@@ -1,0 +1,22 @@
+Aspect DHT
+- implementation UDP pour l'augmentation de la vitesse d'echange (inconvenient de ne pas gerer les erreurs + les canaux sont
+  que dans un sens)
+- un noeud ne peut stocker que dans une certaine limite qu'il doit faire connaitre a la communaute afin que celle ci ne
+  demande pas davantage au noeud. C'est l'aspect INEGALITE des noeuds
+- Routing scheme : La procedure deterministique qui permet de retrouver les noeuds qui contiennent la cle et sa valeur
+  Cette procedure doit etre RAPIDE, impliquer un minimum de noeud
+
+get_agent_status
+
+SVN
+
+UDP TCP abstraction
+
+Pour eviter qu'un agent fasse autre chose que ce qu'on lui demande, lorsqu'on demande une tache, plusieurs noeud l'execute.
+Ainsi si une minorité de noeud fait differment :
+1) son travail n'est pas pris en compe
+2) son niveau de confiance diminue
+Si le niveau de confiance est en dessous d'un seuil alors le noeud est banni.
+
+Pour eviter les attaques par DoS en series sur les noeuds du reseau, il faut
+1) les detecter et bannir
