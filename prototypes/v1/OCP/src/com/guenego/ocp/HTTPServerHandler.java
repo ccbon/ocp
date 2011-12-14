@@ -47,7 +47,7 @@ public class HTTPServerHandler implements HttpHandler {
 				JLG.debug("asking file: " + file.getAbsolutePath());
 				responseBody.write(JLG.getBinaryFile(file));
 			} catch (Exception e) {
-				responseBody.write("Error...\n".getBytes());
+				responseBody.write(("Error...\n" + agent.id).getBytes());
 			}
 			responseBody.close();
 		}

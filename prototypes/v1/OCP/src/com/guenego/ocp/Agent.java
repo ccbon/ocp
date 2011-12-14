@@ -61,6 +61,15 @@ public class Agent {
 	private PBEParameterSpec userParamSpec;
 	private byte backupNbr;
 
+	public static void main(String[] args) {
+		try {
+			Agent agent = new Agent();
+			agent.start();
+		} catch (Exception e) {
+			JLG.error(e);
+		}
+	}
+	
 	public Agent() throws Exception {
 		this(null);
 	}
@@ -78,6 +87,8 @@ public class Agent {
 		} else {
 			this.p = p;
 		}
+		
+		
 
 		for (Enumeration<Object> e = p.keys(); e.hasMoreElements();) {
 			String key = (String) e.nextElement();
@@ -102,6 +113,16 @@ public class Agent {
 
 		// Storage
 		storage = new Storage(this);
+		
+		// start an icontray or a commandline listener
+		UserInterface ui = null;
+		if (p.getProperty("gui", "true").equalsIgnoreCase("true")) {
+			ui = new CommandLine(this);
+		} else {
+			//gui mode
+			ui = new GraphicalUI(this);
+		}
+		(new Thread(ui)).start();
 	}
 
 	public void start() throws JLGException {
@@ -641,7 +662,7 @@ public class Agent {
 				byte[] ciphertext = data.getContent();
 				byte[] cleartext = user.decrypt(ciphertext);
 				result = ByteUtil.sub(cleartext, 1);
-				
+
 				break;
 			}
 		}

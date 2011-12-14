@@ -6,6 +6,8 @@ import java.util.NavigableSet;
 import java.util.TreeSet;
 
 public class UserIndex implements Serializable {
+
+	private static final long serialVersionUID = 1L;
 	
 	private NavigableSet<Pointer> set;
 	
@@ -17,10 +19,6 @@ public class UserIndex implements Serializable {
 	
 	
 	
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
 
 	public void add(Pointer pointer) {
 		set.add(pointer);

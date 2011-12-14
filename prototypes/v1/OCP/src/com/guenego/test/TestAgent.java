@@ -119,8 +119,8 @@ public class TestAgent {
 			FileSystem fs2 = new FileSystem(user, a2, "C:/jlouis/ocp_dir2");
 			fs2.checkout();
 			
-			//a1.stop();
-			//a2.stop();
+			a1.stop();
+			a2.stop();
 
 		} catch (JLGException e) {
 			System.exit(1);

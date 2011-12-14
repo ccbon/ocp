@@ -8,13 +8,10 @@ import com.guenego.misc.JLG;
 public class CommandLine implements UserInterface {
 	private String prompt = "?>";
 
-	private Client client;
-
 	private Agent agent;
 
 	public CommandLine(Agent _agent) {
 		agent = _agent;
-		client = _agent.client;
 	}
 
 	public void run() {
@@ -52,18 +49,30 @@ public class CommandLine implements UserInterface {
 
 	private void createUser() {
 		try {
-			// provide the hash(login + password)
-			// only the server storing your key can create the captcha
-			// user key = hash(login + password)
-			// backup key backup(key) = [
-			// key1=hash(login+password)
-			// key2=hash(key+login+password)
-			// etc.
-			
+			String login = ask("login");
+			String password = ask("password");
+			Captcha captcha = agent.wantToCreateUser(login, password);
+			String answer = ask("captcha->" + captcha.challengeObject);
+			int backupNbr = askInteger("backup nbr");
+			agent.createUser(login, password, backupNbr, captcha, answer);
 		} catch (Exception e) {
 			JLG.error(e);
 		}
 
+	}
+
+	private int askInteger(String string) throws Exception {
+		System.out.print(string + ":");
+		InputStreamReader isr = new InputStreamReader(System.in);
+		BufferedReader br = new BufferedReader(isr);
+		return Integer.parseInt(br.readLine());
+	}
+
+	private String ask(String string) throws Exception {
+		System.out.print(string + ":");
+		InputStreamReader isr = new InputStreamReader(System.in);
+		BufferedReader br = new BufferedReader(isr);
+		return br.readLine();
 	}
 
 	private void badCommand(String s) {
