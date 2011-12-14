@@ -74,18 +74,18 @@ public class Agent {
 		this(null);
 	}
 
-	public Agent(Properties p) throws Exception {
+	public Agent(Properties properties) throws Exception {
 		contactMap = new HashMap<Id, Contact>();
 		nodeMap = new TreeMap<Id, Contact>();
 
-		if (p == null) {
-			this.p = new Properties();
+		if (properties == null) {
+			p = new Properties();
 			try {
 				this.p.load(new FileInputStream("agent.properties"));
 			} catch (IOException e) {
 			}
 		} else {
-			this.p = p;
+			p = properties;
 		}
 		
 		
@@ -117,10 +117,10 @@ public class Agent {
 		// start an icontray or a commandline listener
 		UserInterface ui = null;
 		if (p.getProperty("gui", "true").equalsIgnoreCase("true")) {
-			ui = new CommandLine(this);
-		} else {
-			//gui mode
+			// gui mode
 			ui = new GraphicalUI(this);
+		} else {
+			ui = new CommandLine(this);
 		}
 		(new Thread(ui)).start();
 	}
