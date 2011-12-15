@@ -18,6 +18,7 @@ public class TestAgent {
 		JLG.debug("working directory = " + System.getProperty("user.dir"));
 
 		try {
+			JLG.rm(System.getenv("TEMP") + "/ocp_agent_storage");
 			// start 2 agents
 			Properties p1 = new Properties();
 			p1.setProperty("name", "Suzana");
@@ -81,7 +82,7 @@ public class TestAgent {
 			Pointer pointer = a2.set(user, str);
 			JLG.debug(a1.toString());
 			JLG.debug(a2.toString());
-			//System.exit(0);
+			System.exit(0);
 			
 			
 			str = "This is my second object";

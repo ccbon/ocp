@@ -6,12 +6,15 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.OutputStream;
 import java.io.Serializable;
 import java.security.KeyFactory;
 import java.security.MessageDigest;
@@ -186,8 +189,12 @@ public class JLG {
 
 	public static void mkdir(String path) throws Exception {
 		File dir = new File(path);
+		mkdir(dir);
+	}
+
+	public static void mkdir(File dir) throws Exception {
 		if (dir.mkdirs() == false) {
-			throw new Exception("Cannot create directory " + path);
+			throw new Exception("Cannot create directory " + dir);
 		}
 	}
 
@@ -198,6 +205,17 @@ public class JLG {
 			out.write(content);
 		} catch (Exception e) {
 			throw e;
+		} finally {
+			out.close();
+		}
+	}
+
+	public static void setBinaryFile(File file, byte[] content) throws Exception {
+		OutputStream out = null;
+		try {
+			out = new FileOutputStream(file, false);
+			out.write(content);
+			out.flush();
 		} finally {
 			out.close();
 		}
@@ -214,7 +232,8 @@ public class JLG {
 		// Before converting to an int type, check
 		// to ensure that file is not larger than Integer.MAX_VALUE.
 		if (length > Integer.MAX_VALUE) {
-			throw new Exception("file is too large. It cannot exceed " + Integer.MAX_VALUE);
+			throw new Exception("file is too large. It cannot exceed "
+					+ Integer.MAX_VALUE);
 		}
 
 		// Create the byte array to hold the data

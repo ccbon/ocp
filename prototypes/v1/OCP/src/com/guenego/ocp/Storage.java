@@ -1,6 +1,5 @@
 package com.guenego.ocp;
 
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.NavigableSet;
@@ -17,7 +16,7 @@ public class Storage {
 
 	public Storage(Agent agent) {
 		nodeSet = new TreeSet<Id>();
-		contentMap = new HashMap<Address, Content>();
+		contentMap = new PersistentHashMap(agent);
 		this.agent = agent;
 	}
 
