@@ -65,6 +65,8 @@ public class Agent {
 		try {
 			Agent agent = new Agent();
 			agent.start();
+			Thread.sleep(10000);
+			agent.stop();
 		} catch (Exception e) {
 			JLG.error(e);
 		}
@@ -88,7 +90,11 @@ public class Agent {
 			p = properties;
 		}
 		
-		
+		// debugging aspect
+		if (p.getProperty("debug", "true").equalsIgnoreCase("true")) {
+			JLG.debug_on();
+			JLG.debug("working directory = " + System.getProperty("user.dir"));
+		}
 
 		for (Enumeration<Object> e = p.keys(); e.hasMoreElements();) {
 			String key = (String) e.nextElement();

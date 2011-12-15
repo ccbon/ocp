@@ -193,9 +193,7 @@ public class JLG {
 	}
 
 	public static void mkdir(File dir) throws Exception {
-		if (dir.mkdirs() == false) {
-			throw new Exception("Cannot create directory " + dir);
-		}
+		dir.mkdirs();
 	}
 
 	public static void setFile(String file, String content) throws IOException {
