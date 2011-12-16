@@ -33,6 +33,7 @@ import com.guenego.misc.ByteUtil;
 import com.guenego.misc.Id;
 import com.guenego.misc.JLG;
 import com.guenego.misc.JLGException;
+import com.guenego.ocp.gui.GraphicalUI;
 
 public class Agent {
 
@@ -65,8 +66,8 @@ public class Agent {
 		try {
 			Agent agent = new Agent();
 			agent.start();
-			Thread.sleep(10000);
-			agent.stop();
+//			Thread.sleep(10000);
+//			agent.stop();
 		} catch (Exception e) {
 			JLG.error(e);
 		}
