@@ -77,7 +77,7 @@ public class GraphicalUI implements UserInterface {
 			ActionListener configListener = new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					JLG.debug("Configuring");
-					ConfigFrame configFrame = new ConfigFrame(agent);
+					//ConfigFrame configFrame = new ConfigFrame(agent);
 				}
 			};
 			configItem.addActionListener(configListener);

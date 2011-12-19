@@ -33,10 +33,12 @@ import com.guenego.misc.ByteUtil;
 import com.guenego.misc.Id;
 import com.guenego.misc.JLG;
 import com.guenego.misc.JLGException;
+import com.guenego.ocp.gui.ConfigWizard;
 import com.guenego.ocp.gui.GraphicalUI;
 
 public class Agent {
 
+	private static final String AGENT_PROPERTIES_FILE = "agent.properties";
 	public Id id;
 	private String name;
 
@@ -64,6 +66,9 @@ public class Agent {
 
 	public static void main(String[] args) {
 		try {
+			if (!JLG.isFile(AGENT_PROPERTIES_FILE)) {
+				ConfigWizard.start();
+			}
 			Agent agent = new Agent();
 			agent.start();
 //			Thread.sleep(10000);
@@ -83,10 +88,7 @@ public class Agent {
 
 		if (properties == null) {
 			p = new Properties();
-			try {
-				this.p.load(new FileInputStream("agent.properties"));
-			} catch (IOException e) {
-			}
+			p.load(new FileInputStream(AGENT_PROPERTIES_FILE));
 		} else {
 			p = properties;
 		}

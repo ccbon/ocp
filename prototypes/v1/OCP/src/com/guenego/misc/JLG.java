@@ -256,4 +256,9 @@ public class JLG {
 		return bytes;
 	}
 
+	public static boolean isFile(String path) {
+		File file = new File(path);
+		return file.isFile();
+	}
+
 }
