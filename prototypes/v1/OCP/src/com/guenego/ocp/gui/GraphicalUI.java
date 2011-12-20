@@ -42,9 +42,10 @@ public class GraphicalUI implements UserInterface {
 			TrayItem item = new TrayItem(tray, SWT.NONE);
 			Image image = new Image(display, "images/ocp_icon.png");
 			item.setImage(image);
+			item.setToolTipText("OCP Agent");
 			final MenuManager myMenu = new MenuManager("xxx");
 			final Menu menu = myMenu.createContextMenu(shell);
-			myMenu.add(new ExitAction(window, display));
+			myMenu.add(new ExitAction(agent, display));
 			myMenu.add(new OpenConsoleAction(window, display));
 			menu.setEnabled(true);
 			
@@ -62,8 +63,10 @@ public class GraphicalUI implements UserInterface {
 
 		}
 		while (!shell.isDisposed()) {
-			if (!display.readAndDispatch())
+			if (!display.readAndDispatch()) {
 				display.sleep();
+				//JLG.debug("sleep");
+			}
 		}
 		display.dispose();
 

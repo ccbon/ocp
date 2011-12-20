@@ -18,6 +18,7 @@ public class AdminConsole extends ApplicationWindow {
 	public Agent agent;
 	private ExitAction exitAction;
 	private Display display;
+	private NewUserAction newUserAction;
 
 	/**
 	 * Create the application window.
@@ -30,6 +31,14 @@ public class AdminConsole extends ApplicationWindow {
 		addToolBar(SWT.FLAT | SWT.WRAP);
 		addMenuBar();
 		addStatusLine();
+	}
+	
+	@Override
+	public boolean close() {
+		// TODO Auto-generated method stub
+		//return super.close();
+		getShell().setVisible(false);
+		return true;
 	}
 
 	/**
@@ -49,7 +58,8 @@ public class AdminConsole extends ApplicationWindow {
 	 */
 	private void createActions() {
 		// Create the actions
-		exitAction = new ExitAction(this, display);
+		exitAction = new ExitAction(agent, display);
+		newUserAction = new NewUserAction(this, display);
 	}
 
 	/**
@@ -63,8 +73,12 @@ public class AdminConsole extends ApplicationWindow {
 		MenuManager fileMenu = new MenuManager("&File");
 		MenuManager helpMenu = new MenuManager("&Help");
 		menuBar.add(fileMenu);
+		
+		MenuManager editMenu = new MenuManager("&Edit");
+		menuBar.add(editMenu);
 		menuBar.add(helpMenu);
 		fileMenu.add(exitAction);
+		fileMenu.add(newUserAction);
 		return menuBar;
 	}
 
@@ -76,6 +90,8 @@ public class AdminConsole extends ApplicationWindow {
 	@Override
 	protected ToolBarManager createToolBarManager(int style) {
 		ToolBarManager toolBarManager = new ToolBarManager(style);
+		toolBarManager.add(exitAction);
+		toolBarManager.add(newUserAction);
 		return toolBarManager;
 	}
 
