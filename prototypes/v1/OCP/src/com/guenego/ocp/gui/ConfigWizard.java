@@ -13,6 +13,8 @@ import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
+import com.guenego.misc.JLG;
+
 public class ConfigWizard extends Wizard {
 
 	private boolean bIsOnlyClient = false;
@@ -21,13 +23,24 @@ public class ConfigWizard extends Wizard {
 	private String sponsorURL = "tcp://localhost:22222";
 
 	public static void start() {
-		Display display = new Display();
+		JLG.debug_on();
+		JLG.debug("starting wizard");
+		Display display = Display.getDefault();
 
 		final Shell shell = new Shell(display);
 		shell.setLayout(new FillLayout());
 
 		WizardDialog dialog = new WizardDialog(shell, new ConfigWizard());
 		dialog.open();
+//		while (!shell.isDisposed()) {
+//			if (!display.readAndDispatch()) {
+//				JLG.debug("sleep...");	
+//				display.sleep();
+//			}
+//		}
+		JLG.debug("about to dispose");
+		shell.dispose();
+		display.dispose();
 	}
 
 	public ConfigWizard() {

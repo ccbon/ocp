@@ -1,20 +1,24 @@
 package com.guenego.ocp.gui;
 
-import java.awt.AWTException;
-import java.awt.Image;
-import java.awt.MenuItem;
-import java.awt.PopupMenu;
-import java.awt.SystemTray;
-import java.awt.Toolkit;
-import java.awt.TrayIcon;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+import org.eclipse.jface.action.MenuManager;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.MenuItem;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.Tray;
+import org.eclipse.swt.widgets.TrayItem;
 
 import com.guenego.misc.JLG;
 import com.guenego.ocp.Agent;
 import com.guenego.ocp.UserInterface;
+import com.guenego.ocp.gui.console.ExitAction;
+import com.guenego.ocp.gui.console.OpenConsoleAction;
 
 public class GraphicalUI implements UserInterface {
 
@@ -26,84 +30,93 @@ public class GraphicalUI implements UserInterface {
 
 	@Override
 	public void run() {
-		// TODO Auto-generated method stub
-		if (SystemTray.isSupported()) {
-			JLG.debug("System tray is supported.");
+		JLG.debug("starting GUI");
+		final Display display = Display.getDefault();
+		Shell shell = null;
+//		if (display.getActiveShell() != null) {
+//			shell = display.getActiveShell();
+//		} else {
+			shell = new Shell(display);
+//		}
+		final AdminConsole window = new AdminConsole(agent, display);
+		window.setBlockOnOpen(true);
 
-			// get the SystemTray instance
-			SystemTray tray = SystemTray.getSystemTray();
-			// load an image
-			Image image = Toolkit.getDefaultToolkit().getImage(
-					"images/ocp_icon.png");
+		Tray tray = display.getSystemTray();
+		if (tray != null) {
+			TrayItem item = new TrayItem(tray, SWT.NONE);
+			Image image = new Image(display, "images/ocp_icon.png");
+			item.setImage(image);
+			final MenuManager myMenu = new MenuManager("xxx");
+			final Menu menu = myMenu.createContextMenu(shell);
+			myMenu.add(new ExitAction(window, display));
+			myMenu.add(new OpenConsoleAction(window, display));
+			menu.setEnabled(true);
+			
+//			final Menu menu = new Menu(shell, SWT.POP_UP);
+//			MenuItem menuItem = null;
+//
+//			menuItem = new MenuItem(menu, SWT.PUSH);
+//			menuItem.setText("Show Console");
+//			menuItem.addSelectionListener(new SelectionListener() {
+//				
+//				@Override
+//				public void widgetSelected(SelectionEvent arg0) {
+//					// TODO Auto-generated method stub
+//					try {
+//						window.open();
+//					} catch (Exception e) {
+//						e.printStackTrace();
+//					}
+//
+//				}
+//				
+//				@Override
+//				public void widgetDefaultSelected(SelectionEvent arg0) {
+//					// TODO Auto-generated method stub
+//					
+//				}
+//			});
+//
+//			
+//			menuItem = new MenuItem(menu, SWT.PUSH);
+//			menuItem.setText("Exit");
+//			menuItem.addSelectionListener(new SelectionListener() {
+//				
+//				@Override
+//				public void widgetSelected(SelectionEvent arg0) {
+//					// TODO Auto-generated method stub
+//					JLG.debug("Exiting...");
+//					agent.stop();
+//					display.dispose();
+//					System.exit(0);					
+//				}
+//				
+//				@Override
+//				public void widgetDefaultSelected(SelectionEvent arg0) {
+//					// TODO Auto-generated method stub
+//					
+//				}
+//			});
 
-//			MouseListener mouseListener = new MouseListener() {
-//
-//				public void mouseClicked(MouseEvent e) {
-//					JLG.debug("Tray Icon - Mouse clicked!");
-//				}
-//
-//				public void mouseEntered(MouseEvent e) {
-//					JLG.debug("Tray Icon - Mouse entered!");
-//				}
-//
-//				public void mouseExited(MouseEvent e) {
-//					JLG.debug("Tray Icon - Mouse exited!");
-//				}
-//
-//				public void mousePressed(MouseEvent e) {
-//					JLG.debug("Tray Icon - Mouse pressed!");
-//				}
-//
-//				public void mouseReleased(MouseEvent e) {
-//					JLG.debug("Tray Icon - Mouse released!");
-//				}
-//			};
+			item.addListener(SWT.MenuDetect, new Listener() {
 
-
-			PopupMenu popup = new PopupMenu();
-
-			MenuItem exitItem = new MenuItem("Exit");
-			ActionListener exitListener = new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					JLG.debug("Exiting...");
-					agent.stop();
-					System.exit(0);
+				@Override
+				public void handleEvent(Event arg0) {
+					// TODO Auto-generated method stub
+					//menu.setVisible(true);
+					JLG.debug("coucou");
+					myMenu.setVisible(true);
+					menu.setVisible(true);
 				}
-			};
-			exitItem.addActionListener(exitListener);
-			popup.add(exitItem);
+			});
 
-			MenuItem configItem = new MenuItem("Config");
-			ActionListener configListener = new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					JLG.debug("Configuring");
-					//ConfigFrame configFrame = new ConfigFrame(agent);
-				}
-			};
-			configItem.addActionListener(configListener);
-			popup.add(configItem);
-
-			final TrayIcon trayIcon = new TrayIcon(image, "OCP Agent", popup);
-
-//			ActionListener actionListener = new ActionListener() {
-//				public void actionPerformed(ActionEvent e) {
-//					JLG.debug("try to display a message");
-//					trayIcon.displayMessage("Action Event",
-//							"An Action Event Has Been Performed!",
-//							TrayIcon.MessageType.INFO);
-//				}
-//			};
-
-			trayIcon.setImageAutoSize(true);
-			//trayIcon.addActionListener(actionListener);
-			//trayIcon.addMouseListener(mouseListener);
-
-			try {
-				tray.add(trayIcon);
-			} catch (AWTException e) {
-				JLG.error(e);
-			}
 
 		}
+		while (!shell.isDisposed()) {
+			if (!display.readAndDispatch())
+				display.sleep();
+		}
+		display.dispose();
+
 	}
 }
