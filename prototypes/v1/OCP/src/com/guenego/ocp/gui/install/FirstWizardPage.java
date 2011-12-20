@@ -1,4 +1,4 @@
-package com.guenego.ocp.gui;
+package com.guenego.ocp.gui.install;
 
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;

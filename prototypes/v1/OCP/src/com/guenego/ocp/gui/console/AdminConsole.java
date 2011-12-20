@@ -1,4 +1,4 @@
-package com.guenego.ocp.gui;
+package com.guenego.ocp.gui.console;
 
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.StatusLineManager;
@@ -12,7 +12,6 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
 import com.guenego.ocp.Agent;
-import com.guenego.ocp.gui.console.ExitAction;
 
 public class AdminConsole extends ApplicationWindow {
 

@@ -7,7 +7,6 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.widgets.Display;
 
 import com.guenego.misc.JLG;
-import com.guenego.ocp.gui.AdminConsole;
 
 public class ExitAction extends Action {
 	AdminConsole window;

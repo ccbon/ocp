@@ -33,8 +33,8 @@ import com.guenego.misc.ByteUtil;
 import com.guenego.misc.Id;
 import com.guenego.misc.JLG;
 import com.guenego.misc.JLGException;
-import com.guenego.ocp.gui.ConfigWizard;
 import com.guenego.ocp.gui.GraphicalUI;
+import com.guenego.ocp.gui.install.ConfigWizard;
 
 public class Agent {
 

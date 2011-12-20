@@ -17,6 +17,7 @@ import org.eclipse.swt.widgets.TrayItem;
 import com.guenego.misc.JLG;
 import com.guenego.ocp.Agent;
 import com.guenego.ocp.UserInterface;
+import com.guenego.ocp.gui.console.AdminConsole;
 import com.guenego.ocp.gui.console.ExitAction;
 import com.guenego.ocp.gui.console.OpenConsoleAction;
 
@@ -32,12 +33,7 @@ public class GraphicalUI implements UserInterface {
 	public void run() {
 		JLG.debug("starting GUI");
 		final Display display = Display.getDefault();
-		Shell shell = null;
-//		if (display.getActiveShell() != null) {
-//			shell = display.getActiveShell();
-//		} else {
-			shell = new Shell(display);
-//		}
+		Shell shell = new Shell(display);
 		final AdminConsole window = new AdminConsole(agent, display);
 		window.setBlockOnOpen(true);
 
@@ -52,58 +48,11 @@ public class GraphicalUI implements UserInterface {
 			myMenu.add(new OpenConsoleAction(window, display));
 			menu.setEnabled(true);
 			
-//			final Menu menu = new Menu(shell, SWT.POP_UP);
-//			MenuItem menuItem = null;
-//
-//			menuItem = new MenuItem(menu, SWT.PUSH);
-//			menuItem.setText("Show Console");
-//			menuItem.addSelectionListener(new SelectionListener() {
-//				
-//				@Override
-//				public void widgetSelected(SelectionEvent arg0) {
-//					// TODO Auto-generated method stub
-//					try {
-//						window.open();
-//					} catch (Exception e) {
-//						e.printStackTrace();
-//					}
-//
-//				}
-//				
-//				@Override
-//				public void widgetDefaultSelected(SelectionEvent arg0) {
-//					// TODO Auto-generated method stub
-//					
-//				}
-//			});
-//
-//			
-//			menuItem = new MenuItem(menu, SWT.PUSH);
-//			menuItem.setText("Exit");
-//			menuItem.addSelectionListener(new SelectionListener() {
-//				
-//				@Override
-//				public void widgetSelected(SelectionEvent arg0) {
-//					// TODO Auto-generated method stub
-//					JLG.debug("Exiting...");
-//					agent.stop();
-//					display.dispose();
-//					System.exit(0);					
-//				}
-//				
-//				@Override
-//				public void widgetDefaultSelected(SelectionEvent arg0) {
-//					// TODO Auto-generated method stub
-//					
-//				}
-//			});
 
 			item.addListener(SWT.MenuDetect, new Listener() {
 
 				@Override
 				public void handleEvent(Event arg0) {
-					// TODO Auto-generated method stub
-					//menu.setVisible(true);
 					JLG.debug("coucou");
 					myMenu.setVisible(true);
 					menu.setVisible(true);
