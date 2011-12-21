@@ -1,21 +1,17 @@
 package com.guenego.ocp.gui.console;
 
-import java.beans.PropertyChangeEvent;
-
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.wb.swt.SWTResourceManager;
 import org.eclipse.swt.widgets.Text;
 
 import com.guenego.misc.JLG;
 import com.guenego.ocp.Agent;
-
-import org.eclipse.swt.events.ModifyListener;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.graphics.Image;
 
 public class NewUserCaptchaWizardPage extends WizardPage {
 	private Text text;
