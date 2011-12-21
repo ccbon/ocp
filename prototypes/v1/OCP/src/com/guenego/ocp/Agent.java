@@ -2,7 +2,6 @@ package com.guenego.ocp;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
-import java.io.IOException;
 import java.io.Serializable;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;

@@ -7,14 +7,14 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.widgets.Display;
 
 import com.guenego.misc.JLG;
-import com.guenego.ocp.gui.install.ConfigWizard;
+import com.guenego.ocp.Agent;
 
 public class NewUserAction extends Action {
-	AdminConsole window;
 	private Display display;
+	private Agent agent;
 
-	public NewUserAction(AdminConsole w, Display d) {
-		window = w;
+	public NewUserAction(Agent a, Display d) {
+		agent = a;
 		display = d;
 		setText("&Create User@Ctrl+N");
 		setToolTipText("Create a new user");
@@ -29,6 +29,6 @@ public class NewUserAction extends Action {
 
 	public void run() {
 		JLG.debug("Creating a new User: display a wizard...");
-		NewUserWizard.start(display);
+		NewUserWizard.start(display, agent);
 	}
 }

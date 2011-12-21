@@ -59,7 +59,7 @@ public class AdminConsole extends ApplicationWindow {
 	private void createActions() {
 		// Create the actions
 		exitAction = new ExitAction(agent, display);
-		newUserAction = new NewUserAction(this, display);
+		newUserAction = new NewUserAction(agent, display);
 	}
 
 	/**
