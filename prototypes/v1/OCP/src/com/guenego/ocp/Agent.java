@@ -355,6 +355,7 @@ public class Agent {
 
 	public Captcha wantToCreateUser(String login, String password)
 			throws Exception {
+		// TODO check if user already exists ?
 		JLG.debug("want to create a user");
 		Id key = hash(ucrypt(password, login + password));
 		JLG.debug("key = " + key);
@@ -579,7 +580,6 @@ public class Agent {
 		if (result == null) {
 			if (isResponsible(address)) {
 				JLG.debug("address not found on " + id + " : " + address);
-				JLG.debug(this.toString());
 				return null;
 			} else {
 				result = client.getFromAddress(address);
