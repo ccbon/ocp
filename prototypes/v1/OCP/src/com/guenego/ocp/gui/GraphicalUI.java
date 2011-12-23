@@ -59,6 +59,8 @@ public class GraphicalUI implements UserInterface {
 
 
 		}
+		// if you want to open the window when starting...
+		window.open();
 		while (!shell.isDisposed()) {
 			if (!display.readAndDispatch()) {
 				display.sleep();
