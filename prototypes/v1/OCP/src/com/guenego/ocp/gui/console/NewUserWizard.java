@@ -13,11 +13,12 @@ import com.guenego.ocp.Captcha;
 
 public class NewUserWizard extends Wizard {
 
-	public static void start(Display display, Agent agent) {
+	public static void start(Display display, Agent agent, AdminConsole window) {
+		
 		final Shell shell = new Shell(display);
 		shell.setLayout(new FillLayout());
 
-		WizardDialog dialog = new WizardDialog(shell, new NewUserWizard(agent)) {
+		WizardDialog dialog = new WizardDialog(shell, new NewUserWizard(agent, window)) {
 			@Override
 			protected void nextPressed() {
 				try {
@@ -50,9 +51,11 @@ public class NewUserWizard extends Wizard {
 	private String username;
 	private String password;
 	public boolean bCanFinnish;
+	private AdminConsole window;
 
-	public NewUserWizard(Agent agent) {
+	public NewUserWizard(Agent agent, AdminConsole window) {
 		this.agent = agent;
+		this.window = window;
 		setWindowTitle("Create new user Wizard");
 		bCanFinnish = false;
 	}
@@ -102,6 +105,10 @@ public class NewUserWizard extends Wizard {
 
 	public Captcha getCaptcha() {
 		return captcha;
+	}
+
+	public AdminConsole getAdminConsole() {
+		return window;
 	}
 
 }

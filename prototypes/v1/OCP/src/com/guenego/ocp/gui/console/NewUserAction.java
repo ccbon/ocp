@@ -12,10 +12,12 @@ import com.guenego.ocp.Agent;
 public class NewUserAction extends Action {
 	private Display display;
 	private Agent agent;
+	private AdminConsole window;
 
-	public NewUserAction(Agent a, Display d) {
+	public NewUserAction(Agent a, Display d, AdminConsole adminConsole) {
 		agent = a;
 		display = d;
+		window = adminConsole; 
 		setText("&Create User@Ctrl+N");
 		setToolTipText("Create a new user");
 		try {
@@ -29,6 +31,6 @@ public class NewUserAction extends Action {
 
 	public void run() {
 		JLG.debug("Creating a new User: display a wizard...");
-		NewUserWizard.start(display, agent);
+		NewUserWizard.start(display, agent, window);
 	}
 }

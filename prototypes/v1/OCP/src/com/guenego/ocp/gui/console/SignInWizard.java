@@ -14,11 +14,11 @@ import com.guenego.ocp.User;
 
 public class SignInWizard extends Wizard {
 
-	public static void start(Display display, Agent agent) {
+	public static void start(Display display, Agent agent, AdminConsole window) {
 		final Shell shell = new Shell(display);
 		shell.setLayout(new FillLayout());
 
-		WizardDialog dialog = new WizardDialog(shell, new SignInWizard(agent));
+		WizardDialog dialog = new WizardDialog(shell, new SignInWizard(agent, window));
 		dialog.open();
 		JLG.debug("about to dispose shell");
 		// shell.dispose();
@@ -28,9 +28,11 @@ public class SignInWizard extends Wizard {
 	private Agent agent;
 	private String username;
 	private String password;
+	private AdminConsole window;
 
-	public SignInWizard(Agent agent) {
+	public SignInWizard(Agent agent, AdminConsole window) {
 		this.agent = agent;
+		this.window = window;
 		setWindowTitle("Sign In Wizard");
 	}
 
@@ -46,6 +48,7 @@ public class SignInWizard extends Wizard {
 		try {
 			User user = agent.login(p1.usernameText.getText(),
 					p1.passwordText.getText());
+			window.addUserTab(user);
 		} catch (Exception e) {
 			MessageBox messageBox = new MessageBox(getShell(), SWT.ICON_ERROR
 					| SWT.OK);

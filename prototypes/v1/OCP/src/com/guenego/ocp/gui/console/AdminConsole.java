@@ -15,6 +15,8 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
 import com.guenego.ocp.Agent;
+import com.guenego.ocp.User;
+
 import org.eclipse.wb.swt.SWTResourceManager;
 
 public class AdminConsole extends ApplicationWindow {
@@ -24,6 +26,7 @@ public class AdminConsole extends ApplicationWindow {
 	private Display display;
 	private NewUserAction newUserAction;
 	private SignInAction signInAction;
+	private CTabFolder tabFolder;
 
 	/**
 	 * Create the application window.
@@ -57,7 +60,7 @@ public class AdminConsole extends ApplicationWindow {
 		Composite container = new Composite(parent, SWT.BORDER);
 		container.setLayout(new FillLayout(SWT.HORIZONTAL));
 		
-		CTabFolder tabFolder = new CTabFolder(container, SWT.BORDER);
+		tabFolder = new CTabFolder(container, SWT.BORDER);
 		//tabFolder.setSelectionBackground(Display.getCurrent().getSystemColor(SWT.COLOR_TITLE_INACTIVE_BACKGROUND_GRADIENT));
 		tabFolder.setSimple(false);
 		
@@ -69,13 +72,6 @@ public class AdminConsole extends ApplicationWindow {
 		composite.setBackground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_HIGHLIGHT_SHADOW));
 		tbtmWelcome.setControl(composite);
 		
-		CTabItem tbtmUserJlouis = new CTabItem(tabFolder, SWT.NONE);
-		tbtmUserJlouis.setShowClose(true);
-		tbtmUserJlouis.setText("User: jlouis");
-		
-		Composite composite_1 = new Composite(tabFolder, SWT.NONE);
-		composite_1.setBackground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_HIGHLIGHT_SHADOW));
-		tbtmUserJlouis.setControl(composite_1);
 
 		return container;
 	}
@@ -86,8 +82,8 @@ public class AdminConsole extends ApplicationWindow {
 	private void createActions() {
 		// Create the actions
 		exitAction = new ExitAction(agent, display);
-		newUserAction = new NewUserAction(agent, display);
-		signInAction = new SignInAction(agent, display);
+		newUserAction = new NewUserAction(agent, display, this);
+		signInAction = new SignInAction(agent, display, this);
 	}
 
 	/**
@@ -155,5 +151,16 @@ public class AdminConsole extends ApplicationWindow {
 	@Override
 	protected Point getInitialSize() {
 		return new Point(652, 514);
+	}
+
+	public void addUserTab(User user) {
+		CTabItem userCTabItem = new CTabItem(tabFolder, SWT.NONE);
+		userCTabItem.setShowClose(true);
+		userCTabItem.setText("User: " + user.getLogin());
+		
+		Composite composite_1 = new Composite(tabFolder, SWT.NONE);
+		composite_1.setBackground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_HIGHLIGHT_SHADOW));
+		userCTabItem.setControl(composite_1);
+		tabFolder.setSelection(userCTabItem);
 	}
 }

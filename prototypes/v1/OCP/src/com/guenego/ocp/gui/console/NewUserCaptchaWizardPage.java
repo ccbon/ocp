@@ -12,6 +12,7 @@ import org.eclipse.swt.widgets.Text;
 
 import com.guenego.misc.JLG;
 import com.guenego.ocp.Agent;
+import com.guenego.ocp.User;
 
 public class NewUserCaptchaWizardPage extends WizardPage {
 	private Text text;
@@ -74,6 +75,8 @@ public class NewUserCaptchaWizardPage extends WizardPage {
 		NewUserWizard wizard = (NewUserWizard) getWizard();
 		Agent agent = wizard.getAgent();
 		agent.createUser(wizard.getUsername(), wizard.getPassword(), 2, wizard.getCaptcha(), text.getText());
+		User user = agent.login(wizard.getUsername(), wizard.getPassword());
+		wizard.getAdminConsole().addUserTab(user);
 		wizard.bCanFinnish = true;
 	}
 
