@@ -6,12 +6,9 @@ import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Text;
 
 import com.guenego.misc.JLG;
-import com.guenego.ocp.Agent;
-import com.guenego.ocp.User;
 
 public class SignInWizardPage extends WizardPage {
 	Text usernameText;

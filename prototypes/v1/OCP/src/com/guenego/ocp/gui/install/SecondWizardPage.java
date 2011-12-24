@@ -41,7 +41,6 @@ public class SecondWizardPage extends WizardPage {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				System.out.println("check box event.");
-				NetworkWizardPage networkPage = (NetworkWizardPage) getWizard().getPage("networkPage");
 				if (joinButton.getSelection()) {
 					sponsorURLText.setEnabled(true);
 				} else {

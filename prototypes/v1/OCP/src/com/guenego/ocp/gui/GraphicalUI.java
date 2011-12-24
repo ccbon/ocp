@@ -43,7 +43,7 @@ public class GraphicalUI implements UserInterface {
 			final MenuManager myMenu = new MenuManager("xxx");
 			final Menu menu = myMenu.createContextMenu(shell);
 			myMenu.add(new ExitAction(agent, display));
-			myMenu.add(new OpenConsoleAction(window, display));
+			myMenu.add(new OpenConsoleAction(window));
 			menu.setEnabled(true);
 			
 

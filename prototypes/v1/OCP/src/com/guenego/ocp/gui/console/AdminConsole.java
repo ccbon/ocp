@@ -13,11 +13,10 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.wb.swt.SWTResourceManager;
 
 import com.guenego.ocp.Agent;
 import com.guenego.ocp.User;
-
-import org.eclipse.wb.swt.SWTResourceManager;
 
 public class AdminConsole extends ApplicationWindow {
 
