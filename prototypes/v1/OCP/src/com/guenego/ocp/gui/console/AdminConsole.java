@@ -158,9 +158,8 @@ public class AdminConsole extends ApplicationWindow {
 		userCTabItem.setShowClose(true);
 		userCTabItem.setText("User: " + user.getLogin());
 		
-		Composite composite_1 = new Composite(tabFolder, SWT.NONE);
-		composite_1.setBackground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_HIGHLIGHT_SHADOW));
-		userCTabItem.setControl(composite_1);
+		Composite composite = new UserComposite(tabFolder, SWT.NONE, agent, user);
+		userCTabItem.setControl(composite);
 		tabFolder.setSelection(userCTabItem);
 	}
 }

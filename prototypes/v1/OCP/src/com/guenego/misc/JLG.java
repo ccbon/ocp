@@ -174,6 +174,7 @@ public class JLG {
 	}
 
 	public static void rm(String path) {
+		JLG.debug("removing " + path);
 		rm(new File(path));
 	}
 
