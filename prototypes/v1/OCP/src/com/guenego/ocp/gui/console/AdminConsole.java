@@ -17,6 +17,7 @@ import org.eclipse.wb.swt.SWTResourceManager;
 
 import com.guenego.ocp.Agent;
 import com.guenego.ocp.User;
+import com.guenego.ocp.gui.GraphicalUI;
 
 public class AdminConsole extends ApplicationWindow {
 
@@ -139,7 +140,7 @@ public class AdminConsole extends ApplicationWindow {
 	@Override
 	protected void configureShell(Shell newShell) {
 		newShell.setSize(new Point(500, 400));
-		newShell.setImage(SWTResourceManager.getImage("images/ocp_icon.png"));
+		newShell.setImage(SWTResourceManager.getImage(GraphicalUI.class, "ocp_icon.png"));
 		super.configureShell(newShell);
 		newShell.setText("OCP Agent Console");
 	}

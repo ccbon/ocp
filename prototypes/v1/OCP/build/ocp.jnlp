@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<jnlp spec="1.0+">
+
+	<information>
+		<title>OCP Agent Prototype v1</title>
+		<vendor>Jean-Louis GUENEGO</vendor>
+		
+		<description>Open Cloud Protocol first prototype</description>
+		<description kind="short">Software that allows personal remote data storage</description>
+		<description kind="tooltip">OCP Agent</description>
+		
+		<offline-allowed />
+	</information>
+	
+	<security>
+		<all-permissions />
+	</security>
+
+	<resources>
+		<j2se version="1.7+" href="http://java.sun.com/products/autodl/j2se"/>
+		<jar href="http://ocp.googlecode.com/files/ocp.jar"/>
+	</resources>
+	
+	<application-desc main-class="com.guenego.ocp.Agent">
+	</application-desc>
+
+</jnlp>

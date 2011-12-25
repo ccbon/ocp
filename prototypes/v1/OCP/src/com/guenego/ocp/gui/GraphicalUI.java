@@ -28,46 +28,49 @@ public class GraphicalUI implements UserInterface {
 
 	@Override
 	public void run() {
-		JLG.debug("starting GUI");
-		final Display display = Display.getDefault();
-		Shell shell = new Shell(display);
-		final AdminConsole window = new AdminConsole(agent, display);
-		window.setBlockOnOpen(true);
+		try {
+			JLG.debug("starting GUI");
+			final Display display = Display.getDefault();
+			Shell shell = new Shell(display);
+			final AdminConsole window = new AdminConsole(agent, display);
+			window.setBlockOnOpen(true);
 
-		Tray tray = display.getSystemTray();
-		if (tray != null) {
-			TrayItem item = new TrayItem(tray, SWT.NONE);
-			Image image = new Image(display, "images/ocp_icon.png");
-			item.setImage(image);
-			item.setToolTipText("OCP Agent");
-			final MenuManager myMenu = new MenuManager("xxx");
-			final Menu menu = myMenu.createContextMenu(shell);
-			myMenu.add(new ExitAction(agent, display));
-			myMenu.add(new OpenConsoleAction(window));
-			menu.setEnabled(true);
-			
+			Tray tray = display.getSystemTray();
+			if (tray != null) {
+				TrayItem item = new TrayItem(tray, SWT.NONE);
+				Image image = new Image(display,
+						GraphicalUI.class.getResourceAsStream("ocp_icon.png"));
+				item.setImage(image);
+				item.setToolTipText("OCP Agent");
+				final MenuManager myMenu = new MenuManager("xxx");
+				final Menu menu = myMenu.createContextMenu(shell);
+				myMenu.add(new ExitAction(agent, display));
+				myMenu.add(new OpenConsoleAction(window));
+				menu.setEnabled(true);
 
-			item.addListener(SWT.MenuDetect, new Listener() {
+				item.addListener(SWT.MenuDetect, new Listener() {
 
-				@Override
-				public void handleEvent(Event arg0) {
-					JLG.debug("coucou");
-					myMenu.setVisible(true);
-					menu.setVisible(true);
-				}
-			});
+					@Override
+					public void handleEvent(Event arg0) {
+						JLG.debug("coucou");
+						myMenu.setVisible(true);
+						menu.setVisible(true);
+					}
+				});
 
-
-		}
-		// if you want to open the window when starting...
-		window.open();
-		while (!shell.isDisposed()) {
-			if (!display.readAndDispatch()) {
-				display.sleep();
-				//JLG.debug("sleep");
 			}
+			// if you want to open the window when starting...
+			window.open();
+			while (!shell.isDisposed()) {
+				if (!display.readAndDispatch()) {
+					display.sleep();
+					// JLG.debug("sleep");
+				}
+			}
+			display.dispose();
+		} catch (Exception e) {
+			JLG.error(e);
+			System.exit(1);
 		}
-		display.dispose();
-
 	}
 }

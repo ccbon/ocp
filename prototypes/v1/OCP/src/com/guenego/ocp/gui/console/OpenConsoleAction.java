@@ -1,9 +1,8 @@
 package com.guenego.ocp.gui.console;
 
-import java.net.URL;
-
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.swt.graphics.ImageData;
 
 import com.guenego.misc.JLG;
 
@@ -16,19 +15,18 @@ public class OpenConsoleAction extends Action {
 		setText("&Open Console@Ctrl+O");
 		setToolTipText("Open the OCP Agent Administration Console");
 		try {
-			ImageDescriptor i = ImageDescriptor.createFromURL(new URL(
-					"file:images/console.png"));
+			ImageDescriptor i = ImageDescriptor
+					.createFromImageData(new ImageData(ExitAction.class
+							.getResourceAsStream("console.png")));
 			setImageDescriptor(i);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public void run() {
 		JLG.debug("Opening Console");
 		window.open();
 	}
-
-
 
 }

@@ -1,10 +1,9 @@
 package com.guenego.ocp.gui.console;
 
-import java.net.URL;
-
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
@@ -22,8 +21,7 @@ public class ExitAction extends Action {
 		setText("E&xit@Ctrl+W");
 		setToolTipText("Exit the application");
 		try {
-			ImageDescriptor i = ImageDescriptor.createFromURL(new URL(
-					"file:images/exit.png"));
+			ImageDescriptor i = ImageDescriptor.createFromImageData(new ImageData(ExitAction.class.getResourceAsStream("exit.png")));
 			setImageDescriptor(i);
 		} catch (Exception e) {
 			e.printStackTrace();
