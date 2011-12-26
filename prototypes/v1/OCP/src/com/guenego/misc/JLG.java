@@ -196,7 +196,7 @@ public class JLG {
 		dir.mkdirs();
 	}
 
-	public static void setFile(String file, String content) throws IOException {
+	public static void setFile(String file, String content) throws Exception {
 		BufferedWriter out = null;
 		try {
 			out = new BufferedWriter(new FileWriter(file));

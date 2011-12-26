@@ -99,7 +99,7 @@ public class PersistentHashMap implements Map<Address, Content> {
 
 	@Override
 	public Set<java.util.Map.Entry<Address, Content>> entrySet() {
-		Set<java.util.Map.Entry<Address, Content>> result = new HashSet<>();
+		Set<java.util.Map.Entry<Address, Content>> result = new HashSet<java.util.Map.Entry<Address, Content>>();
 		try {
 			for (File child : dir.listFiles()) {
 				Address address = new Address(child.getName());
@@ -139,7 +139,7 @@ public class PersistentHashMap implements Map<Address, Content> {
 
 	@Override
 	public Set<Address> keySet() {
-		Set<Address> result = new HashSet<>();
+		Set<Address> result = new HashSet<Address>();
 		try {
 			for (File child : dir.listFiles()) {
 				Address address = new Address(child.getName());
@@ -196,7 +196,7 @@ public class PersistentHashMap implements Map<Address, Content> {
 
 	@Override
 	public Collection<Content> values() {
-		Collection<Content> result = new HashSet<>();
+		Collection<Content> result = new HashSet<Content>();
 		try {
 			for (File child : dir.listFiles()) {
 				Content content = (Content) JLG.deserialize(new String(JLG

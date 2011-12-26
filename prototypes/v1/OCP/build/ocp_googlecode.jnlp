@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<jnlp spec="1.0+" codebase="file:/C:/Documents and Settings/jlouis/git/ocp/prototypes/v1" >
-
+<jnlp spec="1.0+" codebase="http://ocp.googlecode.com/files/">
 
 	<information>
 		<title>OCP Agent Prototype v1</title>
@@ -19,18 +18,17 @@
 	
 	<resources os="Windows" arch="x86">
 		<j2se version="1.6+" href="http://java.sun.com/products/autodl/j2se"/>
-		<jar href="signed/ocp_Windows_x86.jar"/>
+		<jar href="ocp_Windows_x86.jar"/>
 	</resources>
 		
 	<resources os="Windows" arch="x86_64">
 		<j2se version="1.6+" href="http://java.sun.com/products/autodl/j2se"/>
-		<jar href="signed/ocp_Windows_x86_64.jar"/>
+		<jar href="ocp_Windows_x86_64.jar"/>
 	</resources>
 	
 
 	
 	<application-desc main-class="com.guenego.ocp.Agent">
 	</application-desc>
-
 
 </jnlp>

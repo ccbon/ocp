@@ -19,7 +19,7 @@ public class Server {
 		try {
 			this.agent = agent;
 			
-			listenerList = new ArrayList<>();
+			listenerList = new ArrayList<Listener>();
 			Iterator<String> it = agent.p.stringPropertyNames().iterator();
 			while (it.hasNext()) {
 				String key = it.next();

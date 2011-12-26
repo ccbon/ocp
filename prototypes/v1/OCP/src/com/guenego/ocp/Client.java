@@ -25,7 +25,7 @@ public class Client {
 
 	public Client(Agent _agent) {
 		agent = _agent;
-		understandableChannelList = new ArrayList<>();
+		understandableChannelList = new ArrayList<Channel>();
 		understandableChannelList.add(new TCPChannel());
 		channelMap = new HashMap<String, Channel>();
 	}
