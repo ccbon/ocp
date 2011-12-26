@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project default="main" name="Create Runnable Jar for Project OCP">
+	<property name="root.dir" value="${basedir}/../.." />
+	<property name="lib.dir" value="${root.dir}/OCP/lib" />
+	<property name="build.dir" value="${root.dir}/build" />
+	<property name="tmp.dir" value="${build.dir}/tmp" />
+
+	<macrodef name="create_ocp_jar">
+		<attribute name="archi" />
+		<sequential>
+			<echo message="making ocp jar file for @{archi}" />
+			<mkdir dir="${build.dir}" />
+			<mkdir dir="${tmp.dir}" />
+			<jar destfile="${tmp.dir}/ocp_@{archi}.jar" filesetmanifest="mergewithoutmain">
+				<manifest>
+					<attribute name="Main-Class" value="com.guenego.ocp.Agent" />
+					<attribute name="Class-Path" value="." />
+				</manifest>
+				<fileset dir="${root.dir}/OCP/bin" />
+				<zipfileset excludes="META-INF/* .* *.html plugin.properties" src="${lib.dir}/org.eclipse.core.commands_3.6.0.I20110111-0800.jar" />
+				<zipfileset excludes="META-INF/* .* *.html plugin.properties" src="${lib.dir}/org.eclipse.equinox.common_3.6.0.v20110523.jar" />
+				<zipfileset excludes="META-INF/* .* *.html plugin.properties" src="${lib.dir}/org.eclipse.equinox.registry_3.5.101.R37x_v20110810-1611.jar" />
+				<zipfileset excludes="META-INF/* .* *.html plugin.properties" src="${lib.dir}/@{archi}/swt.jar" />
+				<zipfileset excludes="META-INF/* .* *.html plugin.properties" src="${lib.dir}/org.eclipse.jface_3.7.0.I20110522-1430.jar" />
+			</jar>
+			<signjar destDir="${build.dir}" alias="jlg" keystore="C:/cygwin/home/jlouis/jlgkeystore" storepass="jlgpass" preservelastmodified="true" jar="${tmp.dir}/ocp_@{archi}.jar" />
+			<delete dir="${tmp.dir}" />
+		</sequential>
+	</macrodef>
+
+	<target name="main" depends="clean, jar" />
+	<target name="clean">
+		<delete dir="${build.dir}" />
+	</target>
+	<target name="jar">
+		<create_ocp_jar archi="Windows_x86"/>
+		<create_ocp_jar archi="Windows_x86_64"/>
+	</target>
+</project>
