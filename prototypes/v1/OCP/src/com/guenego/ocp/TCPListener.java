@@ -17,6 +17,7 @@ public class TCPListener implements Listener {
 	@Override
 	public void start() {
 		tcpServer.start();
+		(new NATTraversal()).map(url.getPort());
 	}
 
 	@Override
