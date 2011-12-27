@@ -21,16 +21,20 @@ import com.guenego.ocp.gui.console.OpenConsoleAction;
 public class GraphicalUI implements UserInterface {
 
 	private Agent agent;
+	private Display display;
+	
 
 	public GraphicalUI(Agent agent) {
 		this.agent = agent;
+		
 	}
 
 	@Override
 	public void run() {
 		try {
 			JLG.debug("starting GUI");
-			final Display display = Display.getDefault();
+			final Display display = new Display();
+			this.display = display;
 			Shell shell = new Shell(display);
 			final AdminConsole window = new AdminConsole(agent, display);
 			window.setBlockOnOpen(true);
@@ -71,6 +75,13 @@ public class GraphicalUI implements UserInterface {
 		} catch (Exception e) {
 			JLG.error(e);
 			System.exit(1);
+		}
+	}
+
+	@Override
+	public void stop() {
+		if (!display.isDisposed()) {
+			display.dispose();
 		}
 	}
 }

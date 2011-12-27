@@ -1,18 +1,22 @@
 package com.guenego.misc;
 
+import java.io.Serializable;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class URL {
+public class URL implements Serializable {
 
-	String sUrl;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
 	private String sProtocol;
 	private String sHost;
 	private int iPort;
 
 	public URL(String sUrl) throws JLGException {
 		JLG.debug("start creating url");
-		this.sUrl = sUrl;
 		Pattern pattern = Pattern.compile("^(\\w+)://(\\w+):(\\d+).*$");
 		Matcher matcher = pattern.matcher(sUrl);
 		boolean found = false;
@@ -49,7 +53,12 @@ public class URL {
 	
 	@Override
 	public String toString() {
-		return sUrl;
+		return sProtocol + "://" + sHost + ":" + iPort;
+	}
+
+	public void setHost(String hostAddress) {
+		sHost = hostAddress;
+		
 	}
 
 }

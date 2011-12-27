@@ -82,7 +82,7 @@ public class TestAgent {
 			Pointer pointer = a2.set(user, str);
 			JLG.debug(a1.toString());
 			JLG.debug(a2.toString());
-			System.exit(0);
+			//System.exit(0);
 			
 			
 			str = "This is my second object";

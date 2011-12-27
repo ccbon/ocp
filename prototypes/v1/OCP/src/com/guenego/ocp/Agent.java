@@ -38,6 +38,7 @@ import com.guenego.ocp.gui.install.ConfigWizard;
 public class Agent {
 
 	private static final String AGENT_PROPERTIES_FILE = "agent.properties";
+	private static final String NETWORK_PROPERTIES_FILE = "network.properties";
 	public Id id;
 	private String name;
 
@@ -48,10 +49,13 @@ public class Agent {
 
 	public Storage storage;
 
-	public Server server;
 	public Properties p;
-	public Client client;
 	public Properties network;
+	
+	public Client client;
+	public Server server;
+	
+	UserInterface ui;
 
 	// these two attributes are corelated
 	// all access to them must be synchronized
@@ -123,14 +127,13 @@ public class Agent {
 		storage = new Storage(this);
 		
 		// start an icontray or a commandline listener
-		UserInterface ui = null;
+		this.ui = null;
 		if (p.getProperty("gui", "true").equalsIgnoreCase("true")) {
 			// gui mode
 			ui = new GraphicalUI(this);
 		} else {
 			ui = new CommandLine(this);
 		}
-		(new Thread(ui)).start();
 	}
 
 	public void start() throws JLGException {
@@ -140,7 +143,7 @@ public class Agent {
 				JLG.debug("This is the first agent on the network");
 				if (network == null) {
 					network = new Properties();
-					network.load(new FileInputStream("network.properties"));
+					network.load(new FileInputStream(NETWORK_PROPERTIES_FILE));
 				}
 			} else {
 				// even if network is not null...
@@ -181,6 +184,7 @@ public class Agent {
 				addContact(myself);
 
 			}
+			(new Thread(ui)).start();
 		} catch (Exception e) {
 			throw new JLGException(e);
 		}
@@ -342,7 +346,7 @@ public class Agent {
 			Iterator<Listener> it = server.listenerList.iterator();
 			while (it.hasNext()) {
 				Listener l = it.next();
-				c.addURL(l.getUrl().toString());
+				c.addURL(l.getUrl());
 			}
 			Iterator<Id> itn = storage.nodeSet.iterator();
 			while (itn.hasNext()) {

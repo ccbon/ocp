@@ -2,6 +2,8 @@ package com.guenego.ocp;
 
 import java.io.ByteArrayOutputStream;
 import java.io.Serializable;
+import java.net.InetAddress;
+import java.net.Socket;
 import java.util.Arrays;
 import java.util.Iterator;
 
@@ -31,7 +33,7 @@ public class Protocol {
 		this.agent = agent;
 	}
 
-	public String process(String request) throws InterruptedException {
+	public String process(String request, Socket clientSocket) throws InterruptedException {
 		if (request.equalsIgnoreCase(PING)) {
 			return agent.id.toString();
 		}
@@ -174,6 +176,8 @@ public class Protocol {
 				Iterator<String> it = iterator(request);
 				it.next();
 				Contact contact = (Contact) JLG.deserialize(it.next());
+				InetAddress host = clientSocket.getLocalAddress();
+				contact.updateHost(host);
 				agent.addContact(contact);
 				// serialize it.
 				return SUCCESS;

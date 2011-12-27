@@ -84,4 +84,10 @@ public class CommandLine implements UserInterface {
 				+ "h, help: print this message.\n" + "c, create: create a user");
 
 	}
+
+	@Override
+	public void stop() {
+		// TODO Auto-generated method stub
+		
+	}
 }

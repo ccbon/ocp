@@ -21,13 +21,13 @@ public class Client {
 
 	private Agent agent;
 	private List<Channel> understandableChannelList;
-	private Map<String, Channel> channelMap;
+	private Map<URL, Channel> channelMap;
 
 	public Client(Agent _agent) {
 		agent = _agent;
 		understandableChannelList = new ArrayList<Channel>();
 		understandableChannelList.add(new TCPChannel());
-		channelMap = new HashMap<String, Channel>();
+		channelMap = new HashMap<URL, Channel>();
 	}
 
 	private boolean understand(Channel c) {
@@ -127,7 +127,7 @@ public class Client {
 				if (idc != null) {
 					JLG.debug("we found a pingable sponsor channel");
 					sponsor = new Contact(idc);
-					sponsor.addURL(sUrl);
+					sponsor.addURL(url);
 					getInfo(sponsor);
 					agent.addContact(sponsor);
 
@@ -200,15 +200,16 @@ public class Client {
 		// receiving a response
 		// For that, I need to know the channel to use.
 		// for the time being I know only the TCP channel.
-		Iterator<String> it = contact.sUrlList.iterator();
+		Iterator<URL> it = contact.urlList.iterator();
 		while (it.hasNext()) {
-			String sUrl = it.next();
+			URL url = it.next();
+			
 			Channel channel = null;
-			if (channelMap.containsKey(sUrl)) {
-				channel = channelMap.get(sUrl);
+			if (channelMap.containsKey(url)) {
+				channel = channelMap.get(url);
 			} else {
-				channel = Channel.getInstance(new URL(sUrl));
-				channelMap.put(sUrl, channel);
+				channel = Channel.getInstance(url);
+				channelMap.put(url, channel);
 			}
 			if (understand(channel)) {
 				try {

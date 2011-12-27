@@ -1,6 +1,7 @@
 package com.guenego.ocp;
 
 import java.io.Serializable;
+import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -9,6 +10,7 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 import com.guenego.misc.Id;
+import com.guenego.misc.URL;
 
 public class Contact implements Serializable, Comparable<Contact> {
 
@@ -16,14 +18,14 @@ public class Contact implements Serializable, Comparable<Contact> {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	public List<String> sUrlList;
+	public List<URL> urlList;
 	public Id id;
 	public byte[] publicKey;
 	public SortedSet<Id> nodeIdSet;
 
 	public Contact(Id id) {
 		this.id = id;
-		sUrlList = new ArrayList<String>();
+		urlList = new ArrayList<URL>();
 		nodeIdSet = Collections.synchronizedSortedSet(new TreeSet<Id>());
 	}
 
@@ -31,10 +33,10 @@ public class Contact implements Serializable, Comparable<Contact> {
 	@Override
 	public String toString() {
 		String result = id.toString();
-		Iterator<String> itp = sUrlList.iterator();
+		Iterator<URL> itp = urlList.iterator();
 		while (itp.hasNext()) {
-			String sUrl = itp.next();
-			result += "[" + sUrl.toString() + "]";
+			URL url = itp.next();
+			result += "[" + url.toString() + "]";
 		}
 		return result;
 	}
@@ -48,14 +50,14 @@ public class Contact implements Serializable, Comparable<Contact> {
 	}
 
 
-	public void addURL(String sUrl) {
-		sUrlList.add(sUrl);
+	public void addURL(URL url) {
+		urlList.add(url);
 	}
 
 
 	public void copy(Contact c) {
 		// for all member, replace
-		this.sUrlList = c.sUrlList;
+		this.urlList = c.urlList;
 		this.id = c.id;
 		this.publicKey = c.publicKey;
 		this.nodeIdSet = c.nodeIdSet;
@@ -69,4 +71,12 @@ public class Contact implements Serializable, Comparable<Contact> {
 	}
 
 
+	public void updateHost(InetAddress host) {
+		// foreach url, update the hostname
+		Iterator<URL> itp = urlList.iterator();
+		while (itp.hasNext()) {
+			URL url = itp.next();
+			url.setHost(host.getHostAddress());
+		}
+	}
 }
