@@ -3,21 +3,17 @@ package com.guenego.ocp.gui.console;
 import java.util.Iterator;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeColumn;
+import org.eclipse.swt.widgets.TreeItem;
 
 import com.guenego.misc.URL;
 import com.guenego.ocp.Agent;
 import com.guenego.ocp.Contact;
-import com.guenego.ocp.Listener;
-
-import org.eclipse.swt.widgets.TreeItem;
-import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.layout.GridData;
 
 public class ContactComposite extends Composite {
 

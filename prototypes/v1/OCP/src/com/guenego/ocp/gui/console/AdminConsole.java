@@ -85,7 +85,7 @@ public class AdminConsole extends ApplicationWindow {
 		exitAction = new ExitAction(agent, display);
 		newUserAction = new NewUserAction(agent, display, this);
 		signInAction = new SignInAction(agent, display, this);
-		viewAdminTabAction = new ViewContactTabAction(agent, display, this);
+		viewAdminTabAction = new ViewContactTabAction(this);
 	}
 
 	/**

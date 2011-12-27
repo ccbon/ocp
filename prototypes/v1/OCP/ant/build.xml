@@ -22,6 +22,9 @@
 				<zipfileset excludes="META-INF/* .* *.html plugin.properties" src="${lib.dir}/org.eclipse.equinox.registry_3.5.101.R37x_v20110810-1611.jar" />
 				<zipfileset excludes="META-INF/* .* *.html plugin.properties" src="${lib.dir}/@{archi}/swt.jar" />
 				<zipfileset excludes="META-INF/* .* *.html plugin.properties" src="${lib.dir}/org.eclipse.jface_3.7.0.I20110522-1430.jar" />
+				<zipfileset excludes="META-INF/* .* *.html plugin.properties" src="${lib.dir}/cling-core-1.0.5.jar" />
+				<zipfileset excludes="META-INF/* .* *.html plugin.properties" src="${lib.dir}/cling-support-1.0.5.jar" />
+				<zipfileset excludes="META-INF/* .* *.html plugin.properties" src="${lib.dir}/teleal-common-1.0.13.jar" />
 			</jar>
 			<signjar destDir="${build.dir}" alias="jlg" keystore="C:/cygwin/home/jlouis/jlgkeystore" storepass="jlgpass" preservelastmodified="true" jar="${tmp.dir}/ocp_@{archi}.jar" />
 			<delete dir="${tmp.dir}" />
