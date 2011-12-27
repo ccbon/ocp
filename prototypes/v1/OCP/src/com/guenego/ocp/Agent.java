@@ -340,6 +340,7 @@ public class Agent {
 	public Contact toContact() {
 		// convert the agent public information into a contact
 		Contact c = new Contact(this.id);
+		c.setName(this.name);
 		c.publicKey = this.keyPair.getPublic().getEncoded();
 		// add the listener url and node id information
 		if (server != null) {

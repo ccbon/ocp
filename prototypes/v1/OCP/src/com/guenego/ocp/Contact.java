@@ -22,6 +22,7 @@ public class Contact implements Serializable, Comparable<Contact> {
 	public Id id;
 	public byte[] publicKey;
 	public SortedSet<Id> nodeIdSet;
+	private String name;
 
 	public Contact(Id id) {
 		this.id = id;
@@ -61,7 +62,7 @@ public class Contact implements Serializable, Comparable<Contact> {
 		this.id = c.id;
 		this.publicKey = c.publicKey;
 		this.nodeIdSet = c.nodeIdSet;
-		
+		this.name = c.name;
 	}
 
 
@@ -70,7 +71,6 @@ public class Contact implements Serializable, Comparable<Contact> {
 		return this.id.compareTo(o.id);
 	}
 
-
 	public void updateHost(InetAddress host) {
 		// foreach url, update the hostname
 		Iterator<URL> itp = urlList.iterator();
@@ -78,5 +78,16 @@ public class Contact implements Serializable, Comparable<Contact> {
 			URL url = itp.next();
 			url.setHost(host.getHostAddress());
 		}
+	}
+
+
+	public String getName() {
+		return name;
+	}
+
+
+	public void setName(String name) {
+		this.name = name;
+		
 	}
 }

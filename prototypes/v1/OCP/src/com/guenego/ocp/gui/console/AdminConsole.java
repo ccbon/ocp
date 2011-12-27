@@ -23,6 +23,7 @@ public class AdminConsole extends ApplicationWindow {
 
 	public Agent agent;
 	private ExitAction exitAction;
+	private ViewContactTabAction viewAdminTabAction;
 	private Display display;
 	private NewUserAction newUserAction;
 	private SignInAction signInAction;
@@ -84,6 +85,7 @@ public class AdminConsole extends ApplicationWindow {
 		exitAction = new ExitAction(agent, display);
 		newUserAction = new NewUserAction(agent, display, this);
 		signInAction = new SignInAction(agent, display, this);
+		viewAdminTabAction = new ViewContactTabAction(agent, display, this);
 	}
 
 	/**
@@ -95,11 +97,13 @@ public class AdminConsole extends ApplicationWindow {
 	protected MenuManager createMenuManager() {
 		MenuManager menuBar = new MenuManager("menu");
 		MenuManager fileMenu = new MenuManager("&File");
-		MenuManager helpMenu = new MenuManager("&Help");
 		menuBar.add(fileMenu);
 		
-		MenuManager editMenu = new MenuManager("&Edit");
-		menuBar.add(editMenu);
+		MenuManager viewMenu = new MenuManager("&View");
+		menuBar.add(viewMenu);
+		viewMenu.add(viewAdminTabAction);
+		
+		MenuManager helpMenu = new MenuManager("&Help");
 		menuBar.add(helpMenu);
 		fileMenu.add(exitAction);
 		fileMenu.add(newUserAction);
@@ -142,7 +146,7 @@ public class AdminConsole extends ApplicationWindow {
 		newShell.setSize(new Point(500, 400));
 		newShell.setImage(SWTResourceManager.getImage(GraphicalUI.class, "ocp_icon.png"));
 		super.configureShell(newShell);
-		newShell.setText("OCP Agent Console");
+		newShell.setText("OCP Agent Console - " + agent.getName());
 	}
 
 	/**
@@ -161,5 +165,16 @@ public class AdminConsole extends ApplicationWindow {
 		Composite composite = new UserComposite(tabFolder, SWT.NONE, agent, user);
 		userCTabItem.setControl(composite);
 		tabFolder.setSelection(userCTabItem);
+	}
+
+	public void addContactTab() {
+		CTabItem contactCTabItem = new CTabItem(tabFolder, SWT.NONE);
+		contactCTabItem.setShowClose(true);
+		contactCTabItem.setText("Contacts");
+		
+		Composite composite = new ContactComposite(tabFolder, SWT.NONE, agent);
+		contactCTabItem.setControl(composite);
+		tabFolder.setSelection(contactCTabItem);
+		
 	}
 }
