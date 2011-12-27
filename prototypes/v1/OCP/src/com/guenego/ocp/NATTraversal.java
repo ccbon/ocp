@@ -1,7 +1,8 @@
 package com.guenego.ocp;
 
 import java.net.InetAddress;
-import java.net.UnknownHostException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.teleal.cling.UpnpService;
 import org.teleal.cling.UpnpServiceImpl;
@@ -16,8 +17,8 @@ public class NATTraversal {
 	private UpnpService upnpService;
 	
 	public void map(int port) {
-		// TODO Auto-generated method stub
-		
+		// be silent and try to do only your job...
+		Logger.getLogger("org.teleal.cling").setLevel(Level.OFF);
 		
 		try {
 			addr = InetAddress.getLocalHost();
@@ -38,9 +39,8 @@ public class NATTraversal {
 
 			upnpService.getControlPoint().search();
 
-		} catch (UnknownHostException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (Exception e) {
+			//e.printStackTrace();
 		}
 
 		
@@ -50,8 +50,9 @@ public class NATTraversal {
 		Runtime.getRuntime().addShutdownHook(new Thread() {
 			@Override
 			public void run() {
-				JLG.debug("About to remove nat traversal upnp");
+				JLG.debug("NAT Traversal: hook on exit...");
 				if (upnpService != null) {
+					JLG.debug("About to shutdown the uPnP service.");
 					upnpService.shutdown();
 				}
 			}
