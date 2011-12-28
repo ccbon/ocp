@@ -20,6 +20,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.PublicKey;
 import java.security.spec.X509EncodedKeySpec;
+import java.util.Properties;
 
 public class JLG {
 	static {
@@ -259,6 +260,23 @@ public class JLG {
 	public static boolean isFile(String path) {
 		File file = new File(path);
 		return file.isFile();
+	}
+
+	public static void storeConfig(Properties p, String file) {
+		OutputStream out = null;
+		try {
+			out = new FileOutputStream(new File(file));
+			p.store(out, "no comment");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			try {
+				out.close();
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
+		}
 	}
 
 }

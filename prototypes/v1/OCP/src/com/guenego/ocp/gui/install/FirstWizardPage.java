@@ -15,6 +15,7 @@ public class FirstWizardPage extends WizardPage {
 	protected Text listenerURLText;
 	protected boolean bIsPageComplete = true;
 	public Button onlyClientButton;
+	protected Text agentNameText;
 
 	/**
 	 * Create the wizard.
@@ -74,6 +75,14 @@ public class FirstWizardPage extends WizardPage {
 		Label lblSponsorUrl = new Label(container, SWT.NONE);
 		lblSponsorUrl.setBounds(104, 70, 179, 13);
 		lblSponsorUrl.setText("Listener URL :");
+		
+		Label lblAgentName = new Label(container, SWT.NONE);
+		lblAgentName.setBounds(102, 132, 98, 13);
+		lblAgentName.setText("Agent name :");
+		
+		agentNameText = new Text(container, SWT.BORDER);
+		agentNameText.setText("anonymous");
+		agentNameText.setBounds(102, 151, 177, 19);
 	}
 
 	@Override

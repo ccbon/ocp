@@ -37,8 +37,8 @@ import com.guenego.ocp.gui.install.ConfigWizard;
 
 public class Agent {
 
-	private static final String AGENT_PROPERTIES_FILE = "agent.properties";
-	private static final String NETWORK_PROPERTIES_FILE = "network.properties";
+	public static final String AGENT_PROPERTIES_FILE = "agent.properties";
+	public static final String NETWORK_PROPERTIES_FILE = "network.properties";
 	public Id id;
 	private String name;
 
@@ -136,58 +136,62 @@ public class Agent {
 		}
 	}
 
-	public void start() throws JLGException {
+	public void start() throws Exception {
 		JLG.debug("starting agent " + name);
-		try {
-			if (isFirstAgent()) {
-				JLG.debug("This is the first agent on the network");
-				if (network == null) {
-					network = new Properties();
-					network.load(new FileInputStream(NETWORK_PROPERTIES_FILE));
-				}
-			} else {
-				// even if network is not null...
-				network = client.getNetworkProperties();
+
+		if (isFirstAgent()) {
+			JLG.debug("This is the first agent on the network");
+			if (network == null) {
+				network = new Properties();
+				network.load(new FileInputStream(NETWORK_PROPERTIES_FILE));
 			}
-
-			try {
-				backupNbr = (byte) Integer.parseInt(network.getProperty(
-						"backupNbr", "5"));
-			} catch (NumberFormatException e) {
-				throw new Exception(
-						"network property error: backupNbr must be an integer between 1 and 255.");
-			}
-			if (backupNbr < 1) {
-				throw new Exception(
-						"network property error: backupNbr must be an integer between 1 and 255.");
-			}
-
-			id = generateId();
-			JLG.debug("agent id = " + id);
-
-			// all agent must have a PKI
-			keyPair = generateKeyPair();
-			signatureAlgorithm = network.getProperty("SignatureAlgo",
-					"SHA1withDSA");
-
-			// all users use the same algo for symmetric encryption
-			userSecretKeyFactory = SecretKeyFactory.getInstance(network
-					.getProperty("user.cipher.algo", "PBEWithMD5AndDES"));
-			userCipher = Cipher.getInstance(network.getProperty(
-					"user.cipher.algo", "PBEWithMD5AndDES"));
-
-			if (p.getProperty("server", "yes").equals("yes")) {
-				server = new Server(this);
-				server.start();
-				attach();
-				Contact myself = toContact();
-				addContact(myself);
-
-			}
-			(new Thread(ui)).start();
-		} catch (Exception e) {
-			throw new JLGException(e);
+		} else {
+			// even if network is not null...
+			network = client.getNetworkProperties();
 		}
+
+		String sId = p.getProperty("id");
+		if (sId == null) {
+			id = generateId();
+			p.setProperty("id", id.toString());
+			JLG.storeConfig(p, AGENT_PROPERTIES_FILE);
+		} else {
+			id = new Id(sId);
+		}
+		JLG.debug("agent id = " + id);
+
+		try {
+			backupNbr = (byte) Integer.parseInt(network.getProperty(
+					"backupNbr", "5"));
+		} catch (NumberFormatException e) {
+			throw new Exception(
+					"network property error: backupNbr must be an integer between 1 and 255.");
+		}
+		if (backupNbr < 1) {
+			throw new Exception(
+					"network property error: backupNbr must be an integer between 1 and 255.");
+		}
+
+		// all agent must have a PKI
+		keyPair = generateKeyPair();
+		signatureAlgorithm = network
+				.getProperty("SignatureAlgo", "SHA1withDSA");
+
+		// all users use the same algo for symmetric encryption
+		userSecretKeyFactory = SecretKeyFactory.getInstance(network
+				.getProperty("user.cipher.algo", "PBEWithMD5AndDES"));
+		userCipher = Cipher.getInstance(network.getProperty("user.cipher.algo",
+				"PBEWithMD5AndDES"));
+
+		if (p.getProperty("server", "yes").equals("yes")) {
+			server = new Server(this);
+			server.start();
+			attach();
+			Contact myself = toContact();
+			addContact(myself);
+
+		}
+		(new Thread(ui)).start();
 	}
 
 	private void attach() throws Exception {
@@ -195,7 +199,6 @@ public class Agent {
 	}
 
 	public Id generateId() throws Exception {
-
 		MessageDigest md = MessageDigest.getInstance(network.getProperty(
 				"hash", "SHA-1"));
 		SecureRandom random = SecureRandom.getInstance("SHA1PRNG");

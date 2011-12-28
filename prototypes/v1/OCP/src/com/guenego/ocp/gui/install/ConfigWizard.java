@@ -14,6 +14,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
 import com.guenego.misc.JLG;
+import com.guenego.ocp.Agent;
 
 public class ConfigWizard extends Wizard {
 
@@ -21,6 +22,7 @@ public class ConfigWizard extends Wizard {
 	private String listenerURL = "tcp://localhost:22220";
 	private boolean bIsFirstAgent = false;
 	private String sponsorURL = "tcp://localhost:22222";
+	private String agentName = "anonymous";
 
 	public static void start() {
 		JLG.debug_on();
@@ -79,6 +81,7 @@ public class ConfigWizard extends Wizard {
 		if (firstPage != null) {
 			bIsOnlyClient = firstPage.onlyClientButton.getSelection();
 			listenerURL = firstPage.listenerURLText.getText();
+			agentName  = firstPage.agentNameText.getText();
 		}
 		SecondWizardPage secondPage = (SecondWizardPage) getPage("secondPage");
 		if (secondPage != null) {
@@ -88,6 +91,7 @@ public class ConfigWizard extends Wizard {
 			System.out.println("second page is null");
 		}
 
+		p.setProperty("name", agentName);
 		if (bIsOnlyClient) {
 			p.setProperty("server", "no");
 		} else {
@@ -100,21 +104,7 @@ public class ConfigWizard extends Wizard {
 		} else {
 			p.setProperty("sponsor.1", sponsorURL);
 		}
-
-		OutputStream out = null;
-		try {
-			out = new FileOutputStream(new File("agent.properties"));
-			p.store(out, "no comment");
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} finally {
-			try {
-				out.close();
-			} catch (Exception e) {
-				// TODO: handle exception
-			}
-		}
+		JLG.storeConfig(p, Agent.AGENT_PROPERTIES_FILE);
 
 		if (bIsFirstAgent) {
 			NetworkWizardPage networkPage = (NetworkWizardPage) getPage("networkPage");
@@ -125,20 +115,7 @@ public class ConfigWizard extends Wizard {
 			np.setProperty("SignatureAlgo", "SHA1withDSA");
 			np.setProperty("user.cipher.algo", "PBEWithMD5AndDES");
 			
-
-			try {
-				out = new FileOutputStream(new File("network.properties"));
-				np.store(out, "no comment");
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} finally {
-				try {
-					out.close();
-				} catch (Exception e) {
-					// TODO: handle exception
-				}
-			}
+			JLG.storeConfig(np, Agent.NETWORK_PROPERTIES_FILE);
 
 		}
 
