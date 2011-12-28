@@ -11,9 +11,12 @@ import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.swt.widgets.TreeItem;
 
+import com.guenego.misc.JLG;
 import com.guenego.misc.URL;
 import com.guenego.ocp.Agent;
 import com.guenego.ocp.Contact;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 
 public class ContactComposite extends Composite {
 
@@ -34,10 +37,17 @@ public class ContactComposite extends Composite {
 		composite.pack();
 		
 		Button btnRefresh = new Button(composite, SWT.NONE);
+		final Tree tree = new Tree(this, SWT.BORDER);
+		btnRefresh.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				refresh(tree);
+			}
+		});
 		btnRefresh.setBounds(10, 10, 68, 23);
 		btnRefresh.setText("Refresh");
 		
-		Tree tree = new Tree(this, SWT.BORDER);
+
 		tree.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		tree.setLinesVisible(true);
 		tree.setHeaderVisible(true);
@@ -50,6 +60,7 @@ public class ContactComposite extends Composite {
 	}
 
 	private void refresh(Tree tree) {
+		tree.removeAll();
 		synchronized (agent) {
 			Iterator<Contact> it = agent.getContactIterator();
 			while (it.hasNext()) {

@@ -147,6 +147,8 @@ public class Client {
 	public void getInfo(Contact contact) throws Exception {
 		String response = request(contact, Protocol.GET_CONTACT);
 		Contact c = (Contact) JLG.deserialize(response);
+		String host = contact.urlList.iterator().next().getHost();
+		c.updateHost(host);
 		contact.copy(c);
 	}
 

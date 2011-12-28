@@ -15,9 +15,12 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.wb.swt.SWTResourceManager;
 
+import com.guenego.misc.JLG;
 import com.guenego.ocp.Agent;
 import com.guenego.ocp.User;
 import com.guenego.ocp.gui.GraphicalUI;
+import org.eclipse.swt.events.DisposeListener;
+import org.eclipse.swt.events.DisposeEvent;
 
 public class AdminConsole extends ApplicationWindow {
 
@@ -28,6 +31,7 @@ public class AdminConsole extends ApplicationWindow {
 	private NewUserAction newUserAction;
 	private SignInAction signInAction;
 	private CTabFolder tabFolder;
+	CTabItem contactCTabItem;
 
 	/**
 	 * Create the application window.
@@ -73,7 +77,7 @@ public class AdminConsole extends ApplicationWindow {
 		composite.setBackground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_HIGHLIGHT_SHADOW));
 		tbtmWelcome.setControl(composite);
 		
-
+		tabFolder.setSelection(tbtmWelcome);
 		return container;
 	}
 
@@ -168,9 +172,20 @@ public class AdminConsole extends ApplicationWindow {
 	}
 
 	public void addContactTab() {
-		CTabItem contactCTabItem = new CTabItem(tabFolder, SWT.NONE);
+		// if one contact tab is already present, then just select it.
+		if (contactCTabItem != null && contactCTabItem.isShowing()) {
+			tabFolder.setSelection(contactCTabItem);
+			return;
+		}
+		contactCTabItem = new CTabItem(tabFolder, SWT.NONE);
 		contactCTabItem.setShowClose(true);
 		contactCTabItem.setText("Contacts");
+		contactCTabItem.addDisposeListener(new DisposeListener() {
+			public void widgetDisposed(DisposeEvent arg0) {
+				JLG.debug("dispose");
+				contactCTabItem = null;
+			}
+		});
 		
 		Composite composite = new ContactComposite(tabFolder, SWT.NONE, agent);
 		contactCTabItem.setControl(composite);

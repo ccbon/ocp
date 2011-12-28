@@ -60,14 +60,11 @@ public class Protocol {
 
 		if (request.equalsIgnoreCase(GET_CONTACT)) {
 			try {
-				// le chieur, il se fait attendre...
-				// Thread.sleep(2000);
-				// String response = agent.server.storage.nodeSet.first().id
-				// .toString();
-				// JLG.debug("response(get_resp)=" + response);
-				// return response;
+				Contact c = agent.toContact();
+				
+				
 				JLG.debug("I start to serialize");
-				return JLG.serialize(agent.toContact());
+				return JLG.serialize(c);
 			} catch (Exception e) {
 				JLG.error(e);
 				return ERROR;
@@ -176,8 +173,8 @@ public class Protocol {
 				Iterator<String> it = iterator(request);
 				it.next();
 				Contact contact = (Contact) JLG.deserialize(it.next());
-				InetAddress host = clientSocket.getLocalAddress();
-				contact.updateHost(host);
+				InetAddress host = clientSocket.getInetAddress();
+				contact.updateHost(host.getHostAddress());
 				agent.addContact(contact);
 				// serialize it.
 				return SUCCESS;

@@ -71,12 +71,12 @@ public class Contact implements Serializable, Comparable<Contact> {
 		return this.id.compareTo(o.id);
 	}
 
-	public void updateHost(InetAddress host) {
+	public void updateHost(String host) {
 		// foreach url, update the hostname
 		Iterator<URL> itp = urlList.iterator();
 		while (itp.hasNext()) {
 			URL url = itp.next();
-			url.setHost(host.getHostAddress());
+			url.setHost(host);
 		}
 	}
 

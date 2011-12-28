@@ -29,9 +29,11 @@ import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.PBEParameterSpec;
 
 import com.guenego.misc.ByteUtil;
+import com.guenego.misc.IPAddress;
 import com.guenego.misc.Id;
 import com.guenego.misc.JLG;
 import com.guenego.misc.JLGException;
+import com.guenego.misc.URL;
 import com.guenego.ocp.gui.GraphicalUI;
 import com.guenego.ocp.gui.install.ConfigWizard;
 
@@ -51,10 +53,10 @@ public class Agent {
 
 	public Properties p;
 	public Properties network;
-	
+
 	public Client client;
 	public Server server;
-	
+
 	UserInterface ui;
 
 	// these two attributes are corelated
@@ -74,13 +76,13 @@ public class Agent {
 			}
 			Agent agent = new Agent();
 			agent.start();
-//			Thread.sleep(10000);
-//			agent.stop();
+			// Thread.sleep(10000);
+			// agent.stop();
 		} catch (Exception e) {
 			JLG.error(e);
 		}
 	}
-	
+
 	public Agent() throws Exception {
 		this(null);
 	}
@@ -95,7 +97,7 @@ public class Agent {
 		} else {
 			p = properties;
 		}
-		
+
 		// debugging aspect
 		if (p.getProperty("debug", "true").equalsIgnoreCase("true")) {
 			JLG.debug_on();
@@ -125,7 +127,7 @@ public class Agent {
 
 		// Storage
 		storage = new Storage(this);
-		
+
 		// start an icontray or a commandline listener
 		this.ui = null;
 		if (p.getProperty("gui", "true").equalsIgnoreCase("true")) {
