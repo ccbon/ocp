@@ -7,6 +7,8 @@ import org.eclipse.jface.window.ApplicationWindow;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabItem;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -19,14 +21,13 @@ import com.guenego.misc.JLG;
 import com.guenego.ocp.Agent;
 import com.guenego.ocp.User;
 import com.guenego.ocp.gui.GraphicalUI;
-import org.eclipse.swt.events.DisposeListener;
-import org.eclipse.swt.events.DisposeEvent;
 
 public class AdminConsole extends ApplicationWindow {
 
 	public Agent agent;
 	private ExitAction exitAction;
 	private ViewContactTabAction viewAdminTabAction;
+	private RemoveStorageAction removeStorageAction;
 	private Display display;
 	private NewUserAction newUserAction;
 	private SignInAction signInAction;
@@ -90,6 +91,7 @@ public class AdminConsole extends ApplicationWindow {
 		newUserAction = new NewUserAction(agent, display, this);
 		signInAction = new SignInAction(agent, display, this);
 		viewAdminTabAction = new ViewContactTabAction(this);
+		removeStorageAction = new RemoveStorageAction(agent, display);
 	}
 
 	/**
@@ -112,6 +114,10 @@ public class AdminConsole extends ApplicationWindow {
 		fileMenu.add(exitAction);
 		fileMenu.add(newUserAction);
 		fileMenu.add(signInAction);
+		
+		MenuManager testMenu = new MenuManager("&Test");
+		menuBar.add(testMenu);
+		testMenu.add(removeStorageAction);
 		return menuBar;
 	}
 

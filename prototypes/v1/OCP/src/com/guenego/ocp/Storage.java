@@ -87,4 +87,8 @@ public class Storage {
 		contentMap.remove(address);
 	}
 
+	public void removeAll() {
+		contentMap.clear();
+	}
+
 }

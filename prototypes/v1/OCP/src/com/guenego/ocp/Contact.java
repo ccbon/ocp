@@ -1,7 +1,6 @@
 package com.guenego.ocp;
 
 import java.io.Serializable;
-import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
