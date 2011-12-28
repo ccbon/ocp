@@ -39,8 +39,6 @@ public class RemoveStorageAction extends Action {
 		switch (buttonID) {
 		case SWT.YES:
 			agent.storage.removeAll();
-			display.dispose();
-			System.exit(0);
 		case SWT.NO:
 			// exits here ...
 			break;

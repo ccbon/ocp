@@ -2,7 +2,7 @@
 <project default="main" name="Create Runnable Jar for Project OCP">
 	<property name="root.dir" value="${basedir}/../.." />
 	<property name="lib.dir" value="${root.dir}/OCP/lib" />
-	<property name="build.dir" value="${root.dir}/build" />
+	<property name="build.dir" value="C:/jlouis/build" />
 	<property name="tmp.dir" value="${build.dir}/tmp" />
 
 	<macrodef name="create_ocp_jar">
