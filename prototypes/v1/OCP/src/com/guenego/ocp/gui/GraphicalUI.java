@@ -2,6 +2,8 @@ package com.guenego.ocp.gui;
 
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
@@ -59,6 +61,19 @@ public class GraphicalUI implements UserInterface {
 						JLG.debug("coucou");
 						myMenu.setVisible(true);
 						menu.setVisible(true);
+					}
+				});
+				
+				item.addSelectionListener(new SelectionListener() {
+					
+					@Override
+					public void widgetSelected(SelectionEvent arg0) {
+					}
+					
+					@Override
+					public void widgetDefaultSelected(SelectionEvent arg0) {
+						JLG.debug("item default selected");
+						new OpenConsoleAction(window).run();
 					}
 				});
 

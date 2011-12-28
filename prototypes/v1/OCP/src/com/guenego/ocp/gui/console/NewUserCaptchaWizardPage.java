@@ -13,9 +13,12 @@ import org.eclipse.swt.widgets.Text;
 import com.guenego.misc.JLG;
 import com.guenego.ocp.Agent;
 import com.guenego.ocp.User;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.events.PaintListener;
+import org.eclipse.swt.events.PaintEvent;
 
 public class NewUserCaptchaWizardPage extends WizardPage {
-	private Text text;
+	private Text captchaAnswerText;
 
 	/**
 	 * Create the wizard.
@@ -50,13 +53,14 @@ public class NewUserCaptchaWizardPage extends WizardPage {
 		lblTypeWhatYou.setBounds(84, 133, 164, 13);
 		lblTypeWhatYou.setText("Type what you see");
 
-		text = new Text(container, SWT.BORDER);
-		text.addModifyListener(new ModifyListener() {
+		captchaAnswerText = new Text(container, SWT.BORDER);
+		captchaAnswerText.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent arg0) {
 				getWizard().getContainer().updateButtons();
 			}
 		});
-		text.setBounds(81, 152, 167, 19);
+		captchaAnswerText.setBounds(81, 152, 167, 19);
+		captchaAnswerText.setFocus();
 	}
 
 	@Override
@@ -67,7 +71,7 @@ public class NewUserCaptchaWizardPage extends WizardPage {
 
 	@Override
 	public boolean canFlipToNextPage() {
-		if (text.getText().equals("")) {
+		if (captchaAnswerText.getText().equals("")) {
 			return false;
 		}
 		return super.canFlipToNextPage();
@@ -78,7 +82,7 @@ public class NewUserCaptchaWizardPage extends WizardPage {
 		NewUserWizard wizard = (NewUserWizard) getWizard();
 		Agent agent = wizard.getAgent();
 		agent.createUser(wizard.getUsername(), wizard.getPassword(), 2,
-				wizard.getCaptcha(), text.getText());
+				wizard.getCaptcha(), captchaAnswerText.getText());
 		User user = agent.login(wizard.getUsername(), wizard.getPassword());
 		wizard.getAdminConsole().addUserTab(user);
 		wizard.bCanFinnish = true;

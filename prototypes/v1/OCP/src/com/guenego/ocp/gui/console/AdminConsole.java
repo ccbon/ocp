@@ -31,7 +31,7 @@ public class AdminConsole extends ApplicationWindow {
 	private Display display;
 	private NewUserAction newUserAction;
 	private SignInAction signInAction;
-	private CTabFolder tabFolder;
+	public CTabFolder tabFolder;
 	CTabItem contactCTabItem;
 
 	/**
@@ -132,6 +132,8 @@ public class AdminConsole extends ApplicationWindow {
 		toolBarManager.add(exitAction);
 		toolBarManager.add(newUserAction);
 		toolBarManager.add(signInAction);
+		toolBarManager.add(viewAdminTabAction);
+		toolBarManager.add(removeStorageAction);
 		return toolBarManager;
 	}
 

@@ -6,6 +6,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
@@ -58,6 +59,8 @@ public class NewUserFormWizardPage extends WizardPage {
 			}
 		});
 		passwordText.setBounds(57, 106, 153, 19);
+		container.setTabList(new Control[]{usernameText, passwordText});
+		usernameText.setFocus();
 	}
 	
 	@Override

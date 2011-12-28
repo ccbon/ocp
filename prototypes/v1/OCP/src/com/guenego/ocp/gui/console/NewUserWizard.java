@@ -13,7 +13,7 @@ import com.guenego.ocp.Captcha;
 
 public class NewUserWizard extends Wizard {
 
-	public static void start(Display display, Agent agent, AdminConsole window) {
+	public static void start(Display display, Agent agent, final AdminConsole window) {
 		
 		final Shell shell = new Shell(display);
 		shell.setLayout(new FillLayout());
@@ -36,6 +36,14 @@ public class NewUserWizard extends Wizard {
 					this.close();
 				}
 				super.nextPressed();
+				getContents().setFocus();
+			}
+			
+			@Override
+			protected void finishPressed() {
+				// TODO Auto-generated method stub
+				super.finishPressed();
+				window.tabFolder.setFocus();
 			}
 		};
 		dialog.open();
