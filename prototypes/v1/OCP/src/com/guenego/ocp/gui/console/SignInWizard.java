@@ -14,11 +14,18 @@ import com.guenego.ocp.User;
 
 public class SignInWizard extends Wizard {
 
-	public static void start(Display display, Agent agent, AdminConsole window) {
+	public static void start(Display display, Agent agent, final AdminConsole window) {
 		final Shell shell = new Shell(display);
 		shell.setLayout(new FillLayout());
 
-		WizardDialog dialog = new WizardDialog(shell, new SignInWizard(agent, window));
+		WizardDialog dialog = new WizardDialog(shell, new SignInWizard(agent, window)) {
+			@Override
+			protected void finishPressed() {
+				// TODO Auto-generated method stub
+				super.finishPressed();
+				window.tabFolder.setFocus();
+			}
+		};
 		dialog.open();
 		JLG.debug("about to dispose shell");
 		// shell.dispose();

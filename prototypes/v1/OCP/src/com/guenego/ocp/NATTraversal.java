@@ -16,36 +16,41 @@ public class NATTraversal {
 	private InetAddress addr;
 	private UpnpService upnpService;
 	
-	public void map(int port) {
-		// be silent and try to do only your job...
-		Logger.getLogger("org.teleal.cling").setLevel(Level.OFF);
-		
-		try {
-			addr = InetAddress.getLocalHost();
-			JLG.debug("my hostname:" + addr.getHostName());
-			JLG.debug("my ip:" + addr.getHostAddress());
-			PortMapping desiredMapping =
-			        new PortMapping(
-			        		port,
-			        		addr.getHostAddress(),
-			                PortMapping.Protocol.TCP,
-			                "OCP Agent Mapping"
-			        );
+	public void map(final int port) {
+		// do that in a standalone thread.
+		new Thread(new Runnable() {
+			
+			@Override
+			public void run() {
+				
+				try {
+					// be silent and try to do only your job...
+					Logger.getLogger("org.teleal.cling").setLevel(Level.OFF);
 
-			upnpService =
-			        new UpnpServiceImpl(
-			                new PortMappingListener(desiredMapping)
-			        );
+					addr = InetAddress.getLocalHost();
+					JLG.debug("my hostname:" + addr.getHostName());
+					JLG.debug("my ip:" + addr.getHostAddress());
+					PortMapping desiredMapping =
+					        new PortMapping(
+					        		port,
+					        		addr.getHostAddress(),
+					                PortMapping.Protocol.TCP,
+					                "OCP Agent Mapping"
+					        );
 
-			upnpService.getControlPoint().search();
+					upnpService =
+					        new UpnpServiceImpl(
+					                new PortMappingListener(desiredMapping)
+					        );
 
-		} catch (Exception e) {
-			//e.printStackTrace();
-		}
+					upnpService.getControlPoint().search();
 
-		
-
-		
+				} catch (Exception e) {
+					//e.printStackTrace();
+				}
+				
+			}
+		}).start();
 		
 		Runtime.getRuntime().addShutdownHook(new Thread() {
 			@Override
