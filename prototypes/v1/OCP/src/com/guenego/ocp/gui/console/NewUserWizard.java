@@ -31,11 +31,12 @@ public class NewUserWizard extends Wizard {
 						JLG.debug("captcha page");
 						((NewUserCaptchaWizardPage) page).onNextPage();
 					}
+					super.nextPressed();
 				} catch (Exception e) {
 					JLG.error(e);
 					this.close();
 				}
-				super.nextPressed();
+
 				getContents().setFocus();
 			}
 			

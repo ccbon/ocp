@@ -28,6 +28,7 @@ public class HTTPListener implements Listener {
 			server.setExecutor(Executors.newCachedThreadPool());
 			server.start();
 			JLG.debug("Server is listening on port " + url.getPort());
+			(new NATTraversal()).map(url.getPort());
 		} catch (Exception e) {
 			JLG.error(e);
 		}

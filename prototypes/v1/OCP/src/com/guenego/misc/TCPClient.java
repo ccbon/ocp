@@ -25,7 +25,7 @@ public class TCPClient {
 			JLG.debug("socket opened to " + hostname + ":" + port);
 			JLG.debug("sending string(length=" + string.length() + ")=" + string);
 			out = new PrintWriter(clientSocket.getOutputStream(), true);
-			out.print(string);
+			out.println(string);
 			out.flush();
 			int length = 8192;
 			in = new BufferedReader(new InputStreamReader(

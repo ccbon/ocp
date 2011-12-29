@@ -136,7 +136,7 @@ public class Protocol {
 				Key key = link.getKey();
 				Key targetKey = link.getTargetKey();
 				if (agent.exists(key) || agent.exists(targetKey)) {
-					throw new Exception("it seens that the user already exists.");
+					throw new Exception("it seems that the user already exists.");
 				}
 				
 				agent.setWithLink(null, data, link);

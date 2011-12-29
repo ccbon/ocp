@@ -16,7 +16,6 @@ import com.guenego.ocp.User;
 
 public class UserComposite extends Composite {
 	private Text dirText;
-	private String selectedDir;
 	private Agent agent;
 	private User user;
 
@@ -46,14 +45,13 @@ public class UserComposite extends Composite {
 			public void widgetSelected(SelectionEvent e) {
 				DirectoryDialog directoryDialog = new DirectoryDialog(
 						getShell());
-				directoryDialog.setFilterPath(selectedDir);
+				directoryDialog.setFilterPath(dirText.getText());
 				directoryDialog
 						.setMessage("Please select a directory and click OK");
 
 				String dir = directoryDialog.open();
 				if (dir != null) {
 					dirText.setText(dir);
-					selectedDir = dir;
 				}
 
 			}
@@ -65,7 +63,7 @@ public class UserComposite extends Composite {
 		checkoutButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				FileSystem fs = new FileSystem(user, agent, selectedDir);
+				FileSystem fs = new FileSystem(user, agent, dirText.getText());
 				try {
 					fs.checkout();
 				} catch (Exception e1) {
@@ -80,7 +78,7 @@ public class UserComposite extends Composite {
 		commitButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				FileSystem fs = new FileSystem(user, agent, selectedDir);
+				FileSystem fs = new FileSystem(user, agent, dirText.getText());
 				try {
 					fs.commit();
 				} catch (Exception e1) {

@@ -8,14 +8,12 @@ import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Text;
 
 import com.guenego.misc.JLG;
 import com.guenego.ocp.Agent;
 import com.guenego.ocp.User;
-import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.events.PaintListener;
-import org.eclipse.swt.events.PaintEvent;
 
 public class NewUserCaptchaWizardPage extends WizardPage {
 	private Text captchaAnswerText;
@@ -78,6 +76,7 @@ public class NewUserCaptchaWizardPage extends WizardPage {
 	}
 
 	public void onNextPage() throws Exception {
+		try {
 		JLG.debug("creating the user");
 		NewUserWizard wizard = (NewUserWizard) getWizard();
 		Agent agent = wizard.getAgent();
@@ -86,6 +85,14 @@ public class NewUserCaptchaWizardPage extends WizardPage {
 		User user = agent.login(wizard.getUsername(), wizard.getPassword());
 		wizard.getAdminConsole().addUserTab(user);
 		wizard.bCanFinnish = true;
+		} catch (Exception e) {
+			MessageBox messageBox = new MessageBox(getShell(), SWT.ICON_ERROR
+					| SWT.OK);
+			messageBox.setMessage("Sorry. Cannot create the user.");
+			messageBox.setText("Error !");
+			messageBox.open();
+			throw e;
+		}
 	}
 
 }

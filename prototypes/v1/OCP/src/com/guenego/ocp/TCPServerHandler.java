@@ -25,18 +25,8 @@ public class TCPServerHandler implements TCPServerHandlerInterface {
 			in = new BufferedReader(new InputStreamReader(
 					clientSocket.getInputStream()));
 			out = clientSocket.getOutputStream();
-			String request = new String();
-			char[] cbuf = new char[8192];
-			int readBytes = 8192;
-			while (readBytes == 8192) {
-				readBytes = in.read(cbuf);
-				if (readBytes >= 0) {
-					request += new String(cbuf, 0, readBytes);
-					// JLG.debug("readBytes = " + readBytes + " input = [" +
-					// request
-					// + "]");
-				}
-			}
+			String request = in.readLine();
+			
 			JLG.debug("received(length=" + request.length() + ": " + request);
 			String response = (new Protocol(agent)).process(request, clientSocket);
 			out.write(response.getBytes());
