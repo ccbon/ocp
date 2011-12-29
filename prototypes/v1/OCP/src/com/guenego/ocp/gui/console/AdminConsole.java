@@ -26,6 +26,7 @@ public class AdminConsole extends ApplicationWindow {
 
 	public Agent agent;
 	private ExitAction exitAction;
+	private HelpAction helpAction;
 	private ViewContactTabAction viewAdminTabAction;
 	private RemoveStorageAction removeStorageAction;
 	private Display display;
@@ -92,6 +93,7 @@ public class AdminConsole extends ApplicationWindow {
 		signInAction = new SignInAction(agent, display, this);
 		viewAdminTabAction = new ViewContactTabAction(this);
 		removeStorageAction = new RemoveStorageAction(agent, display);
+		helpAction = new HelpAction();
 	}
 
 	/**
@@ -108,9 +110,6 @@ public class AdminConsole extends ApplicationWindow {
 		MenuManager viewMenu = new MenuManager("&View");
 		menuBar.add(viewMenu);
 		viewMenu.add(viewAdminTabAction);
-		
-		MenuManager helpMenu = new MenuManager("&Help");
-		menuBar.add(helpMenu);
 		fileMenu.add(exitAction);
 		fileMenu.add(newUserAction);
 		fileMenu.add(signInAction);
@@ -118,6 +117,10 @@ public class AdminConsole extends ApplicationWindow {
 		MenuManager testMenu = new MenuManager("&Test");
 		menuBar.add(testMenu);
 		testMenu.add(removeStorageAction);
+		
+		MenuManager helpMenu = new MenuManager("&Help");
+		menuBar.add(helpMenu);
+		helpMenu.add(helpAction);
 		return menuBar;
 	}
 
@@ -134,6 +137,7 @@ public class AdminConsole extends ApplicationWindow {
 		toolBarManager.add(signInAction);
 		toolBarManager.add(viewAdminTabAction);
 		toolBarManager.add(removeStorageAction);
+		toolBarManager.add(helpAction);
 		return toolBarManager;
 	}
 
