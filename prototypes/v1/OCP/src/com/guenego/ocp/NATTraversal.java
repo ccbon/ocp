@@ -57,7 +57,7 @@ public class NATTraversal {
 			public void run() {
 				JLG.debug("NAT Traversal: hook on exit...");
 				if (upnpService != null) {
-					JLG.debug("About to shutdown the uPnP service.");
+					JLG.debug("About to stop nat traversal for port " + port + ".");
 					upnpService.shutdown();
 				}
 			}

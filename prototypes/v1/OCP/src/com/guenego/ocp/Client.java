@@ -179,6 +179,9 @@ public class Client {
 					send(c, message);
 				} catch (DetachedAgentException e) {
 					contactToBeDetached.add(c);
+				} catch (Exception e) {
+					// we don't care for agent that don't understand the sent message.
+					JLG.debug("Contact answered with error: " + e.getMessage());
 				}
 			}
 			Iterator<Contact> it = contactToBeDetached.iterator();
