@@ -13,10 +13,14 @@ import com.guenego.misc.JLG;
 
 public class NATTraversal {
 
-	private InetAddress addr;
 	private UpnpService upnpService;
+	private int port;
 	
-	public void map(final int port) {
+	public NATTraversal(int port) {
+		this.port = port;
+	}
+	
+	public void map() {
 		// do that in a standalone thread.
 		new Thread(new Runnable() {
 			
@@ -27,7 +31,7 @@ public class NATTraversal {
 					// be silent and try to do only your job...
 					Logger.getLogger("org.teleal.cling").setLevel(Level.OFF);
 
-					addr = InetAddress.getLocalHost();
+					InetAddress addr = InetAddress.getLocalHost();
 					JLG.debug("my hostname:" + addr.getHostName());
 					JLG.debug("my ip:" + addr.getHostAddress());
 					PortMapping desiredMapping =
@@ -55,13 +59,25 @@ public class NATTraversal {
 		Runtime.getRuntime().addShutdownHook(new Thread() {
 			@Override
 			public void run() {
+				unmap();
+			}
+		});		
+	}
+
+	public void unmap() {
+		new Thread(new Runnable() {
+			
+			@Override
+			public void run() {
 				JLG.debug("NAT Traversal: hook on exit...");
 				if (upnpService != null) {
 					JLG.debug("About to stop nat traversal for port " + port + ".");
 					upnpService.shutdown();
+					upnpService = null;
 				}
+				
 			}
-		});
+		}).start();
 	}
 
 }

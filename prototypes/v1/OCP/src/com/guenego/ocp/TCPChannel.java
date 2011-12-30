@@ -32,12 +32,12 @@ public class TCPChannel extends Channel {
 	}
 
 	@Override
-	public Id ping() throws JLGException {
+	public Contact getContact() throws JLGException {
 		try {
 			JLG.debug("tcp ping");
-			String response = request(Protocol.PING);
-			Id id = new Id(response);
-			return id;
+			String response = request(Protocol.GET_CONTACT);
+			Contact c = (Contact) JLG.deserialize(response);
+			return c;
 		} catch (ConnectException e) {
 			return null;
 		} catch (Exception e) {

@@ -21,6 +21,7 @@ import com.guenego.ocp.Protocol;
 public class ContactComposite extends Composite {
 
 	private Agent agent;
+	private Tree tree;
 
 	/**
 	 * Create the composite.
@@ -39,11 +40,11 @@ public class ContactComposite extends Composite {
 		composite.pack();
 
 		Button btnRefresh = new Button(composite, SWT.NONE);
-		final Tree tree = new Tree(this, SWT.BORDER);
+		tree = new Tree(this, SWT.BORDER);
 		btnRefresh.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				refresh(tree);
+				refresh();
 			}
 		});
 		btnRefresh.setBounds(10, 10, 68, 23);
@@ -57,10 +58,10 @@ public class ContactComposite extends Composite {
 		trclmnContact.setWidth(343);
 		trclmnContact.setText("Contact");
 
-		refresh(tree);
+		refresh();
 	}
 
-	private void refresh(Tree tree) {
+	public void refresh() {
 		new Thread(new Runnable() {
 
 			@Override
@@ -73,21 +74,19 @@ public class ContactComposite extends Composite {
 			}
 		}).start();
 		tree.removeAll();
-		synchronized (agent) {
-			Iterator<Contact> it = agent.getContactIterator();
-			while (it.hasNext()) {
-				Contact contact = (Contact) it.next();
-				TreeItem contactTreeItem = new TreeItem(tree, SWT.NONE);
-				String text = contact.id + " - " + contact.getName();
-				contactTreeItem.setText(text);
-				Iterator<URL> itu = contact.urlList.iterator();
-				while (itu.hasNext()) {
-					URL url = (URL) itu.next();
-					TreeItem urlTreeItem = new TreeItem(contactTreeItem,
-							SWT.NONE);
-					urlTreeItem.setText(url.toString());
-					contactTreeItem.setExpanded(true);
-				}
+
+		Iterator<Contact> it = agent.getContactIterator();
+		while (it.hasNext()) {
+			Contact contact = (Contact) it.next();
+			TreeItem contactTreeItem = new TreeItem(tree, SWT.NONE);
+			String text = contact.id + " - " + contact.getName();
+			contactTreeItem.setText(text);
+			Iterator<URL> itu = contact.urlList.iterator();
+			while (itu.hasNext()) {
+				URL url = (URL) itu.next();
+				TreeItem urlTreeItem = new TreeItem(contactTreeItem, SWT.NONE);
+				urlTreeItem.setText(url.toString());
+				contactTreeItem.setExpanded(true);
 			}
 		}
 

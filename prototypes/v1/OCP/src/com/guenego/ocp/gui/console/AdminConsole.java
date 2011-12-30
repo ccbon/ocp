@@ -35,6 +35,7 @@ public class AdminConsole extends ApplicationWindow {
 	private SignInAction signInAction;
 	public CTabFolder tabFolder;
 	CTabItem contactCTabItem;
+	private ContactComposite contactComposite;
 
 	/**
 	 * Create the application window.
@@ -189,6 +190,7 @@ public class AdminConsole extends ApplicationWindow {
 		// if one contact tab is already present, then just select it.
 		if (contactCTabItem != null && contactCTabItem.isShowing()) {
 			tabFolder.setSelection(contactCTabItem);
+			contactComposite.refresh();
 			return;
 		}
 		contactCTabItem = new CTabItem(tabFolder, SWT.NONE);
@@ -201,8 +203,8 @@ public class AdminConsole extends ApplicationWindow {
 			}
 		});
 		
-		Composite composite = new ContactComposite(tabFolder, SWT.NONE, agent);
-		contactCTabItem.setControl(composite);
+		contactComposite = new ContactComposite(tabFolder, SWT.NONE, agent);
+		contactCTabItem.setControl(contactComposite);
 		tabFolder.setSelection(contactCTabItem);
 		
 	}

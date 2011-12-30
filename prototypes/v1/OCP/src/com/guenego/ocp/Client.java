@@ -41,15 +41,15 @@ public class Client {
 		return false;
 	}
 
-	public Id ping(Channel channel) throws Exception {
+	public Contact getContact(Channel channel) throws Exception {
 		// I have to request to an agent (sending to it a string and then
 		// receiving a response
 		// For that, I need to know the channel to use.
-		JLG.debug("pinging channel " + channel);
+		JLG.debug("get contact from channel " + channel);
 		if (understand(channel)) {
-			return channel.ping();
+			return channel.getContact();
 		}
-		JLG.warn("channel not pingable. ping return null.");
+		JLG.warn("channel not reachable. get contact returns null.");
 		return null;
 	}
 
@@ -112,7 +112,7 @@ public class Client {
 	}
 
 	private void findSponsor() throws Exception {
-		Contact sponsor = null;
+		
 		// find some contact from your sponsor or die alone...
 		Iterator<String> it = agent.p.stringPropertyNames().iterator();
 		boolean bSponsorInProperty = false;
@@ -123,14 +123,10 @@ public class Client {
 				String sUrl = agent.p.getProperty(key);
 				URL url = new URL(sUrl);
 				Channel channel = Channel.getInstance(url);
-				Id idc = ping(channel);
-				if (idc != null) {
+				Contact sponsor = getContact(channel);
+				if (sponsor != null) {
 					JLG.debug("we found a pingable sponsor channel");
-					sponsor = new Contact(idc);
-					sponsor.addURL(url);
-					getInfo(sponsor);
 					agent.addContact(sponsor);
-
 				} else {
 					JLG.warn("channel not pingable: " + channel);
 				}
@@ -165,31 +161,32 @@ public class Client {
 
 	public void sendAll(String message) throws Exception {
 		// tell all your contact of what happened
-		synchronized (agent) {
-			Set<Contact> contactToBeDetached = new HashSet<Contact>();
-			Iterator<Contact> itc = agent.getContactIterator();
-			while (itc.hasNext()) {
-				Contact c = itc.next();
-				if (c.id.equals(agent.id)) {
-					// do not send the message to myself
-					continue;
-				}
-				try {
-					// we do not care about the response
-					send(c, message);
-				} catch (DetachedAgentException e) {
-					contactToBeDetached.add(c);
-				} catch (Exception e) {
-					// we don't care for agent that don't understand the sent message.
-					JLG.debug("Contact answered with error: " + e.getMessage());
-				}
+
+		Set<Contact> contactToBeDetached = new HashSet<Contact>();
+		Iterator<Contact> itc = agent.getContactIterator();
+		while (itc.hasNext()) {
+			Contact c = itc.next();
+			if (c.id.equals(agent.id)) {
+				// do not send the message to myself
+				continue;
 			}
-			Iterator<Contact> it = contactToBeDetached.iterator();
-			while (it.hasNext()) {
-				Contact c = it.next();
-				detach(c);
+			try {
+				// we do not care about the response
+				send(c, message);
+			} catch (DetachedAgentException e) {
+				contactToBeDetached.add(c);
+			} catch (Exception e) {
+				// we don't care for agent that don't understand the sent
+				// message.
+				JLG.debug("Contact answered with error: " + e.getMessage());
 			}
 		}
+		Iterator<Contact> it = contactToBeDetached.iterator();
+		while (it.hasNext()) {
+			Contact c = it.next();
+			detach(c);
+		}
+
 	}
 
 	public void send(Contact c, String message) throws Exception {
@@ -208,7 +205,7 @@ public class Client {
 		Iterator<URL> it = contact.urlList.iterator();
 		while (it.hasNext()) {
 			URL url = it.next();
-			
+
 			Channel channel = null;
 			if (channelMap.containsKey(url)) {
 				channel = channelMap.get(url);
@@ -221,6 +218,8 @@ public class Client {
 					response = channel.request(string);
 				} catch (ConnectException e) {
 					continue;
+				} catch (Exception e) {
+					JLG.warn(e);
 				}
 				return response;
 			}
@@ -241,8 +240,8 @@ public class Client {
 
 	public void createUser(Contact contact, ObjectData data, Link link,
 			Captcha captcha, String answer) throws Exception {
-		String request = Protocol.message(Protocol.CREATE_USER, data, link, captcha,
-				answer);
+		String request = Protocol.message(Protocol.CREATE_USER, data, link,
+				captcha, answer);
 		send(contact, request);
 	}
 

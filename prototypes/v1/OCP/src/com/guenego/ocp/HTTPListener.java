@@ -12,10 +12,12 @@ public class HTTPListener implements Listener {
 	private URL url;
 	private Agent agent;
 	HttpServer server;
+	private NATTraversal natTraversal;
 
 	public HTTPListener(Agent agent, URL url) {
 		this.url = url;
 		this.agent = agent;
+		natTraversal = new NATTraversal(url.getPort());
 	}
 
 	@Override
@@ -28,7 +30,7 @@ public class HTTPListener implements Listener {
 			server.setExecutor(Executors.newCachedThreadPool());
 			server.start();
 			JLG.debug("Server is listening on port " + url.getPort());
-			(new NATTraversal()).map(url.getPort());
+			natTraversal.map();
 		} catch (Exception e) {
 			JLG.error(e);
 		}
@@ -37,6 +39,7 @@ public class HTTPListener implements Listener {
 	@Override
 	public void stop() {
 		JLG.debug("stopping http server");
+		natTraversal.unmap();
 		server.stop(0);
 
 	}

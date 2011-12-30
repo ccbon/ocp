@@ -38,9 +38,10 @@ public class ExitAction extends Action {
 		int buttonID = messageBox.open();
 		switch (buttonID) {
 		case SWT.YES:
-			agent.stop();
 			display.dispose();
-			System.exit(0);
+			agent.stop();
+			
+			//System.exit(0);
 		case SWT.NO:
 			// exits here ...
 			break;

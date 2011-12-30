@@ -9,6 +9,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -288,7 +289,10 @@ public class Agent {
 	}
 
 	public Iterator<Contact> getContactIterator() {
-		return contactMap.values().iterator();
+		// we return a snapshot and not the modifiable contact list
+		Collection<Contact> values = contactMap.values();
+		LinkedList<Contact> linkedList = new LinkedList<Contact>(values);
+		return linkedList.iterator();
 	}
 
 	public synchronized void removeContact(Contact contact) {

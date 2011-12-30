@@ -19,7 +19,7 @@ public class UnknownChannel extends Channel {
 	}
 
 	@Override
-	public Id ping() throws JLGException {
+	public Contact getContact() throws Exception {
 		return null;
 	}
 	

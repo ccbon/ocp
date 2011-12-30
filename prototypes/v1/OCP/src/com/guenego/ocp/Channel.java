@@ -1,6 +1,5 @@
 package com.guenego.ocp;
 
-import com.guenego.misc.Id;
 import com.guenego.misc.URL;
 
 public abstract class Channel {
@@ -15,6 +14,6 @@ public abstract class Channel {
 	
 	public abstract String request(String string) throws Exception;
 
-	public abstract Id ping() throws Exception;
+	public abstract Contact getContact() throws Exception;
 
 }

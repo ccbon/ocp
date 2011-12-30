@@ -35,7 +35,7 @@ public class Protocol {
 
 	public String process(String request, Socket clientSocket) throws InterruptedException {
 		if (request.equalsIgnoreCase(PING)) {
-			return agent.id.toString();
+			return SUCCESS;
 		}
 
 		if (request.equalsIgnoreCase(NETWORK_PROPERTIES)) {
