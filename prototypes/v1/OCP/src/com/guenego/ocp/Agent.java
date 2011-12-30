@@ -236,9 +236,10 @@ public class Agent {
 		this.network = network;
 	}
 
-	public synchronized Queue<Contact> makeContactQueue(Id key)
+	public Queue<Contact> makeContactQueue(Id key)
 			throws Exception {
 		Queue<Contact> contactQueue = new LinkedList<Contact>();
+		NavigableMap<Id, Contact> nodeMap = new TreeMap<Id, Contact>(this.nodeMap);
 		if (nodeMap.containsKey(key)) {
 			contactQueue.offer(nodeMap.get(key));
 		}
@@ -290,8 +291,7 @@ public class Agent {
 
 	public Iterator<Contact> getContactIterator() {
 		// we return a snapshot and not the modifiable contact list
-		Collection<Contact> values = contactMap.values();
-		LinkedList<Contact> linkedList = new LinkedList<Contact>(values);
+		LinkedList<Contact> linkedList = new LinkedList<Contact>(contactMap.values());
 		return linkedList.iterator();
 	}
 
