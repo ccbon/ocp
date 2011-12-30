@@ -1,6 +1,7 @@
 package com.guenego.ocp.gui.console;
 
 import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.action.StatusLineManager;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.window.ApplicationWindow;
@@ -110,9 +111,10 @@ public class AdminConsole extends ApplicationWindow {
 		MenuManager viewMenu = new MenuManager("&View");
 		menuBar.add(viewMenu);
 		viewMenu.add(viewAdminTabAction);
-		fileMenu.add(exitAction);
-		fileMenu.add(newUserAction);
 		fileMenu.add(signInAction);
+		fileMenu.add(newUserAction);
+		fileMenu.add(new Separator());
+		fileMenu.add(exitAction);
 		
 		MenuManager testMenu = new MenuManager("&Test");
 		menuBar.add(testMenu);
