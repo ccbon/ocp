@@ -1,7 +1,5 @@
 package com.guenego.ocp;
 
-import com.guenego.misc.Id;
-import com.guenego.misc.JLGException;
 import com.guenego.misc.URL;
 
 public class UnknownChannel extends Channel {

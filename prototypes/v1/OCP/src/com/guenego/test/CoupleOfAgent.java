@@ -1,15 +1,9 @@
 package com.guenego.test;
 
-import java.util.Iterator;
 import java.util.Properties;
 
 import com.guenego.misc.JLG;
-import com.guenego.misc.JLGException;
 import com.guenego.ocp.Agent;
-import com.guenego.ocp.Captcha;
-import com.guenego.ocp.FileSystem;
-import com.guenego.ocp.Pointer;
-import com.guenego.ocp.User;
 
 public class CoupleOfAgent {
 	public static void main(String[] args) {

@@ -532,12 +532,12 @@ public class Agent {
 	}
 
 	private Key set(Data data) throws Exception {
-		Key contentKey = data.getKey(this);
-		Address[] address = getAddressList(contentKey);
+		Key key = data.getKey(this);
+		Address[] address = getAddressList(key);
 		for (byte i = 0; i < address.length; i++) {
 			store(address[i], data);
 		}
-		return contentKey;
+		return key;
 	}
 
 	void store(Address address, Content content) throws Exception {

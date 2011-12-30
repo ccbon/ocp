@@ -2,7 +2,6 @@ package com.guenego.ocp;
 
 import java.net.ConnectException;
 
-import com.guenego.misc.Id;
 import com.guenego.misc.JLG;
 import com.guenego.misc.JLGException;
 import com.guenego.misc.TCPClient;
