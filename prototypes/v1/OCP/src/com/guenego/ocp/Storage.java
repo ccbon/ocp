@@ -45,7 +45,7 @@ public class Storage {
 	public void put(Address address, Content data) throws Exception {
 		contentMap.put(address, data);
 		// Rude detachment: now tell to your agent backuper what you have stored.
-		// declare(ADD, address, data);
+		// declare(ADD, address, data.getKey(agent));
 	}
 
 	public Content get(Address address) {

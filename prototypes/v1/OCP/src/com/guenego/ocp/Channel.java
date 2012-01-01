@@ -4,6 +4,16 @@ import com.guenego.misc.URL;
 
 public abstract class Channel {
 
+	protected URL url;
+	
+	public URL getUrl() {
+		return url;
+	}
+
+	public void setUrl(URL url) {
+		this.url = url;
+	}
+
 	public static Channel getInstance(URL url) {
 		if (url.getProtocol().equalsIgnoreCase("tcp")) {
 			return new TCPChannel(url);

@@ -42,7 +42,9 @@ public class Protocol {
 			try {
 				ByteArrayOutputStream out = new ByteArrayOutputStream();
 				agent.network.store(out, "");
-				return out.toString();
+				String result = out.toString();
+				out.close();
+				return result;
 			} catch (Exception e) {
 				return ERROR;
 			}

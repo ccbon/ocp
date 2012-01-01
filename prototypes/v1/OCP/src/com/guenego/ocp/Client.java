@@ -47,7 +47,8 @@ public class Client {
 		// For that, I need to know the channel to use.
 		JLG.debug("get contact from channel " + channel);
 		if (understand(channel)) {
-			return channel.getContact();
+			Contact c = channel.getContact();
+			return c;
 		}
 		JLG.warn("channel not reachable. get contact returns null.");
 		return null;
@@ -140,7 +141,7 @@ public class Client {
 		}
 	}
 
-	public void getInfo(Contact contact) throws Exception {
+	public void enrichContact(Contact contact) throws Exception {
 		String response = request(contact, Protocol.GET_CONTACT);
 		Contact c = (Contact) JLG.deserialize(response);
 		String host = contact.urlList.iterator().next().getHost();

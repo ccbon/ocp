@@ -10,7 +10,7 @@ import com.guenego.misc.URL;
 public class TCPChannel extends Channel {
 
 	private TCPClient tcpClient;
-	private URL url;
+	
 
 	public TCPChannel(URL url) {
 		this.url = url;
@@ -36,6 +36,8 @@ public class TCPChannel extends Channel {
 			JLG.debug("tcp ping");
 			String response = request(Protocol.GET_CONTACT);
 			Contact c = (Contact) JLG.deserialize(response);
+			// we update a host because an agent does not see its public address.
+			c.updateHost(url.getHost());
 			return c;
 		} catch (ConnectException e) {
 			return null;
