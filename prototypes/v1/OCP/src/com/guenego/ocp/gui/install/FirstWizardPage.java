@@ -2,20 +2,23 @@ package com.guenego.ocp.gui.install;
 
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.events.ModifyEvent;
+
+import com.guenego.misc.JLG;
 
 public class FirstWizardPage extends WizardPage {
-	protected Text listenerURLText;
 	protected boolean bIsPageComplete = true;
-	public Button onlyClientButton;
 	protected Text agentNameText;
+	public Text listenerPortText;
+	public Text sponsorText;
+	private Label sponsorLabel;
 
 	/**
 	 * Create the wizard.
@@ -32,57 +35,70 @@ public class FirstWizardPage extends WizardPage {
 	 * @param parent
 	 */
 	public void createControl(Composite parent) {
+		final ConfigWizard wizard = (ConfigWizard) getWizard();
 		Composite container = new Composite(parent, SWT.NULL);
 		container.setTouchEnabled(true);
 
 		setControl(container);
 
-		onlyClientButton = new Button(container, SWT.CHECK);
-		onlyClientButton.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				if (onlyClientButton.getSelection()) {
-					((SecondWizardPage) getWizard().getPage("secondPage")).joinButton.setEnabled(false);
-					((SecondWizardPage) getWizard().getPage("secondPage")).joinButton.setSelection(true);
-					((SecondWizardPage) getWizard().getPage("secondPage")).sponsorURLText.setEnabled(true);
-					listenerURLText.setEnabled(false);
-				} else {
-					((SecondWizardPage) getWizard().getPage("secondPage")).joinButton.setEnabled(true);
-					listenerURLText.setEnabled(true);
-				}
-			}
-		});
-		onlyClientButton.setBounds(102, 29, 292, 16);
-		onlyClientButton.setText("Make this agent only a client.");
-		onlyClientButton.setSelection(false);
-
-		listenerURLText = new Text(container, SWT.BORDER);
-		listenerURLText.addModifyListener(new ModifyListener() {
-			public void modifyText(ModifyEvent arg0) {
-				if (listenerURLText.getText().equals("")) {
-					bIsPageComplete = false;
-					getWizard().getContainer().updateButtons();
-				} else if (bIsPageComplete == false) {
-					bIsPageComplete = true;
-					getWizard().getContainer().updateButtons();
-					
-				}
-			}
-		});
-		listenerURLText.setText("tcp://localhost:22221");
-		listenerURLText.setBounds(104, 89, 175, 19);
-
-		Label lblSponsorUrl = new Label(container, SWT.NONE);
-		lblSponsorUrl.setBounds(104, 70, 179, 13);
-		lblSponsorUrl.setText("Listener URL :");
-		
 		Label lblAgentName = new Label(container, SWT.NONE);
-		lblAgentName.setBounds(102, 132, 98, 13);
+		lblAgentName.setBounds(102, 54, 98, 13);
 		lblAgentName.setText("Agent name :");
-		
+
 		agentNameText = new Text(container, SWT.BORDER);
 		agentNameText.setText("anonymous");
-		agentNameText.setBounds(102, 151, 177, 19);
+		agentNameText.setBounds(102, 73, 177, 19);
+
+		Label lblListeningPort = new Label(container, SWT.NONE);
+		lblListeningPort.setBounds(102, 10, 177, 13);
+		lblListeningPort.setText("Listening port :");
+
+		listenerPortText = new Text(container, SWT.BORDER);
+		listenerPortText.setText(wizard.listenerPort);
+		listenerPortText.addModifyListener(new ModifyListener() {
+			public void modifyText(ModifyEvent arg0) {
+				bIsPageComplete = JLG.isInteger(listenerPortText.getText());
+				wizard.getContainer().updateButtons();
+			}
+		});
+
+		listenerPortText.setBounds(102, 29, 76, 19);
+
+		Button joinOCPButton = new Button(container, SWT.RADIO);
+		joinOCPButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				wizard.bIsFirstAgent = false;
+				sponsorLabel.setEnabled(true);
+				sponsorText.setEnabled(true);
+				wizard.getContainer().updateButtons();
+			}
+		});
+		joinOCPButton.setBounds(102, 133, 177, 16);
+		joinOCPButton.setText("Join an existing OCP network");
+
+		Button createOCPButton = new Button(container, SWT.RADIO);
+		createOCPButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				wizard.bIsFirstAgent = true;
+				sponsorLabel.setEnabled(false);
+				sponsorText.setEnabled(false);
+				wizard.getContainer().updateButtons();
+			}
+		});
+		createOCPButton.setBounds(102, 155, 177, 16);
+		createOCPButton.setText("Create a new OCP network");
+
+		sponsorLabel = new Label(container, SWT.NONE);
+		sponsorLabel.setBounds(102, 192, 177, 13);
+		sponsorLabel.setText("Sponsor URL :");
+		sponsorLabel.setEnabled(false);
+
+		sponsorText = new Text(container, SWT.BORDER);
+		sponsorText.setText("http://localhost:22221");
+		sponsorText.setBounds(102, 211, 177, 19);
+		sponsorText.setEnabled(false);
 	}
 
 	@Override

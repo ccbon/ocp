@@ -9,7 +9,6 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -71,6 +70,9 @@ public class Agent {
 		try {
 			if (!JLG.isFile(AGENT_PROPERTIES_FILE)) {
 				ConfigWizard.start();
+			}
+			if (!JLG.isFile(AGENT_PROPERTIES_FILE)) {
+				return;
 			}
 			Agent agent = new Agent();
 			agent.start();

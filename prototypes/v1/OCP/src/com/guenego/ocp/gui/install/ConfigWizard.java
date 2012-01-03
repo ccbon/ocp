@@ -14,11 +14,9 @@ import com.guenego.ocp.Agent;
 
 public class ConfigWizard extends Wizard {
 
-	private boolean bIsOnlyClient = false;
-	private String listenerURL = "tcp://localhost:22220";
-	private boolean bIsFirstAgent = false;
-	private String sponsorURL = "tcp://localhost:22222";
-	private String agentName = "anonymous";
+	
+	public boolean bIsFirstAgent = false;
+	public String listenerPort = "22222";
 
 	public static void start() {
 		JLG.debug_on();
@@ -30,12 +28,7 @@ public class ConfigWizard extends Wizard {
 
 		WizardDialog dialog = new WizardDialog(shell, new ConfigWizard());
 		dialog.open();
-//		while (!shell.isDisposed()) {
-//			if (!display.readAndDispatch()) {
-//				JLG.debug("sleep...");	
-//				display.sleep();
-//			}
-//		}
+
 		JLG.debug("about to dispose");
 		shell.dispose();
 		display.dispose();
@@ -48,19 +41,13 @@ public class ConfigWizard extends Wizard {
 	@Override
 	public void addPages() {
 		addPage(new FirstWizardPage());
-		addPage(new SecondWizardPage());
 		addPage(new NetworkWizardPage());
 	}
 
 	public IWizardPage getNextPage(IWizardPage page) {
 		if (page.getName().equals("firstPage")) {
-			return getPage("secondPage");
-		} else if (page.getName().equals("secondPage")) {
-			SecondWizardPage secondPage = (SecondWizardPage) page;
-			bIsFirstAgent = !secondPage.joinButton.getSelection();
-			NetworkWizardPage networkPage = (NetworkWizardPage) getPage("networkPage");
 			if (bIsFirstAgent) {
-				return networkPage;
+				return getPage("networkPage");
 			} else {
 				return null;
 			}
@@ -74,31 +61,14 @@ public class ConfigWizard extends Wizard {
 		Properties p = new Properties();
 		FirstWizardPage firstPage = (FirstWizardPage) getPage("firstPage");
 
-		if (firstPage != null) {
-			bIsOnlyClient = firstPage.onlyClientButton.getSelection();
-			listenerURL = firstPage.listenerURLText.getText();
-			agentName  = firstPage.agentNameText.getText();
-		}
-		SecondWizardPage secondPage = (SecondWizardPage) getPage("secondPage");
-		if (secondPage != null) {
-			bIsFirstAgent = !secondPage.joinButton.getSelection();
-			sponsorURL = secondPage.sponsorURLText.getText();
-		} else {
-			System.out.println("second page is null");
-		}
-
-		p.setProperty("name", agentName);
-		if (bIsOnlyClient) {
-			p.setProperty("server", "no");
-		} else {
-			p.setProperty("server", "yes");
-			p.setProperty("server.listener.1", listenerURL);
-		}
+		p.setProperty("name", firstPage.agentNameText.getText());
+		p.setProperty("server", "yes");
+		p.setProperty("server.listener.1", "tcp://localhost:" + firstPage.listenerPortText.getText());
 
 		if (bIsFirstAgent) {
 			p.setProperty("server.isFirstAgent", "yes");
 		} else {
-			p.setProperty("sponsor.1", sponsorURL);
+			p.setProperty("sponsor.1", firstPage.sponsorText.getText());
 		}
 		JLG.storeConfig(p, Agent.AGENT_PROPERTIES_FILE);
 
@@ -110,7 +80,7 @@ public class ConfigWizard extends Wizard {
 			np.setProperty("backupNbr", networkPage.backupNbrText.getText());
 			np.setProperty("SignatureAlgo", "SHA1withDSA");
 			np.setProperty("user.cipher.algo", "PBEWithMD5AndDES");
-			
+
 			JLG.storeConfig(np, Agent.NETWORK_PROPERTIES_FILE);
 
 		}

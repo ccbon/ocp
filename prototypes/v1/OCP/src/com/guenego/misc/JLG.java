@@ -209,7 +209,8 @@ public class JLG {
 		}
 	}
 
-	public static void setBinaryFile(File file, byte[] content) throws Exception {
+	public static void setBinaryFile(File file, byte[] content)
+			throws Exception {
 		OutputStream out = null;
 		try {
 			out = new FileOutputStream(file, false);
@@ -277,6 +278,15 @@ public class JLG {
 				// TODO: handle exception
 			}
 		}
+	}
+
+	public static boolean isInteger(String text) {
+		try {
+			Integer.parseInt(text);
+		} catch (Exception e) {
+			return false;
+		}
+		return true;
 	}
 
 }
