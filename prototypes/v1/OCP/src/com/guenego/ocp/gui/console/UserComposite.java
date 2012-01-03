@@ -40,6 +40,13 @@ public class UserComposite extends Composite {
 		lblLocalDirectory.setText("Local Directory");
 
 		dirText = new Text(this, SWT.BORDER);
+		String defaultDir = System.getProperty("user.home") + "/ocp/" + user.getLogin();
+		File defaultDirFile = new File(defaultDir);
+		try {
+			JLG.mkdir(defaultDir);
+		} catch (Exception e) {
+		}
+		dirText.setText(defaultDirFile.getAbsolutePath());
 		dirText.setBounds(10, 63, 267, 19);
 
 		Button btnBrowse = new Button(this, SWT.NONE);

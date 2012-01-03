@@ -22,6 +22,7 @@ import com.guenego.misc.JLG;
 import com.guenego.ocp.Agent;
 import com.guenego.ocp.User;
 import com.guenego.ocp.gui.GraphicalUI;
+import org.eclipse.swt.browser.Browser;
 
 public class AdminConsole extends ApplicationWindow {
 
@@ -80,6 +81,11 @@ public class AdminConsole extends ApplicationWindow {
 		Composite composite = new Composite(tabFolder, SWT.NONE);
 		composite.setBackground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_HIGHLIGHT_SHADOW));
 		tbtmWelcome.setControl(composite);
+		composite.setLayout(new FillLayout(SWT.HORIZONTAL));
+		
+		Browser browser = new Browser(composite, SWT.NONE);
+		String html = "You can press 'F1' to get help.";
+		browser.setText(html);
 		
 		tabFolder.setSelection(tbtmWelcome);
 		return container;
