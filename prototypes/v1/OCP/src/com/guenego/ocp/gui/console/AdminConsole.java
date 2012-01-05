@@ -37,6 +37,8 @@ public class AdminConsole extends ApplicationWindow {
 	CTabItem contactCTabItem;
 	private ContactComposite contactComposite;
 
+	private CTabItem userCTabItem;
+
 	private ExitAction exitAction;
 	private HelpAction helpAction;
 	private ViewContactTabAction viewAdminTabAction;
@@ -45,7 +47,7 @@ public class AdminConsole extends ApplicationWindow {
 	private SignInAction signInAction;
 	private AboutAction aboutAction;
 	private SignOutAction signOutAction;
-	private CTabItem userCTabItem;
+	private ViewUserTabAction viewUserTabAction;
 
 	/**
 	 * Create the application window.
@@ -116,7 +118,7 @@ public class AdminConsole extends ApplicationWindow {
 		removeStorageAction = new RemoveStorageAction(agent, display);
 		helpAction = new HelpAction();
 		aboutAction = new AboutAction(display);
-
+		viewUserTabAction = new ViewUserTabAction(this);
 	}
 
 	/**
@@ -138,6 +140,7 @@ public class AdminConsole extends ApplicationWindow {
 		MenuManager viewMenu = new MenuManager("&View");
 		menuBar.add(viewMenu);
 		viewMenu.add(viewAdminTabAction);
+		viewMenu.add(viewUserTabAction);
 
 		MenuManager testMenu = new MenuManager("&Test");
 		menuBar.add(testMenu);
@@ -163,6 +166,7 @@ public class AdminConsole extends ApplicationWindow {
 		toolBarManager.add(signInAction);
 		toolBarManager.add(signOutAction);
 		toolBarManager.add(viewAdminTabAction);
+		toolBarManager.add(viewUserTabAction);
 		toolBarManager.add(removeStorageAction);
 		toolBarManager.add(helpAction);
 		toolBarManager.add(aboutAction);
@@ -203,19 +207,30 @@ public class AdminConsole extends ApplicationWindow {
 	}
 
 	public void addUserTab() {
-		userCTabItem = new CTabItem(tabFolder, SWT.NONE);
-		userCTabItem.setShowClose(true);
-		userCTabItem.setText("User: " + user.getLogin());
+		if (userCTabItem == null) {
+			userCTabItem = new CTabItem(tabFolder, SWT.NONE);
+			userCTabItem.addDisposeListener(new DisposeListener() {
+				public void widgetDisposed(DisposeEvent arg0) {
+					JLG.debug("on dispose event");
+					userCTabItem = null;
+				}
+			});
 
-		Composite composite = new UserComposite(tabFolder, SWT.NONE, agent,
-				user);
-		userCTabItem.setControl(composite);
+			userCTabItem.setShowClose(true);
+			userCTabItem.setText("User: " + user.getLogin());
+
+			Composite composite = new UserComposite(tabFolder, SWT.NONE, agent,
+					user);
+			userCTabItem.setControl(composite);
+			
+		}
 		tabFolder.setSelection(userCTabItem);
 	}
 
 	public void removeUserTab() {
 		if (userCTabItem != null && (!userCTabItem.isDisposed())) {
 			userCTabItem.dispose();
+			userCTabItem = null;
 		}
 	}
 
@@ -256,7 +271,9 @@ public class AdminConsole extends ApplicationWindow {
 		signInAction.setEnabled(!bIsConnected);
 		newUserAction.setEnabled(!bIsConnected);
 		
+
 		// connected actions
 		signOutAction.setEnabled(bIsConnected);
+		viewUserTabAction.setEnabled(bIsConnected);
 	}
 }
