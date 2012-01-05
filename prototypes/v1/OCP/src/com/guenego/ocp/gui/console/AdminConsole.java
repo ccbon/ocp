@@ -26,17 +26,26 @@ import org.eclipse.swt.browser.Browser;
 
 public class AdminConsole extends ApplicationWindow {
 
+	private static final String NOT_CONNECTED_STATUS = "No user connected.";
+	private static final String CONNECTED_STATUS = "User connected: ";
+
 	public Agent agent;
+	private User user;
+
+	private Display display;
+	public CTabFolder tabFolder;
+	CTabItem contactCTabItem;
+	private ContactComposite contactComposite;
+
 	private ExitAction exitAction;
 	private HelpAction helpAction;
 	private ViewContactTabAction viewAdminTabAction;
 	private RemoveStorageAction removeStorageAction;
-	private Display display;
 	private NewUserAction newUserAction;
 	private SignInAction signInAction;
-	public CTabFolder tabFolder;
-	CTabItem contactCTabItem;
-	private ContactComposite contactComposite;
+	private AboutAction aboutAction;
+	private SignOutAction signOutAction;
+	private CTabItem userCTabItem;
 
 	/**
 	 * Create the application window.
@@ -50,11 +59,11 @@ public class AdminConsole extends ApplicationWindow {
 		addMenuBar();
 		addStatusLine();
 	}
-	
+
 	@Override
 	public boolean close() {
 		// TODO Auto-generated method stub
-		//return super.close();
+		// return super.close();
 		getShell().setVisible(false);
 		return true;
 	}
@@ -66,28 +75,31 @@ public class AdminConsole extends ApplicationWindow {
 	 */
 	@Override
 	protected Control createContents(Composite parent) {
-		setStatus("\u00A9 JLG Consulting - 2011 - Jean-Louis GUENEGO");
 		Composite container = new Composite(parent, SWT.BORDER);
 		container.setLayout(new FillLayout(SWT.HORIZONTAL));
-		
+
 		tabFolder = new CTabFolder(container, SWT.BORDER);
-		//tabFolder.setSelectionBackground(Display.getCurrent().getSystemColor(SWT.COLOR_TITLE_INACTIVE_BACKGROUND_GRADIENT));
+		// tabFolder.setSelectionBackground(Display.getCurrent().getSystemColor(SWT.COLOR_TITLE_INACTIVE_BACKGROUND_GRADIENT));
 		tabFolder.setSimple(false);
-		
+
 		CTabItem tbtmWelcome = new CTabItem(tabFolder, SWT.NONE);
 		tbtmWelcome.setShowClose(true);
 		tbtmWelcome.setText("Welcome");
-		
+
 		Composite composite = new Composite(tabFolder, SWT.NONE);
-		composite.setBackground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_HIGHLIGHT_SHADOW));
+		composite.setBackground(SWTResourceManager
+				.getColor(SWT.COLOR_WIDGET_HIGHLIGHT_SHADOW));
 		tbtmWelcome.setControl(composite);
 		composite.setLayout(new FillLayout(SWT.HORIZONTAL));
-		
+
 		Browser browser = new Browser(composite, SWT.NONE);
 		String html = "You can press 'F1' to get help.";
 		browser.setText(html);
-		
+
 		tabFolder.setSelection(tbtmWelcome);
+
+		setUser(null);
+
 		return container;
 	}
 
@@ -99,9 +111,12 @@ public class AdminConsole extends ApplicationWindow {
 		exitAction = new ExitAction(agent, display);
 		newUserAction = new NewUserAction(agent, display, this);
 		signInAction = new SignInAction(agent, display, this);
+		signOutAction = new SignOutAction(this);
 		viewAdminTabAction = new ViewContactTabAction(this);
 		removeStorageAction = new RemoveStorageAction(agent, display);
 		helpAction = new HelpAction();
+		aboutAction = new AboutAction(display);
+
 	}
 
 	/**
@@ -114,22 +129,24 @@ public class AdminConsole extends ApplicationWindow {
 		MenuManager menuBar = new MenuManager("menu");
 		MenuManager fileMenu = new MenuManager("&File");
 		menuBar.add(fileMenu);
-		
-		MenuManager viewMenu = new MenuManager("&View");
-		menuBar.add(viewMenu);
-		viewMenu.add(viewAdminTabAction);
 		fileMenu.add(signInAction);
+		fileMenu.add(signOutAction);
 		fileMenu.add(newUserAction);
 		fileMenu.add(new Separator());
 		fileMenu.add(exitAction);
-		
+
+		MenuManager viewMenu = new MenuManager("&View");
+		menuBar.add(viewMenu);
+		viewMenu.add(viewAdminTabAction);
+
 		MenuManager testMenu = new MenuManager("&Test");
 		menuBar.add(testMenu);
 		testMenu.add(removeStorageAction);
-		
+
 		MenuManager helpMenu = new MenuManager("&Help");
 		menuBar.add(helpMenu);
 		helpMenu.add(helpAction);
+		helpMenu.add(aboutAction);
 		return menuBar;
 	}
 
@@ -144,9 +161,11 @@ public class AdminConsole extends ApplicationWindow {
 		toolBarManager.add(exitAction);
 		toolBarManager.add(newUserAction);
 		toolBarManager.add(signInAction);
+		toolBarManager.add(signOutAction);
 		toolBarManager.add(viewAdminTabAction);
 		toolBarManager.add(removeStorageAction);
 		toolBarManager.add(helpAction);
+		toolBarManager.add(aboutAction);
 		return toolBarManager;
 	}
 
@@ -169,7 +188,8 @@ public class AdminConsole extends ApplicationWindow {
 	@Override
 	protected void configureShell(Shell newShell) {
 		newShell.setSize(new Point(500, 400));
-		newShell.setImage(SWTResourceManager.getImage(GraphicalUI.class, "ocp_icon.png"));
+		newShell.setImage(SWTResourceManager.getImage(GraphicalUI.class,
+				"ocp_icon.png"));
 		super.configureShell(newShell);
 		newShell.setText("OCP Agent Console - " + agent.getName());
 	}
@@ -182,14 +202,21 @@ public class AdminConsole extends ApplicationWindow {
 		return new Point(652, 514);
 	}
 
-	public void addUserTab(User user) {
-		CTabItem userCTabItem = new CTabItem(tabFolder, SWT.NONE);
+	public void addUserTab() {
+		userCTabItem = new CTabItem(tabFolder, SWT.NONE);
 		userCTabItem.setShowClose(true);
 		userCTabItem.setText("User: " + user.getLogin());
-		
-		Composite composite = new UserComposite(tabFolder, SWT.NONE, agent, user);
+
+		Composite composite = new UserComposite(tabFolder, SWT.NONE, agent,
+				user);
 		userCTabItem.setControl(composite);
 		tabFolder.setSelection(userCTabItem);
+	}
+
+	public void removeUserTab() {
+		if (userCTabItem != null && (!userCTabItem.isDisposed())) {
+			userCTabItem.dispose();
+		}
 	}
 
 	public void addContactTab() {
@@ -208,10 +235,28 @@ public class AdminConsole extends ApplicationWindow {
 				contactCTabItem = null;
 			}
 		});
-		
+
 		contactComposite = new ContactComposite(tabFolder, SWT.NONE, agent);
 		contactCTabItem.setControl(contactComposite);
 		tabFolder.setSelection(contactCTabItem);
+
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+		boolean bIsConnected = true;
+		if (user == null) {
+			setStatus(NOT_CONNECTED_STATUS);
+			removeUserTab();
+			bIsConnected = false;
+		} else {
+			setStatus(CONNECTED_STATUS + user.getLogin());
+		}
+		// not connected actions
+		signInAction.setEnabled(!bIsConnected);
+		newUserAction.setEnabled(!bIsConnected);
 		
+		// connected actions
+		signOutAction.setEnabled(bIsConnected);
 	}
 }

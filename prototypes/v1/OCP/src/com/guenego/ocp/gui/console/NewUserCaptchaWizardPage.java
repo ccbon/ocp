@@ -77,14 +77,15 @@ public class NewUserCaptchaWizardPage extends WizardPage {
 
 	public void onNextPage() throws Exception {
 		try {
-		JLG.debug("creating the user");
-		NewUserWizard wizard = (NewUserWizard) getWizard();
-		Agent agent = wizard.getAgent();
-		agent.createUser(wizard.getUsername(), wizard.getPassword(), 2,
-				wizard.getCaptcha(), captchaAnswerText.getText());
-		User user = agent.login(wizard.getUsername(), wizard.getPassword());
-		wizard.getAdminConsole().addUserTab(user);
-		wizard.bCanFinnish = true;
+			JLG.debug("creating the user");
+			NewUserWizard wizard = (NewUserWizard) getWizard();
+			Agent agent = wizard.getAgent();
+			agent.createUser(wizard.getUsername(), wizard.getPassword(), 2,
+					wizard.getCaptcha(), captchaAnswerText.getText());
+			User user = agent.login(wizard.getUsername(), wizard.getPassword());
+			wizard.getAdminConsole().setUser(user);
+			wizard.getAdminConsole().addUserTab();
+			wizard.bCanFinnish = true;
 		} catch (Exception e) {
 			MessageBox messageBox = new MessageBox(getShell(), SWT.ICON_ERROR
 					| SWT.OK);

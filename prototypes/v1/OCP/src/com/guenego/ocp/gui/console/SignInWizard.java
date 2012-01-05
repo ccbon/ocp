@@ -55,7 +55,8 @@ public class SignInWizard extends Wizard {
 		try {
 			User user = agent.login(p1.usernameText.getText(),
 					p1.passwordText.getText());
-			window.addUserTab(user);
+			window.setUser(user);
+			window.addUserTab();
 		} catch (Exception e) {
 			MessageBox messageBox = new MessageBox(getShell(), SWT.ICON_ERROR
 					| SWT.OK);
