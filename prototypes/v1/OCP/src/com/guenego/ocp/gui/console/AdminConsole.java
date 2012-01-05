@@ -38,17 +38,24 @@ public class AdminConsole extends ApplicationWindow {
 	private ContactComposite contactComposite;
 
 	private CTabItem userCTabItem;
-
-	private ExitAction exitAction;
-	private HelpAction helpAction;
-	private ViewContactTabAction viewAdminTabAction;
-	private RemoveStorageAction removeStorageAction;
+	private CTabItem userExplorerCTabItem;
+		
+	
 	private NewUserAction newUserAction;
 	private SignInAction signInAction;
-	private AboutAction aboutAction;
 	private SignOutAction signOutAction;
-	private ViewUserTabAction viewUserTabAction;
-
+	private ExitAction exitAction;
+	
+	private ViewContactTabAction viewAdminTabAction;
+	private ViewUserSyncTabAction viewUserSyncTabAction;
+	private ViewUserExplorerTabAction viewUserExplorerTabAction;
+	
+	private RemoveStorageAction removeStorageAction;
+	
+	private HelpAction helpAction;
+	private AboutAction aboutAction;
+	
+	
 	/**
 	 * Create the application window.
 	 */
@@ -118,7 +125,8 @@ public class AdminConsole extends ApplicationWindow {
 		removeStorageAction = new RemoveStorageAction(agent, display);
 		helpAction = new HelpAction();
 		aboutAction = new AboutAction(display);
-		viewUserTabAction = new ViewUserTabAction(this);
+		viewUserSyncTabAction = new ViewUserSyncTabAction(this);
+		viewUserExplorerTabAction = new ViewUserExplorerTabAction(this);
 	}
 
 	/**
@@ -133,6 +141,7 @@ public class AdminConsole extends ApplicationWindow {
 		menuBar.add(fileMenu);
 		fileMenu.add(signInAction);
 		fileMenu.add(signOutAction);
+		fileMenu.add(new Separator());
 		fileMenu.add(newUserAction);
 		fileMenu.add(new Separator());
 		fileMenu.add(exitAction);
@@ -140,7 +149,8 @@ public class AdminConsole extends ApplicationWindow {
 		MenuManager viewMenu = new MenuManager("&View");
 		menuBar.add(viewMenu);
 		viewMenu.add(viewAdminTabAction);
-		viewMenu.add(viewUserTabAction);
+		viewMenu.add(viewUserSyncTabAction);
+		viewMenu.add(viewUserExplorerTabAction);
 
 		MenuManager testMenu = new MenuManager("&Test");
 		menuBar.add(testMenu);
@@ -161,13 +171,17 @@ public class AdminConsole extends ApplicationWindow {
 	@Override
 	protected ToolBarManager createToolBarManager(int style) {
 		ToolBarManager toolBarManager = new ToolBarManager(style);
-		toolBarManager.add(exitAction);
 		toolBarManager.add(newUserAction);
+		toolBarManager.add(new Separator());
 		toolBarManager.add(signInAction);
 		toolBarManager.add(signOutAction);
+		toolBarManager.add(new Separator());
 		toolBarManager.add(viewAdminTabAction);
-		toolBarManager.add(viewUserTabAction);
+		toolBarManager.add(viewUserSyncTabAction);
+		toolBarManager.add(viewUserExplorerTabAction);
+		toolBarManager.add(new Separator());
 		toolBarManager.add(removeStorageAction);
+		toolBarManager.add(new Separator());
 		toolBarManager.add(helpAction);
 		toolBarManager.add(aboutAction);
 		return toolBarManager;
@@ -206,6 +220,29 @@ public class AdminConsole extends ApplicationWindow {
 		return new Point(652, 514);
 	}
 
+	public void addUserExplorerTab() {
+		if (userExplorerCTabItem == null) {
+			userExplorerCTabItem = new CTabItem(tabFolder, SWT.NONE);
+			userExplorerCTabItem.addDisposeListener(new DisposeListener() {
+				public void widgetDisposed(DisposeEvent arg0) {
+					JLG.debug("on dispose event");
+					userExplorerCTabItem = null;
+				}
+			});
+
+			userExplorerCTabItem.setShowClose(true);
+			userExplorerCTabItem.setText("User: " + user.getLogin());
+
+			Composite composite = new UserExplorerComposite(tabFolder, SWT.NONE, agent,
+					user);
+			userExplorerCTabItem.setControl(composite);
+			
+		}
+		tabFolder.setSelection(userExplorerCTabItem);
+		
+	}
+
+	
 	public void addUserTab() {
 		if (userCTabItem == null) {
 			userCTabItem = new CTabItem(tabFolder, SWT.NONE);
@@ -274,6 +311,8 @@ public class AdminConsole extends ApplicationWindow {
 
 		// connected actions
 		signOutAction.setEnabled(bIsConnected);
-		viewUserTabAction.setEnabled(bIsConnected);
+		viewUserSyncTabAction.setEnabled(bIsConnected);
+		viewUserExplorerTabAction.setEnabled(bIsConnected);
 	}
+
 }

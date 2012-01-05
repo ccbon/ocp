@@ -6,15 +6,15 @@ import org.eclipse.swt.graphics.ImageData;
 
 import com.guenego.misc.JLG;
 
-public class ViewUserTabAction extends Action {
+public class ViewUserSyncTabAction extends Action {
 	private AdminConsole window;
 
-	public ViewUserTabAction(AdminConsole adminConsole) {
+	public ViewUserSyncTabAction(AdminConsole adminConsole) {
 		window = adminConsole;
 		setText("User Synchronize@Ctrl+H");
 		setToolTipText("View User Synchronize Tab");
 		try {
-			ImageDescriptor i = ImageDescriptor.createFromImageData(new ImageData(ViewUserTabAction.class.getResourceAsStream("view_user_sync.png")));
+			ImageDescriptor i = ImageDescriptor.createFromImageData(new ImageData(ViewUserSyncTabAction.class.getResourceAsStream("view_user_sync.png")));
 			setImageDescriptor(i);
 		} catch (Exception e) {
 			e.printStackTrace();
