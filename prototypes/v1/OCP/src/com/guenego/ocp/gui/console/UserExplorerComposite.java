@@ -7,10 +7,13 @@ import java.util.Set;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
+import org.eclipse.swt.events.MouseAdapter;
+import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.program.Program;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
@@ -24,8 +27,6 @@ import com.guenego.ocp.Pointer;
 import com.guenego.ocp.Tree;
 import com.guenego.ocp.TreeEntry;
 import com.guenego.ocp.User;
-import org.eclipse.swt.events.MouseAdapter;
-import org.eclipse.swt.events.MouseEvent;
 
 public class UserExplorerComposite extends Composite {
 	private static final String DIRECTORY_SIZE = "";
@@ -94,16 +95,7 @@ public class UserExplorerComposite extends Composite {
 				TableItem[] items = localDirectoryTable.getSelection();
 				if (items.length == 1) {
 					TableItem item = items[0];
-					String type = item.getText(1);
-					JLG.debug("type = " + type);
-					if (type.equals(DIRECTORY_TYPE)) {
-						String name = item.getText(0);
-						if (name.equals(DIRECTORY_PARENT)) {
-							currentLocalDirectory = currentLocalDirectory
-									.getParentFile();
-							reloadLocalDirectoryTable();
-						}
-					}
+					openLocalFile(item);
 				}
 				JLG.debug("table item:" + e.widget.getClass());
 			}
@@ -210,6 +202,24 @@ public class UserExplorerComposite extends Composite {
 
 		sashForm.setWeights(new int[] { 1, 1 });
 
+	}
+
+	protected void openLocalFile(TableItem item) {
+		String name = item.getText(0);
+		String type = item.getText(1);
+		JLG.debug("type = " + type);
+		if (type.equals(DIRECTORY_TYPE)) {
+			
+			if (name.equals(DIRECTORY_PARENT)) {
+				currentLocalDirectory = currentLocalDirectory
+						.getParentFile();
+			} else {
+				currentLocalDirectory = new File(currentLocalDirectory, name);
+			}
+			reloadLocalDirectoryTable();
+		} else {
+			Program.launch(new File(currentLocalDirectory, name).getAbsolutePath());
+		}
 	}
 
 	protected void reloadLocalDirectoryTable() {
