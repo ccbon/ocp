@@ -19,8 +19,8 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.layout.GridData;
 
 public class UserExplorerComposite extends Composite {
-	private Table leftTable;
-	private Table table;
+	private Table localDirectoryTable;
+	private Table remoteDirectoryTable;
 
 	/**
 	 * Create the composite.
@@ -35,64 +35,75 @@ public class UserExplorerComposite extends Composite {
 		SashForm sashForm = new SashForm(this, SWT.NONE);
 		
 		Composite leftComposite = new Composite(sashForm, SWT.NONE);
-		leftComposite.setLayout(new GridLayout(1, false));
+		GridLayout gl_leftComposite = new GridLayout(1, false);
+		gl_leftComposite.marginLeft = 5;
+		gl_leftComposite.marginWidth = 0;
+		gl_leftComposite.horizontalSpacing = 0;
+		leftComposite.setLayout(gl_leftComposite);
 		
-		Label lblCtrucbidule = new Label(leftComposite, SWT.NONE);
-		lblCtrucbidule.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
-		lblCtrucbidule.setText("C:/truc/bidule");
+		Label localDirectoryLabel = new Label(leftComposite, SWT.NONE);
+		localDirectoryLabel.setToolTipText("Local Directory");
+		localDirectoryLabel.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
+		localDirectoryLabel.setText("C:/truc/bidule");
 		
-		leftTable = new Table(leftComposite, SWT.BORDER | SWT.FULL_SELECTION);
-		GridData gd_leftTable = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
-		gd_leftTable.heightHint = 275;
-		leftTable.setLayoutData(gd_leftTable);
-		leftTable.setHeaderVisible(true);
-		leftTable.setLinesVisible(true);
+		localDirectoryTable = new Table(leftComposite, SWT.BORDER | SWT.FULL_SELECTION);
+		GridData gd_localDirectoryTable = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
+		gd_localDirectoryTable.heightHint = 275;
+		localDirectoryTable.setLayoutData(gd_localDirectoryTable);
+		localDirectoryTable.setHeaderVisible(true);
 		
-		TableColumn tblclmnName = new TableColumn(leftTable, SWT.NONE);
-		tblclmnName.setWidth(100);
-		tblclmnName.setText("Name");
+		TableColumn localNameColumn = new TableColumn(localDirectoryTable, SWT.NONE);
+		localNameColumn.setWidth(100);
+		localNameColumn.setText("Name");
 		
-		TableColumn tblclmnType = new TableColumn(leftTable, SWT.NONE);
-		tblclmnType.setWidth(100);
-		tblclmnType.setText("Type");
+		TableColumn localTypeColumn = new TableColumn(localDirectoryTable, SWT.NONE);
+		localTypeColumn.setWidth(100);
+		localTypeColumn.setText("Type");
 		
-		TableColumn tblclmnSize = new TableColumn(leftTable, SWT.NONE);
-		tblclmnSize.setWidth(100);
-		tblclmnSize.setText("Size");
+		TableColumn localSizeColumn = new TableColumn(localDirectoryTable, SWT.NONE);
+		localSizeColumn.setWidth(100);
+		localSizeColumn.setText("Size");
 		
-		TableItem tableItem = new TableItem(leftTable, SWT.NONE);
+		TableItem tableItem = new TableItem(localDirectoryTable, SWT.NONE);
+		tableItem.setText(new String[] {"Directory", "hello", "12"});
 		tableItem.setImage(SWTResourceManager.getImage(UserExplorerComposite.class, "directory.png"));
-		tableItem.setText("Directory");
 		
-		TableItem tableItem_1 = new TableItem(leftTable, SWT.NONE);
+		TableItem tableItem_1 = new TableItem(localDirectoryTable, SWT.NONE);
 		tableItem_1.setImage(SWTResourceManager.getImage(UserExplorerComposite.class, "file.png"));
 		tableItem_1.setText("File");
 		
-		Composite composite = new Composite(sashForm, SWT.NONE);
-		composite.setLayout(new GridLayout(1, false));
+		Composite rightComposite = new Composite(sashForm, SWT.NONE);
+		GridLayout gl_rightComposite = new GridLayout(1, false);
+		gl_rightComposite.marginRight = 5;
+		gl_rightComposite.marginWidth = 0;
+		rightComposite.setLayout(gl_rightComposite);
 		
-		Label label = new Label(composite, SWT.NONE);
-		label.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
-		label.setText("C:/truc/bidule");
+		Label remoteDirectoryLabel = new Label(rightComposite, SWT.NONE);
+		remoteDirectoryLabel.setToolTipText("Remote Directory");
+		remoteDirectoryLabel.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
+		remoteDirectoryLabel.setText("/bidule");
 		
-		table = new Table(composite, SWT.BORDER | SWT.FULL_SELECTION);
-		table.setLinesVisible(true);
-		table.setHeaderVisible(true);
-		GridData gd_table = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
-		gd_table.heightHint = 275;
-		table.setLayoutData(gd_table);
+		remoteDirectoryTable = new Table(rightComposite, SWT.BORDER | SWT.FULL_SELECTION);
+		remoteDirectoryTable.setHeaderVisible(true);
+		GridData gd_remoteDirectoryTable = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
+		gd_remoteDirectoryTable.heightHint = 275;
+		remoteDirectoryTable.setLayoutData(gd_remoteDirectoryTable);
 		
-		TableColumn tableColumn = new TableColumn(table, SWT.NONE);
-		tableColumn.setWidth(100);
-		tableColumn.setText("Name");
+		TableColumn nameColumn = new TableColumn(remoteDirectoryTable, SWT.NONE);
+		nameColumn.setWidth(100);
+		nameColumn.setText("Name");
 		
-		TableColumn tableColumn_1 = new TableColumn(table, SWT.NONE);
-		tableColumn_1.setWidth(100);
-		tableColumn_1.setText("Type");
+		TableColumn typeColumn = new TableColumn(remoteDirectoryTable, SWT.NONE);
+		typeColumn.setWidth(100);
+		typeColumn.setText("Type");
 		
-		TableColumn tableColumn_2 = new TableColumn(table, SWT.NONE);
-		tableColumn_2.setWidth(100);
-		tableColumn_2.setText("Size");
+		TableColumn sizeColumn = new TableColumn(remoteDirectoryTable, SWT.NONE);
+		sizeColumn.setWidth(100);
+		sizeColumn.setText("Size");
+		
+		TableItem tableItem_2 = new TableItem(remoteDirectoryTable, 0);
+		tableItem_2.setText(new String[] {"Directory", "hello", "12"});
+		tableItem_2.setImage(SWTResourceManager.getImage(UserExplorerComposite.class, "directory.png"));
 		sashForm.setWeights(new int[] {1, 1});
 
 	}

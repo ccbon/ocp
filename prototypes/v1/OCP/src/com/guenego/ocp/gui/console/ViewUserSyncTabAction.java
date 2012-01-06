@@ -23,6 +23,6 @@ public class ViewUserSyncTabAction extends Action {
 
 	public void run() {
 		JLG.debug("View User Synchronization.");
-		window.addUserTab();
+		window.addUserSyncTab();
 	}
 }

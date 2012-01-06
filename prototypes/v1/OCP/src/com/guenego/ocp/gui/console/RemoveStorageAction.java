@@ -13,11 +13,11 @@ import com.guenego.ocp.Agent;
 
 public class RemoveStorageAction extends Action {
 	private Agent agent;
-	private Display display;
+	private AdminConsole window;
 
-	public RemoveStorageAction(Agent a, Display d) {
-		agent = a;
-		display = d;
+	public RemoveStorageAction(AdminConsole window) {
+		this.window = window;
+		agent = window.agent;
 		setText("&Remove local storage");
 		setToolTipText("Remove local storage (Test purpose)");
 		try {
@@ -30,7 +30,7 @@ public class RemoveStorageAction extends Action {
 
 	public void run() {
 		JLG.debug("Removing storage...");
-		MessageBox messageBox = new MessageBox(new Shell(display),
+		MessageBox messageBox = new MessageBox(window.getShell(),
 				SWT.ICON_WARNING | SWT.YES | SWT.NO);
 		messageBox
 				.setMessage("This will destroy the storage of this agent. Are you sure ?");
@@ -43,5 +43,6 @@ public class RemoveStorageAction extends Action {
 			// exits here ...
 			break;
 		}
+		window.getShell().setFocus();
 	}
 }

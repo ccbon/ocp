@@ -122,7 +122,7 @@ public class AdminConsole extends ApplicationWindow {
 		signInAction = new SignInAction(agent, display, this);
 		signOutAction = new SignOutAction(this);
 		viewAdminTabAction = new ViewContactTabAction(this);
-		removeStorageAction = new RemoveStorageAction(agent, display);
+		removeStorageAction = new RemoveStorageAction(this);
 		helpAction = new HelpAction();
 		aboutAction = new AboutAction(display);
 		viewUserSyncTabAction = new ViewUserSyncTabAction(this);
@@ -231,7 +231,7 @@ public class AdminConsole extends ApplicationWindow {
 			});
 
 			userExplorerCTabItem.setShowClose(true);
-			userExplorerCTabItem.setText("User: " + user.getLogin());
+			userExplorerCTabItem.setText("Explorer");
 
 			Composite composite = new UserExplorerComposite(tabFolder, SWT.NONE, agent,
 					user);
@@ -243,7 +243,7 @@ public class AdminConsole extends ApplicationWindow {
 	}
 
 	
-	public void addUserTab() {
+	public void addUserSyncTab() {
 		if (userCTabItem == null) {
 			userCTabItem = new CTabItem(tabFolder, SWT.NONE);
 			userCTabItem.addDisposeListener(new DisposeListener() {
@@ -254,7 +254,7 @@ public class AdminConsole extends ApplicationWindow {
 			});
 
 			userCTabItem.setShowClose(true);
-			userCTabItem.setText("User: " + user.getLogin());
+			userCTabItem.setText("Synchronize");
 
 			Composite composite = new UserComposite(tabFolder, SWT.NONE, agent,
 					user);
@@ -268,6 +268,10 @@ public class AdminConsole extends ApplicationWindow {
 		if (userCTabItem != null && (!userCTabItem.isDisposed())) {
 			userCTabItem.dispose();
 			userCTabItem = null;
+		}
+		if (userExplorerCTabItem != null && (!userExplorerCTabItem.isDisposed())) {
+			userExplorerCTabItem.dispose();
+			userExplorerCTabItem = null;
 		}
 	}
 
@@ -300,6 +304,7 @@ public class AdminConsole extends ApplicationWindow {
 		if (user == null) {
 			setStatus(NOT_CONNECTED_STATUS);
 			removeUserTab();
+			
 			bIsConnected = false;
 		} else {
 			setStatus(CONNECTED_STATUS + user.getLogin());
