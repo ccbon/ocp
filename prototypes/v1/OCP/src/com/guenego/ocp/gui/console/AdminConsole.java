@@ -124,7 +124,7 @@ public class AdminConsole extends ApplicationWindow {
 		viewAdminTabAction = new ViewContactTabAction(this);
 		removeStorageAction = new RemoveStorageAction(this);
 		helpAction = new HelpAction();
-		aboutAction = new AboutAction(display);
+		aboutAction = new AboutAction(this);
 		viewUserSyncTabAction = new ViewUserSyncTabAction(this);
 		viewUserExplorerTabAction = new ViewUserExplorerTabAction(this);
 	}

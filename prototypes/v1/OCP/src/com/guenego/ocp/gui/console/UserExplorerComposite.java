@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Set;
 
+import org.eclipse.jface.action.MenuManager;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.events.MouseAdapter;
@@ -15,7 +16,10 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.program.Program;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
@@ -27,6 +31,8 @@ import com.guenego.ocp.Pointer;
 import com.guenego.ocp.Tree;
 import com.guenego.ocp.TreeEntry;
 import com.guenego.ocp.User;
+import org.eclipse.swt.events.MenuDetectListener;
+import org.eclipse.swt.events.MenuDetectEvent;
 
 public class UserExplorerComposite extends Composite {
 	private static final String DIRECTORY_SIZE = "";
@@ -59,6 +65,8 @@ public class UserExplorerComposite extends Composite {
 		super(parent, style);
 		this.agent = agent;
 		this.user = user;
+		final Display display = parent.getDisplay();
+		final Shell shell = parent.getShell();
 
 		currentLocalDirectory = new File(user.getDefaultLocalDir());
 		currentRemoteDirString = "/";
@@ -88,6 +96,17 @@ public class UserExplorerComposite extends Composite {
 
 		localDirectoryTable = new Table(leftComposite, SWT.BORDER
 				| SWT.FULL_SELECTION);
+		localDirectoryTable.addMenuDetectListener(new MenuDetectListener() {
+			public void menuDetected(MenuDetectEvent arg0) {
+				JLG.debug("opening context menu");
+				final MenuManager myMenu = new MenuManager("xxx");
+				final Menu menu = myMenu.createContextMenu(shell);
+				myMenu.add(new CommitAction(display));
+				menu.setEnabled(true);
+				myMenu.setVisible(true);
+				menu.setVisible(true);
+			}
+		});
 		localDirectoryTable.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseDoubleClick(MouseEvent e) {

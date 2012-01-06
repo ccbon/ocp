@@ -10,18 +10,17 @@ import org.eclipse.swt.widgets.Shell;
 
 import com.guenego.misc.JLG;
 
-public class AboutAction extends Action {
+public class CommitAction extends Action {
 
+	private Display display;
 
-	private AdminConsole window;
-
-	public AboutAction(AdminConsole w) {
-		window = w;
+	public CommitAction(Display d) {
+		display = d;
 		setText("&About@Ctrl+F1");
 		setToolTipText("About");
 		try {
 			ImageDescriptor i = ImageDescriptor
-					.createFromImageData(new ImageData(AboutAction.class
+					.createFromImageData(new ImageData(CommitAction.class
 							.getResourceAsStream("about.png")));
 			setImageDescriptor(i);
 		} catch (Exception e) {
@@ -31,14 +30,12 @@ public class AboutAction extends Action {
 
 	public void run() {
 		JLG.debug("About");
-		Display display = window.getShell().getDisplay();
 		MessageBox messageBox = new MessageBox(new Shell(display),
 				SWT.ICON_INFORMATION | SWT.OK);
-		String message = "OCP Agent Prototype v1\n";
-		message += "Jean-Louis GUENEGO - JLG Consulting @ 2011-2012\n";
+		String message = "Commit Action... to be implemented";
 		messageBox.setMessage(message);
-		messageBox.setText("About");
+		messageBox.setText("Commit");
 		messageBox.open();
-		window.getShell().setFocus();
+
 	}
 }
