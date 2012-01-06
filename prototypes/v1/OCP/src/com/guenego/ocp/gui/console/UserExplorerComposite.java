@@ -1,6 +1,7 @@
 package com.guenego.ocp.gui.console;
 
 import java.io.File;
+import java.util.Iterator;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
@@ -16,6 +17,9 @@ import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.wb.swt.SWTResourceManager;
 
 import com.guenego.ocp.Agent;
+import com.guenego.ocp.Pointer;
+import com.guenego.ocp.Tree;
+import com.guenego.ocp.TreeEntry;
 import com.guenego.ocp.User;
 
 public class UserExplorerComposite extends Composite {
@@ -27,8 +31,13 @@ public class UserExplorerComposite extends Composite {
 	private Table localDirectoryTable;
 	private Table remoteDirectoryTable;
 	private File currentLocalDirectory;
+	private String currentRemoteDirString;
+	private Tree currentTree;
+	
 	private Agent agent;
 	private User user;
+	
+	
 
 	/**
 	 * Create the composite.
@@ -42,6 +51,16 @@ public class UserExplorerComposite extends Composite {
 		this.user = user;
 		
 		currentLocalDirectory = new File(user.getDefaultLocalDir());
+		currentRemoteDirString = "/";
+		Pointer p = null;
+		try {
+			p = user.getRootPointer(agent);
+			currentTree = (Tree) agent.get(user, p);
+		} catch (Exception e) {
+			currentTree = new Tree();
+		}
+		
+		
 		setLayout(new FillLayout(SWT.HORIZONTAL));
 		
 		SashForm sashForm = new SashForm(this, SWT.NONE);
@@ -107,7 +126,7 @@ public class UserExplorerComposite extends Composite {
 		Label remoteDirectoryLabel = new Label(rightComposite, SWT.NONE);
 		remoteDirectoryLabel.setToolTipText("Remote Directory");
 		remoteDirectoryLabel.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
-		remoteDirectoryLabel.setText("/bidule");
+		remoteDirectoryLabel.setText(currentRemoteDirString);
 		
 		remoteDirectoryTable = new Table(rightComposite, SWT.BORDER | SWT.FULL_SELECTION);
 		remoteDirectoryTable.setHeaderVisible(true);
@@ -127,9 +146,34 @@ public class UserExplorerComposite extends Composite {
 		sizeColumn.setWidth(100);
 		sizeColumn.setText("Size");
 		
-		TableItem tableItem_2 = new TableItem(remoteDirectoryTable, 0);
-		tableItem_2.setText(new String[] {"Directory", "hello", "12"});
-		tableItem_2.setImage(SWTResourceManager.getImage(UserExplorerComposite.class, "directory.png"));
+		
+		TableItem parentTreetableItem = new TableItem(remoteDirectoryTable, SWT.NONE);
+		parentTreetableItem.setText(new String[] {"..", DIRECTORY_TYPE, DIRECTORY_SIZE});
+		parentTreetableItem.setImage(SWTResourceManager.getImage(UserExplorerComposite.class, "directory.png"));
+
+		Iterator<String> it = currentTree.getEntries().keySet().iterator();
+		while (it.hasNext()) {
+			String name = (String) it.next();
+			TreeEntry te = currentTree.getEntries().get(name);
+			
+			TableItem tableItem = new TableItem(remoteDirectoryTable, SWT.NONE);
+			String type = null;
+			String size = null;
+			Image image = null;
+			if (te.isTree()) {
+				type = DIRECTORY_TYPE;
+				size = "";
+				image = DIRECTORY_ICON;
+			} else {
+				type = FILE_TYPE;
+				size = ""; // not implemented yet
+				image = FILE_ICON;
+			}
+			tableItem.setText(new String[] {name, type, size});
+			tableItem.setImage(image);
+
+		}
+		
 		sashForm.setWeights(new int[] {1, 1});
 
 	}
