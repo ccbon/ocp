@@ -1,5 +1,6 @@
 package com.guenego.ocp;
 
+import java.io.File;
 import java.io.Serializable;
 import java.security.KeyPair;
 import java.security.Signature;
@@ -138,6 +139,10 @@ public class User implements Serializable {
 		Link link = new Link(this, agent, rootKey, data.getKey(agent));
 		agent.setWithLink(this, data, link);
 		
+	}
+
+	public String getDefaultLocalDir() {
+		return System.getProperty("user.home") + File.separator + "ocp" + File.separator + getLogin();
 	}
 
 }

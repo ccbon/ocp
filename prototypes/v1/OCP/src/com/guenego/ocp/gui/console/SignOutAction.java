@@ -3,10 +3,8 @@ package com.guenego.ocp.gui.console;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.graphics.ImageData;
-import org.eclipse.swt.widgets.Display;
 
 import com.guenego.misc.JLG;
-import com.guenego.ocp.Agent;
 
 public class SignOutAction extends Action {
 	private AdminConsole window;

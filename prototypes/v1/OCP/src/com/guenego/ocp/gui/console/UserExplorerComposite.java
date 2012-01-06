@@ -1,26 +1,34 @@
 package com.guenego.ocp.gui.console;
 
-import org.eclipse.swt.custom.CTabFolder;
-import org.eclipse.swt.widgets.Composite;
+import java.io.File;
 
-import com.guenego.ocp.Agent;
-import com.guenego.ocp.User;
-import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
-import org.eclipse.swt.widgets.Tree;
-import org.eclipse.swt.widgets.TreeItem;
+import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.wb.swt.SWTResourceManager;
-import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.layout.GridData;
+
+import com.guenego.ocp.Agent;
+import com.guenego.ocp.User;
 
 public class UserExplorerComposite extends Composite {
+	private static final String DIRECTORY_SIZE = "";
+	private static final String DIRECTORY_TYPE = "Directory";
+	private static final String FILE_TYPE = "File";
+	private static final Image DIRECTORY_ICON = SWTResourceManager.getImage(UserExplorerComposite.class, "directory.png");
+	private static final Image FILE_ICON = SWTResourceManager.getImage(UserExplorerComposite.class, "file.png");
 	private Table localDirectoryTable;
 	private Table remoteDirectoryTable;
+	private File currentLocalDirectory;
+	private Agent agent;
+	private User user;
 
 	/**
 	 * Create the composite.
@@ -30,6 +38,10 @@ public class UserExplorerComposite extends Composite {
 	public UserExplorerComposite(Composite parent, int style, Agent agent,
 			User user) {
 		super(parent, style);
+		this.agent = agent;
+		this.user = user;
+		
+		currentLocalDirectory = new File(user.getDefaultLocalDir());
 		setLayout(new FillLayout(SWT.HORIZONTAL));
 		
 		SashForm sashForm = new SashForm(this, SWT.NONE);
@@ -44,7 +56,7 @@ public class UserExplorerComposite extends Composite {
 		Label localDirectoryLabel = new Label(leftComposite, SWT.NONE);
 		localDirectoryLabel.setToolTipText("Local Directory");
 		localDirectoryLabel.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
-		localDirectoryLabel.setText("C:/truc/bidule");
+		localDirectoryLabel.setText(currentLocalDirectory.getAbsolutePath());
 		
 		localDirectoryTable = new Table(leftComposite, SWT.BORDER | SWT.FULL_SELECTION);
 		GridData gd_localDirectoryTable = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
@@ -63,14 +75,28 @@ public class UserExplorerComposite extends Composite {
 		TableColumn localSizeColumn = new TableColumn(localDirectoryTable, SWT.NONE);
 		localSizeColumn.setWidth(100);
 		localSizeColumn.setText("Size");
-		
-		TableItem tableItem = new TableItem(localDirectoryTable, SWT.NONE);
-		tableItem.setText(new String[] {"Directory", "hello", "12"});
-		tableItem.setImage(SWTResourceManager.getImage(UserExplorerComposite.class, "directory.png"));
-		
-		TableItem tableItem_1 = new TableItem(localDirectoryTable, SWT.NONE);
-		tableItem_1.setImage(SWTResourceManager.getImage(UserExplorerComposite.class, "file.png"));
-		tableItem_1.setText("File");
+
+		TableItem parentDirtableItem = new TableItem(localDirectoryTable, SWT.NONE);
+		parentDirtableItem.setText(new String[] {"..", DIRECTORY_TYPE, DIRECTORY_SIZE});
+		parentDirtableItem.setImage(SWTResourceManager.getImage(UserExplorerComposite.class, "directory.png"));
+
+		for (File f : currentLocalDirectory.listFiles()) {
+			TableItem tableItem = new TableItem(localDirectoryTable, SWT.NONE);
+			String type = null;
+			String size = null;
+			Image image = null;
+			if (f.isDirectory()) {
+				type = DIRECTORY_TYPE;
+				size = "";
+				image = DIRECTORY_ICON;
+			} else {
+				type = FILE_TYPE;
+				size = (f.length() / 1024) + " KB";
+				image = FILE_ICON;
+			}
+			tableItem.setText(new String[] {f.getName(), type, size});
+			tableItem.setImage(image);
+		}
 		
 		Composite rightComposite = new Composite(sashForm, SWT.NONE);
 		GridLayout gl_rightComposite = new GridLayout(1, false);

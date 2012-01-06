@@ -6,6 +6,7 @@ import org.eclipse.jface.action.StatusLineManager;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.window.ApplicationWindow;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.events.DisposeEvent;
@@ -22,7 +23,6 @@ import com.guenego.misc.JLG;
 import com.guenego.ocp.Agent;
 import com.guenego.ocp.User;
 import com.guenego.ocp.gui.GraphicalUI;
-import org.eclipse.swt.browser.Browser;
 
 public class AdminConsole extends ApplicationWindow {
 

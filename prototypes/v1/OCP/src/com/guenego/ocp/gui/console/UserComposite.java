@@ -40,7 +40,7 @@ public class UserComposite extends Composite {
 		lblLocalDirectory.setText("Local Directory");
 
 		dirText = new Text(this, SWT.BORDER);
-		String defaultDir = System.getProperty("user.home") + "/ocp/" + user.getLogin();
+		String defaultDir = user.getDefaultLocalDir();
 		File defaultDirFile = new File(defaultDir);
 		try {
 			JLG.mkdir(defaultDir);
