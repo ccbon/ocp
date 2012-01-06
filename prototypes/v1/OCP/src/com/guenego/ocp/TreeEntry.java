@@ -6,7 +6,9 @@ public class TreeEntry implements Serializable {
 
 	private Pointer p;
 	private int type;
-	public TreeEntry(Pointer p, int type) {
+	private String name;
+	public TreeEntry(String name, Pointer p, int type) {
+		this.setName(name);
 		this.p = p;
 		this.type = type;
 	}
@@ -22,8 +24,16 @@ public class TreeEntry implements Serializable {
 	public Pointer getPointer() {
 		return p;
 	}
+	
+	
 	public boolean isFile() {
 		return type == FILE;
+	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
 	}
 
 }

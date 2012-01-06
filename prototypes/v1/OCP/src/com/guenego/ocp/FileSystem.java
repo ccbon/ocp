@@ -32,19 +32,18 @@ public class FileSystem {
 	}
 
 	private void checkout(Tree rootTree, File file) throws Exception {
-		Iterator<String> it = rootTree.getEntries().keySet().iterator();
+		Iterator<TreeEntry> it = rootTree.getEntries().iterator();
 		while (it.hasNext()) {
-			String name = (String) it.next();
-			TreeEntry te = rootTree.getEntries().get(name);
+			TreeEntry te = it.next();
 			Pointer p = te.getPointer();
 			if (te.isTree()) {
-				File dirFile = new File(file, name);
+				File dirFile = new File(file, te.getName());
 				dirFile.mkdir();
 				
 				Tree tree = (Tree) agent.get(user, p);
 				checkout(tree, dirFile);
 			} else if (te.isFile()){
-				File subFile = new File(file, name);
+				File subFile = new File(file, te.getName());
 				byte[] content = (byte[]) agent.getBytes(user, p);
 				setBinaryFile(subFile, content);
 			}

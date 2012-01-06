@@ -1,8 +1,8 @@
 package com.guenego.ocp;
 
 import java.io.Serializable;
-import java.util.NavigableMap;
-import java.util.TreeMap;
+import java.util.HashSet;
+import java.util.Set;
 
 public class Tree implements Serializable {
 
@@ -11,11 +11,11 @@ public class Tree implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private NavigableMap<String, TreeEntry> entryMap;
+	private Set<TreeEntry> entrySet;
 	
 	
 	public Tree() {
-		entryMap = new TreeMap<String, TreeEntry>();
+		entrySet = new HashSet<TreeEntry>();
 	}
 
 	public void checkout(FileSystem fileSystem) {
@@ -24,17 +24,16 @@ public class Tree implements Serializable {
 	}
 
 	public void addFile(String name, Pointer p) {
-		entryMap.put(name, new TreeEntry(p, TreeEntry.FILE));
+		entrySet.add(new TreeEntry(name, p, TreeEntry.FILE));
 		
 	}
 
 	public void addTree(String name, Pointer p) {
-		entryMap.put(name, new TreeEntry(p, TreeEntry.TREE));
+		entrySet.add(new TreeEntry(name, p, TreeEntry.TREE));
 	}
 
-	public NavigableMap<String, TreeEntry> getEntries() {
-		return entryMap;
+	public Set<TreeEntry> getEntries() {
+		return entrySet;
 	}
-
 
 }
