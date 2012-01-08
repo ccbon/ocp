@@ -35,6 +35,8 @@ import com.guenego.ocp.Pointer;
 import com.guenego.ocp.Tree;
 import com.guenego.ocp.TreeEntry;
 import com.guenego.ocp.User;
+import org.eclipse.swt.events.KeyAdapter;
+import org.eclipse.swt.events.KeyEvent;
 
 public class UserExplorerComposite extends Composite {
 	private static final String DIRECTORY_SIZE = "";
@@ -46,7 +48,7 @@ public class UserExplorerComposite extends Composite {
 	private static final Image FILE_ICON = SWTResourceManager.getImage(
 			UserExplorerComposite.class, "file.png");
 
-	private Table localDirectoryTable;
+	public Table localDirectoryTable;
 	private Table remoteDirectoryTable;
 	private File currentLocalDirectory;
 	private LinkedList<Tree> treeList;
@@ -57,7 +59,6 @@ public class UserExplorerComposite extends Composite {
 	private User user;
 	private Label localDirectoryLabel;
 	private Label remoteDirectoryLabel;
-
 
 	/**
 	 * Create the composite.
@@ -102,15 +103,25 @@ public class UserExplorerComposite extends Composite {
 
 		localDirectoryTable = new Table(leftComposite, SWT.BORDER
 				| SWT.FULL_SELECTION);
+		localDirectoryTable.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if (e.keyCode == SWT.KEYPAD_CR || e.keyCode == (int) '\r') {
+					(new OpenFileAction(UserExplorerComposite.this)).run();
+				}
+			}
+		});
 		localDirectoryTable.addMenuDetectListener(new MenuDetectListener() {
 			public void menuDetected(MenuDetectEvent arg0) {
-				JLG.debug("opening context menu");
-				final MenuManager myMenu = new MenuManager("xxx");
-				final Menu menu = myMenu.createContextMenu(shell);
-				myMenu.add(new CommitAction(display));
-				menu.setEnabled(true);
-				myMenu.setVisible(true);
-				menu.setVisible(true);
+				if (localDirectoryTable.getSelection().length > 0) {
+					JLG.debug("opening context menu");
+					final MenuManager myMenu = new MenuManager("xxx");
+					final Menu menu = myMenu.createContextMenu(shell);
+					myMenu.add(new OpenFileAction(UserExplorerComposite.this));
+					menu.setEnabled(true);
+					myMenu.setVisible(true);
+					menu.setVisible(true);
+				}
 			}
 		});
 		localDirectoryTable.addMouseListener(new MouseAdapter() {
@@ -204,7 +215,8 @@ public class UserExplorerComposite extends Composite {
 			String name = item.getText(0);
 			if (name.equals(DIRECTORY_PARENT)) {
 				currentTree = treeList.removeLast();
-				currentRemoteDirString = currentRemoteDirString.substring(0,  currentRemoteDirString.lastIndexOf("/") + 1);
+				currentRemoteDirString = currentRemoteDirString.substring(0,
+						currentRemoteDirString.lastIndexOf("/") + 1);
 				if (currentLocalDirectory.equals("")) {
 					currentRemoteDirString = "/";
 				}

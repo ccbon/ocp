@@ -117,7 +117,7 @@ public class AdminConsole extends ApplicationWindow {
 	 */
 	private void createActions() {
 		// Create the actions
-		exitAction = new ExitAction(agent, display);
+		exitAction = new ExitAction(agent, display, this);
 		newUserAction = new NewUserAction(agent, display, this);
 		signInAction = new SignInAction(agent, display, this);
 		signOutAction = new SignOutAction(this);

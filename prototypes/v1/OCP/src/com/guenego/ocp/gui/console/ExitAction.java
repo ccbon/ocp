@@ -14,14 +14,19 @@ import com.guenego.ocp.Agent;
 public class ExitAction extends Action {
 	private Agent agent;
 	private Display display;
+	private AdminConsole window;
+	
 
-	public ExitAction(Agent a, Display d) {
+	public ExitAction(Agent a, Display d, AdminConsole w) {
 		agent = a;
 		display = d;
+		window = w;
 		setText("E&xit@Ctrl+W");
 		setToolTipText("Exit the application");
 		try {
-			ImageDescriptor i = ImageDescriptor.createFromImageData(new ImageData(ExitAction.class.getResourceAsStream("exit.png")));
+			ImageDescriptor i = ImageDescriptor
+					.createFromImageData(new ImageData(ExitAction.class
+							.getResourceAsStream("exit.png")));
 			setImageDescriptor(i);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -40,10 +45,12 @@ public class ExitAction extends Action {
 		case SWT.YES:
 			display.dispose();
 			agent.stop();
-			
-			//System.exit(0);
+			break;
 		case SWT.NO:
-			// exits here ...
+			Shell shell = window.getShell();
+			if (shell != null) {
+				shell.setFocus();
+			}
 			break;
 		}
 	}
