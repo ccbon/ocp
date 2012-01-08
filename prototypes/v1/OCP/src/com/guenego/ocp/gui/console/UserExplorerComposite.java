@@ -3,11 +3,15 @@ package com.guenego.ocp.gui.console;
 import java.io.File;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.Set;
 
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
+import org.eclipse.swt.events.MenuDetectEvent;
+import org.eclipse.swt.events.MenuDetectListener;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.graphics.Image;
@@ -31,8 +35,6 @@ import com.guenego.ocp.Pointer;
 import com.guenego.ocp.Tree;
 import com.guenego.ocp.TreeEntry;
 import com.guenego.ocp.User;
-import org.eclipse.swt.events.MenuDetectListener;
-import org.eclipse.swt.events.MenuDetectEvent;
 
 public class UserExplorerComposite extends Composite {
 	private static final String DIRECTORY_SIZE = "";
@@ -47,12 +49,15 @@ public class UserExplorerComposite extends Composite {
 	private Table localDirectoryTable;
 	private Table remoteDirectoryTable;
 	private File currentLocalDirectory;
-	private String currentRemoteDirString;
+	private LinkedList<Tree> treeList;
 	private Tree currentTree;
+	private String currentRemoteDirString;
 
 	private Agent agent;
 	private User user;
 	private Label localDirectoryLabel;
+	private Label remoteDirectoryLabel;
+
 
 	/**
 	 * Create the composite.
@@ -69,6 +74,7 @@ public class UserExplorerComposite extends Composite {
 		final Shell shell = parent.getShell();
 
 		currentLocalDirectory = new File(user.getDefaultLocalDir());
+		treeList = new LinkedList<Tree>();
 		currentRemoteDirString = "/";
 		Pointer p = null;
 		try {
@@ -148,14 +154,28 @@ public class UserExplorerComposite extends Composite {
 		gl_rightComposite.marginWidth = 0;
 		rightComposite.setLayout(gl_rightComposite);
 
-		Label remoteDirectoryLabel = new Label(rightComposite, SWT.NONE);
+		remoteDirectoryLabel = new Label(rightComposite, SWT.NONE);
 		remoteDirectoryLabel.setToolTipText("Remote Directory");
 		remoteDirectoryLabel.setLayoutData(new GridData(SWT.FILL, SWT.FILL,
 				true, false, 1, 1));
-		remoteDirectoryLabel.setText(currentRemoteDirString);
 
 		remoteDirectoryTable = new Table(rightComposite, SWT.BORDER
 				| SWT.FULL_SELECTION);
+		remoteDirectoryTable.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseDoubleClick(MouseEvent e) {
+				JLG.debug("double click");
+				TableItem[] items = remoteDirectoryTable.getSelection();
+				JLG.debug("length=" + items.length);
+				if (items.length == 1) {
+					JLG.debug("length=1");
+					TableItem item = items[0];
+					openRemoteFile(item);
+				}
+				JLG.debug("table item:" + e.widget.getClass());
+
+			}
+		});
 		remoteDirectoryTable.setHeaderVisible(true);
 		GridData gd_remoteDirectoryTable = new GridData(SWT.FILL, SWT.FILL,
 				true, true, 1, 1);
@@ -174,16 +194,52 @@ public class UserExplorerComposite extends Composite {
 		sizeColumn.setWidth(100);
 		sizeColumn.setText("Size");
 
-		TableItem parentTreetableItem = new TableItem(remoteDirectoryTable,
-				SWT.NONE);
-		parentTreetableItem.setText(new String[] { DIRECTORY_PARENT,
-				DIRECTORY_TYPE, DIRECTORY_SIZE });
-		parentTreetableItem.setImage(SWTResourceManager.getImage(
-				UserExplorerComposite.class, "directory.png"));
+		reloadRemoteDirectoryTable();
+		sashForm.setWeights(new int[] { 1, 1 });
+
+	}
+
+	protected void openRemoteFile(TableItem item) {
+		try {
+			String name = item.getText(0);
+			if (name.equals(DIRECTORY_PARENT)) {
+				currentTree = treeList.removeLast();
+				currentRemoteDirString = currentRemoteDirString.substring(0,  currentRemoteDirString.lastIndexOf("/") + 1);
+				if (currentLocalDirectory.equals("")) {
+					currentRemoteDirString = "/";
+				}
+				reloadRemoteDirectoryTable();
+			} else {
+				TreeEntry te = (TreeEntry) item.getData();
+				JLG.debug("Try to open " + te.getName());
+				if (te.isTree()) {
+					Pointer p = te.getPointer();
+					treeList.addLast(currentTree);
+					currentTree = (Tree) agent.get(user, p);
+					currentRemoteDirString += te.getName();
+				}
+				reloadRemoteDirectoryTable();
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+	}
+
+	private void reloadRemoteDirectoryTable() {
+		remoteDirectoryLabel.setText(currentRemoteDirString);
+		// first make sure the table content is empty.
+		remoteDirectoryTable.removeAll();
+
+		if (!treeList.isEmpty()) {
+			TableItem parentTreetableItem = new TableItem(remoteDirectoryTable,
+					SWT.NONE);
+			parentTreetableItem.setText(new String[] { DIRECTORY_PARENT,
+					DIRECTORY_TYPE, DIRECTORY_SIZE });
+			parentTreetableItem.setImage(DIRECTORY_ICON);
+		}
 
 		Set<TreeEntry> set = currentTree.getEntries();
 		// Create an array containing the elements in a set
-		Object[] objectArray = set.toArray();
 		TreeEntry[] array = (TreeEntry[]) set
 				.toArray(new TreeEntry[set.size()]);
 		// Order
@@ -202,6 +258,7 @@ public class UserExplorerComposite extends Composite {
 		for (TreeEntry te : array) {
 
 			TableItem tableItem = new TableItem(remoteDirectoryTable, SWT.NONE);
+			tableItem.setData(te);
 			String type = null;
 			String size = null;
 			Image image = null;
@@ -219,8 +276,6 @@ public class UserExplorerComposite extends Composite {
 
 		}
 
-		sashForm.setWeights(new int[] { 1, 1 });
-
 	}
 
 	protected void openLocalFile(TableItem item) {
@@ -228,16 +283,16 @@ public class UserExplorerComposite extends Composite {
 		String type = item.getText(1);
 		JLG.debug("type = " + type);
 		if (type.equals(DIRECTORY_TYPE)) {
-			
+
 			if (name.equals(DIRECTORY_PARENT)) {
-				currentLocalDirectory = currentLocalDirectory
-						.getParentFile();
+				currentLocalDirectory = currentLocalDirectory.getParentFile();
 			} else {
 				currentLocalDirectory = new File(currentLocalDirectory, name);
 			}
 			reloadLocalDirectoryTable();
 		} else {
-			Program.launch(new File(currentLocalDirectory, name).getAbsolutePath());
+			Program.launch(new File(currentLocalDirectory, name)
+					.getAbsolutePath());
 		}
 	}
 
@@ -290,7 +345,11 @@ public class UserExplorerComposite extends Composite {
 				image = DIRECTORY_ICON;
 			} else {
 				type = FILE_TYPE;
-				size = (f.length() / 1024) + " KB";
+				if (f.length() > 1024) {
+					size = (f.length() / 1024) + " KB";
+				} else {
+					size = f.length() + " B";
+				}
 				image = FILE_ICON;
 			}
 			String name = null;
