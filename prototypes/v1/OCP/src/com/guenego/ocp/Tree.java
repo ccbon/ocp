@@ -1,8 +1,9 @@
 package com.guenego.ocp;
 
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Tree implements Serializable {
 
@@ -11,29 +12,28 @@ public class Tree implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private Set<TreeEntry> entrySet;
+	private Map<String, TreeEntry> entryMap;
 	
 	
 	public Tree() {
-		entrySet = new HashSet<TreeEntry>();
-	}
-
-	public void checkout(FileSystem fileSystem) {
-		// TODO Auto-generated method stub
-		
+		entryMap = new HashMap<String, TreeEntry>();
 	}
 
 	public void addFile(String name, Pointer p) {
-		entrySet.add(new TreeEntry(name, p, TreeEntry.FILE));
+		entryMap.put(name, new TreeEntry(name, p, TreeEntry.FILE));
 		
 	}
 
 	public void addTree(String name, Pointer p) {
-		entrySet.add(new TreeEntry(name, p, TreeEntry.TREE));
+		entryMap.put(name, new TreeEntry(name, p, TreeEntry.TREE));
 	}
 
-	public Set<TreeEntry> getEntries() {
-		return entrySet;
+	public Collection<TreeEntry> getEntries() {
+		return entryMap.values();
+	}
+
+	public TreeEntry getEntry(String name) {
+		return entryMap.get(name);
 	}
 
 }

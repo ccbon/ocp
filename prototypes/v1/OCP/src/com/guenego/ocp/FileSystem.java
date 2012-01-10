@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.util.Iterator;
+import java.util.Stack;
 
 import com.guenego.misc.JLG;
 
@@ -31,24 +32,29 @@ public class FileSystem {
 		checkout(rootTree, new File(this.path));
 	}
 
+	public void checkout(TreeEntry te, File parentDir) throws Exception {
+		Pointer p = te.getPointer();
+		if (te.isTree()) {
+			File dirFile = new File(parentDir, te.getName());
+			dirFile.mkdir();
+
+			Tree tree = (Tree) agent.get(user, p);
+			checkout(tree, dirFile);
+		} else if (te.isFile()) {
+			File subFile = new File(parentDir, te.getName());
+			byte[] content = (byte[]) agent.getBytes(user, p);
+			setBinaryFile(subFile, content);
+		}
+
+	}
+
 	private void checkout(Tree rootTree, File file) throws Exception {
 		Iterator<TreeEntry> it = rootTree.getEntries().iterator();
 		while (it.hasNext()) {
 			TreeEntry te = it.next();
-			Pointer p = te.getPointer();
-			if (te.isTree()) {
-				File dirFile = new File(file, te.getName());
-				dirFile.mkdir();
-				
-				Tree tree = (Tree) agent.get(user, p);
-				checkout(tree, dirFile);
-			} else if (te.isFile()){
-				File subFile = new File(file, te.getName());
-				byte[] content = (byte[]) agent.getBytes(user, p);
-				setBinaryFile(subFile, content);
-			}
+			checkout(te, file);
 		}
-		
+
 	}
 
 	private void setBinaryFile(File subFile, byte[] content) throws Exception {
@@ -94,5 +100,52 @@ public class FileSystem {
 		return result;
 	}
 
+	public void commitFile(String path, File file) throws Exception {
+		// TODO : termine l'implementation
+		Pointer p = commit(file);
+
+		String[] dirnames = path.split("/");
+		Tree[] trees = getTreeStack(dirnames);
+		Tree tree = trees[trees.length - 1];
+		if (file.isDirectory()) {
+			tree.addTree(file.getName(), p);
+		} else {
+			tree.addFile(file.getName(), p);
+		}
+		p = agent.set(user, tree);
+		for (int i = dirnames.length - 2; i >= 0; i--) {
+			tree = trees[i];
+			tree.addTree(dirnames[i + 1], p);
+			p = agent.set(user, tree);
+		}
+		user.setRootPointer(agent, p);
+	}
+
+	private Tree[] getTreeStack(String[] dirnames) throws Exception {
+
+		Tree[] treeStack = new Tree[dirnames.length];
+		Pointer p = user.getRootPointer(agent);
+		Tree tree = null;
+		if (p == null) {
+			tree = new Tree();
+		} else {
+			tree = (Tree) agent.get(user, p);
+		}
+		treeStack[0] = tree;
+		for (int i = 1; i < dirnames.length; i++) {
+			String dirname = dirnames[i];
+			TreeEntry te = tree.getEntry(dirname);
+			if (te == null || te.isFile()) {
+				tree = new Tree();
+				
+			} else {
+				p = te.getPointer();
+				tree = (Tree) agent.get(user, p);
+				
+			}
+			treeStack[i] = tree;
+		}
+		return treeStack;
+	}
 
 }

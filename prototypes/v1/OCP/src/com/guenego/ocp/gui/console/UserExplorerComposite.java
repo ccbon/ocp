@@ -2,11 +2,12 @@ package com.guenego.ocp.gui.console;
 
 import java.io.File;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.LinkedList;
-import java.util.Set;
 
 import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.action.Separator;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.events.KeyAdapter;
@@ -48,14 +49,14 @@ public class UserExplorerComposite extends Composite {
 			UserExplorerComposite.class, "file.png");
 
 	public Table localDirectoryTable;
-	private Table remoteDirectoryTable;
-	private File currentLocalDirectory;
+	public Table remoteDirectoryTable;
+	public File currentLocalDirectory;
 	private LinkedList<Tree> treeList;
-	private Tree currentTree;
-	private String currentRemoteDirString;
+	public Tree currentTree;
+	public String currentRemoteDirString;
 
-	private Agent agent;
-	private User user;
+	public Agent agent;
+	public User user;
 	private Label localDirectoryLabel;
 	private Label remoteDirectoryLabel;
 
@@ -117,6 +118,8 @@ public class UserExplorerComposite extends Composite {
 					final MenuManager myMenu = new MenuManager("xxx");
 					final Menu menu = myMenu.createContextMenu(shell);
 					myMenu.add(new OpenFileAction(UserExplorerComposite.this));
+					myMenu.add(new Separator());
+					myMenu.add(new CommitAction(UserExplorerComposite.this));
 					menu.setEnabled(true);
 					myMenu.setVisible(true);
 					menu.setVisible(true);
@@ -171,6 +174,20 @@ public class UserExplorerComposite extends Composite {
 
 		remoteDirectoryTable = new Table(rightComposite, SWT.BORDER
 				| SWT.FULL_SELECTION);
+		remoteDirectoryTable.addMenuDetectListener(new MenuDetectListener() {
+			public void menuDetected(MenuDetectEvent arg0) {
+				if (remoteDirectoryTable.getSelection().length > 0) {
+					JLG.debug("opening context menu");
+					final MenuManager myMenu = new MenuManager("xxx");
+					final Menu menu = myMenu.createContextMenu(shell);
+					myMenu.add(new CheckOutAction(UserExplorerComposite.this));
+					menu.setEnabled(true);
+					myMenu.setVisible(true);
+					menu.setVisible(true);
+				}
+
+			}
+		});
 		remoteDirectoryTable.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseDoubleClick(MouseEvent e) {
@@ -236,7 +253,7 @@ public class UserExplorerComposite extends Composite {
 		}
 	}
 
-	private void reloadRemoteDirectoryTable() {
+	public void reloadRemoteDirectoryTable() {
 		remoteDirectoryLabel.setText(currentRemoteDirString);
 		// first make sure the table content is empty.
 		remoteDirectoryTable.removeAll();
@@ -249,7 +266,7 @@ public class UserExplorerComposite extends Composite {
 			parentTreetableItem.setImage(DIRECTORY_ICON);
 		}
 
-		Set<TreeEntry> set = currentTree.getEntries();
+		Collection<TreeEntry> set = currentTree.getEntries();
 		// Create an array containing the elements in a set
 		TreeEntry[] array = (TreeEntry[]) set
 				.toArray(new TreeEntry[set.size()]);
@@ -307,7 +324,7 @@ public class UserExplorerComposite extends Composite {
 		}
 	}
 
-	protected void reloadLocalDirectoryTable() {
+	public void reloadLocalDirectoryTable() {
 		String path = "";
 		if (currentLocalDirectory != null) {
 			path = currentLocalDirectory.getAbsolutePath();
