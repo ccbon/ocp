@@ -7,7 +7,7 @@ public class ByteUtil {
 
 	public static byte[] sub(byte[] input, int start) throws Exception {
 		if (start >= input.length) {
-			throw new Exception("cannot to the sub");
+			return null;
 		}
 		byte[] result = new byte[input.length - start];
 		for (int i = start; i < input.length; i++) {
@@ -19,7 +19,9 @@ public class ByteUtil {
 	public static byte[] concat(byte[]... input) throws IOException {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		for (int i = 0; i < input.length; i++) {
-			baos.write(input[i]);
+			if (input[i] != null) {
+				baos.write(input[i]);
+			}
 		}
 		byte[] result = baos.toByteArray();
 		baos.close();

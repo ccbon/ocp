@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.util.Iterator;
-import java.util.Stack;
 
 import com.guenego.misc.JLG;
 
