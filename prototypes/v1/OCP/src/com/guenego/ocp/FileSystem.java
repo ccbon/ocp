@@ -102,10 +102,15 @@ public class FileSystem {
 
 	public void commitFile(String path, File file) throws Exception {
 		// TODO : termine l'implementation
-		Pointer p = commit(file);
-
+		
+		JLG.debug("path = " + path);
 		String[] dirnames = path.split("/");
+		if (path.equals("/")) {
+			dirnames = new String[]{ "" };
+		}
+		JLG.debug("dirnames.length = " + dirnames.length);
 		Tree[] trees = getTreeStack(dirnames);
+		Pointer p = commit(file);
 		Tree tree = trees[trees.length - 1];
 		if (file.isDirectory()) {
 			tree.addTree(file.getName(), p);

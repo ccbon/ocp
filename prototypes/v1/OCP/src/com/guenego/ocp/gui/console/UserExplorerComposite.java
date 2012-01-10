@@ -75,15 +75,9 @@ public class UserExplorerComposite extends Composite {
 		final Shell shell = parent.getShell();
 
 		currentLocalDirectory = new File(user.getDefaultLocalDir());
-		treeList = new LinkedList<Tree>();
+		
 		currentRemoteDirString = "/";
-		Pointer p = null;
-		try {
-			p = user.getRootPointer(agent);
-			currentTree = (Tree) agent.get(user, p);
-		} catch (Exception e) {
-			currentTree = new Tree();
-		}
+		synchronizeRemote();
 
 		setLayout(new FillLayout(SWT.HORIZONTAL));
 
@@ -395,6 +389,37 @@ public class UserExplorerComposite extends Composite {
 	@Override
 	protected void checkSubclass() {
 		// Disable the check that prevents subclassing of SWT components
+	}
+
+	public void synchronizeRemote() {
+		treeList = new LinkedList<Tree>();
+		Pointer p = null;
+		try {
+			p = user.getRootPointer(agent);
+			currentTree = (Tree) agent.get(user, p);
+		} catch (Exception e) {
+			currentTree = new Tree();
+		}
+		if (currentRemoteDirString.equals("/")) {
+			return;
+		}
+		String[] dirnames = currentRemoteDirString.substring(1).split("/");
+		for (int i = 0; i < dirnames.length; i++) {
+			String dirname = dirnames[i];
+			p = currentTree.getEntry(dirname).getPointer();
+			Tree subTree;
+			try {
+				subTree = (Tree) agent.get(user, p);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				return;
+			}
+			treeList.addLast(currentTree);
+			
+			currentTree = subTree;
+		}
+		
 	}
 
 }

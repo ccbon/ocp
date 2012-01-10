@@ -35,11 +35,13 @@ public class CommitAction extends Action {
 			FileSystem fs = new FileSystem(user, agent, null);
 			try {
 				fs.commitFile(composite.currentRemoteDirString, file);
+				composite.synchronizeRemote();
+				composite.reloadRemoteDirectoryTable();
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			composite.reloadRemoteDirectoryTable();
+			
 
 		}
 		
