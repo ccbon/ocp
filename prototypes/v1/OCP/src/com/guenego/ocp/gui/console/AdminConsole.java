@@ -1,6 +1,5 @@
 package com.guenego.ocp.gui.console;
 
-import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.action.StatusLineManager;
