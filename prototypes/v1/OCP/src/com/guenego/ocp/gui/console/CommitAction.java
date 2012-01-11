@@ -8,7 +8,6 @@ import org.eclipse.swt.widgets.TableItem;
 import com.guenego.misc.JLG;
 import com.guenego.ocp.Agent;
 import com.guenego.ocp.FileSystem;
-import com.guenego.ocp.TreeEntry;
 import com.guenego.ocp.User;
 
 public class CommitAction extends Action {

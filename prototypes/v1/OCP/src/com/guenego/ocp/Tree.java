@@ -36,4 +36,8 @@ public class Tree implements Serializable {
 		return entryMap.get(name);
 	}
 
+	public void removeEntry(String name) {
+		entryMap.remove(name);
+	}
+
 }

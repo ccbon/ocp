@@ -102,8 +102,6 @@ public class FileSystem {
 	}
 
 	public void commitFile(String path, File file) throws Exception {
-		// TODO : termine l'implementation
-
 		JLG.debug("path = " + path);
 		String[] dirnames = path.split("/");
 		if (path.equals("/")) {
@@ -152,6 +150,27 @@ public class FileSystem {
 			treeStack[i] = tree;
 		}
 		return treeStack;
+	}
+
+	public void deleteFile(String path, String name) throws Exception {
+		JLG.debug("path = " + path);
+		String[] dirnames = path.split("/");
+		if (path.equals("/")) {
+			dirnames = new String[] { "" };
+		}
+		JLG.debug("dirnames.length = " + dirnames.length);
+		Tree[] trees = getTreeStack(dirnames);
+		
+		Tree tree = trees[trees.length - 1];
+		tree.removeEntry(name);
+		Pointer p = agent.set(user, tree);
+		for (int i = dirnames.length - 2; i >= 0; i--) {
+			tree = trees[i];
+			tree.addTree(dirnames[i + 1], p);
+			p = agent.set(user, tree);
+		}
+		user.setRootPointer(agent, p);
+		
 	}
 
 }

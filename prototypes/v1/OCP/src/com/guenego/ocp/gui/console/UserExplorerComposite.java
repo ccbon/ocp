@@ -33,6 +33,7 @@ import org.eclipse.wb.swt.SWTResourceManager;
 
 import com.guenego.misc.JLG;
 import com.guenego.ocp.Agent;
+import com.guenego.ocp.FileSystem;
 import com.guenego.ocp.Pointer;
 import com.guenego.ocp.Tree;
 import com.guenego.ocp.TreeEntry;
@@ -185,14 +186,21 @@ public class UserExplorerComposite extends Composite {
 		remoteDirectoryTable.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent e) {
-				if (e.keyCode == SWT.KEYPAD_CR || e.keyCode == (int) '\r') {
+				switch (e.keyCode) {
+				case SWT.KEYPAD_CR:
+				case (int) '\r':
 					(new OpenRemoteFileAction(UserExplorerComposite.this))
 							.run();
-				}
-				if (e.keyCode == SWT.F5) {
-					// refresh
+					break;
+				case SWT.F5:
 					synchronizeRemote();
 					reloadRemoteDirectoryTable();
+					break;
+				case SWT.DEL:
+					(new RemoveRemoteFileAction(UserExplorerComposite.this))
+					.run();
+				default:
+					break;
 				}
 
 				JLG.debug("keypressed: keycode:" + e.keyCode
@@ -212,7 +220,9 @@ public class UserExplorerComposite extends Composite {
 							UserExplorerComposite.this));
 					myMenu.add(new Separator());
 					myMenu.add(new CheckOutAction(UserExplorerComposite.this));
-
+					myMenu.add(new Separator());
+					myMenu.add(new RemoveRemoteFileAction(
+							UserExplorerComposite.this));
 					menu.setEnabled(true);
 					myMenu.setVisible(true);
 					menu.setVisible(true);
@@ -467,15 +477,31 @@ public class UserExplorerComposite extends Composite {
 		String name = item.getText(0);
 		String type = item.getText(1);
 		if (name.equals(DIRECTORY_PARENT)) {
-			QuickMessage.error(this.getShell(), "Cannot delete the parent directory.");
+			QuickMessage.error(this.getShell(),
+					"Cannot delete the parent directory.");
 			return;
 		}
-		if (!QuickMessage.confirm(getShell(), "Are you sure you want to delete the file " + name + "?")) {
+		if (!QuickMessage.confirm(getShell(),
+				"Are you sure you want to delete the file " + name + "?")) {
 			return;
 		}
 		JLG.debug("type = " + type);
 		JLG.rm(new File(currentLocalDirectory, name));
 		reloadLocalDirectoryTable();
+	}
+
+	public void deleteRemoteFile(TableItem item) {
+		String name = item.getText(0);
+
+		FileSystem fs = new FileSystem(user, agent, null);
+		try {
+			fs.deleteFile(currentRemoteDirString, name);
+			synchronizeRemote();
+			reloadRemoteDirectoryTable();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 }
