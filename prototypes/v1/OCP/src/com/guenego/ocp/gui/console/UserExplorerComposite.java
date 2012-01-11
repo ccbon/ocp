@@ -196,6 +196,10 @@ public class UserExplorerComposite extends Composite {
 					(new OpenRemoteFileAction(UserExplorerComposite.this))
 							.run();
 					break;
+				case SWT.F2:
+					(new RenameRemoteFileAction(UserExplorerComposite.this))
+					.run();
+					break;
 				case SWT.F5:
 					synchronizeRemote();
 					reloadRemoteDirectoryTable();
@@ -227,6 +231,9 @@ public class UserExplorerComposite extends Composite {
 					myMenu.add(new Separator());
 					myMenu.add(new RemoveRemoteFileAction(
 							UserExplorerComposite.this));
+					myMenu.add(new RenameRemoteFileAction(
+							UserExplorerComposite.this));
+					
 					menu.setEnabled(true);
 					myMenu.setVisible(true);
 					menu.setVisible(true);
@@ -511,6 +518,18 @@ public class UserExplorerComposite extends Composite {
 
 	public void renameLocalFile(String name, String text) {
 		new File(currentLocalDirectory, name).renameTo(new File(currentLocalDirectory, text));
+		
+	}
+
+	public void renameRemoteFile(String oldName, String newName) {
+
+		FileSystem fs = new FileSystem(user, agent, null);
+		try {
+			fs.renameFile(currentRemoteDirString, oldName, newName);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 	}
 

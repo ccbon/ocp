@@ -173,4 +173,26 @@ public class FileSystem {
 		
 	}
 
+	public void renameFile(String path, String oldName,
+			String newName) throws Exception {
+		JLG.debug("path = " + path);
+		String[] dirnames = path.split("/");
+		if (path.equals("/")) {
+			dirnames = new String[] { "" };
+		}
+		JLG.debug("dirnames.length = " + dirnames.length);
+		Tree[] trees = getTreeStack(dirnames);
+		
+		Tree tree = trees[trees.length - 1];
+		tree.renameEntry(oldName, newName);
+		Pointer p = agent.set(user, tree);
+		for (int i = dirnames.length - 2; i >= 0; i--) {
+			tree = trees[i];
+			tree.addTree(dirnames[i + 1], p);
+			p = agent.set(user, tree);
+		}
+		user.setRootPointer(agent, p);
+		
+	}
+
 }

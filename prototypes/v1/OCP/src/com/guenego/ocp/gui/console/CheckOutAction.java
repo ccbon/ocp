@@ -31,7 +31,10 @@ public class CheckOutAction extends Action {
 			Agent agent = composite.agent;
 			File parentDir = composite.currentLocalDirectory;
 			String name = item.getText(0);
+			// TODO: change the treeentry access by doing FileSystem.getTreeEntry(path, name)
+			// IMPORTANT: more generally access to a tree directly by FileSystem.getTree(path)
 			TreeEntry te = composite.currentTree.getEntry(name);
+			 
 			FileSystem fs = new FileSystem(user, agent, null);
 			try {
 				fs.checkout(te, parentDir);

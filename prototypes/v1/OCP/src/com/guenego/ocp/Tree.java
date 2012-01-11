@@ -7,21 +7,19 @@ import java.util.Map;
 
 public class Tree implements Serializable {
 
-
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 	private Map<String, TreeEntry> entryMap;
-	
-	
+
 	public Tree() {
 		entryMap = new HashMap<String, TreeEntry>();
 	}
 
 	public void addFile(String name, Pointer p) {
 		entryMap.put(name, new TreeEntry(name, p, TreeEntry.FILE));
-		
+
 	}
 
 	public void addTree(String name, Pointer p) {
@@ -38,6 +36,12 @@ public class Tree implements Serializable {
 
 	public void removeEntry(String name) {
 		entryMap.remove(name);
+	}
+
+	public void renameEntry(String oldName, String newName) {
+		TreeEntry te = entryMap.remove(oldName);
+		te.setName(newName);
+		entryMap.put(newName, te);
 	}
 
 }
