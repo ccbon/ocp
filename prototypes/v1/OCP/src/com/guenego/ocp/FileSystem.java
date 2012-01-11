@@ -160,7 +160,7 @@ public class FileSystem {
 		}
 		JLG.debug("dirnames.length = " + dirnames.length);
 		Tree[] trees = getTreeStack(dirnames);
-		
+
 		Tree tree = trees[trees.length - 1];
 		tree.removeEntry(name);
 		Pointer p = agent.set(user, tree);
@@ -170,11 +170,11 @@ public class FileSystem {
 			p = agent.set(user, tree);
 		}
 		user.setRootPointer(agent, p);
-		
+
 	}
 
-	public void renameFile(String path, String oldName,
-			String newName) throws Exception {
+	public void renameFile(String path, String oldName, String newName)
+			throws Exception {
 		JLG.debug("path = " + path);
 		String[] dirnames = path.split("/");
 		if (path.equals("/")) {
@@ -182,7 +182,7 @@ public class FileSystem {
 		}
 		JLG.debug("dirnames.length = " + dirnames.length);
 		Tree[] trees = getTreeStack(dirnames);
-		
+
 		Tree tree = trees[trees.length - 1];
 		tree.renameEntry(oldName, newName);
 		Pointer p = agent.set(user, tree);
@@ -192,7 +192,31 @@ public class FileSystem {
 			p = agent.set(user, tree);
 		}
 		user.setRootPointer(agent, p);
-		
+
+	}
+
+	public Tree getTree(String path) throws Exception {
+		String[] dirnames = path.split("/");
+		if (path.equals("/")) {
+			dirnames = new String[] { "" };
+		}
+
+		Pointer p = user.getRootPointer(agent);
+		if (p == null) {
+			return null;
+		}
+		Tree tree = (Tree) agent.get(user, p);
+
+		for (int i = 1; i < dirnames.length; i++) {
+			String dirname = dirnames[i];
+			TreeEntry te = tree.getEntry(dirname);
+			if (te == null || te.isFile()) {
+				return null;
+			}
+			p = te.getPointer();
+			tree = (Tree) agent.get(user, p);
+		}
+		return tree;
 	}
 
 }

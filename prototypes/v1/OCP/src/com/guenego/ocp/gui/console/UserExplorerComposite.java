@@ -4,7 +4,6 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
-import java.util.LinkedList;
 
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
@@ -22,7 +21,6 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.program.Program;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Shell;
@@ -34,7 +32,6 @@ import org.eclipse.wb.swt.SWTResourceManager;
 import com.guenego.misc.JLG;
 import com.guenego.ocp.Agent;
 import com.guenego.ocp.FileSystem;
-import com.guenego.ocp.Pointer;
 import com.guenego.ocp.Tree;
 import com.guenego.ocp.TreeEntry;
 import com.guenego.ocp.User;
@@ -52,9 +49,8 @@ public class UserExplorerComposite extends Composite {
 	public Table localDirectoryTable;
 	public Table remoteDirectoryTable;
 	public File currentLocalDirectory;
-	private LinkedList<Tree> treeList;
-	public Tree currentTree;
 	public String currentRemoteDirString;
+	public FileSystem fs;
 
 	public Agent agent;
 	public User user;
@@ -72,13 +68,11 @@ public class UserExplorerComposite extends Composite {
 		super(parent, style);
 		this.agent = agent;
 		this.user = user;
-		final Display display = parent.getDisplay();
+		this.fs = new FileSystem(user, agent, null);
 		final Shell shell = parent.getShell();
 
 		currentLocalDirectory = new File(user.getDefaultLocalDir());
-
 		currentRemoteDirString = "/";
-		synchronizeRemote();
 
 		setLayout(new FillLayout(SWT.HORIZONTAL));
 
@@ -198,15 +192,14 @@ public class UserExplorerComposite extends Composite {
 					break;
 				case SWT.F2:
 					(new RenameRemoteFileAction(UserExplorerComposite.this))
-					.run();
+							.run();
 					break;
 				case SWT.F5:
-					synchronizeRemote();
 					reloadRemoteDirectoryTable();
 					break;
 				case SWT.DEL:
 					(new RemoveRemoteFileAction(UserExplorerComposite.this))
-					.run();
+							.run();
 				default:
 					break;
 				}
@@ -233,7 +226,7 @@ public class UserExplorerComposite extends Composite {
 							UserExplorerComposite.this));
 					myMenu.add(new RenameRemoteFileAction(
 							UserExplorerComposite.this));
-					
+
 					menu.setEnabled(true);
 					myMenu.setVisible(true);
 					menu.setVisible(true);
@@ -283,10 +276,9 @@ public class UserExplorerComposite extends Composite {
 		try {
 			String name = item.getText(0);
 			if (name.equals(DIRECTORY_PARENT)) {
-				currentTree = treeList.removeLast();
 				currentRemoteDirString = currentRemoteDirString.substring(0,
-						currentRemoteDirString.lastIndexOf("/") + 1);
-				if (currentLocalDirectory.equals("")) {
+						currentRemoteDirString.lastIndexOf("/"));
+				if (currentRemoteDirString.equals("")) {
 					currentRemoteDirString = "/";
 				}
 				reloadRemoteDirectoryTable();
@@ -294,9 +286,6 @@ public class UserExplorerComposite extends Composite {
 				TreeEntry te = (TreeEntry) item.getData();
 				JLG.debug("Try to open " + te.getName());
 				if (te.isTree()) {
-					Pointer p = te.getPointer();
-					treeList.addLast(currentTree);
-					currentTree = (Tree) agent.get(user, p);
 					if (!currentRemoteDirString.endsWith("/")) {
 						currentRemoteDirString += "/";
 					}
@@ -310,56 +299,64 @@ public class UserExplorerComposite extends Composite {
 	}
 
 	public void reloadRemoteDirectoryTable() {
-		remoteDirectoryLabel.setText(currentRemoteDirString);
-		// first make sure the table content is empty.
-		remoteDirectoryTable.removeAll();
+		try {
+			remoteDirectoryLabel.setText(currentRemoteDirString);
+			// first make sure the table content is empty.
+			remoteDirectoryTable.removeAll();
 
-		if (!treeList.isEmpty()) {
-			TableItem parentTreetableItem = new TableItem(remoteDirectoryTable,
-					SWT.NONE);
-			parentTreetableItem.setText(new String[] { DIRECTORY_PARENT,
-					DIRECTORY_TYPE, DIRECTORY_SIZE });
-			parentTreetableItem.setImage(DIRECTORY_ICON);
-		}
+			//if (!currentRemoteDirString.equals("/")) {
+				TableItem parentTreetableItem = new TableItem(
+						remoteDirectoryTable, SWT.NONE);
+				parentTreetableItem.setText(new String[] { DIRECTORY_PARENT,
+						DIRECTORY_TYPE, DIRECTORY_SIZE });
+				parentTreetableItem.setImage(DIRECTORY_ICON);
+			//}
 
-		Collection<TreeEntry> set = currentTree.getEntries();
-		// Create an array containing the elements in a set
-		TreeEntry[] array = (TreeEntry[]) set
-				.toArray(new TreeEntry[set.size()]);
-		// Order
-		Arrays.sort(array, new Comparator<TreeEntry>() {
-			public int compare(TreeEntry f1, TreeEntry f2) {
-				if (f1.isFile() && f2.isTree()) {
-					return 1;
-				} else if (f2.isFile() && f1.isTree()) {
-					return -1;
-				} else {
-					return f1.getName().compareTo(f2.getName());
+			Tree currentTree = fs.getTree(currentRemoteDirString);
+			if (currentTree == null) {
+				return;
+			}
+			Collection<TreeEntry> set = currentTree.getEntries();
+			// Create an array containing the elements in a set
+			TreeEntry[] array = (TreeEntry[]) set.toArray(new TreeEntry[set
+					.size()]);
+			// Order
+			Arrays.sort(array, new Comparator<TreeEntry>() {
+				public int compare(TreeEntry f1, TreeEntry f2) {
+					if (f1.isFile() && f2.isTree()) {
+						return 1;
+					} else if (f2.isFile() && f1.isTree()) {
+						return -1;
+					} else {
+						return f1.getName().compareTo(f2.getName());
+					}
 				}
+			});
+
+			for (TreeEntry te : array) {
+
+				TableItem tableItem = new TableItem(remoteDirectoryTable,
+						SWT.NONE);
+				tableItem.setData(te);
+				String type = null;
+				String size = null;
+				Image image = null;
+				if (te.isTree()) {
+					type = DIRECTORY_TYPE;
+					size = "";
+					image = DIRECTORY_ICON;
+				} else {
+					type = FILE_TYPE;
+					size = ""; // not implemented yet
+					image = FILE_ICON;
+				}
+				tableItem.setText(new String[] { te.getName(), type, size });
+				tableItem.setImage(image);
+
 			}
-		});
-
-		for (TreeEntry te : array) {
-
-			TableItem tableItem = new TableItem(remoteDirectoryTable, SWT.NONE);
-			tableItem.setData(te);
-			String type = null;
-			String size = null;
-			Image image = null;
-			if (te.isTree()) {
-				type = DIRECTORY_TYPE;
-				size = "";
-				image = DIRECTORY_ICON;
-			} else {
-				type = FILE_TYPE;
-				size = ""; // not implemented yet
-				image = FILE_ICON;
-			}
-			tableItem.setText(new String[] { te.getName(), type, size });
-			tableItem.setImage(image);
-
+		} catch (Exception e) {
+			// TODO: handle exception
 		}
-
 	}
 
 	protected void openLocalFile(TableItem item) {
@@ -453,37 +450,6 @@ public class UserExplorerComposite extends Composite {
 		// Disable the check that prevents subclassing of SWT components
 	}
 
-	public void synchronizeRemote() {
-		treeList = new LinkedList<Tree>();
-		Pointer p = null;
-		try {
-			p = user.getRootPointer(agent);
-			currentTree = (Tree) agent.get(user, p);
-		} catch (Exception e) {
-			currentTree = new Tree();
-		}
-		if (currentRemoteDirString.equals("/")) {
-			return;
-		}
-		String[] dirnames = currentRemoteDirString.substring(1).split("/");
-		for (int i = 0; i < dirnames.length; i++) {
-			String dirname = dirnames[i];
-			p = currentTree.getEntry(dirname).getPointer();
-			Tree subTree;
-			try {
-				subTree = (Tree) agent.get(user, p);
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-				return;
-			}
-			treeList.addLast(currentTree);
-
-			currentTree = subTree;
-		}
-
-	}
-
 	public void deleteLocalFile(TableItem item) {
 		String name = item.getText(0);
 		String type = item.getText(1);
@@ -502,13 +468,12 @@ public class UserExplorerComposite extends Composite {
 	}
 
 	public void deleteRemoteFile(TableItem item) {
-		
+
 		String name = item.getText(0);
 
 		FileSystem fs = new FileSystem(user, agent, null);
 		try {
 			fs.deleteFile(currentRemoteDirString, name);
-			synchronizeRemote();
 			reloadRemoteDirectoryTable();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -517,8 +482,9 @@ public class UserExplorerComposite extends Composite {
 	}
 
 	public void renameLocalFile(String name, String text) {
-		new File(currentLocalDirectory, name).renameTo(new File(currentLocalDirectory, text));
-		
+		new File(currentLocalDirectory, name).renameTo(new File(
+				currentLocalDirectory, text));
+
 	}
 
 	public void renameRemoteFile(String oldName, String newName) {
@@ -530,7 +496,11 @@ public class UserExplorerComposite extends Composite {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
+	}
+
+	public Tree getCurrentTree() throws Exception {
+		return fs.getTree(currentRemoteDirString);
 	}
 
 }
