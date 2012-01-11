@@ -75,7 +75,7 @@ public class UserExplorerComposite extends Composite {
 		final Shell shell = parent.getShell();
 
 		currentLocalDirectory = new File(user.getDefaultLocalDir());
-		
+
 		currentRemoteDirString = "/";
 		synchronizeRemote();
 
@@ -100,9 +100,21 @@ public class UserExplorerComposite extends Composite {
 		localDirectoryTable.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent e) {
-				if (e.keyCode == SWT.KEYPAD_CR || e.keyCode == (int) '\r') {
+				switch (e.keyCode) {
+				case SWT.KEYPAD_CR:
+				case (int) '\r':
 					(new OpenFileAction(UserExplorerComposite.this)).run();
+					break;
+				case (int) SWT.F5:
+					reloadLocalDirectoryTable();
+					break;
+				case SWT.DEL:
+					(new RemoveFileAction(UserExplorerComposite.this)).run();
+					break;
+				default:
 				}
+				JLG.debug("keypressed: keycode:" + e.keyCode
+						+ " and character = '" + e.character + "'");
 			}
 		});
 		localDirectoryTable.addMenuDetectListener(new MenuDetectListener() {
@@ -114,6 +126,8 @@ public class UserExplorerComposite extends Composite {
 					myMenu.add(new OpenFileAction(UserExplorerComposite.this));
 					myMenu.add(new Separator());
 					myMenu.add(new CommitAction(UserExplorerComposite.this));
+					myMenu.add(new Separator());
+					myMenu.add(new RemoveFileAction(UserExplorerComposite.this));
 					menu.setEnabled(true);
 					myMenu.setVisible(true);
 					menu.setVisible(true);
@@ -168,13 +182,37 @@ public class UserExplorerComposite extends Composite {
 
 		remoteDirectoryTable = new Table(rightComposite, SWT.BORDER
 				| SWT.FULL_SELECTION);
+		remoteDirectoryTable.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if (e.keyCode == SWT.KEYPAD_CR || e.keyCode == (int) '\r') {
+					(new OpenRemoteFileAction(UserExplorerComposite.this))
+							.run();
+				}
+				if (e.keyCode == SWT.F5) {
+					// refresh
+					synchronizeRemote();
+					reloadRemoteDirectoryTable();
+				}
+
+				JLG.debug("keypressed: keycode:" + e.keyCode
+						+ " and character = '" + e.character + "'");
+
+			}
+		});
 		remoteDirectoryTable.addMenuDetectListener(new MenuDetectListener() {
-			public void menuDetected(MenuDetectEvent arg0) {
+			public void menuDetected(MenuDetectEvent e) {
 				if (remoteDirectoryTable.getSelection().length > 0) {
-					JLG.debug("opening context menu");
+					JLG.debug("opening context menu just closed to the selection");
+					// TODO : replace the context menu at the good position if
+					// needed.
 					final MenuManager myMenu = new MenuManager("xxx");
 					final Menu menu = myMenu.createContextMenu(shell);
+					myMenu.add(new OpenRemoteFileAction(
+							UserExplorerComposite.this));
+					myMenu.add(new Separator());
 					myMenu.add(new CheckOutAction(UserExplorerComposite.this));
+
 					menu.setEnabled(true);
 					myMenu.setVisible(true);
 					menu.setVisible(true);
@@ -238,6 +276,9 @@ public class UserExplorerComposite extends Composite {
 					Pointer p = te.getPointer();
 					treeList.addLast(currentTree);
 					currentTree = (Tree) agent.get(user, p);
+					if (!currentRemoteDirString.endsWith("/")) {
+						currentRemoteDirString += "/";
+					}
 					currentRemoteDirString += te.getName();
 				}
 				reloadRemoteDirectoryTable();
@@ -416,10 +457,22 @@ public class UserExplorerComposite extends Composite {
 				return;
 			}
 			treeList.addLast(currentTree);
-			
+
 			currentTree = subTree;
 		}
-		
+
+	}
+
+	public void deleteLocalFile(TableItem item) {
+		String name = item.getText(0);
+		String type = item.getText(1);
+		if (name.equals(DIRECTORY_PARENT)) {
+			QuickMessage.error(this.getShell(), "Cannot delete the parent directory.");
+			return;
+		}
+		JLG.debug("type = " + type);
+		JLG.rm(new File(currentLocalDirectory, name));
+		reloadLocalDirectoryTable();
 	}
 
 }

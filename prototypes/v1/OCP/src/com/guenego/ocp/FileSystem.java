@@ -60,7 +60,9 @@ public class FileSystem {
 		OutputStream out = null;
 		try {
 			out = new FileOutputStream(subFile);
-			out.write(content);
+			if (content != null) {
+				out.write(content);
+			}
 		} catch (Exception e) {
 			throw e;
 		} finally {
@@ -101,11 +103,11 @@ public class FileSystem {
 
 	public void commitFile(String path, File file) throws Exception {
 		// TODO : termine l'implementation
-		
+
 		JLG.debug("path = " + path);
 		String[] dirnames = path.split("/");
 		if (path.equals("/")) {
-			dirnames = new String[]{ "" };
+			dirnames = new String[] { "" };
 		}
 		JLG.debug("dirnames.length = " + dirnames.length);
 		Tree[] trees = getTreeStack(dirnames);
@@ -141,11 +143,11 @@ public class FileSystem {
 			TreeEntry te = tree.getEntry(dirname);
 			if (te == null || te.isFile()) {
 				tree = new Tree();
-				
+
 			} else {
 				p = te.getPointer();
 				tree = (Tree) agent.get(user, p);
-				
+
 			}
 			treeStack[i] = tree;
 		}
