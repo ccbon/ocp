@@ -106,6 +106,9 @@ public class UserExplorerComposite extends Composite {
 				case (int) '\r':
 					(new OpenFileAction(UserExplorerComposite.this)).run();
 					break;
+				case (int) SWT.F2:
+					(new RenameFileAction(UserExplorerComposite.this)).run();
+					break;
 				case (int) SWT.F5:
 					reloadLocalDirectoryTable();
 					break;
@@ -129,6 +132,7 @@ public class UserExplorerComposite extends Composite {
 					myMenu.add(new CommitAction(UserExplorerComposite.this));
 					myMenu.add(new Separator());
 					myMenu.add(new RemoveFileAction(UserExplorerComposite.this));
+					myMenu.add(new RenameFileAction(UserExplorerComposite.this));
 					menu.setEnabled(true);
 					myMenu.setVisible(true);
 					menu.setVisible(true);
@@ -503,6 +507,11 @@ public class UserExplorerComposite extends Composite {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+
+	public void renameLocalFile(String name, String text) {
+		new File(currentLocalDirectory, name).renameTo(new File(currentLocalDirectory, text));
+		
 	}
 
 }

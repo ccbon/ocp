@@ -14,14 +14,6 @@ public class RemoveRemoteFileAction extends Action {
 		this.composite = userExplorerComposite;
 		setText("&Delete@DEL");
 		setToolTipText("Delete remote file");
-//		try {
-//			ImageDescriptor i = ImageDescriptor
-//					.createFromImageData(new ImageData(OpenFileAction.class
-//							.getResourceAsStream("about.png")));
-//			setImageDescriptor(i);
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
 	}
 
 
