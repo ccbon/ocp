@@ -32,6 +32,14 @@ public class JLG {
 	public static void debug_on() {
 		sDebug = true;
 	}
+	
+	public static void debug_off() {
+		sDebug = false;
+	}
+
+	public static boolean getDebugStatus() {
+		return sDebug;
+	}
 
 	public static void debug(String input) {
 		if (sDebug) {
@@ -288,5 +296,7 @@ public class JLG {
 		}
 		return true;
 	}
+
+
 
 }

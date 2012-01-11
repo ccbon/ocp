@@ -1,5 +1,6 @@
 package com.guenego.ocp.gui.console;
 
+import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.action.StatusLineManager;
@@ -54,6 +55,7 @@ public class AdminConsole extends ApplicationWindow {
 	
 	private HelpAction helpAction;
 	private AboutAction aboutAction;
+	private DebugAction debugAction;
 	
 	
 	/**
@@ -123,6 +125,7 @@ public class AdminConsole extends ApplicationWindow {
 		signOutAction = new SignOutAction(this);
 		viewAdminTabAction = new ViewContactTabAction(this);
 		removeStorageAction = new RemoveStorageAction(this);
+		debugAction = new DebugAction();
 		helpAction = new HelpAction();
 		aboutAction = new AboutAction(this);
 		viewUserSyncTabAction = new ViewUserSyncTabAction(this);
@@ -155,6 +158,7 @@ public class AdminConsole extends ApplicationWindow {
 		MenuManager testMenu = new MenuManager("&Test");
 		menuBar.add(testMenu);
 		testMenu.add(removeStorageAction);
+		testMenu.add(debugAction);
 
 		MenuManager helpMenu = new MenuManager("&Help");
 		menuBar.add(helpMenu);
