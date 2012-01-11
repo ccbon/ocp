@@ -13,4 +13,15 @@ public class QuickMessage {
 		messageBox.open();
 	}
 
+	public static boolean confirm(Shell shell, String string) {
+		MessageBox messageBox = new MessageBox(shell, SWT.ICON_WARNING
+				| SWT.YES | SWT.NO);
+		messageBox.setMessage(string);
+		messageBox.setText("Warning");
+		if (messageBox.open() == SWT.YES) {
+			return true;
+		}
+		return false;
+	}
+
 }

@@ -470,6 +470,9 @@ public class UserExplorerComposite extends Composite {
 			QuickMessage.error(this.getShell(), "Cannot delete the parent directory.");
 			return;
 		}
+		if (!QuickMessage.confirm(getShell(), "Are you sure you want to delete the file " + name + "?")) {
+			return;
+		}
 		JLG.debug("type = " + type);
 		JLG.rm(new File(currentLocalDirectory, name));
 		reloadLocalDirectoryTable();
