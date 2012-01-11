@@ -27,6 +27,9 @@ public class RemoveRemoteFileAction extends Action {
 
 	public void run() {
 		JLG.debug("Delete remote file");
+		if (!QuickMessage.confirm(composite.getShell(), "Are you sure you want to delete selected files ?")) {
+			return;
+		}
 		for (TableItem item : composite.remoteDirectoryTable.getSelection()) {
 			composite.deleteRemoteFile(item);
 		}

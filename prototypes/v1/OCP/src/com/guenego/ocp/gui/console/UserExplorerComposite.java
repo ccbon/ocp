@@ -491,6 +491,7 @@ public class UserExplorerComposite extends Composite {
 	}
 
 	public void deleteRemoteFile(TableItem item) {
+		
 		String name = item.getText(0);
 
 		FileSystem fs = new FileSystem(user, agent, null);
