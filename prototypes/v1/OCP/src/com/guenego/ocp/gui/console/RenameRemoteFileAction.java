@@ -15,13 +15,11 @@ public class RenameRemoteFileAction extends Action {
 
 	private UserExplorerComposite composite;
 
-
 	public RenameRemoteFileAction(UserExplorerComposite userExplorerComposite) {
 		this.composite = userExplorerComposite;
 		setText("&Rename@F2");
 		setToolTipText("Rename");
 	}
-
 
 	public void run() {
 		JLG.debug("Rename");
@@ -29,14 +27,22 @@ public class RenameRemoteFileAction extends Action {
 		final String name = item.getText(0);
 		final Text text = new Text(item.getParent(), SWT.BORDER);
 		text.setBounds(item.getBounds());
+		text.setText(name);
+		text.setSelection(0, name.length());
 		text.setFocus();
 		text.addKeyListener(new KeyAdapter() {
 			public void keyPressed(KeyEvent e) {
 				switch (e.keyCode) {
 				case SWT.KEYPAD_CR:
 				case (int) '\r':
-					composite.renameRemoteFile(name, text.getText());
-					item.setText(0, text.getText());
+					if ((text.getText() != "")
+							&& (!name.equals(text.getText()))) {
+						composite.renameRemoteFile(name, text.getText());
+						item.setText(0, text.getText());
+					}
+					text.dispose();
+					break;
+				case SWT.ESC:
 					text.dispose();
 					break;
 				default:
@@ -48,8 +54,11 @@ public class RenameRemoteFileAction extends Action {
 		text.addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusLost(FocusEvent e) {
-				composite.renameRemoteFile(name, text.getText());
-				item.setText(0, text.getText());
+				if ((text.getText() != "")
+						&& (!name.equals(text.getText()))) {
+					composite.renameRemoteFile(name, text.getText());
+					item.setText(0, text.getText());
+				}
 				text.dispose();
 				super.focusLost(e);
 			}
