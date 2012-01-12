@@ -16,6 +16,7 @@ import org.eclipse.swt.events.MenuDetectListener;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -91,7 +92,7 @@ public class UserExplorerComposite extends Composite {
 				true, false, 1, 1));
 
 		localDirectoryTable = new Table(leftComposite, SWT.BORDER
-				| SWT.FULL_SELECTION);
+				| SWT.FULL_SELECTION | SWT.MULTI);
 		localDirectoryTable.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent e) {
@@ -109,6 +110,8 @@ public class UserExplorerComposite extends Composite {
 				case SWT.DEL:
 					(new RemoveFileAction(UserExplorerComposite.this)).run();
 					break;
+				case SWT.ESC:
+					localDirectoryTable.deselectAll();
 				default:
 				}
 				JLG.debug("keypressed: keycode:" + e.keyCode
@@ -117,16 +120,25 @@ public class UserExplorerComposite extends Composite {
 		});
 		localDirectoryTable.addMenuDetectListener(new MenuDetectListener() {
 			public void menuDetected(MenuDetectEvent arg0) {
-				if (localDirectoryTable.getSelection().length > 0) {
+				int sel = localDirectoryTable.getSelection().length;
+				if (sel > 0) {
 					JLG.debug("opening context menu");
 					final MenuManager myMenu = new MenuManager("xxx");
 					final Menu menu = myMenu.createContextMenu(shell);
-					myMenu.add(new OpenFileAction(UserExplorerComposite.this));
+					OpenFileAction openFileAction = new OpenFileAction(UserExplorerComposite.this);
+					myMenu.add(openFileAction);
+					
 					myMenu.add(new Separator());
 					myMenu.add(new CommitAction(UserExplorerComposite.this));
 					myMenu.add(new Separator());
 					myMenu.add(new RemoveFileAction(UserExplorerComposite.this));
-					myMenu.add(new RenameFileAction(UserExplorerComposite.this));
+					RenameFileAction renameFileAction = new RenameFileAction(UserExplorerComposite.this);
+					myMenu.add(renameFileAction);
+					
+					if (sel > 1) {
+						openFileAction.setEnabled(false);
+						renameFileAction.setEnabled(false);
+					}
 					menu.setEnabled(true);
 					myMenu.setVisible(true);
 					menu.setVisible(true);
@@ -143,6 +155,15 @@ public class UserExplorerComposite extends Composite {
 					openLocalFile(item);
 				}
 				JLG.debug("table item:" + e.widget.getClass());
+			}
+			@Override
+			public void mouseDown(MouseEvent e) {
+				JLG.debug("mouse down");
+				Point pt = new Point(e.x, e.y);
+				if (localDirectoryTable.getItem(pt) == null) {
+					JLG.debug("cancel selection");
+					localDirectoryTable.deselectAll();
+				}
 			}
 		});
 		GridData gd_localDirectoryTable = new GridData(SWT.FILL, SWT.FILL,
@@ -180,7 +201,7 @@ public class UserExplorerComposite extends Composite {
 				true, false, 1, 1));
 
 		remoteDirectoryTable = new Table(rightComposite, SWT.BORDER
-				| SWT.FULL_SELECTION);
+				| SWT.FULL_SELECTION | SWT.MULTI);
 		remoteDirectoryTable.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent e) {
@@ -200,6 +221,8 @@ public class UserExplorerComposite extends Composite {
 				case SWT.DEL:
 					(new RemoveRemoteFileAction(UserExplorerComposite.this))
 							.run();
+				case SWT.ESC:
+					remoteDirectoryTable.deselectAll();
 				default:
 					break;
 				}
@@ -248,6 +271,17 @@ public class UserExplorerComposite extends Composite {
 				JLG.debug("table item:" + e.widget.getClass());
 
 			}
+			
+			@Override
+			public void mouseDown(MouseEvent e) {
+				JLG.debug("mouse down");
+				Point pt = new Point(e.x, e.y);
+				if (remoteDirectoryTable.getItem(pt) == null) {
+					JLG.debug("cancel selection");
+					remoteDirectoryTable.deselectAll();
+				}
+			}
+
 		});
 		remoteDirectoryTable.setHeaderVisible(true);
 		GridData gd_remoteDirectoryTable = new GridData(SWT.FILL, SWT.FILL,
@@ -458,13 +492,8 @@ public class UserExplorerComposite extends Composite {
 					"Cannot delete the parent directory.");
 			return;
 		}
-		if (!QuickMessage.confirm(getShell(),
-				"Are you sure you want to delete the file " + name + "?")) {
-			return;
-		}
 		JLG.debug("type = " + type);
 		JLG.rm(new File(currentLocalDirectory, name));
-		reloadLocalDirectoryTable();
 	}
 
 	public void deleteRemoteFile(TableItem item) {
@@ -474,7 +503,6 @@ public class UserExplorerComposite extends Composite {
 		FileSystem fs = new FileSystem(user, agent, null);
 		try {
 			fs.deleteFile(currentRemoteDirString, name);
-			reloadRemoteDirectoryTable();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

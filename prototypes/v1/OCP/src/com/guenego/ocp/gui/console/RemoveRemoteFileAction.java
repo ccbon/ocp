@@ -19,11 +19,22 @@ public class RemoveRemoteFileAction extends Action {
 
 	public void run() {
 		JLG.debug("Delete remote file");
-		if (!QuickMessage.confirm(composite.getShell(), "Are you sure you want to delete selected files ?")) {
-			return;
+		int selNbr = composite.remoteDirectoryTable.getSelection().length;
+		if (selNbr == 1) {
+			String name = composite.remoteDirectoryTable.getSelection()[0].getText();
+			if (!QuickMessage.confirm(composite.getShell(),
+					"Are you sure you want to delete the file " + name + " ?")) {
+				return;
+			}
+		} else {
+			if (!QuickMessage.confirm(composite.getShell(),
+					"Are you sure you want to delete these " + selNbr + " files?")) {
+				return;
+			}			
 		}
 		for (TableItem item : composite.remoteDirectoryTable.getSelection()) {
 			composite.deleteRemoteFile(item);
 		}
+		composite.reloadRemoteDirectoryTable();
 	}
 }
