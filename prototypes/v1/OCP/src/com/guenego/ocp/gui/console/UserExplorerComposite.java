@@ -199,9 +199,9 @@ public class UserExplorerComposite extends Composite {
 		localSizeColumn.setWidth(100);
 		localSizeColumn.setText("Size");
 
-		DragSource dragSource = new DragSource(localDirectoryTable,
+		DragSource dragLocalSource = new DragSource(localDirectoryTable,
 				DND.DROP_MOVE | DND.DROP_COPY);
-		dragSource.addDragListener(new DragSourceAdapter() {
+		dragLocalSource.addDragListener(new DragSourceAdapter() {
 			@Override
 			public void dragSetData(DragSourceEvent event) {
 				if (TextTransfer.getInstance().isSupportedType(event.dataType)) {
@@ -218,8 +218,26 @@ public class UserExplorerComposite extends Composite {
 			}
 		});
 		Transfer[] types = new Transfer[] { TextTransfer.getInstance() };
-		dragSource.setTransfer(types);
+		dragLocalSource.setTransfer(types);
 
+		DropTarget dropLocalTarget = new DropTarget(localDirectoryTable,
+				DND.DROP_MOVE | DND.DROP_COPY | DND.DROP_DEFAULT);
+		dropLocalTarget.setTransfer(types);
+		dropLocalTarget.addDropListener(new DropTargetAdapter() {
+
+			@Override
+			public void drop(DropTargetEvent event) {
+				JLG.debug("drop");
+				if (TextTransfer.getInstance().isSupportedType(
+						event.currentDataType)) {
+					String text = (String) event.data;
+					JLG.debug("received from transfer: " + text);
+					(new CheckOutAction(UserExplorerComposite.this)).run();
+				}
+			}
+		});
+
+		
 		reloadLocalDirectoryTable();
 
 		Composite rightComposite = new Composite(sashForm, SWT.NONE);
@@ -337,10 +355,31 @@ public class UserExplorerComposite extends Composite {
 		reloadRemoteDirectoryTable();
 		sashForm.setWeights(new int[] { 1, 1 });
 
-		DropTarget dropTarget = new DropTarget(remoteDirectoryTable,
+		DragSource dragRemoteSource = new DragSource(remoteDirectoryTable,
+				DND.DROP_MOVE | DND.DROP_COPY);
+		dragRemoteSource.addDragListener(new DragSourceAdapter() {
+			@Override
+			public void dragSetData(DragSourceEvent event) {
+				if (TextTransfer.getInstance().isSupportedType(event.dataType)) {
+					// event.data = localDirectoryTable.getSelection();
+					event.data = new String("this is my fake data");
+				}
+			}
+
+			@Override
+			public void dragStart(DragSourceEvent event) {
+				if (remoteDirectoryTable.getSelection().length == 0) {
+					event.doit = false;
+				}
+			}
+		});
+		dragRemoteSource.setTransfer(types);
+
+		
+		DropTarget dropRemoteTarget = new DropTarget(remoteDirectoryTable,
 				DND.DROP_MOVE | DND.DROP_COPY | DND.DROP_DEFAULT);
-		dropTarget.setTransfer(types);
-		dropTarget.addDropListener(new DropTargetAdapter() {
+		dropRemoteTarget.setTransfer(types);
+		dropRemoteTarget.addDropListener(new DropTargetAdapter() {
 
 			@Override
 			public void drop(DropTargetEvent event) {
