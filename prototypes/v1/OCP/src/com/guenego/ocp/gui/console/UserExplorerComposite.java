@@ -50,11 +50,13 @@ public class UserExplorerComposite extends Composite {
 	private static final String DIRECTORY_SIZE = "";
 	private static final String DIRECTORY_TYPE = "Directory";
 	private static final String DIRECTORY_PARENT = "..";
+	private static final String DIRECTORY_NEW = "New Folder";
 	private static final String FILE_TYPE = "File";
 	private static final Image DIRECTORY_ICON = SWTResourceManager.getImage(
 			UserExplorerComposite.class, "directory.png");
 	private static final Image FILE_ICON = SWTResourceManager.getImage(
 			UserExplorerComposite.class, "file.png");
+	
 
 	public Table localDirectoryTable;
 	public Table remoteDirectoryTable;
@@ -129,11 +131,12 @@ public class UserExplorerComposite extends Composite {
 		});
 		localDirectoryTable.addMenuDetectListener(new MenuDetectListener() {
 			public void menuDetected(MenuDetectEvent arg0) {
+				JLG.debug("opening context menu");
+				final MenuManager myMenu = new MenuManager("xxx");
+				final Menu menu = myMenu.createContextMenu(shell);
+
 				int sel = localDirectoryTable.getSelection().length;
 				if (sel > 0) {
-					JLG.debug("opening context menu");
-					final MenuManager myMenu = new MenuManager("xxx");
-					final Menu menu = myMenu.createContextMenu(shell);
 					OpenFileAction openFileAction = new OpenFileAction(
 							UserExplorerComposite.this);
 					myMenu.add(openFileAction);
@@ -150,10 +153,13 @@ public class UserExplorerComposite extends Composite {
 						openFileAction.setEnabled(false);
 						renameFileAction.setEnabled(false);
 					}
-					menu.setEnabled(true);
-					myMenu.setVisible(true);
-					menu.setVisible(true);
 				}
+				myMenu.add(new CreateNewDirAction(UserExplorerComposite.this));
+
+				menu.setEnabled(true);
+				myMenu.setVisible(true);
+				menu.setVisible(true);
+
 			}
 		});
 		localDirectoryTable.addMouseListener(new MouseAdapter() {
@@ -285,27 +291,34 @@ public class UserExplorerComposite extends Composite {
 		});
 		remoteDirectoryTable.addMenuDetectListener(new MenuDetectListener() {
 			public void menuDetected(MenuDetectEvent e) {
-				if (remoteDirectoryTable.getSelection().length > 0) {
-					JLG.debug("opening context menu just closed to the selection");
-					// TODO : replace the context menu at the good position if
-					// needed.
-					final MenuManager myMenu = new MenuManager("xxx");
-					final Menu menu = myMenu.createContextMenu(shell);
-					myMenu.add(new OpenRemoteFileAction(
-							UserExplorerComposite.this));
+				JLG.debug("opening context menu");
+				final MenuManager myMenu = new MenuManager("xxx");
+				final Menu menu = myMenu.createContextMenu(shell);
+				
+
+				int sel = remoteDirectoryTable.getSelection().length;
+				if (sel > 0) {
+					OpenRemoteFileAction openRemoteFileAction = new OpenRemoteFileAction(
+							UserExplorerComposite.this);
+					myMenu.add(openRemoteFileAction);
+
 					myMenu.add(new Separator());
 					myMenu.add(new CheckOutAction(UserExplorerComposite.this));
 					myMenu.add(new Separator());
-					myMenu.add(new RemoveRemoteFileAction(
-							UserExplorerComposite.this));
-					myMenu.add(new RenameRemoteFileAction(
-							UserExplorerComposite.this));
+					myMenu.add(new RemoveRemoteFileAction(UserExplorerComposite.this));
+					RenameRemoteFileAction renameremoteFileAction = new RenameRemoteFileAction(
+							UserExplorerComposite.this);
+					myMenu.add(renameremoteFileAction);
 
-					menu.setEnabled(true);
-					myMenu.setVisible(true);
-					menu.setVisible(true);
+					if (sel > 1) {
+						openRemoteFileAction.setEnabled(false);
+						renameremoteFileAction.setEnabled(false);
+					}
 				}
-
+				myMenu.add(new CreateNewRemoteDirAction(UserExplorerComposite.this));
+				menu.setEnabled(true);
+				myMenu.setVisible(true);
+				menu.setVisible(true);
 			}
 		});
 		remoteDirectoryTable.addMouseListener(new MouseAdapter() {
@@ -616,6 +629,43 @@ public class UserExplorerComposite extends Composite {
 
 	public Tree getCurrentTree() throws Exception {
 		return fs.getTree(currentRemoteDirString);
+	}
+
+	public void createNewLocalDir() {
+		TableItem newDirItem = new TableItem(localDirectoryTable,
+				SWT.NONE);
+		newDirItem.setText(new String[] { DIRECTORY_NEW,
+				DIRECTORY_TYPE, DIRECTORY_SIZE });
+		newDirItem.setImage(DIRECTORY_ICON);
+		try {
+			JLG.mkdir(new File(currentLocalDirectory, DIRECTORY_NEW));
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		localDirectoryTable.setSelection(newDirItem);
+		(new RenameFileAction(this)).run();
+		
+	}
+
+	public void createNewRemoteDir() {
+		TableItem newDirItem = new TableItem(remoteDirectoryTable,
+				SWT.NONE);
+		newDirItem.setText(new String[] { DIRECTORY_NEW,
+				DIRECTORY_TYPE, DIRECTORY_SIZE });
+		newDirItem.setImage(DIRECTORY_ICON);
+		try {
+			fs.createNewDir(currentRemoteDirString, DIRECTORY_NEW);
+			TreeEntry te = fs.getTree(currentRemoteDirString).getEntry(DIRECTORY_NEW);
+			newDirItem.setData(te);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		remoteDirectoryTable.setSelection(newDirItem);
+		(new RenameRemoteFileAction(this)).run();
+		
 	}
 
 }

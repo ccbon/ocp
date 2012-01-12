@@ -219,4 +219,24 @@ public class FileSystem {
 		return tree;
 	}
 
+	public void createNewDir(String path, String directoryNew) throws Exception {
+		JLG.debug("path = " + path);
+		String[] dirnames = path.split("/");
+		if (path.equals("/")) {
+			dirnames = new String[] { "" };
+		}
+		JLG.debug("dirnames.length = " + dirnames.length);
+		Tree[] trees = getTreeStack(dirnames);
+		Pointer p = agent.set(user, new Tree());
+		Tree tree = trees[trees.length - 1];
+		tree.addTree(directoryNew, p);
+		p = agent.set(user, tree);
+		for (int i = dirnames.length - 2; i >= 0; i--) {
+			tree = trees[i];
+			tree.addTree(dirnames[i + 1], p);
+			p = agent.set(user, tree);
+		}
+		user.setRootPointer(agent, p);
+	}
+
 }
