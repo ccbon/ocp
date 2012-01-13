@@ -14,9 +14,11 @@ public abstract class Channel {
 		this.url = url;
 	}
 
-	public static Channel getInstance(URL url) {
+	public static Channel getInstance(URL url, Agent agent) {
 		if (url.getProtocol().equalsIgnoreCase("tcp")) {
 			return new TCPChannel(url);
+		} else if (url.getProtocol().equalsIgnoreCase("myself")) {
+			return new MyselfChannel(url, agent);
 		} else {
 			return new UnknownChannel(url);
 		}

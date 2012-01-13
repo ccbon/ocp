@@ -11,9 +11,9 @@ public class URL implements Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	private String sProtocol;
-	private String sHost;
-	private int iPort;
+	private String protocol;
+	private String host;
+	private int port;
 	
 
 	public URL(String sUrl) throws JLGException {
@@ -24,9 +24,9 @@ public class URL implements Serializable {
 		JLG.debug("groupCount = " + matcher.groupCount());
 		if (matcher.find()) {
 			found = true;
-			sProtocol = matcher.group(1);
-			sHost = matcher.group(2);
-			iPort = Integer.parseInt(matcher.group(3));
+			protocol = matcher.group(1);
+			host = matcher.group(2);
+			port = Integer.parseInt(matcher.group(3));
 			//JLG.debug("sProtocol: " + sProtocol);
 			//JLG.debug("sHost: " + sHost);
 			//JLG.debug("iPort: " + iPort);
@@ -37,17 +37,17 @@ public class URL implements Serializable {
 	}
 
 	public URL(String protocol, String ip, int port) {
-		this.sProtocol = protocol;
-		this.sHost = ip;
-		this.iPort = port;
+		this.protocol = protocol;
+		this.host = ip;
+		this.port = port;
 	}
 
 	public String getProtocol() {
-		return sProtocol;
+		return protocol;
 	}
 
 	public int getPort() {
-		return iPort;
+		return port;
 	}
 
 	public int getDefaultPort() {
@@ -55,16 +55,25 @@ public class URL implements Serializable {
 	}
 
 	public String getHost() {
-		return sHost;
+		return host;
 	}
 	
 	@Override
 	public String toString() {
-		return sProtocol + "://" + sHost + ":" + iPort;
+		return protocol + "://" + host + ":" + port;
 	}
 
 	public void setHost(String hostAddress) {
-		sHost = hostAddress;
+		host = hostAddress;
+		
+	}
+
+	public URL duplicate() {
+		return new URL(protocol, host, port);
+	}
+
+	public void setProtocol(String protocol) {
+		this.protocol = protocol;
 		
 	}
 

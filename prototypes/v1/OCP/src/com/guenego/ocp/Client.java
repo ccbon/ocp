@@ -27,6 +27,7 @@ public class Client {
 		agent = _agent;
 		understandableChannelList = new ArrayList<Channel>();
 		understandableChannelList.add(new TCPChannel());
+		understandableChannelList.add(new MyselfChannel());
 		channelMap = new HashMap<URL, Channel>();
 	}
 
@@ -123,7 +124,7 @@ public class Client {
 				bSponsorInProperty = true;
 				String sUrl = agent.p.getProperty(key);
 				URL url = new URL(sUrl);
-				Channel channel = Channel.getInstance(url);
+				Channel channel = Channel.getInstance(url, agent);
 				Contact sponsor = getContact(channel);
 				if (sponsor != null) {
 					JLG.debug("we found a pingable sponsor channel");
@@ -211,7 +212,7 @@ public class Client {
 			if (channelMap.containsKey(url)) {
 				channel = channelMap.get(url);
 			} else {
-				channel = Channel.getInstance(url);
+				channel = Channel.getInstance(url, agent);
 				channelMap.put(url, channel);
 			}
 			if (understand(channel)) {

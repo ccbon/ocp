@@ -31,13 +31,14 @@ import javax.crypto.spec.PBEParameterSpec;
 import com.guenego.misc.ByteUtil;
 import com.guenego.misc.Id;
 import com.guenego.misc.JLG;
+import com.guenego.misc.URL;
 
 public class Agent {
 
 	public static final String AGENT_PROPERTIES_FILE = "agent.properties";
 	public static final String NETWORK_PROPERTIES_FILE = "network.properties";
 	public Id id;
-	public String name = "anonymous";
+	public String name;
 
 	public KeyPair keyPair;
 	private SecretKey secretKey;
@@ -161,7 +162,7 @@ public class Agent {
 			server = new Server(this);
 			server.start();
 			attach();
-			Contact myself = toContact();
+			Contact myself = toContactForMyself();
 			addContact(myself);
 
 		}
@@ -334,6 +335,29 @@ public class Agent {
 		return c;
 	}
 
+	public Contact toContactForMyself() {
+		// convert the agent public information into a contact
+		Contact c = new Contact(this.id);
+		c.setName(this.name);
+		c.publicKey = this.keyPair.getPublic().getEncoded();
+		// add the listener url and node id information
+		if (server != null) {
+			Iterator<Listener> it = server.listenerList.iterator();
+			while (it.hasNext()) {
+				Listener l = it.next();
+				URL url = l.getUrl().duplicate();
+				url.setProtocol("myself");
+				c.addURL(url);
+			}
+			Iterator<Id> itn = storage.nodeSet.iterator();
+			while (itn.hasNext()) {
+				Id nodeId = (Id) itn.next();
+				c.nodeIdSet.add(nodeId);
+			}
+		}
+		return c;
+	}
+
 	public Captcha wantToCreateUser(String login, String password)
 			throws Exception {
 		// TODO check if user already exists ?
@@ -376,6 +400,7 @@ public class Agent {
 	}
 
 	public User login(String login, String password) throws Exception {
+		try {
 		Id key = hash(ucrypt(password, login + password));
 		byte[] content = client.getUser(key);
 		if (content == null || content.length == 0) {
@@ -386,6 +411,10 @@ public class Agent {
 			throw new Exception("user unknown");
 		}
 		return user;
+		} catch (Exception e) {
+			JLG.error(e);
+			throw e;
+		}
 	}
 
 	public synchronized Contact getContact(Id contactId) throws Exception {
