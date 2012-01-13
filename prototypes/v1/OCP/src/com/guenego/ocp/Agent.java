@@ -543,7 +543,7 @@ public class Agent {
 		if (isResponsible(address)) {
 			// local (even if this should be store elsewhere, store this for
 			// cache purpose.
-			JLG.debug("local store");
+			//JLG.debug("local store");
 			storage.put(address, content);
 		} else {
 			// transfer the order to another agent
@@ -559,7 +559,7 @@ public class Agent {
 		// if the content is a link (LINK:<key>), then recursively retrieve the
 		// content
 		// of the link.
-		JLG.debug("getFromKey:" + key);
+		//JLG.debug("getFromKey:" + key);
 		Content result = null;
 		Queue<Address> queue = new LinkedList<Address>();
 		Address[] address = getAddressList(key);
@@ -578,7 +578,7 @@ public class Agent {
 		}
 		if (result.isLink()) {
 			Link link = (Link) result;
-			JLG.debug("key " + key + " is a link on " + link.getTargetKey());
+			//JLG.debug("key " + key + " is a link on " + link.getTargetKey());
 			result = get(link.getTargetKey());
 		}
 		return result;
@@ -589,7 +589,7 @@ public class Agent {
 		Content result = storage.get(address);
 		if (result == null) {
 			if (isResponsible(address)) {
-				JLG.debug("address not found on " + id + " : " + address);
+				//JLG.debug("address not found on " + id + " : " + address);
 				return null;
 			} else {
 				result = client.getFromAddress(address);
@@ -622,8 +622,6 @@ public class Agent {
 			baos.close();
 			result[i] = address;
 		}
-		JLG.debug("address from key " + key + ":" + JLG.NL
-				+ JLG.join(JLG.NL, (Object[]) result));
 		return result;
 	}
 

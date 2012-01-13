@@ -85,7 +85,7 @@ public class Storage {
 		if (upi.verify(agent, address.getBytes(), addressSignature) == false) {
 			throw new Exception("Cannot remove data. Verifying signature failed.");
 		}
-		JLG.debug("signature ok");
+		//JLG.debug("signature ok");
 		contentMap.remove(address);
 	}
 

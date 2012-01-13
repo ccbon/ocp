@@ -1,6 +1,8 @@
 package com.guenego.misc;
 
 import java.io.BufferedReader;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
@@ -62,4 +64,43 @@ public class TCPClient {
 		}
 		return response;
 	}
+	
+	public byte[] request(byte[] message) throws Exception {
+		byte[] output = null;
+		Socket clientSocket = null;
+		DataOutputStream out = null;
+		DataInputStream in = null;
+		try {
+			clientSocket = new Socket(hostname, port);
+			JLG.debug("socket opened to " + hostname + ":" + port);
+			JLG.debug("sending string(length=" + message.length + ")");
+			out = new DataOutputStream(clientSocket.getOutputStream());
+			out.write(message.length);
+			out.write(message);
+			out.flush();
+			
+			in = new DataInputStream(clientSocket.getInputStream());
+			int responseLength = in.readInt();
+			output = new byte[responseLength];
+			in.read(output, 0, responseLength);
+			JLG.debug("response length=" + responseLength);
+		} catch (Exception e) {
+			throw e;
+		} finally {
+			try {
+				if (out != null) {
+					out.close();
+				}
+				if (in != null) {
+					in.close();
+				}
+				if (clientSocket != null) {
+					clientSocket.close();
+				}
+			} catch (Exception e) {
+			}
+		}
+		return output;
+	}
+
 }

@@ -48,7 +48,7 @@ public class JLG {
 			StackTraceElement ste = t.getStackTrace()[1];
 
 			String sPrefix = "DEBUG [T=" + Thread.currentThread().getName()
-					+ "] (" + ste.getFileName() + ":" + ste.getLineNumber()
+					+ "] (" + ste.getClassName() + ".java:" + ste.getLineNumber()
 					+ ") : ";
 			System.out.println(sPrefix + input);
 		}
@@ -130,10 +130,7 @@ public class JLG {
 	}
 
 	public static Serializable deserialize(String sInput) throws Exception {
-		JLG.debug("sInput = " + sInput);
-		JLG.debug("sInput.length() = " + sInput.length());
 		byte[] input = JLG.hexToBytes(sInput);
-		JLG.debug("input.length = " + input.length);
 		ObjectInputStream in = new ObjectInputStream(new ByteArrayInputStream(
 				input));
 		Object obj = in.readObject();
