@@ -31,15 +31,13 @@ import javax.crypto.spec.PBEParameterSpec;
 import com.guenego.misc.ByteUtil;
 import com.guenego.misc.Id;
 import com.guenego.misc.JLG;
-import com.guenego.ocp.gui.GraphicalUI;
-import com.guenego.ocp.gui.install.ConfigWizard;
 
 public class Agent {
 
 	public static final String AGENT_PROPERTIES_FILE = "agent.properties";
 	public static final String NETWORK_PROPERTIES_FILE = "network.properties";
 	public Id id;
-	private String name;
+	public String name = "anonymous";
 
 	public KeyPair keyPair;
 	private SecretKey secretKey;
@@ -54,8 +52,6 @@ public class Agent {
 	public Client client;
 	public Server server;
 
-	UserInterface ui;
-
 	// these two attributes are corelated
 	// all access to them must be synchronized
 	private Map<Id, Contact> contactMap; // contactid->contact
@@ -66,22 +62,6 @@ public class Agent {
 	private PBEParameterSpec userParamSpec;
 	private byte backupNbr;
 
-	public static void main(String[] args) {
-		try {
-			if (!JLG.isFile(AGENT_PROPERTIES_FILE)) {
-				ConfigWizard.start();
-			}
-			if (!JLG.isFile(AGENT_PROPERTIES_FILE)) {
-				return;
-			}
-			Agent agent = new Agent();
-			agent.start();
-			// Thread.sleep(10000);
-			// agent.stop();
-		} catch (Exception e) {
-			JLG.error(e);
-		}
-	}
 
 	public Agent() throws Exception {
 		this(null);
@@ -128,14 +108,6 @@ public class Agent {
 		// Storage
 		storage = new Storage(this);
 
-		// start an icontray or a commandline listener
-		this.ui = null;
-		if (p.getProperty("gui", "true").equalsIgnoreCase("true")) {
-			// gui mode
-			ui = new GraphicalUI(this);
-		} else {
-			ui = new CommandLine(this);
-		}
 	}
 
 	public void start() throws Exception {
@@ -193,7 +165,7 @@ public class Agent {
 			addContact(myself);
 
 		}
-		(new Thread(ui)).start();
+		
 	}
 
 	private void attach() throws Exception {
@@ -308,10 +280,6 @@ public class Agent {
 
 	public synchronized boolean hasContact(Contact contact) {
 		return contactMap.containsValue(contact);
-	}
-
-	public String getName() {
-		return name;
 	}
 
 	public byte[] crypt(String string) throws Exception, BadPaddingException {

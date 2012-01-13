@@ -56,7 +56,6 @@ public class UserExplorerComposite extends Composite {
 			UserExplorerComposite.class, "directory.png");
 	private static final Image FILE_ICON = SWTResourceManager.getImage(
 			UserExplorerComposite.class, "file.png");
-	
 
 	public Table localDirectoryTable;
 	public Table remoteDirectoryTable;
@@ -154,8 +153,10 @@ public class UserExplorerComposite extends Composite {
 						renameFileAction.setEnabled(false);
 					}
 				}
-				myMenu.add(new CreateNewDirAction(UserExplorerComposite.this));
-
+				if (sel == 0) {
+					myMenu.add(new CreateNewDirAction(
+							UserExplorerComposite.this));
+				}
 				menu.setEnabled(true);
 				myMenu.setVisible(true);
 				menu.setVisible(true);
@@ -243,7 +244,6 @@ public class UserExplorerComposite extends Composite {
 			}
 		});
 
-		
 		reloadLocalDirectoryTable();
 
 		Composite rightComposite = new Composite(sashForm, SWT.NONE);
@@ -294,7 +294,6 @@ public class UserExplorerComposite extends Composite {
 				JLG.debug("opening context menu");
 				final MenuManager myMenu = new MenuManager("xxx");
 				final Menu menu = myMenu.createContextMenu(shell);
-				
 
 				int sel = remoteDirectoryTable.getSelection().length;
 				if (sel > 0) {
@@ -305,7 +304,8 @@ public class UserExplorerComposite extends Composite {
 					myMenu.add(new Separator());
 					myMenu.add(new CheckOutAction(UserExplorerComposite.this));
 					myMenu.add(new Separator());
-					myMenu.add(new RemoveRemoteFileAction(UserExplorerComposite.this));
+					myMenu.add(new RemoveRemoteFileAction(
+							UserExplorerComposite.this));
 					RenameRemoteFileAction renameremoteFileAction = new RenameRemoteFileAction(
 							UserExplorerComposite.this);
 					myMenu.add(renameremoteFileAction);
@@ -315,7 +315,10 @@ public class UserExplorerComposite extends Composite {
 						renameremoteFileAction.setEnabled(false);
 					}
 				}
-				myMenu.add(new CreateNewRemoteDirAction(UserExplorerComposite.this));
+				if (sel == 0) {
+					myMenu.add(new CreateNewRemoteDirAction(
+							UserExplorerComposite.this));
+				}
 				menu.setEnabled(true);
 				myMenu.setVisible(true);
 				menu.setVisible(true);
@@ -388,7 +391,6 @@ public class UserExplorerComposite extends Composite {
 		});
 		dragRemoteSource.setTransfer(types);
 
-		
 		DropTarget dropRemoteTarget = new DropTarget(remoteDirectoryTable,
 				DND.DROP_MOVE | DND.DROP_COPY | DND.DROP_DEFAULT);
 		dropRemoteTarget.setTransfer(types);
@@ -632,10 +634,9 @@ public class UserExplorerComposite extends Composite {
 	}
 
 	public void createNewLocalDir() {
-		TableItem newDirItem = new TableItem(localDirectoryTable,
-				SWT.NONE);
-		newDirItem.setText(new String[] { DIRECTORY_NEW,
-				DIRECTORY_TYPE, DIRECTORY_SIZE });
+		TableItem newDirItem = new TableItem(localDirectoryTable, SWT.NONE);
+		newDirItem.setText(new String[] { DIRECTORY_NEW, DIRECTORY_TYPE,
+				DIRECTORY_SIZE });
 		newDirItem.setImage(DIRECTORY_ICON);
 		try {
 			JLG.mkdir(new File(currentLocalDirectory, DIRECTORY_NEW));
@@ -645,18 +646,18 @@ public class UserExplorerComposite extends Composite {
 		}
 		localDirectoryTable.setSelection(newDirItem);
 		(new RenameFileAction(this)).run();
-		
+
 	}
 
 	public void createNewRemoteDir() {
-		TableItem newDirItem = new TableItem(remoteDirectoryTable,
-				SWT.NONE);
-		newDirItem.setText(new String[] { DIRECTORY_NEW,
-				DIRECTORY_TYPE, DIRECTORY_SIZE });
+		TableItem newDirItem = new TableItem(remoteDirectoryTable, SWT.NONE);
+		newDirItem.setText(new String[] { DIRECTORY_NEW, DIRECTORY_TYPE,
+				DIRECTORY_SIZE });
 		newDirItem.setImage(DIRECTORY_ICON);
 		try {
 			fs.createNewDir(currentRemoteDirString, DIRECTORY_NEW);
-			TreeEntry te = fs.getTree(currentRemoteDirString).getEntry(DIRECTORY_NEW);
+			TreeEntry te = fs.getTree(currentRemoteDirString).getEntry(
+					DIRECTORY_NEW);
 			newDirItem.setData(te);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -665,7 +666,7 @@ public class UserExplorerComposite extends Composite {
 
 		remoteDirectoryTable.setSelection(newDirItem);
 		(new RenameRemoteFileAction(this)).run();
-		
+
 	}
 
 }

@@ -212,7 +212,7 @@ public class AdminConsole extends ApplicationWindow {
 		newShell.setImage(SWTResourceManager.getImage(GraphicalUI.class,
 				"ocp_icon.png"));
 		super.configureShell(newShell);
-		newShell.setText("OCP Agent Console - " + agent.getName());
+		newShell.setText("OCP Agent Console - " + agent.name);
 	}
 
 	/**

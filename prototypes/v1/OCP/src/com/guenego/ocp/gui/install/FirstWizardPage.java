@@ -96,7 +96,7 @@ public class FirstWizardPage extends WizardPage {
 		sponsorLabel.setEnabled(false);
 
 		sponsorText = new Text(container, SWT.BORDER);
-		sponsorText.setText("http://localhost:22221");
+		sponsorText.setText("tcp://localhost:22221");
 		sponsorText.setBounds(102, 211, 177, 19);
 		sponsorText.setEnabled(false);
 	}
