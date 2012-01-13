@@ -89,16 +89,11 @@ public class JLG {
 		if (input == null) {
 			return null;
 		}
-		String result = "";
+		StringBuffer result = new StringBuffer(input.length * 2);
 		for (int i = 0; i < input.length; i++) {
-			result += String.format("%1$02x", input[i]);
+			result.append(String.format("%1$02x", input[i]));
 		}
-		if (result.length() % 2 != 0) {
-			JLG.error("Cannot convert to hex, result = " + result);
-			(new Exception()).printStackTrace();
-			System.exit(1);
-		}
-		return result;
+		return result.toString();
 	}
 
 	public static byte[] hexToBytes(String string) throws Exception {
