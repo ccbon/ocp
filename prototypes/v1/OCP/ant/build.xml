@@ -13,7 +13,7 @@
 			<mkdir dir="${tmp.dir}" />
 			<jar destfile="${tmp.dir}/ocp_@{archi}.jar" filesetmanifest="mergewithoutmain">
 				<manifest>
-					<attribute name="Main-Class" value="com.guenego.ocp.Agent" />
+					<attribute name="Main-Class" value="com.guenego.ocp.gui.Main" />
 					<attribute name="Class-Path" value="." />
 				</manifest>
 				<fileset dir="${root.dir}/OCP/bin" />

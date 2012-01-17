@@ -28,7 +28,7 @@
 	
 
 	
-	<application-desc main-class="com.guenego.ocp.Agent">
+	<application-desc main-class="com.guenego.ocp.gui.Main">
 	</application-desc>
 
 </jnlp>

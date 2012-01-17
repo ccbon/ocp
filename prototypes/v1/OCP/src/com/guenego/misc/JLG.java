@@ -90,8 +90,8 @@ public class JLG {
 			return null;
 		}
 		StringBuffer result = new StringBuffer(input.length * 2);
-		for (int i = 0; i < input.length; i++) {
-			result.append(String.format("%1$02x", input[i]));
+		for (byte b : input) {
+			result.append(String.format("%1$02x", b));
 		}
 		return result.toString();
 	}
