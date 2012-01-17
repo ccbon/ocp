@@ -33,7 +33,7 @@ import com.guenego.misc.Id;
 import com.guenego.misc.JLG;
 import com.guenego.misc.URL;
 
-public class Agent {
+public abstract class Agent {
 
 	public static final String AGENT_PROPERTIES_FILE = "agent.properties";
 	public static final String NETWORK_PROPERTIES_FILE = "network.properties";
@@ -64,14 +64,16 @@ public class Agent {
 	private byte backupNbr;
 
 
-	public Agent() throws Exception {
-		this(null);
-	}
-
-	public Agent(Properties properties) throws Exception {
+	public Agent() {
 		contactMap = new HashMap<Id, Contact>();
 		nodeMap = new TreeMap<Id, Contact>();
+	}
 
+	public void loadAgentConfig() throws Exception {
+		loadAgentConfig(null);
+	}
+
+	public void loadAgentConfig(Properties properties) throws Exception {
 		if (properties == null) {
 			p = new Properties();
 			p.load(new FileInputStream(AGENT_PROPERTIES_FILE));
@@ -109,6 +111,7 @@ public class Agent {
 		// Storage
 		storage = new Storage(this);
 
+		
 	}
 
 	public void start() throws Exception {
@@ -779,5 +782,6 @@ public class Agent {
 		UserPublicInfo upi = (UserPublicInfo) data.getObject();
 		return upi;
 	}
+
 
 }
