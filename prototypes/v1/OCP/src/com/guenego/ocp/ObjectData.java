@@ -6,7 +6,7 @@ import com.guenego.misc.JLG;
 
 public class ObjectData extends Data {
 
-	public ObjectData(Agent agent, User user, Serializable serializable)
+	public ObjectData(OCPAgent agent, User user, Serializable serializable)
 			throws Exception {
 		super(agent, user, JLG.serialize(serializable).getBytes());
 	}

@@ -13,7 +13,7 @@ public class Link extends Content {
 	private Key key;
 	private Key targetKey;
 
-	public Link(User user, Agent agent, Key key, Key targetKey) throws Exception {
+	public Link(User user, OCPAgent agent, Key key, Key targetKey) throws Exception {
 		this.setKey(key);
 		this.targetKey = targetKey;
 		this.signature = user.sign(agent, ByteUtil.concat(getContent()));

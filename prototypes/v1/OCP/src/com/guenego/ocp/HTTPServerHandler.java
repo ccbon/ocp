@@ -14,11 +14,11 @@ import com.sun.net.httpserver.HttpHandler;
 
 public class HTTPServerHandler implements HttpHandler {
 
-	private Agent agent;
+	private OCPAgent agent;
 	private String root;
 	private Map<String, String> extMap;
 
-	public HTTPServerHandler(Agent agent) {
+	public HTTPServerHandler(OCPAgent agent) {
 		this.agent = agent;
 		this.root = agent.p.getProperty("http.htdocs", ".");
 		extMap = new HashMap<String, String>();

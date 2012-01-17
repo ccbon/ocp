@@ -11,11 +11,11 @@ import com.guenego.misc.URL;
 public class Server {
 
 	
-	public Agent agent;
+	public OCPAgent agent;
 	public List<Listener> listenerList;
 	
 
-	public Server(Agent agent) throws JLGException {
+	public Server(OCPAgent agent) throws JLGException {
 		try {
 			this.agent = agent;
 			

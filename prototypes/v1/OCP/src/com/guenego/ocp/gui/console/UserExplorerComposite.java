@@ -42,6 +42,7 @@ import org.eclipse.wb.swt.SWTResourceManager;
 import com.guenego.misc.JLG;
 import com.guenego.ocp.Agent;
 import com.guenego.ocp.FileSystem;
+import com.guenego.ocp.OCPAgent;
 import com.guenego.ocp.Tree;
 import com.guenego.ocp.TreeEntry;
 import com.guenego.ocp.User;
@@ -79,7 +80,7 @@ public class UserExplorerComposite extends Composite {
 		super(parent, style);
 		this.agent = agent;
 		this.user = user;
-		this.fs = new FileSystem(user, agent, null);
+		this.fs = new FileSystem(user, (OCPAgent) agent, null);
 		final Shell shell = parent.getShell();
 
 		currentLocalDirectory = new File(user.getDefaultLocalDir());
@@ -601,8 +602,6 @@ public class UserExplorerComposite extends Composite {
 	public void deleteRemoteFile(TableItem item) {
 
 		String name = item.getText(0);
-
-		FileSystem fs = new FileSystem(user, agent, null);
 		try {
 			fs.deleteFile(currentRemoteDirString, name);
 		} catch (Exception e) {
@@ -618,8 +617,6 @@ public class UserExplorerComposite extends Composite {
 	}
 
 	public void renameRemoteFile(String oldName, String newName) {
-
-		FileSystem fs = new FileSystem(user, agent, null);
 		try {
 			fs.renameFile(currentRemoteDirString, oldName, newName);
 		} catch (Exception e) {

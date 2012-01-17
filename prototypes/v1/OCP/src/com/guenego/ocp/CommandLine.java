@@ -8,10 +8,10 @@ import com.guenego.misc.JLG;
 public class CommandLine implements UserInterface {
 	private String prompt = "?>";
 
-	private Agent agent;
+	private OCPAgent agent;
 
-	public CommandLine(Agent _agent) {
-		agent = _agent;
+	public CommandLine(OCPAgent agent) {
+		this.agent = agent;
 	}
 
 	public void run() {

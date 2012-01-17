@@ -10,7 +10,7 @@ public class TCPListener implements Listener {
 	private URL url;
 	private NATTraversal natTraversal;
 	
-	public TCPListener(Agent agent, URL url) {
+	public TCPListener(OCPAgent agent, URL url) {
 		this.url = url;
 		tcpServer = new TCPServer(url.getPort(), new TCPServerHandler(agent));
 		natTraversal = new NATTraversal(url.getPort());

@@ -19,12 +19,12 @@ import com.guenego.misc.URL;
 
 public class Client {
 
-	private Agent agent;
+	private OCPAgent agent;
 	private List<Channel> understandableChannelList;
 	private Map<URL, Channel> channelMap;
 
-	public Client(Agent _agent) {
-		agent = _agent;
+	public Client(OCPAgent agent) {
+		this.agent = agent;
 		understandableChannelList = new ArrayList<Channel>();
 		understandableChannelList.add(new TCPChannel());
 		understandableChannelList.add(new MyselfChannel());

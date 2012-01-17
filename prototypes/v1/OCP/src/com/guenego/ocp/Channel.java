@@ -14,7 +14,7 @@ public abstract class Channel {
 		this.url = url;
 	}
 
-	public static Channel getInstance(URL url, Agent agent) {
+	public static Channel getInstance(URL url, OCPAgent agent) {
 		if (url.getProtocol().equalsIgnoreCase("tcp")) {
 			return new TCPChannel(url);
 		} else if (url.getProtocol().equalsIgnoreCase("myself")) {

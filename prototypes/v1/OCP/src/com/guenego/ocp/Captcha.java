@@ -20,7 +20,7 @@ public class Captcha implements Serializable {
 	public String signatureAlgo;
 	public byte[] signature;
 
-	public Captcha(Agent agent) throws Exception {
+	public Captcha(OCPAgent agent) throws Exception {
 		this.challengeObject = "the answer is :didounette";
 		this.created = System.currentTimeMillis();
 		cryptedAnswer = agent.crypt("didounette");

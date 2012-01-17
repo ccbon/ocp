@@ -11,9 +11,9 @@ import com.guenego.misc.TCPServerHandlerInterface;
 public class TCPServerHandler implements TCPServerHandlerInterface {
 
 	private Socket clientSocket;
-	private Agent agent;
+	private OCPAgent agent;
 
-	public TCPServerHandler(Agent agent) {
+	public TCPServerHandler(OCPAgent agent) {
 		this.agent = agent;
 	}
 

@@ -27,9 +27,9 @@ public class Protocol {
 	public static final String GET_ADDRESS = "get_address";
 	public static final String ADDRESS_NOT_FOUND = "not_found";
 	public static final String REMOVE_ADDRESS = "remove_address";
-	private Agent agent;
+	private OCPAgent agent;
 
-	public Protocol(Agent agent) {
+	public Protocol(OCPAgent agent) {
 		this.agent = agent;
 	}
 

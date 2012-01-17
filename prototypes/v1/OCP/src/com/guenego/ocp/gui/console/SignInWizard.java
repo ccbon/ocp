@@ -10,6 +10,7 @@ import org.eclipse.swt.widgets.Shell;
 
 import com.guenego.misc.JLG;
 import com.guenego.ocp.Agent;
+import com.guenego.ocp.OCPAgent;
 import com.guenego.ocp.User;
 
 public class SignInWizard extends Wizard {
@@ -32,13 +33,13 @@ public class SignInWizard extends Wizard {
 	}
 
 	private SignInWizardPage p1;
-	private Agent agent;
+	private OCPAgent agent;
 	private String username;
 	private String password;
 	private AdminConsole window;
 
 	public SignInWizard(Agent agent, AdminConsole window) {
-		this.agent = agent;
+		this.agent = (OCPAgent) agent;
 		this.window = window;
 		setWindowTitle("Sign In Wizard");
 	}

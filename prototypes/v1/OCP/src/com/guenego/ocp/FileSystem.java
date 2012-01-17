@@ -9,11 +9,11 @@ import com.guenego.misc.JLG;
 
 public class FileSystem {
 
-	private Agent agent;
+	private OCPAgent agent;
 	private User user;
 	private String path;
 
-	public FileSystem(User user, Agent agent, String path) {
+	public FileSystem(User user, OCPAgent agent, String path) {
 		this.user = user;
 		this.agent = agent;
 		this.path = path;

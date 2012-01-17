@@ -22,7 +22,7 @@ public class CoupleOfAgent {
 			p1.setProperty("server.listener.2", "http://localhost:11110");
 			p1.setProperty("server.isFirstAgent", "yes");
 			Agent a1 = new OCPAgent();
-			a1.loadAgentConfig(p1);
+			a1.loadConfig(p1);
 			Properties network = new Properties();
 			network.setProperty("hello", "didounette");
 			network.setProperty("coucou", "jlg");
@@ -43,7 +43,7 @@ public class CoupleOfAgent {
 			p2.setProperty("sponsor.1", "tcp://localhost:22220");
 			p2.setProperty("sponsor.2", "xxx://localhost:22223");
 			Agent a2 = new OCPAgent();
-			a2.loadAgentConfig(p2);
+			a2.loadConfig(p2);
 			a2.start();
 			JLG.debug("done for me.");
 		} catch (Exception e) {

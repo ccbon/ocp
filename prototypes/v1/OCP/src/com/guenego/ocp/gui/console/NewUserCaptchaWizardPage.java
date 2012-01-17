@@ -12,7 +12,7 @@ import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Text;
 
 import com.guenego.misc.JLG;
-import com.guenego.ocp.Agent;
+import com.guenego.ocp.OCPAgent;
 import com.guenego.ocp.User;
 
 public class NewUserCaptchaWizardPage extends WizardPage {
@@ -79,7 +79,7 @@ public class NewUserCaptchaWizardPage extends WizardPage {
 		try {
 			JLG.debug("creating the user");
 			NewUserWizard wizard = (NewUserWizard) getWizard();
-			Agent agent = wizard.getAgent();
+			OCPAgent agent = (OCPAgent) wizard.getAgent();
 			agent.createUser(wizard.getUsername(), wizard.getPassword(), 2,
 					wizard.getCaptcha(), captchaAnswerText.getText());
 			User user = agent.login(wizard.getUsername(), wizard.getPassword());

@@ -6,7 +6,7 @@ public class Data extends Content {
 
 	protected byte[] content = null;
 	
-	public Data(Agent agent, User user, byte[] content) throws Exception {
+	public Data(OCPAgent agent, User user, byte[] content) throws Exception {
 		this.content = content;
 		this.username = user.getLogin().getBytes();
 		this.signature = user.sign(agent, content);

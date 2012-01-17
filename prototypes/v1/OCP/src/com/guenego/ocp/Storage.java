@@ -12,9 +12,9 @@ public class Storage {
 
 	public NavigableSet<Id> nodeSet; // set of node referenced by their id
 	private Map<Address, Content> contentMap;
-	public Agent agent;
+	public OCPAgent agent;
 
-	public Storage(Agent agent) {
+	public Storage(OCPAgent agent) {
 		nodeSet = new TreeSet<Id>();
 		contentMap = new PersistentHashMap(agent);
 		this.agent = agent;

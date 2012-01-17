@@ -5,10 +5,10 @@ import com.guenego.misc.URL;
 
 public class MyselfChannel extends Channel {
 
-	private Agent agent;
+	private OCPAgent agent;
 	
 
-	public MyselfChannel(URL url, Agent agent) {
+	public MyselfChannel(URL url, OCPAgent agent) {
 		this.agent = agent;
 		this.url = url;
 	}

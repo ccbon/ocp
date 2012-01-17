@@ -10,11 +10,11 @@ import com.sun.net.httpserver.HttpServer;
 public class HTTPListener implements Listener {
 
 	private URL url;
-	private Agent agent;
+	private OCPAgent agent;
 	HttpServer server;
 	private NATTraversal natTraversal;
 
-	public HTTPListener(Agent agent, URL url) {
+	public HTTPListener(OCPAgent agent, URL url) {
 		this.url = url;
 		this.agent = agent;
 		natTraversal = new NATTraversal(url.getPort());

@@ -11,31 +11,19 @@ import org.eclipse.swt.widgets.Shell;
 
 import com.guenego.misc.JLG;
 import com.guenego.ocp.Agent;
+import com.guenego.ocp.OCPAgent;
 
 public class ConfigWizard extends Wizard {
 
 	
 	public boolean bIsFirstAgent = false;
 	public String listenerPort = "22222";
+	private Agent agent;
 
-	public static void start() {
-		JLG.debug_on();
-		JLG.debug("starting wizard");
-		Display display = Display.getDefault();
 
-		final Shell shell = new Shell(display);
-		shell.setLayout(new FillLayout());
-
-		WizardDialog dialog = new WizardDialog(shell, new ConfigWizard());
-		dialog.open();
-
-		JLG.debug("about to dispose");
-		shell.dispose();
-		display.dispose();
-	}
-
-	public ConfigWizard() {
+	public ConfigWizard(Agent agent) {
 		setWindowTitle("New Wizard");
+		this.agent = agent;
 	}
 
 	@Override
@@ -70,7 +58,7 @@ public class ConfigWizard extends Wizard {
 		} else {
 			p.setProperty("sponsor.1", firstPage.sponsorText.getText());
 		}
-		JLG.storeConfig(p, Agent.AGENT_PROPERTIES_FILE);
+		JLG.storeConfig(p, agent.getConfigFile().getAbsolutePath());
 
 		if (bIsFirstAgent) {
 			NetworkWizardPage networkPage = (NetworkWizardPage) getPage("networkPage");
@@ -81,7 +69,7 @@ public class ConfigWizard extends Wizard {
 			np.setProperty("SignatureAlgo", "SHA1withDSA");
 			np.setProperty("user.cipher.algo", "PBEWithMD5AndDES");
 
-			JLG.storeConfig(np, Agent.NETWORK_PROPERTIES_FILE);
+			JLG.storeConfig(np, ((OCPAgent) agent).getNetworkConfigFile().getAbsolutePath());
 
 		}
 

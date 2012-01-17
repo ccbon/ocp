@@ -61,7 +61,7 @@ public class User implements Serializable {
 		return upi;
 	}
 
-	public byte[] sign(Agent agent, byte[] content) throws Exception {
+	public byte[] sign(OCPAgent agent, byte[] content) throws Exception {
 		Signature s = Signature.getInstance(agent.signatureAlgorithm);
 		s.initSign(keyPair.getPrivate());
 		s.update(content);
@@ -89,7 +89,7 @@ public class User implements Serializable {
 		return cipher.doFinal(ciphertext);
 	}
 
-	public void add(Agent agent, Pointer pointer) throws Exception {
+	public void add(OCPAgent agent, Pointer pointer) throws Exception {
 		UserIndex userIndex = getUserIndex(agent);
 		userIndex.add(pointer);
 		Data data = new Data(agent, this, crypt(JLG.serialize(userIndex).getBytes()));
@@ -97,7 +97,7 @@ public class User implements Serializable {
 		agent.setWithLink(this, data, link);
 	}
 
-	public UserIndex getUserIndex(Agent agent) throws Exception {
+	public UserIndex getUserIndex(OCPAgent agent) throws Exception {
 		UserIndex userIndex = null;
 		Data userIndexData = (Data) agent.get(indexKey);
 		if (userIndexData == null) {
@@ -110,7 +110,7 @@ public class User implements Serializable {
 		return userIndex;
 	}
 
-	public void remove(Agent agent, Pointer pointer) throws Exception {
+	public void remove(OCPAgent agent, Pointer pointer) throws Exception {
 		UserIndex userIndex = getUserIndex(agent);
 		userIndex.remove(pointer);
 		Data data = new Data(agent, this, crypt(JLG.serialize(userIndex).getBytes()));
@@ -120,7 +120,7 @@ public class User implements Serializable {
 	}
 
 
-	public Pointer getRootPointer(Agent agent) throws Exception {
+	public Pointer getRootPointer(OCPAgent agent) throws Exception {
 		Pointer pointer = null;
 		Data pointerData = (Data) agent.get(rootKey);
 		if (pointerData == null) {
@@ -133,7 +133,7 @@ public class User implements Serializable {
 		return pointer;
 	}
 
-	public void setRootPointer(Agent agent, Pointer p) throws Exception {
+	public void setRootPointer(OCPAgent agent, Pointer p) throws Exception {
 
 		Data data = new Data(agent, this, crypt(JLG.serialize(p).getBytes()));
 		Link link = new Link(this, agent, rootKey, data.getKey(agent));
