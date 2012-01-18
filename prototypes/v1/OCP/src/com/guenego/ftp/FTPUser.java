@@ -24,13 +24,6 @@ public class FTPUser extends User {
 	public String getDefaultLocalDir() {
 		return defaultLocalDir;
 	}
-
-	@Override
-	public void checkout(Agent agent, String localDir) throws Exception {
-		JLG.debug("ftp checkout");
-		((FTPAgent) agent).checkout(this, localDir);
-		
-	}
 	
 	public String getPassword() {
 		return password;

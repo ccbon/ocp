@@ -21,8 +21,6 @@ public abstract class User implements Serializable {
 	
 	public abstract String getDefaultLocalDir();
 
-	public abstract void checkout(Agent agent, String text) throws Exception;
-
 
 
 }

@@ -146,10 +146,6 @@ public class OCPUser extends User {
 				+ JLG.bytesToHex(keyPair.getPublic().getEncoded());
 	}
 
-	@Override
-	public void checkout(Agent agent, String dir) throws Exception {
-		FileSystem fs = new FileSystem(this, (OCPAgent) agent, dir);
-		fs.checkout();
-	}
+
 
 }

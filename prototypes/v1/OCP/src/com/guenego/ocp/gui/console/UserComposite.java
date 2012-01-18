@@ -90,7 +90,7 @@ public class UserComposite extends Composite {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				try {
-					user.checkout(agent, dirText.getText());
+					agent.checkout(user, dirText.getText());
 				} catch (Exception e1) {
 					JLG.error(e1);
 				}

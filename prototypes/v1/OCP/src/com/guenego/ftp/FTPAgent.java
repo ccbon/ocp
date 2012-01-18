@@ -62,13 +62,15 @@ public class FTPAgent extends Agent {
 		}
 	}
 
-	public void checkout(FTPUser ftpUser, String localDir) throws Exception {
+	@Override
+	public void checkout(User user, String localDir) throws Exception {
 		// make sure you are at the top directory
-		reconnect(ftpUser);
+		reconnect((FTPUser) user);
 		// now remove the local dir
 		JLG.rm(localDir);
 		JLG.mkdir(localDir);
 		checkout("/", new File(localDir));
+
 	}
 
 	private void checkout(String remotePath, File localDir) throws Exception {
@@ -80,12 +82,14 @@ public class FTPAgent extends Agent {
 			if (ftpFile.isFile()) {
 				JLG.debug("FTPFile: " + ftpFile.getName() + "; "
 						+ ftpFile.getSize());
-				fos = new FileOutputStream(new File(localDir, ftpFile.getName()));
+				fos = new FileOutputStream(
+						new File(localDir, ftpFile.getName()));
 				ftp.retrieveFile(ftpFile.getName(), fos);
 				fos.close();
 			} else if (ftpFile.isDirectory()) {
 				JLG.mkdir(new File(localDir, ftpFile.getName()));
-				checkout(remotePath + ftpFile.getName() + "/", new File(localDir, ftpFile.getName()));
+				checkout(remotePath + ftpFile.getName() + "/", new File(
+						localDir, ftpFile.getName()));
 			}
 		}
 		ftp.changeWorkingDirectory(remotePath);
@@ -94,7 +98,8 @@ public class FTPAgent extends Agent {
 	private void reconnect(FTPUser ftpUser) throws IOException {
 		ftp.logout();
 		ftp.connect(hostname);
-		JLG.debug("login=" + ftpUser.getLogin() + " password=" + ftpUser.getPassword());
+		JLG.debug("login=" + ftpUser.getLogin() + " password="
+				+ ftpUser.getPassword());
 		ftp.login(ftpUser.getLogin(), ftpUser.getPassword());
 
 	}

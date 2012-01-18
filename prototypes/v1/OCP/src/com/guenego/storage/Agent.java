@@ -163,5 +163,7 @@ public abstract class Agent {
 
 	public abstract User login(String login, String password) throws Exception;
 
+	public abstract void checkout(User user, String text) throws Exception;
+
 
 }

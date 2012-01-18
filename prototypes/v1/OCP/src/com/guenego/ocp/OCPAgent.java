@@ -39,7 +39,6 @@ public class OCPAgent extends Agent {
 	protected Map<Id, Contact> contactMap; // contactid->contact
 	protected NavigableMap<Id, Contact> nodeMap; // nodeid->contact
 
-	
 	public OCPAgent() {
 		super();
 		contactMap = new HashMap<Id, Contact>();
@@ -368,7 +367,8 @@ public class OCPAgent extends Agent {
 		return null;
 	}
 
-	public Pointer set(OCPUser user, Serializable serializable) throws Exception {
+	public Pointer set(OCPUser user, Serializable serializable)
+			throws Exception {
 		JLG.debug("set serializable: " + serializable.getClass());
 		return set(user, JLG.serialize(serializable).getBytes());
 	}
@@ -607,11 +607,11 @@ public class OCPAgent extends Agent {
 		storage = new Storage(this);
 
 	}
-	
-	public Queue<Contact> makeContactQueue(Id key)
-			throws Exception {
+
+	public Queue<Contact> makeContactQueue(Id key) throws Exception {
 		Queue<Contact> contactQueue = new LinkedList<Contact>();
-		NavigableMap<Id, Contact> nodeMap = new TreeMap<Id, Contact>(this.nodeMap);
+		NavigableMap<Id, Contact> nodeMap = new TreeMap<Id, Contact>(
+				this.nodeMap);
 		if (nodeMap.containsKey(key)) {
 			contactQueue.offer(nodeMap.get(key));
 		}
@@ -640,7 +640,7 @@ public class OCPAgent extends Agent {
 	public Queue<Contact> makeContactQueue() throws Exception {
 		return makeContactQueue(new Id("0"));
 	}
-	
+
 	public synchronized void addContact(Contact contact) throws Exception {
 
 		contactMap.put(contact.id, contact);
@@ -657,7 +657,8 @@ public class OCPAgent extends Agent {
 
 	public Iterator<Contact> getContactIterator() {
 		// we return a snapshot and not the modifiable contact list
-		LinkedList<Contact> linkedList = new LinkedList<Contact>(contactMap.values());
+		LinkedList<Contact> linkedList = new LinkedList<Contact>(
+				contactMap.values());
 		return linkedList.iterator();
 	}
 
@@ -690,6 +691,10 @@ public class OCPAgent extends Agent {
 		return true;
 	}
 
-
+	@Override
+	public void checkout(User user, String dir) throws Exception {
+		FileSystem fs = new FileSystem((OCPUser) user, this, dir);
+		fs.checkout();
+	}
 
 }
