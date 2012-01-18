@@ -14,13 +14,13 @@ import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.swt.widgets.TreeItem;
 
 import com.guenego.misc.URL;
-import com.guenego.ocp.Agent;
 import com.guenego.ocp.Contact;
+import com.guenego.ocp.OCPAgent;
 import com.guenego.ocp.Protocol;
 
 public class ContactComposite extends Composite {
 
-	private Agent agent;
+	private OCPAgent agent;
 	private Tree tree;
 
 	/**
@@ -29,7 +29,7 @@ public class ContactComposite extends Composite {
 	 * @param parent
 	 * @param style
 	 */
-	public ContactComposite(Composite parent, int style, Agent agent) {
+	public ContactComposite(Composite parent, int style, OCPAgent agent) {
 		super(parent, style);
 		this.agent = agent;
 		setLayout(new GridLayout(1, false));

@@ -9,7 +9,7 @@ import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 
 import com.guenego.misc.JLG;
-import com.guenego.ocp.Agent;
+import com.guenego.storage.Agent;
 
 public class ExitAction extends Action {
 	private Agent agent;

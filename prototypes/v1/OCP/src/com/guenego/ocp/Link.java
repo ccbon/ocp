@@ -2,6 +2,7 @@ package com.guenego.ocp;
 
 import com.guenego.misc.ByteUtil;
 import com.guenego.misc.JLG;
+import com.guenego.storage.Agent;
 
 
 public class Link extends Content {
@@ -13,7 +14,7 @@ public class Link extends Content {
 	private Key key;
 	private Key targetKey;
 
-	public Link(User user, OCPAgent agent, Key key, Key targetKey) throws Exception {
+	public Link(OCPUser user, OCPAgent agent, Key key, Key targetKey) throws Exception {
 		this.setKey(key);
 		this.targetKey = targetKey;
 		this.signature = user.sign(agent, ByteUtil.concat(getContent()));

@@ -1,12 +1,13 @@
 package com.guenego.ocp;
 
 import com.guenego.misc.JLG;
+import com.guenego.storage.Agent;
 
 public class Data extends Content {
 
 	protected byte[] content = null;
 	
-	public Data(OCPAgent agent, User user, byte[] content) throws Exception {
+	public Data(OCPAgent agent, OCPUser user, byte[] content) throws Exception {
 		this.content = content;
 		this.username = user.getLogin().getBytes();
 		this.signature = user.sign(agent, content);

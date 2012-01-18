@@ -10,10 +10,10 @@ import com.guenego.misc.JLG;
 public class FileSystem {
 
 	private OCPAgent agent;
-	private User user;
+	private OCPUser user;
 	private String path;
 
-	public FileSystem(User user, OCPAgent agent, String path) {
+	public FileSystem(OCPUser user, OCPAgent agent, String path) {
 		this.user = user;
 		this.agent = agent;
 		this.path = path;

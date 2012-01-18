@@ -14,11 +14,11 @@ import org.eclipse.swt.widgets.Tray;
 import org.eclipse.swt.widgets.TrayItem;
 
 import com.guenego.misc.JLG;
-import com.guenego.ocp.Agent;
 import com.guenego.ocp.UserInterface;
 import com.guenego.ocp.gui.console.AdminConsole;
 import com.guenego.ocp.gui.console.ExitAction;
 import com.guenego.ocp.gui.console.OpenConsoleAction;
+import com.guenego.storage.Agent;
 
 public class GraphicalUI implements UserInterface {
 

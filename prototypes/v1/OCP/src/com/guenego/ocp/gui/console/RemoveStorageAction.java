@@ -7,7 +7,7 @@ import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.widgets.MessageBox;
 
 import com.guenego.misc.JLG;
-import com.guenego.ocp.Agent;
+import com.guenego.storage.Agent;
 
 public class RemoveStorageAction extends Action {
 	private Agent agent;

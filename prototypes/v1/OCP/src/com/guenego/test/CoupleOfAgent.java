@@ -3,8 +3,8 @@ package com.guenego.test;
 import java.util.Properties;
 
 import com.guenego.misc.JLG;
-import com.guenego.ocp.Agent;
 import com.guenego.ocp.OCPAgent;
+import com.guenego.storage.Agent;
 
 public class CoupleOfAgent {
 	public static void main(String[] args) {

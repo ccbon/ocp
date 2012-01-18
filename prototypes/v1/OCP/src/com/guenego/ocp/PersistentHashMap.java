@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Set;
 
 import com.guenego.misc.JLG;
+import com.guenego.storage.Agent;
 
 public class PersistentHashMap implements Map<Address, Content> {
 

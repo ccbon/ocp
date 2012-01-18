@@ -1,4 +1,4 @@
-package com.guenego.ocp;
+package com.guenego.storage;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -7,14 +7,7 @@ import java.security.KeyPairGenerator;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.Map;
-import java.util.NavigableMap;
 import java.util.Properties;
-import java.util.Queue;
-import java.util.TreeMap;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
@@ -25,6 +18,9 @@ import javax.crypto.spec.PBEParameterSpec;
 
 import com.guenego.misc.Id;
 import com.guenego.misc.JLG;
+import com.guenego.ocp.Client;
+import com.guenego.ocp.Server;
+import com.guenego.ocp.Storage;
 
 public abstract class Agent {
 
@@ -43,11 +39,6 @@ public abstract class Agent {
 	public Client client;
 	public Server server;
 
-	// these two attributes are corelated
-	// all access to them must be synchronized
-	protected Map<Id, Contact> contactMap; // contactid->contact
-	protected NavigableMap<Id, Contact> nodeMap; // nodeid->contact
-
 	protected SecretKeyFactory userSecretKeyFactory;
 	protected Cipher userCipher;
 	protected PBEParameterSpec userParamSpec;
@@ -55,8 +46,6 @@ public abstract class Agent {
 
 
 	public Agent() {
-		contactMap = new HashMap<Id, Contact>();
-		nodeMap = new TreeMap<Id, Contact>();
 	}
 
 	public void loadConfig() throws Exception {
@@ -120,38 +109,7 @@ public abstract class Agent {
 		this.network = network;
 	}
 
-	public Queue<Contact> makeContactQueue(Id key)
-			throws Exception {
-		Queue<Contact> contactQueue = new LinkedList<Contact>();
-		NavigableMap<Id, Contact> nodeMap = new TreeMap<Id, Contact>(this.nodeMap);
-		if (nodeMap.containsKey(key)) {
-			contactQueue.offer(nodeMap.get(key));
-		}
 
-		NavigableMap<Id, Contact> s = nodeMap.headMap(key, false);
-		Iterator<Id> it = s.navigableKeySet().descendingIterator();
-		while (it.hasNext()) {
-			Id nodeId = it.next();
-			Contact contact = s.get(nodeId);
-			if (!contactQueue.contains(contact)) {
-				contactQueue.offer(contact);
-			}
-		}
-		s = nodeMap.tailMap(key, false);
-		it = s.navigableKeySet().descendingIterator();
-		while (it.hasNext()) {
-			Id nodeId = it.next();
-			Contact contact = s.get(nodeId);
-			if (!contactQueue.contains(contact)) {
-				contactQueue.offer(contact);
-			}
-		}
-		return contactQueue;
-	}
-
-	public Queue<Contact> makeContactQueue() throws Exception {
-		return makeContactQueue(new Id("0"));
-	}
 
 	public Id hash(byte[] input) throws Exception {
 		MessageDigest md = MessageDigest.getInstance(network.getProperty(
@@ -159,38 +117,7 @@ public abstract class Agent {
 		return new Id(md.digest(input));
 	}
 
-	public synchronized void addContact(Contact contact) throws Exception {
 
-		contactMap.put(contact.id, contact);
-		if (contact.nodeIdSet.size() == 0) {
-			throw new Exception("contact without node.");
-		}
-		Iterator<Id> it = contact.nodeIdSet.iterator();
-		while (it.hasNext()) {
-			Id id = (Id) it.next();
-			JLG.debug("adding node to nodeMap");
-			nodeMap.put(id, contact);
-		}
-	}
-
-	public Iterator<Contact> getContactIterator() {
-		// we return a snapshot and not the modifiable contact list
-		LinkedList<Contact> linkedList = new LinkedList<Contact>(contactMap.values());
-		return linkedList.iterator();
-	}
-
-	public synchronized void removeContact(Contact contact) {
-		contactMap.remove(contact.id);
-
-	}
-
-	public synchronized boolean hasNoContact() {
-		return contactMap.size() == 0;
-	}
-
-	public synchronized boolean hasContact(Contact contact) {
-		return contactMap.containsValue(contact);
-	}
 
 	public byte[] crypt(String string) throws Exception, BadPaddingException {
 		cipher.init(Cipher.ENCRYPT_MODE, secretKey);
@@ -224,16 +151,6 @@ public abstract class Agent {
 	}
 
 
-	public Captcha wantToCreateUser(String login, String password)
-			throws Exception {
-		// TODO check if user already exists ?
-		JLG.debug("want to create a user");
-		Id key = hash(ucrypt(password, login + password));
-		JLG.debug("key = " + key);
-		Queue<Contact> contactQueue = makeContactQueue(key);
-		JLG.debug("contact queue established.");
-		return client.askCaptcha(contactQueue);
-	}
 
 
 
@@ -241,6 +158,10 @@ public abstract class Agent {
 
 
 	public abstract boolean isConfigFilePresent();
+
+	public abstract boolean allowsUserCreation();
+
+	public abstract User login(String login, String password) throws Exception;
 
 
 }

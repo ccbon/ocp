@@ -2,6 +2,8 @@ package com.guenego.ocp;
 
 import java.io.Serializable;
 
+import com.guenego.storage.Agent;
+
 public abstract class Content implements Serializable {
 	/**
 	 * 

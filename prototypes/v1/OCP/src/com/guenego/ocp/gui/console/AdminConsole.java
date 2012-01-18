@@ -20,9 +20,10 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.wb.swt.SWTResourceManager;
 
 import com.guenego.misc.JLG;
-import com.guenego.ocp.Agent;
-import com.guenego.ocp.User;
+import com.guenego.ocp.OCPAgent;
 import com.guenego.ocp.gui.GraphicalUI;
+import com.guenego.storage.Agent;
+import com.guenego.storage.User;
 
 public class AdminConsole extends ApplicationWindow {
 
@@ -39,24 +40,22 @@ public class AdminConsole extends ApplicationWindow {
 
 	private CTabItem userCTabItem;
 	private CTabItem userExplorerCTabItem;
-		
-	
+
 	private NewUserAction newUserAction;
 	private SignInAction signInAction;
 	private SignOutAction signOutAction;
 	private ExitAction exitAction;
-	
+
 	private ViewContactTabAction viewAdminTabAction;
 	private ViewUserSyncTabAction viewUserSyncTabAction;
 	private ViewUserExplorerTabAction viewUserExplorerTabAction;
-	
+
 	private RemoveStorageAction removeStorageAction;
-	
+
 	private HelpAction helpAction;
 	private AboutAction aboutAction;
 	private DebugAction debugAction;
-	
-	
+
 	/**
 	 * Create the application window.
 	 */
@@ -119,7 +118,9 @@ public class AdminConsole extends ApplicationWindow {
 	private void createActions() {
 		// Create the actions
 		exitAction = new ExitAction(agent, display, this);
-		newUserAction = new NewUserAction(agent, display, this);
+		if (agent.allowsUserCreation()) {
+			newUserAction = new NewUserAction(agent, display, this);
+		}
 		signInAction = new SignInAction(agent, display, this);
 		signOutAction = new SignOutAction(this);
 		viewAdminTabAction = new ViewContactTabAction(this);
@@ -143,8 +144,10 @@ public class AdminConsole extends ApplicationWindow {
 		menuBar.add(fileMenu);
 		fileMenu.add(signInAction);
 		fileMenu.add(signOutAction);
-		fileMenu.add(new Separator());
-		fileMenu.add(newUserAction);
+		if (agent.allowsUserCreation()) {
+			fileMenu.add(new Separator());
+			fileMenu.add(newUserAction);
+		}
 		fileMenu.add(new Separator());
 		fileMenu.add(exitAction);
 
@@ -174,8 +177,10 @@ public class AdminConsole extends ApplicationWindow {
 	@Override
 	protected ToolBarManager createToolBarManager(int style) {
 		ToolBarManager toolBarManager = new ToolBarManager(style);
-		toolBarManager.add(newUserAction);
-		toolBarManager.add(new Separator());
+		if (agent.allowsUserCreation()) {
+			toolBarManager.add(newUserAction);
+			toolBarManager.add(new Separator());
+		}
 		toolBarManager.add(signInAction);
 		toolBarManager.add(signOutAction);
 		toolBarManager.add(new Separator());
@@ -236,16 +241,15 @@ public class AdminConsole extends ApplicationWindow {
 			userExplorerCTabItem.setShowClose(true);
 			userExplorerCTabItem.setText("Explorer");
 
-			Composite composite = new UserExplorerComposite(tabFolder, SWT.NONE, agent,
-					user);
+			Composite composite = new UserExplorerComposite(tabFolder,
+					SWT.NONE, agent, user);
 			userExplorerCTabItem.setControl(composite);
-			
+
 		}
 		tabFolder.setSelection(userExplorerCTabItem);
-		
+
 	}
 
-	
 	public void addUserSyncTab() {
 		if (userCTabItem == null) {
 			userCTabItem = new CTabItem(tabFolder, SWT.NONE);
@@ -262,7 +266,7 @@ public class AdminConsole extends ApplicationWindow {
 			Composite composite = new UserComposite(tabFolder, SWT.NONE, agent,
 					user);
 			userCTabItem.setControl(composite);
-			
+
 		}
 		tabFolder.setSelection(userCTabItem);
 	}
@@ -272,7 +276,8 @@ public class AdminConsole extends ApplicationWindow {
 			userCTabItem.dispose();
 			userCTabItem = null;
 		}
-		if (userExplorerCTabItem != null && (!userExplorerCTabItem.isDisposed())) {
+		if (userExplorerCTabItem != null
+				&& (!userExplorerCTabItem.isDisposed())) {
 			userExplorerCTabItem.dispose();
 			userExplorerCTabItem = null;
 		}
@@ -295,7 +300,8 @@ public class AdminConsole extends ApplicationWindow {
 			}
 		});
 
-		contactComposite = new ContactComposite(tabFolder, SWT.NONE, agent);
+		contactComposite = new ContactComposite(tabFolder, SWT.NONE,
+				(OCPAgent) agent);
 		contactCTabItem.setControl(contactComposite);
 		tabFolder.setSelection(contactCTabItem);
 
@@ -307,16 +313,17 @@ public class AdminConsole extends ApplicationWindow {
 		if (user == null) {
 			setStatus(NOT_CONNECTED_STATUS);
 			removeUserTab();
-			
+
 			bIsConnected = false;
 		} else {
 			setStatus(CONNECTED_STATUS + user.getLogin());
 		}
 		// not connected actions
 		signInAction.setEnabled(!bIsConnected);
-		newUserAction.setEnabled(!bIsConnected);
+		if (agent.allowsUserCreation()) {
+			newUserAction.setEnabled(!bIsConnected);
+		}
 		
-
 		// connected actions
 		signOutAction.setEnabled(bIsConnected);
 		viewUserSyncTabAction.setEnabled(bIsConnected);

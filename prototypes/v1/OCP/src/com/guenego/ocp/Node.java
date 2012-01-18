@@ -4,6 +4,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import com.guenego.misc.Id;
+import com.guenego.storage.Agent;
 
 public class Node implements Comparable<Node> {
 

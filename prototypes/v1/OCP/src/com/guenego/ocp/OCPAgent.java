@@ -6,11 +6,15 @@ import java.io.FileInputStream;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.Map;
+import java.util.NavigableMap;
 import java.util.Properties;
 import java.util.Queue;
 import java.util.Set;
+import java.util.TreeMap;
 
 import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
@@ -21,6 +25,8 @@ import com.guenego.misc.ByteUtil;
 import com.guenego.misc.Id;
 import com.guenego.misc.JLG;
 import com.guenego.misc.URL;
+import com.guenego.storage.Agent;
+import com.guenego.storage.User;
 
 public class OCPAgent extends Agent {
 	private static final String AGENT_PROPERTIES_FILE = "agent.properties";
@@ -28,8 +34,16 @@ public class OCPAgent extends Agent {
 
 	public Id id;
 
+	// these two attributes are corelated
+	// all access to them must be synchronized
+	protected Map<Id, Contact> contactMap; // contactid->contact
+	protected NavigableMap<Id, Contact> nodeMap; // nodeid->contact
+
+	
 	public OCPAgent() {
 		super();
+		contactMap = new HashMap<Id, Contact>();
+		nodeMap = new TreeMap<Id, Contact>();
 	}
 
 	@Override
@@ -230,7 +244,7 @@ public class OCPAgent extends Agent {
 		return result;
 	}
 
-	public void remove(User user, Key key) throws Exception {
+	public void remove(OCPUser user, Key key) throws Exception {
 		if (isLink(key)) {
 			Link link = getLink(key);
 			remove(user, link.getTargetKey());
@@ -244,7 +258,7 @@ public class OCPAgent extends Agent {
 		}
 	}
 
-	public void setWithLink(User user, Content data, Link link)
+	public void setWithLink(OCPUser user, Content data, Link link)
 			throws Exception {
 		// if a link already exists with the same key, then delete it.
 		Key key = link.getKey();
@@ -358,7 +372,7 @@ public class OCPAgent extends Agent {
 		return set(user, JLG.serialize(serializable).getBytes());
 	}
 
-	public Pointer set(User user, byte[] bytes) throws Exception {
+	public Pointer set(OCPUser user, byte[] bytes) throws Exception {
 		// 1) Create all the data objects
 		Key[] keys = new Key[user.getBackupNbr()];
 		for (int i = 0; i < user.getBackupNbr(); i++) {
@@ -376,18 +390,18 @@ public class OCPAgent extends Agent {
 		return pointer;
 	}
 
-	private Pointer makePointer(User user, Key[] keys) throws Exception {
+	private Pointer makePointer(OCPUser user, Key[] keys) throws Exception {
 		Data data = new Data(this, user, user.crypt(JLG.serialize(keys)
 				.getBytes()));
 		Pointer pointer = new Pointer(set(data).getBytes());
 		return pointer;
 	}
 
-	public Serializable get(User user, Pointer pointer) throws Exception {
+	public Serializable get(OCPUser user, Pointer pointer) throws Exception {
 		return JLG.deserialize(new String(getBytes(user, pointer)));
 	}
 
-	public byte[] getBytes(User user, Pointer pointer) throws Exception {
+	public byte[] getBytes(OCPUser user, Pointer pointer) throws Exception {
 		// 1) retrieve the key list from pointer
 		Key[] keys = getKeys(user, pointer);
 		// 2) from each key retrieve the object
@@ -409,7 +423,7 @@ public class OCPAgent extends Agent {
 		return result;
 	}
 
-	private Key[] getKeys(User user, Pointer pointer) throws Exception {
+	private Key[] getKeys(OCPUser user, Pointer pointer) throws Exception {
 		Key pointerKey = pointer.asKey();
 		Data data = (Data) get(pointerKey);
 		if (data == null) {
@@ -421,7 +435,7 @@ public class OCPAgent extends Agent {
 		return keys;
 	}
 
-	public void remove(User user, Pointer pointer) throws Exception {
+	public void remove(OCPUser user, Pointer pointer) throws Exception {
 		// 1) retrieve and remove the key list from pointer
 		Key[] keys = getKeys(user, pointer);
 		for (int i = 0; i < keys.length; i++) {
@@ -480,7 +494,7 @@ public class OCPAgent extends Agent {
 	public void createUser(String login, String password, int backupNbr,
 			Captcha captcha, String answer) throws Exception {
 
-		User user = new User(this, login, backupNbr);
+		OCPUser user = new OCPUser(this, login, backupNbr);
 		UserPublicInfo upi = user.getPublicInfo(this);
 
 		Contact contact = getContact(captcha.contactId);
@@ -507,6 +521,7 @@ public class OCPAgent extends Agent {
 
 	}
 
+	@Override
 	public User login(String login, String password) throws Exception {
 		try {
 			Id key = hash(ucrypt(password, login + password));
@@ -591,5 +606,89 @@ public class OCPAgent extends Agent {
 		storage = new Storage(this);
 
 	}
+	
+	public Queue<Contact> makeContactQueue(Id key)
+			throws Exception {
+		Queue<Contact> contactQueue = new LinkedList<Contact>();
+		NavigableMap<Id, Contact> nodeMap = new TreeMap<Id, Contact>(this.nodeMap);
+		if (nodeMap.containsKey(key)) {
+			contactQueue.offer(nodeMap.get(key));
+		}
+
+		NavigableMap<Id, Contact> s = nodeMap.headMap(key, false);
+		Iterator<Id> it = s.navigableKeySet().descendingIterator();
+		while (it.hasNext()) {
+			Id nodeId = it.next();
+			Contact contact = s.get(nodeId);
+			if (!contactQueue.contains(contact)) {
+				contactQueue.offer(contact);
+			}
+		}
+		s = nodeMap.tailMap(key, false);
+		it = s.navigableKeySet().descendingIterator();
+		while (it.hasNext()) {
+			Id nodeId = it.next();
+			Contact contact = s.get(nodeId);
+			if (!contactQueue.contains(contact)) {
+				contactQueue.offer(contact);
+			}
+		}
+		return contactQueue;
+	}
+
+	public Queue<Contact> makeContactQueue() throws Exception {
+		return makeContactQueue(new Id("0"));
+	}
+	
+	public synchronized void addContact(Contact contact) throws Exception {
+
+		contactMap.put(contact.id, contact);
+		if (contact.nodeIdSet.size() == 0) {
+			throw new Exception("contact without node.");
+		}
+		Iterator<Id> it = contact.nodeIdSet.iterator();
+		while (it.hasNext()) {
+			Id id = (Id) it.next();
+			JLG.debug("adding node to nodeMap");
+			nodeMap.put(id, contact);
+		}
+	}
+
+	public Iterator<Contact> getContactIterator() {
+		// we return a snapshot and not the modifiable contact list
+		LinkedList<Contact> linkedList = new LinkedList<Contact>(contactMap.values());
+		return linkedList.iterator();
+	}
+
+	public synchronized void removeContact(Contact contact) {
+		contactMap.remove(contact.id);
+
+	}
+
+	public synchronized boolean hasNoContact() {
+		return contactMap.size() == 0;
+	}
+
+	public synchronized boolean hasContact(Contact contact) {
+		return contactMap.containsValue(contact);
+	}
+
+	public Captcha wantToCreateUser(String login, String password)
+			throws Exception {
+		// TODO check if user already exists ?
+		JLG.debug("want to create a user");
+		Id key = hash(ucrypt(password, login + password));
+		JLG.debug("key = " + key);
+		Queue<Contact> contactQueue = makeContactQueue(key);
+		JLG.debug("contact queue established.");
+		return client.askCaptcha(contactQueue);
+	}
+
+	@Override
+	public boolean allowsUserCreation() {
+		return true;
+	}
+
+
 
 }

@@ -13,7 +13,7 @@ import org.eclipse.swt.widgets.Text;
 
 import com.guenego.misc.JLG;
 import com.guenego.ocp.OCPAgent;
-import com.guenego.ocp.User;
+import com.guenego.storage.User;
 
 public class NewUserCaptchaWizardPage extends WizardPage {
 	private Text captchaAnswerText;

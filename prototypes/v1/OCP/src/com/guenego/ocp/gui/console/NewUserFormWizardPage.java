@@ -11,8 +11,8 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
 import com.guenego.misc.JLG;
-import com.guenego.ocp.Agent;
 import com.guenego.ocp.Captcha;
+import com.guenego.ocp.OCPAgent;
 
 public class NewUserFormWizardPage extends WizardPage {
 	private Text usernameText;
@@ -85,7 +85,7 @@ public class NewUserFormWizardPage extends WizardPage {
 
 	public void onNextPage() throws Exception {
 		NewUserWizard wizard = (NewUserWizard) getWizard();
-		Agent agent = wizard.getAgent();
+		OCPAgent agent = (OCPAgent) wizard.getAgent();
 		wizard.setUsername(usernameText.getText());
 		wizard.setPassword(passwordText.getText());
 		Captcha c = agent.wantToCreateUser(usernameText.getText(), passwordText.getText());

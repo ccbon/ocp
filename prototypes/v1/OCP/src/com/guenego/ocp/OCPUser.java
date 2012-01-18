@@ -1,7 +1,6 @@
 package com.guenego.ocp;
 
 import java.io.File;
-import java.io.Serializable;
 import java.security.KeyPair;
 import java.security.Signature;
 
@@ -11,10 +10,12 @@ import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 
 import com.guenego.misc.JLG;
+import com.guenego.storage.Agent;
+import com.guenego.storage.User;
 
-public class User implements Serializable {
+public class OCPUser extends User {
 
-	private String login;
+	
 	private Key indexKey;
 	private Key rootKey;
 
@@ -24,11 +25,15 @@ public class User implements Serializable {
 	private SecretKey secretKey;
 	private String cipherAlgo = "AES";
 	private int keySize = 128;
-	
-	
 
-	public User(Agent agent, String login, int backupNbr) throws Exception {
-		this.login = login;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	
+	public OCPUser(Agent agent, String login, int backupNbr) throws Exception {
+		super(login);
 		this.backupNbr = backupNbr;
 		this.indexKey = new Key(agent.generateId()); // refer to the list of pointer
 		this.rootKey = new Key(agent.generateId()); // refer to the root file system
@@ -42,17 +47,7 @@ public class User implements Serializable {
 		secretKey = keyGen.generateKey();
 		
 	}
-
-	@Override
-	public String toString() {
-		return "login=" + login + ";public_key=" + keyPair.getPublic().getAlgorithm() + "-" + JLG.bytesToHex(keyPair.getPublic().getEncoded());
-	}
-
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-
+	
 	public UserPublicInfo getPublicInfo(Agent agent) throws Exception {
 		UserPublicInfo upi = new UserPublicInfo();
 		upi.setLogin(login);
@@ -66,10 +61,6 @@ public class User implements Serializable {
 		s.initSign(keyPair.getPrivate());
 		s.update(content);
 		return s.sign();
-	}
-
-	public String getLogin() {
-		return login;
 	}
 
 	public int getBackupNbr() {
@@ -141,8 +132,15 @@ public class User implements Serializable {
 		
 	}
 
+	@Override
 	public String getDefaultLocalDir() {
 		return System.getProperty("user.home") + File.separator + "ocp" + File.separator + getLogin();
 	}
+	
+	@Override
+	public String toString() {
+		return "login=" + login + ";public_key=" + keyPair.getPublic().getAlgorithm() + "-" + JLG.bytesToHex(keyPair.getPublic().getEncoded());
+	}
+
 
 }

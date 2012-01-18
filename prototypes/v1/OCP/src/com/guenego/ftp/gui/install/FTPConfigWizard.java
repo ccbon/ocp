@@ -6,7 +6,7 @@ import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.Wizard;
 
 import com.guenego.misc.JLG;
-import com.guenego.ocp.Agent;
+import com.guenego.storage.Agent;
 
 public class FTPConfigWizard extends Wizard {
 

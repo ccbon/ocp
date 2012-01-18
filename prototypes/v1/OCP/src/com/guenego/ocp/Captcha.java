@@ -6,6 +6,7 @@ import java.security.Signature;
 
 import com.guenego.misc.Id;
 import com.guenego.misc.JLG;
+import com.guenego.storage.Agent;
 
 public class Captcha implements Serializable {
 

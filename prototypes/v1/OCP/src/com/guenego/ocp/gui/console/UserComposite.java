@@ -13,10 +13,11 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
 import com.guenego.misc.JLG;
-import com.guenego.ocp.Agent;
 import com.guenego.ocp.FileSystem;
 import com.guenego.ocp.OCPAgent;
-import com.guenego.ocp.User;
+import com.guenego.ocp.OCPUser;
+import com.guenego.storage.Agent;
+import com.guenego.storage.User;
 
 public class UserComposite extends Composite {
 	private Text dirText;
@@ -88,7 +89,7 @@ public class UserComposite extends Composite {
 		checkoutButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				FileSystem fs = new FileSystem(user, (OCPAgent) agent, dirText.getText());
+				FileSystem fs = new FileSystem((OCPUser) user, (OCPAgent) agent, dirText.getText());
 				try {
 					fs.checkout();
 				} catch (Exception e1) {
@@ -103,7 +104,7 @@ public class UserComposite extends Composite {
 		commitButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				FileSystem fs = new FileSystem(user, (OCPAgent) agent, dirText.getText());
+				FileSystem fs = new FileSystem((OCPUser) user, (OCPAgent) agent, dirText.getText());
 				try {
 					fs.commit();
 				} catch (Exception e1) {

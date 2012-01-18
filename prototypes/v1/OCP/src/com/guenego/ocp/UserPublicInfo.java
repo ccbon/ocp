@@ -5,6 +5,7 @@ import java.security.PublicKey;
 import java.security.Signature;
 
 import com.guenego.misc.JLG;
+import com.guenego.storage.Agent;
 
 public class UserPublicInfo implements Serializable {
 

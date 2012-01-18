@@ -4,14 +4,10 @@ import java.util.Properties;
 
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.Wizard;
-import org.eclipse.jface.wizard.WizardDialog;
-import org.eclipse.swt.layout.FillLayout;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Shell;
 
 import com.guenego.misc.JLG;
-import com.guenego.ocp.Agent;
 import com.guenego.ocp.OCPAgent;
+import com.guenego.storage.Agent;
 
 public class ConfigWizard extends Wizard {
 

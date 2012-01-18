@@ -5,12 +5,12 @@ import java.util.Properties;
 
 import com.guenego.misc.JLG;
 import com.guenego.misc.JLGException;
-import com.guenego.ocp.Agent;
 import com.guenego.ocp.Captcha;
 import com.guenego.ocp.FileSystem;
 import com.guenego.ocp.OCPAgent;
+import com.guenego.ocp.OCPUser;
 import com.guenego.ocp.Pointer;
-import com.guenego.ocp.User;
+import com.guenego.storage.Agent;
 
 public class TestAgent {
 	public static void main(String[] args) {
@@ -77,7 +77,7 @@ public class TestAgent {
 			JLG.debug(decryptedMessage);
 			//System.exit(0);
 			
-			User user = a2.login(username, password);
+			OCPUser user = (OCPUser) a2.login(username, password);
 			JLG.debug(user.toString());
 			
 			

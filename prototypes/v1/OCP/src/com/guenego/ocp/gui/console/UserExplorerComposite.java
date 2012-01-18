@@ -40,12 +40,13 @@ import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.wb.swt.SWTResourceManager;
 
 import com.guenego.misc.JLG;
-import com.guenego.ocp.Agent;
 import com.guenego.ocp.FileSystem;
 import com.guenego.ocp.OCPAgent;
+import com.guenego.ocp.OCPUser;
 import com.guenego.ocp.Tree;
 import com.guenego.ocp.TreeEntry;
-import com.guenego.ocp.User;
+import com.guenego.storage.Agent;
+import com.guenego.storage.User;
 
 public class UserExplorerComposite extends Composite {
 	private static final String DIRECTORY_SIZE = "";
@@ -80,7 +81,7 @@ public class UserExplorerComposite extends Composite {
 		super(parent, style);
 		this.agent = agent;
 		this.user = user;
-		this.fs = new FileSystem(user, (OCPAgent) agent, null);
+		this.fs = new FileSystem((OCPUser) user, (OCPAgent) agent, null);
 		final Shell shell = parent.getShell();
 
 		currentLocalDirectory = new File(user.getDefaultLocalDir());

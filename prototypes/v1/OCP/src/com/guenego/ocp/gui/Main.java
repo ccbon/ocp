@@ -9,16 +9,16 @@ import org.eclipse.swt.widgets.Shell;
 import com.guenego.ftp.FTPAgent;
 import com.guenego.ftp.gui.install.FTPConfigWizard;
 import com.guenego.misc.JLG;
-import com.guenego.ocp.Agent;
 import com.guenego.ocp.OCPAgent;
 import com.guenego.ocp.UserInterface;
 import com.guenego.ocp.gui.install.ConfigWizard;
+import com.guenego.storage.Agent;
 
 public class Main {
 	public static void main(String[] args) {
 		try {
 			Agent agent = new OCPAgent();
-			// Agent agent = new FTPAgent();
+			//Agent agent = new FTPAgent();
 			UserInterface ui = new GraphicalUI(agent);
 
 			if (!agent.isConfigFilePresent()) {
