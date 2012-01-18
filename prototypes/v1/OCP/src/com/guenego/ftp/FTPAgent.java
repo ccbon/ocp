@@ -1,8 +1,11 @@
 package com.guenego.ftp;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 import org.apache.commons.net.ftp.FTPClient;
+import org.apache.commons.net.ftp.FTPFile;
 
 import com.guenego.misc.JLG;
 import com.guenego.storage.Agent;
@@ -51,11 +54,49 @@ public class FTPAgent extends Agent {
 	public User login(String login, String password) throws Exception {
 		if (ftp.login(login, password)) {
 			JLG.debug("ftp logged in.");
-			FTPUser user = new FTPUser(login, p.getProperty("default.dir", System.getProperty("user.home")));
+			FTPUser user = new FTPUser(login, password, p.getProperty(
+					"default.dir", System.getProperty("user.home")));
 			return user;
 		} else {
 			throw new Exception("Cannot Login.");
 		}
+	}
+
+	public void checkout(FTPUser ftpUser, String localDir) throws Exception {
+		// make sure you are at the top directory
+		reconnect(ftpUser);
+		// now remove the local dir
+		JLG.rm(localDir);
+		JLG.mkdir(localDir);
+		checkout("/", new File(localDir));
+	}
+
+	private void checkout(String remotePath, File localDir) throws Exception {
+		ftp.changeWorkingDirectory(remotePath);
+		FileOutputStream fos = null;
+		FTPFile[] ftpFiles = ftp.listFiles();
+		for (FTPFile ftpFile : ftpFiles) {
+			// Check if FTPFile is a regular file
+			if (ftpFile.isFile()) {
+				JLG.debug("FTPFile: " + ftpFile.getName() + "; "
+						+ ftpFile.getSize());
+				fos = new FileOutputStream(new File(localDir, ftpFile.getName()));
+				ftp.retrieveFile(ftpFile.getName(), fos);
+				fos.close();
+			} else if (ftpFile.isDirectory()) {
+				JLG.mkdir(new File(localDir, ftpFile.getName()));
+				checkout(remotePath + ftpFile.getName() + "/", new File(localDir, ftpFile.getName()));
+			}
+		}
+		ftp.changeWorkingDirectory(remotePath);
+	}
+
+	private void reconnect(FTPUser ftpUser) throws IOException {
+		ftp.logout();
+		ftp.connect(hostname);
+		JLG.debug("login=" + ftpUser.getLogin() + " password=" + ftpUser.getPassword());
+		ftp.login(ftpUser.getLogin(), ftpUser.getPassword());
+
 	}
 
 }
