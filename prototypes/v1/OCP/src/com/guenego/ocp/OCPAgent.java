@@ -118,6 +118,14 @@ public class OCPAgent extends Agent {
 		}
 
 	}
+	
+	@Override
+	public void stop() {
+		if (server != null) {
+			server.stop();
+		}
+	}
+
 
 	public Contact toContact() {
 		// convert the agent public information into a contact
@@ -695,6 +703,18 @@ public class OCPAgent extends Agent {
 	public void checkout(User user, String dir) throws Exception {
 		FileSystem fs = new FileSystem((OCPUser) user, this, dir);
 		fs.checkout();
+	}
+
+	@Override
+	public void commit(User user, String dir) throws Exception {
+		try {
+			FileSystem fs = new FileSystem((OCPUser) user, this, dir);
+			fs.commit();
+		} catch (Exception e) {
+			JLG.error(e);
+		}
+
+		
 	}
 
 }

@@ -1,6 +1,7 @@
 package com.guenego.ftp;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
@@ -38,6 +39,15 @@ public class FTPAgent extends Agent {
 	@Override
 	public void start() throws Exception {
 		ftp.connect(hostname);
+	}
+
+	@Override
+	public void stop() {
+		try {
+			ftp.logout();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override
@@ -102,6 +112,36 @@ public class FTPAgent extends Agent {
 				+ ftpUser.getPassword());
 		ftp.login(ftpUser.getLogin(), ftpUser.getPassword());
 
+	}
+
+	@Override
+	public void commit(User user, String localDir) throws Exception {
+
+		// make sure you are at the top directory
+		reconnect((FTPUser) user);
+		ftp.removeDirectory("/");
+		File file = new File(localDir);
+		if (!file.isDirectory()) {
+			throw new Exception("must be a directory:" + localDir);
+		}
+		commit(user, file, "/");
+	}
+
+	private void commit(User user, File file, String remotePath)
+			throws Exception {
+		JLG.debug("about to commit " + file.getName());
+
+		for (File child : file.listFiles()) {
+			JLG.debug("child: " + child.getName());
+
+			if (child.isDirectory()) {
+				ftp.mkd(remotePath + child.getName() + "/");
+				commit(user, child, remotePath + child.getName() + "/");
+			} else {
+				FileInputStream fis = new FileInputStream(child);
+				ftp.storeFile(remotePath + child.getName(), fis);
+			}
+		}
 	}
 
 }

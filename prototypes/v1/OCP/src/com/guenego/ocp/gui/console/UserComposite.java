@@ -13,9 +13,6 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
 import com.guenego.misc.JLG;
-import com.guenego.ocp.FileSystem;
-import com.guenego.ocp.OCPAgent;
-import com.guenego.ocp.OCPUser;
 import com.guenego.storage.Agent;
 import com.guenego.storage.User;
 
@@ -104,11 +101,11 @@ public class UserComposite extends Composite {
 		commitButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				FileSystem fs = new FileSystem((OCPUser) user, (OCPAgent) agent, dirText.getText());
 				try {
-					fs.commit();
+					agent.commit(user, dirText.getText());
 				} catch (Exception e1) {
-					JLG.error(e1);
+					QuickMessage.error(UserComposite.this.getShell(), "Error while commiting.");
+					e1.printStackTrace();
 				}
 
 			}

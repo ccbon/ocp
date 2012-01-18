@@ -98,12 +98,7 @@ public abstract class Agent {
 						"yes");
 	}
 
-	public void stop() {
-		if (server != null) {
-			server.stop();
-		}
-
-	}
+	public abstract void stop();
 
 	public void setNetworkProperties(Properties network) {
 		this.network = network;
@@ -150,20 +145,15 @@ public abstract class Agent {
 				.toCharArray()));
 	}
 
-
-
-
-
-
-
-
 	public abstract boolean isConfigFilePresent();
 
 	public abstract boolean allowsUserCreation();
 
 	public abstract User login(String login, String password) throws Exception;
 
-	public abstract void checkout(User user, String text) throws Exception;
+	public abstract void checkout(User user, String localDir) throws Exception;
+
+	public abstract void commit(User user, String localDir) throws Exception;
 
 
 }

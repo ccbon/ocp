@@ -1,7 +1,5 @@
 package com.guenego.ftp;
 
-import com.guenego.misc.JLG;
-import com.guenego.storage.Agent;
 import com.guenego.storage.User;
 
 public class FTPUser extends User {
