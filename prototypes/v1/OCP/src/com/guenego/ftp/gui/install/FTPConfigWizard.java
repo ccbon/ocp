@@ -28,7 +28,7 @@ public class FTPConfigWizard extends Wizard {
 	public boolean performFinish() {
 		Properties p = new Properties();
 		FirstWizardPage firstPage = (FirstWizardPage) getPage("firstPage");
-		p.setProperty("name", firstPage.serverHostnameText.getText());
+		p.setProperty("hostname", firstPage.serverHostnameText.getText());
 		JLG.storeConfig(p, agent.getConfigFile().getAbsolutePath());
 		return true;
 	}
