@@ -2,7 +2,7 @@ package com.guenego.storage;
 
 import java.io.Serializable;
 
-public class User implements Serializable {
+public abstract class User implements Serializable {
 
 	/**
 	 * 
@@ -19,9 +19,7 @@ public class User implements Serializable {
 		return login;
 	}
 	
-	public String getDefaultLocalDir() {
-		return System.getProperty("user.home");
-	}
+	public abstract String getDefaultLocalDir();
 
 
 

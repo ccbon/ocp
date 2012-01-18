@@ -51,7 +51,8 @@ public class FTPAgent extends Agent {
 	public User login(String login, String password) throws Exception {
 		if (ftp.login(login, password)) {
 			JLG.debug("ftp logged in.");
-			return new User(login);
+			FTPUser user = new FTPUser(login, p.getProperty("default.dir", System.getProperty("user.home")));
+			return user;
 		} else {
 			throw new Exception("Cannot Login.");
 		}
