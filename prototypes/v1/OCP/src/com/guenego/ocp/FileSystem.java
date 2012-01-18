@@ -81,10 +81,12 @@ public class FileSystem {
 	}
 
 	private Pointer commit(File file) throws Exception {
+		JLG.debug("about to commit " + file.getName());
 		Pointer result = null;
 		if (file.isDirectory()) {
 			Tree tree = new Tree();
 			for (File child : file.listFiles()) {
+				JLG.debug("child: " + child.getName());
 				Pointer p = commit(child);
 				if (child.isDirectory()) {
 					tree.addTree(child.getName(), p);
@@ -92,7 +94,6 @@ public class FileSystem {
 					tree.addFile(child.getName(), p);
 				}
 			}
-
 			result = agent.set(user, tree);
 		} else { // file
 			byte[] content = JLG.getBinaryFile(file);

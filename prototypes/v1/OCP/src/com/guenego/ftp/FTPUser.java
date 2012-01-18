@@ -1,5 +1,7 @@
 package com.guenego.ftp;
 
+import com.guenego.misc.JLG;
+import com.guenego.storage.Agent;
 import com.guenego.storage.User;
 
 public class FTPUser extends User {
@@ -19,6 +21,13 @@ public class FTPUser extends User {
 	@Override
 	public String getDefaultLocalDir() {
 		return defaultLocalDir;
+	}
+
+	@Override
+	public void checkout(Agent agent, String text) throws Exception {
+		JLG.debug("ftp checkout");
+		// TODO Auto-generated method stub
+		
 	}
 
 }

@@ -89,12 +89,12 @@ public class UserComposite extends Composite {
 		checkoutButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				FileSystem fs = new FileSystem((OCPUser) user, (OCPAgent) agent, dirText.getText());
 				try {
-					fs.checkout();
+					user.checkout(agent, dirText.getText());
 				} catch (Exception e1) {
 					JLG.error(e1);
 				}
+				
 			}
 		});
 		checkoutButton.setBounds(10, 88, 68, 23);

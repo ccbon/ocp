@@ -368,7 +368,8 @@ public class OCPAgent extends Agent {
 		return null;
 	}
 
-	public Pointer set(User user, Serializable serializable) throws Exception {
+	public Pointer set(OCPUser user, Serializable serializable) throws Exception {
+		JLG.debug("set serializable: " + serializable.getClass());
 		return set(user, JLG.serialize(serializable).getBytes());
 	}
 

@@ -15,13 +15,12 @@ import com.guenego.storage.User;
 
 public class OCPUser extends User {
 
-	
 	private Key indexKey;
 	private Key rootKey;
 
 	public KeyPair keyPair;
 	private int backupNbr = 1;
-	
+
 	private SecretKey secretKey;
 	private String cipherAlgo = "AES";
 	private int keySize = 128;
@@ -31,23 +30,24 @@ public class OCPUser extends User {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	
 	public OCPUser(Agent agent, String login, int backupNbr) throws Exception {
 		super(login);
 		this.backupNbr = backupNbr;
-		this.indexKey = new Key(agent.generateId()); // refer to the list of pointer
-		this.rootKey = new Key(agent.generateId()); // refer to the root file system
-		
+		this.indexKey = new Key(agent.generateId()); // refer to the list of
+														// pointer
+		this.rootKey = new Key(agent.generateId()); // refer to the root file
+													// system
+
 		// generate a key pair for public key encryption
 		this.keyPair = agent.generateKeyPair();
-		
+
 		// generate a private key for symmetric encryption
 		KeyGenerator keyGen = KeyGenerator.getInstance(cipherAlgo);
 		keyGen.init(keySize);
 		secretKey = keyGen.generateKey();
-		
+
 	}
-	
+
 	public UserPublicInfo getPublicInfo(Agent agent) throws Exception {
 		UserPublicInfo upi = new UserPublicInfo();
 		upi.setLogin(login);
@@ -64,7 +64,7 @@ public class OCPUser extends User {
 	}
 
 	public int getBackupNbr() {
-		return this.backupNbr ;
+		return this.backupNbr;
 	}
 
 	public byte[] crypt(byte[] cleartext) throws Exception, BadPaddingException {
@@ -83,7 +83,8 @@ public class OCPUser extends User {
 	public void add(OCPAgent agent, Pointer pointer) throws Exception {
 		UserIndex userIndex = getUserIndex(agent);
 		userIndex.add(pointer);
-		Data data = new Data(agent, this, crypt(JLG.serialize(userIndex).getBytes()));
+		Data data = new Data(agent, this, crypt(JLG.serialize(userIndex)
+				.getBytes()));
 		Link link = new Link(this, agent, indexKey, data.getKey(agent));
 		agent.setWithLink(this, data, link);
 	}
@@ -97,19 +98,19 @@ public class OCPUser extends User {
 			byte[] content = decrypt(userIndexData.getContent());
 			userIndex = (UserIndex) JLG.deserialize(new String(content));
 		}
-		
+
 		return userIndex;
 	}
 
 	public void remove(OCPAgent agent, Pointer pointer) throws Exception {
 		UserIndex userIndex = getUserIndex(agent);
 		userIndex.remove(pointer);
-		Data data = new Data(agent, this, crypt(JLG.serialize(userIndex).getBytes()));
+		Data data = new Data(agent, this, crypt(JLG.serialize(userIndex)
+				.getBytes()));
 		Link link = new Link(this, agent, indexKey, data.getKey(agent));
 		agent.setWithLink(this, data, link);
-		
-	}
 
+	}
 
 	public Pointer getRootPointer(OCPAgent agent) throws Exception {
 		Pointer pointer = null;
@@ -120,7 +121,7 @@ public class OCPUser extends User {
 			byte[] content = decrypt(pointerData.getContent());
 			pointer = (Pointer) JLG.deserialize(new String(content));
 		}
-		
+
 		return pointer;
 	}
 
@@ -129,18 +130,26 @@ public class OCPUser extends User {
 		Data data = new Data(agent, this, crypt(JLG.serialize(p).getBytes()));
 		Link link = new Link(this, agent, rootKey, data.getKey(agent));
 		agent.setWithLink(this, data, link);
-		
+
 	}
 
 	@Override
 	public String getDefaultLocalDir() {
-		return System.getProperty("user.home") + File.separator + "ocp" + File.separator + getLogin();
-	}
-	
-	@Override
-	public String toString() {
-		return "login=" + login + ";public_key=" + keyPair.getPublic().getAlgorithm() + "-" + JLG.bytesToHex(keyPair.getPublic().getEncoded());
+		return System.getProperty("user.home") + File.separator + "ocp"
+				+ File.separator + getLogin();
 	}
 
+	@Override
+	public String toString() {
+		return "login=" + login + ";public_key="
+				+ keyPair.getPublic().getAlgorithm() + "-"
+				+ JLG.bytesToHex(keyPair.getPublic().getEncoded());
+	}
+
+	@Override
+	public void checkout(Agent agent, String dir) throws Exception {
+		FileSystem fs = new FileSystem(this, (OCPAgent) agent, dir);
+		fs.checkout();
+	}
 
 }
