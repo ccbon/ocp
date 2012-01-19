@@ -7,6 +7,7 @@ import java.io.IOException;
 
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPFile;
+import org.apache.commons.net.ftp.FTPFileFilter;
 
 import com.guenego.misc.JLG;
 import com.guenego.storage.Agent;
@@ -47,7 +48,7 @@ public class FTPAgent extends Agent {
 		try {
 			ftp.logout();
 		} catch (IOException e) {
-			e.printStackTrace();
+			// e.printStackTrace();
 		}
 	}
 
@@ -112,7 +113,6 @@ public class FTPAgent extends Agent {
 		JLG.debug("login=" + ftpUser.getLogin() + " password="
 				+ ftpUser.getPassword());
 		ftp.login(ftpUser.getLogin(), ftpUser.getPassword());
-
 	}
 
 	@Override
@@ -140,7 +140,9 @@ public class FTPAgent extends Agent {
 				commit(user, child, remotePath + child.getName() + "/");
 			} else {
 				FileInputStream fis = new FileInputStream(child);
+				ftp.setFileType(FTPClient.BINARY_FILE_TYPE);
 				ftp.storeFile(remotePath + child.getName(), fis);
+				fis.close();
 			}
 		}
 	}
@@ -148,41 +150,122 @@ public class FTPAgent extends Agent {
 	@Override
 	public void mkdir(User user, String existingParentDir, String newDir)
 			throws Exception {
-		// TODO Auto-generated method stub
+		if (!existingParentDir.endsWith("/")) {
+			existingParentDir += "/";
+		}
+		ftp.mkd(existingParentDir + "/" + newDir);
 
 	}
 
 	@Override
 	public void rm(User user, String existingParentDir, String name)
 			throws Exception {
-		// TODO Auto-generated method stub
+		if (!existingParentDir.endsWith("/")) {
+			existingParentDir += "/";
+		}
+		final String fname = name;
+		FTPFile[] ftpFiles = ftp.listFiles(existingParentDir, new FTPFileFilter() {
+			
+			@Override
+			public boolean accept(FTPFile arg0) {
+				return arg0.getName().equals(fname);
+			}
+		});
+		if (ftpFiles.length != 1) {
+			throw new Exception("ftpFiles.length != 1");
+		}
+		FTPFile ftpFile = ftpFiles[0];
+
+		// Check if FTPFile is a regular file
+		if (ftpFile.isFile()) {
+			ftp.deleteFile(existingParentDir + name);
+		} else if (ftpFile.isDirectory()) {
+			// go in the directory and remove recursively its content.
+			FTPFile[] children = ftp.listFiles(existingParentDir + name);
+			for (FTPFile child : children) {
+				rm(user, existingParentDir + name, child.getName());
+			}
+			ftp.removeDirectory(existingParentDir + name); 
+		}
+		
 
 	}
 
 	@Override
 	public void rename(User user, String existingParentDir, String oldName,
 			String newName) throws Exception {
-		// TODO Auto-generated method stub
-		
+		if (!existingParentDir.endsWith("/")) {
+			existingParentDir += "/";
+		}
+		ftp.rename(existingParentDir + oldName, existingParentDir + newName);
 	}
 
 	@Override
 	public FileInterface getDir(User user, String dir) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+		if (!ftp.changeWorkingDirectory(dir)) {
+			throw new Exception(dir + " is not a remote directory");
+		}
+		FTPFileImpl result = new FTPFileImpl();
+		FTPFile[] ftpFiles = ftp.listFiles();
+		for (FTPFile ftpFile : ftpFiles) {
+			result.add(new FTPFileImpl(ftpFile));
+		}
+		return result;
 	}
 
 	@Override
 	public void checkout(User user, String remoteDir, String remoteFilename,
 			File localDir) throws Exception {
-		// TODO Auto-generated method stub
-		
+		if (!remoteDir.endsWith("/")) {
+			remoteDir += "/";
+		}
+		final String remotePath = remoteFilename;
+		FileOutputStream fos = null;
+
+		FTPFile[] ftpFiles = ftp.listFiles(remoteDir, new FTPFileFilter() {
+			
+			@Override
+			public boolean accept(FTPFile arg0) {
+				return arg0.getName().equals(remotePath);
+			}
+		});
+		if (ftpFiles.length != 1) {
+			throw new Exception("ftpFiles.length != 1");
+		}
+		FTPFile ftpFile = ftpFiles[0];
+
+		// Check if FTPFile is a regular file
+		if (ftpFile.isFile()) {
+			JLG.debug("FTPFile: " + ftpFile.getName() + "; "
+					+ ftpFile.getSize());
+			fos = new FileOutputStream(new File(localDir, ftpFile.getName()));
+			ftp.retrieveFile(ftpFile.getName(), fos);
+			fos.close();
+		} else if (ftpFile.isDirectory()) {
+			JLG.mkdir(new File(localDir, ftpFile.getName()));
+			checkout(remoteDir + remoteFilename,
+					new File(localDir, ftpFile.getName()));
+		}
+
 	}
 
 	@Override
 	public void commit(User user, String remoteDir, File file) throws Exception {
-		// TODO Auto-generated method stub
-		
+		if (!remoteDir.endsWith("/")) {
+			remoteDir += "/";
+		}
+		if (file.isDirectory()) {
+			ftp.mkd(remoteDir + file.getName());
+			for (File child : file.listFiles()) {
+				JLG.debug("child: " + child.getName());
+				commit(user, remoteDir + file.getName(), child);
+			}
+		} else {
+			FileInputStream fis = new FileInputStream(file);
+			ftp.setFileType(FTPClient.BINARY_FILE_TYPE);
+			ftp.storeFile(remoteDir + file.getName(), fis);
+			fis.close();			
+		}
 	}
 
 }
