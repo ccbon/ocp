@@ -40,10 +40,6 @@ import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.wb.swt.SWTResourceManager;
 
 import com.guenego.misc.JLG;
-import com.guenego.ocp.FileSystem;
-import com.guenego.ocp.OCPAgent;
-import com.guenego.ocp.OCPUser;
-import com.guenego.ocp.Tree;
 import com.guenego.storage.Agent;
 import com.guenego.storage.FileInterface;
 import com.guenego.storage.User;
