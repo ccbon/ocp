@@ -423,13 +423,11 @@ public class UserExplorerComposite extends Composite {
 				}
 				reloadRemoteDirectoryTable();
 			} else {
-				TreeEntry te = (TreeEntry) item.getData();
-				JLG.debug("Try to open " + te.getName());
-				if (te.isTree()) {
+				if (item.getText(1).equals(DIRECTORY_TYPE)) {
 					if (!currentRemoteDirString.endsWith("/")) {
 						currentRemoteDirString += "/";
 					}
-					currentRemoteDirString += te.getName();
+					currentRemoteDirString += name;
 				}
 				reloadRemoteDirectoryTable();
 			}
@@ -475,7 +473,6 @@ public class UserExplorerComposite extends Composite {
 
 				TableItem tableItem = new TableItem(remoteDirectoryTable,
 						SWT.NONE);
-				tableItem.setData(te);
 				String type = null;
 				String size = null;
 				Image image = null;
@@ -654,9 +651,6 @@ public class UserExplorerComposite extends Composite {
 		newDirItem.setImage(DIRECTORY_ICON);
 		try {
 			fs.createNewDir(currentRemoteDirString, DIRECTORY_NEW);
-			TreeEntry te = fs.getTree(currentRemoteDirString).getEntry(
-					DIRECTORY_NEW);
-			newDirItem.setData(te);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
