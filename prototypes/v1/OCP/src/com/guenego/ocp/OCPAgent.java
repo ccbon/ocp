@@ -744,4 +744,18 @@ public class OCPAgent extends Agent {
 		return fs.getTree(dir);
 	}
 
+	@Override
+	public void checkout(User user, String remoteDir, String remoteFilename,
+			File localDir) throws Exception {
+		FileSystem fs = new FileSystem((OCPUser) user, this);
+		TreeEntry te = fs.getTree(remoteDir).getEntry(remoteFilename);
+		fs.checkout(te, localDir);
+	}
+
+	@Override
+	public void commit(User user, String remoteDir, File file) throws Exception {
+		FileSystem fs = new FileSystem((OCPUser) user, this);
+		fs.commitFile(remoteDir, file);
+	}
+
 }

@@ -26,7 +26,7 @@ public class CommitAction extends Action {
 			String name = item.getText(0);
 			File file = new File(composite.currentLocalDirectory, name);
 			try {
-				composite.fs.commitFile(composite.currentRemoteDirString, file);
+				composite.agent.commit(composite.user, composite.currentRemoteDirString, file);
 				composite.reloadRemoteDirectoryTable();
 			} catch (Exception e) {
 				// TODO Auto-generated catch block

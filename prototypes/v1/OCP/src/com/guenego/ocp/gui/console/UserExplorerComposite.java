@@ -63,7 +63,6 @@ public class UserExplorerComposite extends Composite {
 	public Table remoteDirectoryTable;
 	public File currentLocalDirectory;
 	public String currentRemoteDirString;
-	public FileSystem fs;
 
 	public Agent agent;
 	public User user;
@@ -81,7 +80,6 @@ public class UserExplorerComposite extends Composite {
 		super(parent, style);
 		this.agent = agent;
 		this.user = user;
-		this.fs = new FileSystem((OCPUser) user, (OCPAgent) agent, null);
 		final Shell shell = parent.getShell();
 
 		currentLocalDirectory = new File(user.getDefaultLocalDir());
@@ -623,10 +621,6 @@ public class UserExplorerComposite extends Composite {
 			e.printStackTrace();
 		}
 
-	}
-
-	public Tree getCurrentTree() throws Exception {
-		return fs.getTree(currentRemoteDirString);
 	}
 
 	public void createNewLocalDir() {

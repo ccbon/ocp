@@ -6,7 +6,6 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.swt.widgets.TableItem;
 
 import com.guenego.misc.JLG;
-import com.guenego.ocp.TreeEntry;
 
 public class CheckOutAction extends Action {
 
@@ -22,11 +21,11 @@ public class CheckOutAction extends Action {
 	public void run() {
 		JLG.debug("Check Out");
 		for (TableItem item : composite.remoteDirectoryTable.getSelection()) {
-			File parentDir = composite.currentLocalDirectory;
+			File localDir = composite.currentLocalDirectory;
 			String name = item.getText(0);
 			try {
-				TreeEntry te = composite.getCurrentTree().getEntry(name);
-				composite.fs.checkout(te, parentDir);
+				String remoteDir = composite.currentRemoteDirString;
+				composite.agent.checkout(composite.user, remoteDir, name, localDir);
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

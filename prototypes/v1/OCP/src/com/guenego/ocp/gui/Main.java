@@ -17,8 +17,8 @@ import com.guenego.storage.Agent;
 public class Main {
 	public static void main(String[] args) {
 		try {
-			Agent agent = new OCPAgent();
-			//Agent agent = new FTPAgent();
+			//Agent agent = new OCPAgent();
+			Agent agent = new FTPAgent();
 			UserInterface ui = new GraphicalUI(agent);
 
 			if (!agent.isConfigFilePresent()) {

@@ -172,4 +172,17 @@ public class FTPAgent extends Agent {
 		return null;
 	}
 
+	@Override
+	public void checkout(User user, String remoteDir, String remoteFilename,
+			File localDir) throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void commit(User user, String remoteDir, File file) throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

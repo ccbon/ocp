@@ -152,13 +152,21 @@ public abstract class Agent {
 
 	public abstract void commit(User user, String localDir) throws Exception;
 
-	public abstract void mkdir(User user, String existingParentDir, String newDir) throws Exception;
+	public abstract void mkdir(User user, String existingParentDir,
+			String newDir) throws Exception;
 
-	public abstract void rm(User user, String existingParentDir, String name) throws Exception;
+	public abstract void rm(User user, String existingParentDir, String name)
+			throws Exception;
 
 	public abstract void rename(User user, String existingParentDir,
 			String oldName, String newName) throws Exception;
 
-	public abstract FileInterface getDir(User user, String dir) throws Exception;
+	public abstract FileInterface getDir(User user, String dir)
+			throws Exception;
+
+	public abstract void checkout(User user, String remoteDir,
+			String remoteFilename, File localDir) throws Exception;
+
+	public abstract void commit(User user, String remoteDir, File file) throws Exception;
 
 }

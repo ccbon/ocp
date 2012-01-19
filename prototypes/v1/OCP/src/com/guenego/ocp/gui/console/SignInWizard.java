@@ -9,7 +9,6 @@ import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 
 import com.guenego.misc.JLG;
-import com.guenego.ocp.OCPUser;
 import com.guenego.storage.Agent;
 import com.guenego.storage.User;
 
@@ -58,9 +57,7 @@ public class SignInWizard extends Wizard {
 					p1.passwordText.getText());
 			window.setUser(user);
 			window.addUserSyncTab();
-			if (user.getClass() == OCPUser.class) {
-				window.addUserExplorerTab();
-			}
+			window.addUserExplorerTab();
 		} catch (Exception e) {
 			JLG.error(e);
 			MessageBox messageBox = new MessageBox(getShell(), SWT.ICON_ERROR
