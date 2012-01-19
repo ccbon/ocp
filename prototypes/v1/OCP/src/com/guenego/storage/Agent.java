@@ -44,13 +44,13 @@ public abstract class Agent {
 	protected PBEParameterSpec userParamSpec;
 	protected byte backupNbr;
 
-
 	public Agent() {
 	}
 
 	public void loadConfig() throws Exception {
 		if (!isConfigFilePresent()) {
-			throw new Exception("Config file is not found. Expected Path: " + getConfigFile().getAbsolutePath());
+			throw new Exception("Config file is not found. Expected Path: "
+					+ getConfigFile().getAbsolutePath());
 		}
 		p = new Properties();
 		p.load(new FileInputStream(getConfigFile()));
@@ -63,10 +63,11 @@ public abstract class Agent {
 		p = properties;
 		readConfig();
 	}
-	
+
 	protected abstract void readConfig() throws Exception;
-	
+
 	public abstract void start() throws Exception;
+
 	protected void attach() throws Exception {
 		storage.attach();
 	}
@@ -104,15 +105,11 @@ public abstract class Agent {
 		this.network = network;
 	}
 
-
-
 	public Id hash(byte[] input) throws Exception {
 		MessageDigest md = MessageDigest.getInstance(network.getProperty(
 				"hash", "SHA-1"));
 		return new Id(md.digest(input));
 	}
-
-
 
 	public byte[] crypt(String string) throws Exception, BadPaddingException {
 		cipher.init(Cipher.ENCRYPT_MODE, secretKey);
@@ -155,5 +152,13 @@ public abstract class Agent {
 
 	public abstract void commit(User user, String localDir) throws Exception;
 
+	public abstract void mkdir(User user, String existingParentDir, String newDir) throws Exception;
+
+	public abstract void rm(User user, String existingParentDir, String name) throws Exception;
+
+	public abstract void rename(User user, String existingParentDir,
+			String oldName, String newName) throws Exception;
+
+	public abstract FileInterface getDir(User user, String dir) throws Exception;
 
 }

@@ -19,6 +19,12 @@ public class FileSystem {
 		this.path = path;
 	}
 
+	public FileSystem(OCPUser user, OCPAgent agent) {
+		this.user = user;
+		this.agent = agent;
+		this.path = null;
+	}
+
 	public void checkout() throws Exception {
 
 		JLG.rm(path);

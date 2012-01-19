@@ -26,6 +26,7 @@ import com.guenego.misc.Id;
 import com.guenego.misc.JLG;
 import com.guenego.misc.URL;
 import com.guenego.storage.Agent;
+import com.guenego.storage.FileInterface;
 import com.guenego.storage.User;
 
 public class OCPAgent extends Agent {
@@ -715,6 +716,32 @@ public class OCPAgent extends Agent {
 		}
 
 		
+	}
+
+	@Override
+	public void mkdir(User user, String existingParentDir, String newDir)
+			throws Exception {
+		FileSystem fs = new FileSystem((OCPUser) user, this); 
+		fs.createNewDir(existingParentDir, newDir);
+	}
+
+	@Override
+	public void rm(User user, String existingParentDir, String name) throws Exception {
+		FileSystem fs = new FileSystem((OCPUser) user, this);
+		fs.deleteFile(existingParentDir, name);
+	}
+
+	@Override
+	public void rename(User user, String existingParentDir, String oldName,
+			String newName) throws Exception {
+		FileSystem fs = new FileSystem((OCPUser) user, this);
+		fs.renameFile(existingParentDir, oldName, newName);
+	}
+
+	@Override
+	public FileInterface getDir(User user, String dir) throws Exception {
+		FileSystem fs = new FileSystem((OCPUser) user, this);
+		return fs.getTree(dir);
 	}
 
 }

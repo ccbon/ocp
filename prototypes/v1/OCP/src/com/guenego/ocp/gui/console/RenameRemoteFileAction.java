@@ -10,7 +10,6 @@ import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 
 import com.guenego.misc.JLG;
-import com.guenego.ocp.TreeEntry;
 
 public class RenameRemoteFileAction extends Action {
 
@@ -40,14 +39,6 @@ public class RenameRemoteFileAction extends Action {
 							&& (!name.equals(text.getText()))) {
 						composite.renameRemoteFile(name, text.getText());
 						item.setText(0, text.getText());
-						try {
-							TreeEntry te = composite.fs.getTree(
-									composite.currentRemoteDirString).getEntry(
-									text.getText());
-							item.setData(te);
-						} catch (Exception e1) {
-							// TODO: handle exception
-						}
 					}
 					text.dispose();
 					break;
@@ -66,14 +57,6 @@ public class RenameRemoteFileAction extends Action {
 				if ((text.getText() != "") && (!name.equals(text.getText()))) {
 					composite.renameRemoteFile(name, text.getText());
 					item.setText(0, text.getText());
-					try {
-						TreeEntry te = composite.fs.getTree(
-								composite.currentRemoteDirString).getEntry(
-								text.getText());
-						item.setData(te);
-					} catch (Exception e1) {
-						// TODO: handle exception
-					}
 				}
 				text.dispose();
 				super.focusLost(e);

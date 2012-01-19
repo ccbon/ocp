@@ -44,8 +44,8 @@ import com.guenego.ocp.FileSystem;
 import com.guenego.ocp.OCPAgent;
 import com.guenego.ocp.OCPUser;
 import com.guenego.ocp.Tree;
-import com.guenego.ocp.TreeEntry;
 import com.guenego.storage.Agent;
+import com.guenego.storage.FileInterface;
 import com.guenego.storage.User;
 
 public class UserExplorerComposite extends Composite {
@@ -448,20 +448,20 @@ public class UserExplorerComposite extends Composite {
 					DIRECTORY_TYPE, DIRECTORY_SIZE });
 			parentTreetableItem.setImage(DIRECTORY_ICON);
 
-			Tree currentTree = fs.getTree(currentRemoteDirString);
-			if (currentTree == null) {
+			FileInterface currentDir = agent.getDir(user, currentRemoteDirString);
+			if (currentDir == null) {
 				return;
 			}
-			Collection<TreeEntry> set = currentTree.getEntries();
+			Collection<? extends FileInterface> set = currentDir.listFiles();
 			// Create an array containing the elements in a set
-			TreeEntry[] array = (TreeEntry[]) set.toArray(new TreeEntry[set
+			FileInterface[] array = (FileInterface[]) set.toArray(new FileInterface[set
 					.size()]);
 			// Order
-			Arrays.sort(array, new Comparator<TreeEntry>() {
-				public int compare(TreeEntry f1, TreeEntry f2) {
-					if (f1.isFile() && f2.isTree()) {
+			Arrays.sort(array, new Comparator<FileInterface>() {
+				public int compare(FileInterface f1, FileInterface f2) {
+					if (f1.isFile() && f2.isDirectory()) {
 						return 1;
-					} else if (f2.isFile() && f1.isTree()) {
+					} else if (f2.isFile() && f1.isDirectory()) {
 						return -1;
 					} else {
 						return f1.getName().compareTo(f2.getName());
@@ -469,14 +469,14 @@ public class UserExplorerComposite extends Composite {
 				}
 			});
 
-			for (TreeEntry te : array) {
+			for (FileInterface te : array) {
 
 				TableItem tableItem = new TableItem(remoteDirectoryTable,
 						SWT.NONE);
 				String type = null;
 				String size = null;
 				Image image = null;
-				if (te.isTree()) {
+				if (te.isDirectory()) {
 					type = DIRECTORY_TYPE;
 					size = "";
 					image = DIRECTORY_ICON;
@@ -601,7 +601,8 @@ public class UserExplorerComposite extends Composite {
 
 		String name = item.getText(0);
 		try {
-			fs.deleteFile(currentRemoteDirString, name);
+			// must work both for dir and file
+			agent.rm(user, currentRemoteDirString, name);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -616,7 +617,7 @@ public class UserExplorerComposite extends Composite {
 
 	public void renameRemoteFile(String oldName, String newName) {
 		try {
-			fs.renameFile(currentRemoteDirString, oldName, newName);
+			agent.rename(user, currentRemoteDirString, oldName, newName);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -650,7 +651,7 @@ public class UserExplorerComposite extends Composite {
 				DIRECTORY_SIZE });
 		newDirItem.setImage(DIRECTORY_ICON);
 		try {
-			fs.createNewDir(currentRemoteDirString, DIRECTORY_NEW);
+			agent.mkdir(user, currentRemoteDirString, DIRECTORY_NEW);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

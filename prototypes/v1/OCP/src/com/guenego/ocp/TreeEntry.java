@@ -1,8 +1,11 @@
 package com.guenego.ocp;
 
 import java.io.Serializable;
+import java.util.Collection;
 
-public class TreeEntry implements Serializable {
+import com.guenego.storage.FileInterface;
+
+public class TreeEntry implements Serializable, FileInterface {
 
 	private Pointer p;
 	private int type;
@@ -34,6 +37,15 @@ public class TreeEntry implements Serializable {
 	}
 	public void setName(String name) {
 		this.name = name;
+	}
+	
+	@Override
+	public Collection<FileInterface> listFiles() {
+		return null;
+	}
+	@Override
+	public boolean isDirectory() {
+		return isTree();
 	}
 
 }

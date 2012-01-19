@@ -5,7 +5,9 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Tree implements Serializable {
+import com.guenego.storage.FileInterface;
+
+public class Tree implements Serializable, FileInterface {
 
 	/**
 	 * 
@@ -42,6 +44,26 @@ public class Tree implements Serializable {
 		TreeEntry te = entryMap.remove(oldName);
 		te.setName(newName);
 		entryMap.put(newName, te);
+	}
+
+	@Override
+	public Collection<? extends FileInterface> listFiles() {
+		return getEntries();
+	}
+
+	@Override
+	public boolean isFile() {
+		return false;
+	}
+
+	@Override
+	public boolean isDirectory() {
+		return true;
+	}
+
+	@Override
+	public String getName() {
+		return null;
 	}
 
 }

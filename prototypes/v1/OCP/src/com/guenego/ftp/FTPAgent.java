@@ -10,6 +10,7 @@ import org.apache.commons.net.ftp.FTPFile;
 
 import com.guenego.misc.JLG;
 import com.guenego.storage.Agent;
+import com.guenego.storage.FileInterface;
 import com.guenego.storage.User;
 
 public class FTPAgent extends Agent {
@@ -142,6 +143,33 @@ public class FTPAgent extends Agent {
 				ftp.storeFile(remotePath + child.getName(), fis);
 			}
 		}
+	}
+
+	@Override
+	public void mkdir(User user, String existingParentDir, String newDir)
+			throws Exception {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void rm(User user, String existingParentDir, String name)
+			throws Exception {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void rename(User user, String existingParentDir, String oldName,
+			String newName) throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public FileInterface getDir(User user, String dir) throws Exception {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }
