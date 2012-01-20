@@ -4,12 +4,15 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.HashSet;
+import java.util.Iterator;
 
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPFile;
 import org.apache.commons.net.ftp.FTPFileFilter;
 
 import com.guenego.misc.JLG;
+import com.guenego.ocp.Contact;
 import com.guenego.storage.Agent;
 import com.guenego.storage.FileInterface;
 import com.guenego.storage.User;
@@ -267,5 +270,33 @@ public class FTPAgent extends Agent {
 			fis.close();			
 		}
 	}
+
+	@Override
+	public void refreshContactList() throws Exception {
+		// TODO we have two contact: the client and the server
+		
+	}
+
+	@Override
+	public Iterator<Contact> getContactIterator() {
+		// TODO Auto-generated method stub
+		return new HashSet<Contact>().iterator();
+	}
+
+	@Override
+	public String getProtocolName() {
+		return "FTP";
+	}
+
+	@Override
+	public String getName() {
+		return "client";
+	}
+	
+	@Override
+	public String getHelpURL() {
+		return "http://code.google.com/p/ocp/wiki/FTPHelp";
+	}
+
 
 }

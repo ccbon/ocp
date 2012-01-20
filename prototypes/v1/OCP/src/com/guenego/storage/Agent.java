@@ -7,6 +7,7 @@ import java.security.KeyPairGenerator;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
+import java.util.Iterator;
 import java.util.Properties;
 
 import javax.crypto.BadPaddingException;
@@ -19,12 +20,13 @@ import javax.crypto.spec.PBEParameterSpec;
 import com.guenego.misc.Id;
 import com.guenego.misc.JLG;
 import com.guenego.ocp.Client;
+import com.guenego.ocp.Contact;
 import com.guenego.ocp.Server;
 import com.guenego.ocp.Storage;
 
 public abstract class Agent {
 
-	public String name;
+	
 
 	public KeyPair keyPair;
 	protected SecretKey secretKey;
@@ -168,5 +170,17 @@ public abstract class Agent {
 			String remoteFilename, File localDir) throws Exception;
 
 	public abstract void commit(User user, String remoteDir, File file) throws Exception;
+
+	public abstract void refreshContactList() throws Exception;
+
+	public abstract Iterator<Contact> getContactIterator();
+
+	public abstract String getProtocolName();
+
+	public abstract String getName();
+
+	public String getHelpURL() {
+		return "http://code.google.com/p/ocp/wiki/Help";
+	}
 
 }

@@ -46,7 +46,7 @@ public class PersistentHashMap implements Map<Address, Content> {
 	public PersistentHashMap(Agent agent) {
 		try {
 			String root = agent.p.getProperty("storage.dir",
-					System.getenv("TEMP") + "/ocp_agent_storage/" + agent.name);
+					System.getenv("TEMP") + "/ocp_agent_storage/" + agent.getName());
 			dir = new File(root);
 			JLG.mkdir(dir);
 		} catch (Exception e) {

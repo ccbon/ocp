@@ -34,6 +34,7 @@ public class OCPAgent extends Agent {
 	private static final String NETWORK_PROPERTIES_FILE = "network.properties";
 
 	public Id id;
+	private String name;
 
 	// these two attributes are corelated
 	// all access to them must be synchronized
@@ -664,6 +665,7 @@ public class OCPAgent extends Agent {
 		}
 	}
 
+	@Override
 	public Iterator<Contact> getContactIterator() {
 		// we return a snapshot and not the modifiable contact list
 		LinkedList<Contact> linkedList = new LinkedList<Contact>(
@@ -756,6 +758,21 @@ public class OCPAgent extends Agent {
 	public void commit(User user, String remoteDir, File file) throws Exception {
 		FileSystem fs = new FileSystem((OCPUser) user, this);
 		fs.commitFile(remoteDir, file);
+	}
+
+	@Override
+	public void refreshContactList() throws Exception {
+		client.sendAll(Protocol.PING);
+	}
+
+	@Override
+	public String getProtocolName() {
+		return "OCP";
+	}
+
+	@Override
+	public String getName() {
+		return name;
 	}
 
 }
