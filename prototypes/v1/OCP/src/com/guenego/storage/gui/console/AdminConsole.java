@@ -123,7 +123,9 @@ public class AdminConsole extends ApplicationWindow {
 		signInAction = new SignInAction(agent, display, this);
 		signOutAction = new SignOutAction(this);
 		viewAdminTabAction = new ViewContactTabAction(this);
-		removeStorageAction = new RemoveStorageAction(this);
+		if (agent.hasStorage()) {
+			removeStorageAction = new RemoveStorageAction(this);
+		}
 		debugAction = new DebugAction();
 		helpAction = new HelpAction(this);
 		aboutAction = new AboutAction(this);
@@ -158,7 +160,9 @@ public class AdminConsole extends ApplicationWindow {
 
 		MenuManager testMenu = new MenuManager("&Test");
 		menuBar.add(testMenu);
-		testMenu.add(removeStorageAction);
+		if (agent.hasStorage()) {
+			testMenu.add(removeStorageAction);
+		}
 		testMenu.add(debugAction);
 
 		MenuManager helpMenu = new MenuManager("&Help");
@@ -187,8 +191,10 @@ public class AdminConsole extends ApplicationWindow {
 		toolBarManager.add(viewUserSyncTabAction);
 		toolBarManager.add(viewUserExplorerTabAction);
 		toolBarManager.add(new Separator());
-		toolBarManager.add(removeStorageAction);
-		toolBarManager.add(new Separator());
+		if (agent.hasStorage()) {
+			toolBarManager.add(removeStorageAction);
+			toolBarManager.add(new Separator());
+		}
 		toolBarManager.add(helpAction);
 		toolBarManager.add(aboutAction);
 		return toolBarManager;
@@ -216,7 +222,8 @@ public class AdminConsole extends ApplicationWindow {
 		newShell.setImage(SWTResourceManager.getImage(GraphicalUI.class,
 				"ocp_icon.png"));
 		super.configureShell(newShell);
-		newShell.setText(agent.getProtocolName() + " Agent Console - " + agent.getName());
+		newShell.setText(agent.getProtocolName() + " Agent Console - "
+				+ agent.getName());
 	}
 
 	/**

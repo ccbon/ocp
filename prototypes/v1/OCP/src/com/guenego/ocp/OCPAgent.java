@@ -125,6 +125,7 @@ public class OCPAgent extends Agent {
 	public void stop() {
 		if (server != null) {
 			server.stop();
+			server = null;
 		}
 	}
 
@@ -773,6 +774,11 @@ public class OCPAgent extends Agent {
 	@Override
 	public String getName() {
 		return name;
+	}
+
+	@Override
+	public boolean hasStorage() {
+		return server != null;
 	}
 
 }

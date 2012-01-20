@@ -6,7 +6,6 @@ import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.program.Program;
 
 import com.guenego.misc.JLG;
-import com.guenego.ocp.OCPAgent;
 
 public class HelpAction extends Action {
 

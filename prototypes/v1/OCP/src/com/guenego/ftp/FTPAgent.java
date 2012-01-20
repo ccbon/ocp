@@ -298,5 +298,10 @@ public class FTPAgent extends Agent {
 		return "http://code.google.com/p/ocp/wiki/FTPHelp";
 	}
 
+	@Override
+	public boolean hasStorage() {
+		return false;
+	}
+
 
 }

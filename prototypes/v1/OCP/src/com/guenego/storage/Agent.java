@@ -183,4 +183,6 @@ public abstract class Agent {
 		return "http://code.google.com/p/ocp/wiki/Help";
 	}
 
+	public abstract boolean hasStorage();
+
 }
