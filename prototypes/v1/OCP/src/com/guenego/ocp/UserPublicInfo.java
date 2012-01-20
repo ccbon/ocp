@@ -5,7 +5,6 @@ import java.security.PublicKey;
 import java.security.Signature;
 
 import com.guenego.misc.JLG;
-import com.guenego.storage.Agent;
 
 public class UserPublicInfo implements Serializable {
 
@@ -39,7 +38,7 @@ public class UserPublicInfo implements Serializable {
 		return publicKey;
 	}
 
-	public boolean verify(Agent agent, byte[] cleartext, byte[] signature)
+	public boolean verify(OCPAgent agent, byte[] cleartext, byte[] signature)
 			throws Exception {
 		Signature s = Signature.getInstance(agent.signatureAlgorithm);
 		s.initVerify(publicKey);
@@ -47,7 +46,7 @@ public class UserPublicInfo implements Serializable {
 		return s.verify(signature);
 	}
 
-	public static Key getKey(Agent agent, String login) throws Exception {
+	public static Key getKey(OCPAgent agent, String login) throws Exception {
 		return new Key(agent.hash(login.getBytes()));
 	}
 

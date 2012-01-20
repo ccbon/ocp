@@ -2,7 +2,6 @@ package com.guenego.ocp;
 
 import com.guenego.misc.ByteUtil;
 import com.guenego.misc.JLG;
-import com.guenego.storage.Agent;
 
 
 public class Link extends Content {
@@ -25,7 +24,7 @@ public class Link extends Content {
 		return targetKey;
 	}
 
-	public Key getKey(Agent agent) {
+	public Key getKey(OCPAgent agent) {
 		return key;
 	}
 	

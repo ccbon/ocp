@@ -303,5 +303,9 @@ public class FTPAgent extends Agent {
 		return false;
 	}
 
+	@Override
+	public void removeStorage() {
+	}
+
 
 }

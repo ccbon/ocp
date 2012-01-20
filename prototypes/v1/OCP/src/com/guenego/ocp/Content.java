@@ -2,8 +2,6 @@ package com.guenego.ocp;
 
 import java.io.Serializable;
 
-import com.guenego.storage.Agent;
-
 public abstract class Content implements Serializable {
 	/**
 	 * 
@@ -20,7 +18,7 @@ public abstract class Content implements Serializable {
 	}
 
 
-	public abstract Key getKey(Agent agent) throws Exception;
+	public abstract Key getKey(OCPAgent agent) throws Exception;
 
 
 	public abstract byte[] getContent() throws Exception;

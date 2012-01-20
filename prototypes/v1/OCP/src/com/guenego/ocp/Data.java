@@ -1,7 +1,6 @@
 package com.guenego.ocp;
 
 import com.guenego.misc.JLG;
-import com.guenego.storage.Agent;
 
 public class Data extends Content {
 
@@ -30,7 +29,7 @@ public class Data extends Content {
 	private static final long serialVersionUID = 1L;
 
 	@Override
-	public Key getKey(Agent agent) throws Exception {
+	public Key getKey(OCPAgent agent) throws Exception {
 		return new Key(agent.hash(content));
 	}
 

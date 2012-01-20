@@ -6,7 +6,6 @@ import java.security.Signature;
 
 import com.guenego.misc.Id;
 import com.guenego.misc.JLG;
-import com.guenego.storage.Agent;
 
 public class Captcha implements Serializable {
 
@@ -24,9 +23,9 @@ public class Captcha implements Serializable {
 	public Captcha(OCPAgent agent) throws Exception {
 		this.challengeObject = "the answer is :didounette";
 		this.created = System.currentTimeMillis();
-		cryptedAnswer = agent.crypt("didounette");
+		cryptedAnswer = agent.crypt("didounette".getBytes());
 		JLG.debug("cryptedAnswer = " + cryptedAnswer);
-		JLG.debug("decryptedAnswer = " + agent.decrypt(cryptedAnswer));
+		JLG.debug("decryptedAnswer = " + new String(agent.decrypt(cryptedAnswer)));
 		contactId = agent.id;
 		signatureAlgo = agent.signatureAlgorithm;
 		Signature s = Signature.getInstance(signatureAlgo);
@@ -44,7 +43,7 @@ public class Captcha implements Serializable {
 		return "challengeObject = " + challengeObject;
 	}
 
-	public boolean checkSignature(Agent agent) throws Exception {
+	public boolean checkSignature(OCPAgent agent) throws Exception {
 		Signature s = Signature.getInstance(signatureAlgo);
 		PublicKey pubKey = agent.keyPair.getPublic();
 		s.initVerify(pubKey);
@@ -57,7 +56,7 @@ public class Captcha implements Serializable {
 
 	}
 
-	public void check(Agent agent, String answer) throws Exception {
+	public void check(OCPAgent agent, String answer) throws Exception {
 		// first check that I generated myself this captcha
 		if (!checkSignature(agent)) {
 			throw new Exception("problem while checking the signature");

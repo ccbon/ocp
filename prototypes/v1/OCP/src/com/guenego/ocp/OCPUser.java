@@ -10,7 +10,6 @@ import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 
 import com.guenego.misc.JLG;
-import com.guenego.storage.Agent;
 import com.guenego.storage.User;
 
 public class OCPUser extends User {
@@ -30,7 +29,7 @@ public class OCPUser extends User {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	public OCPUser(Agent agent, String login, int backupNbr) throws Exception {
+	public OCPUser(OCPAgent agent, String login, int backupNbr) throws Exception {
 		super(login);
 		this.backupNbr = backupNbr;
 		this.indexKey = new Key(agent.generateId()); // refer to the list of
@@ -48,7 +47,7 @@ public class OCPUser extends User {
 
 	}
 
-	public UserPublicInfo getPublicInfo(Agent agent) throws Exception {
+	public UserPublicInfo getPublicInfo(OCPAgent agent) throws Exception {
 		UserPublicInfo upi = new UserPublicInfo();
 		upi.setLogin(login);
 		upi.setPublicKey(keyPair.getPublic());

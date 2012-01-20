@@ -36,7 +36,8 @@ public class RemoveStorageAction extends Action {
 		int buttonID = messageBox.open();
 		switch (buttonID) {
 		case SWT.YES:
-			agent.storage.removeAll();
+			agent.removeStorage();
+			
 		case SWT.NO:
 			// exits here ...
 			break;

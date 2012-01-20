@@ -10,7 +10,6 @@ import com.guenego.ocp.FileSystem;
 import com.guenego.ocp.OCPAgent;
 import com.guenego.ocp.OCPUser;
 import com.guenego.ocp.Pointer;
-import com.guenego.storage.Agent;
 
 public class TestAgent {
 	public static void main(String[] args) {
@@ -27,7 +26,7 @@ public class TestAgent {
 			p1.setProperty("server.listener.1", "tcp://localhost:22220");
 			p1.setProperty("server.listener.2", "http://localhost:11110");
 			p1.setProperty("server.isFirstAgent", "yes");
-			Agent a1 = new OCPAgent();
+			OCPAgent a1 = new OCPAgent();
 			a1.loadConfig(p1);
 			Properties network = new Properties();
 			network.setProperty("hello", "didounette");

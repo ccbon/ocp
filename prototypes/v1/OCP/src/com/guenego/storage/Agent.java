@@ -2,49 +2,15 @@ package com.guenego.storage;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.security.KeyPair;
-import java.security.KeyPairGenerator;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
 import java.util.Iterator;
 import java.util.Properties;
 
-import javax.crypto.BadPaddingException;
-import javax.crypto.Cipher;
-import javax.crypto.SecretKey;
-import javax.crypto.SecretKeyFactory;
-import javax.crypto.spec.PBEKeySpec;
-import javax.crypto.spec.PBEParameterSpec;
-
-import com.guenego.misc.Id;
 import com.guenego.misc.JLG;
-import com.guenego.ocp.Client;
 import com.guenego.ocp.Contact;
-import com.guenego.ocp.Server;
-import com.guenego.ocp.Storage;
 
 public abstract class Agent {
 
-	
-
-	public KeyPair keyPair;
-	protected SecretKey secretKey;
-	protected Cipher cipher;
-	public String signatureAlgorithm;
-
-	public Storage storage;
-
 	public Properties p;
-	public Properties network;
-
-	public Client client;
-	public Server server;
-
-	protected SecretKeyFactory userSecretKeyFactory;
-	protected Cipher userCipher;
-	protected PBEParameterSpec userParamSpec;
-	protected byte backupNbr;
 
 	public Agent() {
 	}
@@ -70,27 +36,6 @@ public abstract class Agent {
 
 	public abstract void start() throws Exception;
 
-	protected void attach() throws Exception {
-		storage.attach();
-	}
-
-	public Id generateId() throws Exception {
-		MessageDigest md = MessageDigest.getInstance(network.getProperty(
-				"hash", "SHA-1"));
-		SecureRandom random = SecureRandom.getInstance("SHA1PRNG");
-		byte[] input = new byte[200];
-		random.nextBytes(input);
-		return new Id(md.digest(input));
-	}
-
-	public KeyPair generateKeyPair() throws NoSuchAlgorithmException {
-		KeyPairGenerator keyGen = KeyPairGenerator.getInstance(network
-				.getProperty("PKAlgo", "DSA"));
-		SecureRandom random = SecureRandom.getInstance("SHA1PRNG");
-		keyGen.initialize(1024, random);
-		return keyGen.generateKeyPair();
-	}
-
 	public boolean isFirstAgent() {
 		if (p == null) {
 			JLG.debug("p is null");
@@ -103,46 +48,9 @@ public abstract class Agent {
 
 	public abstract void stop();
 
-	public void setNetworkProperties(Properties network) {
-		this.network = network;
-	}
 
-	public Id hash(byte[] input) throws Exception {
-		MessageDigest md = MessageDigest.getInstance(network.getProperty(
-				"hash", "SHA-1"));
-		return new Id(md.digest(input));
-	}
 
-	public byte[] crypt(String string) throws Exception, BadPaddingException {
-		cipher.init(Cipher.ENCRYPT_MODE, secretKey);
-		return cipher.doFinal(string.getBytes());
-	}
 
-	public String decrypt(byte[] ciphertext) throws Exception,
-			BadPaddingException {
-		cipher.init(Cipher.DECRYPT_MODE, secretKey);
-		return new String(cipher.doFinal(ciphertext));
-	}
-
-	public byte[] ucrypt(String password, String string) throws Exception,
-			BadPaddingException {
-		SecretKey secretKey = generateSecretKey(password);
-
-		userCipher.init(Cipher.ENCRYPT_MODE, secretKey, userParamSpec);
-		return userCipher.doFinal(string.getBytes());
-	}
-
-	public String udecrypt(String password, byte[] ciphertext)
-			throws Exception, BadPaddingException {
-		SecretKey secretKey = generateSecretKey(password);
-		userCipher.init(Cipher.DECRYPT_MODE, secretKey, userParamSpec);
-		return new String(userCipher.doFinal(ciphertext));
-	}
-
-	private SecretKey generateSecretKey(String password) throws Exception {
-		return userSecretKeyFactory.generateSecret(new PBEKeySpec(password
-				.toCharArray()));
-	}
 
 	public abstract boolean isConfigFilePresent();
 
@@ -184,5 +92,7 @@ public abstract class Agent {
 	}
 
 	public abstract boolean hasStorage();
+
+	public abstract void removeStorage();
 
 }

@@ -4,6 +4,11 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.Serializable;
+import java.security.KeyPair;
+import java.security.KeyPairGenerator;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -16,9 +21,12 @@ import java.util.Queue;
 import java.util.Set;
 import java.util.TreeMap;
 
+import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
+import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.PBEParameterSpec;
 
 import com.guenego.misc.ByteUtil;
@@ -36,6 +44,51 @@ public class OCPAgent extends Agent {
 	public Id id;
 	private String name;
 
+	public Properties network;
+
+	// symmetric encryption
+	public KeyPair keyPair;
+	protected SecretKey secretKey;
+	protected Cipher cipher;
+
+	// signature
+	public String signatureAlgorithm;
+
+	// an OCP agent acts as a server and a client
+	public Client client;
+	public Server server;
+
+	// storage
+	public Storage storage;
+
+	// nbr of technical backup
+	protected byte backupNbr;
+
+	// user
+	protected SecretKeyFactory userSecretKeyFactory;
+	protected Cipher userCipher;
+	protected PBEParameterSpec userParamSpec;
+
+	public byte[] ucrypt(String password, String string) throws Exception,
+			BadPaddingException {
+		SecretKey secretKey = generateSecretKey(password);
+
+		userCipher.init(Cipher.ENCRYPT_MODE, secretKey, userParamSpec);
+		return userCipher.doFinal(string.getBytes());
+	}
+
+	public String udecrypt(String password, byte[] ciphertext)
+			throws Exception, BadPaddingException {
+		SecretKey secretKey = generateSecretKey(password);
+		userCipher.init(Cipher.DECRYPT_MODE, secretKey, userParamSpec);
+		return new String(userCipher.doFinal(ciphertext));
+	}
+
+	private SecretKey generateSecretKey(String password) throws Exception {
+		return userSecretKeyFactory.generateSecret(new PBEKeySpec(password
+				.toCharArray()));
+	}
+
 	// these two attributes are corelated
 	// all access to them must be synchronized
 	protected Map<Id, Contact> contactMap; // contactid->contact
@@ -45,6 +98,37 @@ public class OCPAgent extends Agent {
 		super();
 		contactMap = new HashMap<Id, Contact>();
 		nodeMap = new TreeMap<Id, Contact>();
+	}
+
+	public void setNetworkProperties(Properties network) {
+		this.network = network;
+	}
+
+	public Id hash(byte[] input) throws Exception {
+		MessageDigest md = MessageDigest.getInstance(network.getProperty(
+				"hash", "SHA-1"));
+		return new Id(md.digest(input));
+	}
+
+	public Id generateId() throws Exception {
+		MessageDigest md = MessageDigest.getInstance(network.getProperty(
+				"hash", "SHA-1"));
+		SecureRandom random = SecureRandom.getInstance("SHA1PRNG");
+		byte[] input = new byte[200];
+		random.nextBytes(input);
+		return new Id(md.digest(input));
+	}
+
+	public KeyPair generateKeyPair() throws NoSuchAlgorithmException {
+		KeyPairGenerator keyGen = KeyPairGenerator.getInstance(network
+				.getProperty("PKAlgo", "DSA"));
+		SecureRandom random = SecureRandom.getInstance("SHA1PRNG");
+		keyGen.initialize(1024, random);
+		return keyGen.generateKeyPair();
+	}
+
+	protected void attach() throws Exception {
+		storage.attach();
 	}
 
 	@Override
@@ -120,7 +204,7 @@ public class OCPAgent extends Agent {
 		}
 
 	}
-	
+
 	@Override
 	public void stop() {
 		if (server != null) {
@@ -128,7 +212,6 @@ public class OCPAgent extends Agent {
 			server = null;
 		}
 	}
-
 
 	public Contact toContact() {
 		// convert the agent public information into a contact
@@ -602,6 +685,7 @@ public class OCPAgent extends Agent {
 		name = p.getProperty("name", "anonymous");
 
 		// each agent has its own symmetric key cipher
+		// TODO: test with other algo than AES
 		KeyGenerator keyGen = KeyGenerator.getInstance(this.p.getProperty(
 				"cypher.algo", "AES"));
 		keyGen.init(Integer.parseInt(this.p
@@ -718,18 +802,18 @@ public class OCPAgent extends Agent {
 			JLG.error(e);
 		}
 
-		
 	}
 
 	@Override
 	public void mkdir(User user, String existingParentDir, String newDir)
 			throws Exception {
-		FileSystem fs = new FileSystem((OCPUser) user, this); 
+		FileSystem fs = new FileSystem((OCPUser) user, this);
 		fs.createNewDir(existingParentDir, newDir);
 	}
 
 	@Override
-	public void rm(User user, String existingParentDir, String name) throws Exception {
+	public void rm(User user, String existingParentDir, String name)
+			throws Exception {
 		FileSystem fs = new FileSystem((OCPUser) user, this);
 		fs.deleteFile(existingParentDir, name);
 	}
@@ -779,6 +863,22 @@ public class OCPAgent extends Agent {
 	@Override
 	public boolean hasStorage() {
 		return server != null;
+	}
+
+	public byte[] crypt(byte[] cleartext) throws Exception, BadPaddingException {
+		cipher.init(Cipher.ENCRYPT_MODE, secretKey);
+		return cipher.doFinal(cleartext);
+	}
+
+	public byte[] decrypt(byte[] ciphertext) throws Exception,
+			BadPaddingException {
+		cipher.init(Cipher.DECRYPT_MODE, secretKey);
+		return cipher.doFinal(ciphertext);
+	}
+
+	@Override
+	public void removeStorage() {
+		storage.removeAll();
 	}
 
 }
