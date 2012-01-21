@@ -14,8 +14,8 @@ import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.swt.widgets.TreeItem;
 
 import com.guenego.misc.URL;
-import com.guenego.ocp.Contact;
 import com.guenego.storage.Agent;
+import com.guenego.storage.Contact;
 
 public class ContactComposite extends Composite {
 
@@ -76,9 +76,9 @@ public class ContactComposite extends Composite {
 
 		Iterator<Contact> it = agent.getContactIterator();
 		while (it.hasNext()) {
-			Contact contact = (Contact) it.next();
+			Contact contact = it.next();
 			TreeItem contactTreeItem = new TreeItem(tree, SWT.NONE);
-			String text = contact.id + " - " + contact.getName();
+			String text = contact.getId() + " - " + contact.getName();
 			contactTreeItem.setText(text);
 			Iterator<URL> itu = contact.urlList.iterator();
 			while (itu.hasNext()) {

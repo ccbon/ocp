@@ -26,6 +26,6 @@ public abstract class Channel {
 	
 	public abstract String request(String string) throws Exception;
 
-	public abstract Contact getContact() throws Exception;
+	public abstract OCPContact getContact() throws Exception;
 
 }

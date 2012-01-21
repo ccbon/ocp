@@ -31,11 +31,11 @@ public class TCPChannel extends Channel {
 	}
 
 	@Override
-	public Contact getContact() throws JLGException {
+	public OCPContact getContact() throws JLGException {
 		try {
 			JLG.debug("tcp ping");
 			String response = request(Protocol.GET_CONTACT);
-			Contact c = (Contact) JLG.deserialize(response);
+			OCPContact c = (OCPContact) JLG.deserialize(response);
 			// we update a host because an agent does not see its public address.
 			c.updateHost(url.getHost());
 			return c;

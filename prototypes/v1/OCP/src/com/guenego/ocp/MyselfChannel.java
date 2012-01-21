@@ -22,7 +22,7 @@ public class MyselfChannel extends Channel {
 	}
 
 	@Override
-	public Contact getContact() throws JLGException {
+	public OCPContact getContact() throws JLGException {
 		throw new JLGException("why do you need to call me ?");
 	}
 

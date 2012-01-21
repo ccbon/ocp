@@ -1,31 +1,27 @@
 package com.guenego.ocp;
 
-import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
-import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
 import com.guenego.misc.Id;
 import com.guenego.misc.URL;
+import com.guenego.storage.Contact;
 
-public class Contact implements Serializable, Comparable<Contact> {
+public class OCPContact extends Contact  {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	public List<URL> urlList;
-	public Id id;
 	public byte[] publicKey;
 	public SortedSet<Id> nodeIdSet;
-	private String name;
+	
 
-	public Contact(Id id) {
+	public OCPContact(Id id) {
+		super();
 		this.id = id;
-		urlList = new ArrayList<URL>();
 		nodeIdSet = Collections.synchronizedSortedSet(new TreeSet<Id>());
 	}
 
@@ -44,18 +40,16 @@ public class Contact implements Serializable, Comparable<Contact> {
 	@Override
 	public boolean equals(Object obj) {
 		if (obj != null && obj.getClass().equals(this.getClass())) {
-			return ((Contact) obj).id.equals(id);
+			return ((OCPContact) obj).id.equals(id);
 		}
 		return false;
 	}
 
 
-	public void addURL(URL url) {
-		urlList.add(url);
-	}
 
 
-	public void copy(Contact c) {
+
+	public void copy(OCPContact c) {
 		// for all member, replace
 		this.urlList = c.urlList;
 		this.id = c.id;
@@ -65,10 +59,6 @@ public class Contact implements Serializable, Comparable<Contact> {
 	}
 
 
-	@Override
-	public int compareTo(Contact o) {
-		return this.id.compareTo(o.id);
-	}
 
 	public void updateHost(String host) {
 		// foreach url, update the hostname
@@ -80,13 +70,6 @@ public class Contact implements Serializable, Comparable<Contact> {
 	}
 
 
-	public String getName() {
-		return name;
-	}
 
 
-	public void setName(String name) {
-		this.name = name;
-		
-	}
 }

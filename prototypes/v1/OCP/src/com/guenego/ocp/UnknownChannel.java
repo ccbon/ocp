@@ -17,7 +17,7 @@ public class UnknownChannel extends Channel {
 	}
 
 	@Override
-	public Contact getContact() throws Exception {
+	public OCPContact getContact() throws Exception {
 		return null;
 	}
 	

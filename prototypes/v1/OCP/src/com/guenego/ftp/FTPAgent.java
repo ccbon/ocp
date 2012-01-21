@@ -4,16 +4,16 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.HashSet;
-import java.util.Iterator;
+import java.util.Queue;
 
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPFile;
 import org.apache.commons.net.ftp.FTPFileFilter;
 
 import com.guenego.misc.JLG;
-import com.guenego.ocp.Contact;
+import com.guenego.misc.URL;
 import com.guenego.storage.Agent;
+import com.guenego.storage.Contact;
 import com.guenego.storage.FileInterface;
 import com.guenego.storage.User;
 
@@ -44,6 +44,11 @@ public class FTPAgent extends Agent {
 	@Override
 	public void start() throws Exception {
 		ftp.connect(hostname);
+		FTPContact c = new FTPContact("FTP server");
+		c.addURL(new URL("ftp", hostname, 21));
+		addContact(c);
+		FTPContact myself = (FTPContact) toContact();
+		addContact(myself);
 	}
 
 	@Override
@@ -167,13 +172,14 @@ public class FTPAgent extends Agent {
 			existingParentDir += "/";
 		}
 		final String fname = name;
-		FTPFile[] ftpFiles = ftp.listFiles(existingParentDir, new FTPFileFilter() {
-			
-			@Override
-			public boolean accept(FTPFile arg0) {
-				return arg0.getName().equals(fname);
-			}
-		});
+		FTPFile[] ftpFiles = ftp.listFiles(existingParentDir,
+				new FTPFileFilter() {
+
+					@Override
+					public boolean accept(FTPFile arg0) {
+						return arg0.getName().equals(fname);
+					}
+				});
 		if (ftpFiles.length != 1) {
 			throw new Exception("ftpFiles.length != 1");
 		}
@@ -188,9 +194,8 @@ public class FTPAgent extends Agent {
 			for (FTPFile child : children) {
 				rm(user, existingParentDir + name, child.getName());
 			}
-			ftp.removeDirectory(existingParentDir + name); 
+			ftp.removeDirectory(existingParentDir + name);
 		}
-		
 
 	}
 
@@ -226,7 +231,7 @@ public class FTPAgent extends Agent {
 		FileOutputStream fos = null;
 
 		FTPFile[] ftpFiles = ftp.listFiles(remoteDir, new FTPFileFilter() {
-			
+
 			@Override
 			public boolean accept(FTPFile arg0) {
 				return arg0.getName().equals(remotePath);
@@ -267,20 +272,14 @@ public class FTPAgent extends Agent {
 			FileInputStream fis = new FileInputStream(file);
 			ftp.setFileType(FTPClient.BINARY_FILE_TYPE);
 			ftp.storeFile(remoteDir + file.getName(), fis);
-			fis.close();			
+			fis.close();
 		}
 	}
 
 	@Override
 	public void refreshContactList() throws Exception {
 		// TODO we have two contact: the client and the server
-		
-	}
 
-	@Override
-	public Iterator<Contact> getContactIterator() {
-		// TODO Auto-generated method stub
-		return new HashSet<Contact>().iterator();
 	}
 
 	@Override
@@ -292,7 +291,7 @@ public class FTPAgent extends Agent {
 	public String getName() {
 		return "client";
 	}
-	
+
 	@Override
 	public String getHelpURL() {
 		return "http://code.google.com/p/ocp/wiki/FTPHelp";
@@ -307,5 +306,15 @@ public class FTPAgent extends Agent {
 	public void removeStorage() {
 	}
 
+	@Override
+	public Queue<Contact> makeContactQueue() throws Exception {
+		throw new Exception(
+				"this function is normally useless or may be it has to be implemented...");
+	}
+
+	@Override
+	public Contact toContact() {
+		return new FTPContact("myself (the client)");
+	}
 
 }

@@ -11,10 +11,8 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.Arrays;
 import java.util.Enumeration;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.Map;
 import java.util.NavigableMap;
 import java.util.Properties;
 import java.util.Queue;
@@ -34,6 +32,7 @@ import com.guenego.misc.Id;
 import com.guenego.misc.JLG;
 import com.guenego.misc.URL;
 import com.guenego.storage.Agent;
+import com.guenego.storage.Contact;
 import com.guenego.storage.FileInterface;
 import com.guenego.storage.User;
 
@@ -91,13 +90,11 @@ public class OCPAgent extends Agent {
 
 	// these two attributes are corelated
 	// all access to them must be synchronized
-	protected Map<Id, Contact> contactMap; // contactid->contact
-	protected NavigableMap<Id, Contact> nodeMap; // nodeid->contact
+	protected NavigableMap<Id, OCPContact> nodeMap; // nodeid->contact
 
 	public OCPAgent() {
 		super();
-		contactMap = new HashMap<Id, Contact>();
-		nodeMap = new TreeMap<Id, Contact>();
+		nodeMap = new TreeMap<Id, OCPContact>();
 	}
 
 	public void setNetworkProperties(Properties network) {
@@ -198,7 +195,7 @@ public class OCPAgent extends Agent {
 			server = new Server(this);
 			server.start();
 			attach();
-			Contact myself = toContactForMyself();
+			OCPContact myself = toContactForMyself();
 			addContact(myself);
 
 		}
@@ -213,9 +210,10 @@ public class OCPAgent extends Agent {
 		}
 	}
 
+	@Override
 	public Contact toContact() {
 		// convert the agent public information into a contact
-		Contact c = new Contact(this.id);
+		OCPContact c = new OCPContact(this.id);
 		c.setName(this.name);
 		c.publicKey = this.keyPair.getPublic().getEncoded();
 		// add the listener url and node id information
@@ -234,9 +232,9 @@ public class OCPAgent extends Agent {
 		return c;
 	}
 
-	public Contact toContactForMyself() {
+	public OCPContact toContactForMyself() {
 		// convert the agent public information into a contact
-		Contact c = new Contact(this.id);
+		OCPContact c = new OCPContact(this.id);
 		c.setName(this.name);
 		c.publicKey = this.keyPair.getPublic().getEncoded();
 		// add the listener url and node id information
@@ -278,7 +276,7 @@ public class OCPAgent extends Agent {
 			Iterator<Id> it = nodeMap.keySet().iterator();
 			while (it.hasNext()) {
 				Id id = (Id) it.next();
-				Contact contact = nodeMap.get(id);
+				OCPContact contact = nodeMap.get(id);
 				result += id + "->" + contact + JLG.NL;
 			}
 		}
@@ -291,7 +289,7 @@ public class OCPAgent extends Agent {
 
 	public boolean isResponsible(Address address) throws Exception {
 		Id nodeId = getNodeId(address);
-		Contact contact = getContactFromNodeId(nodeId);
+		OCPContact contact = getContactFromNodeId(nodeId);
 		return contact.id.equals(id);
 	}
 
@@ -635,14 +633,6 @@ public class OCPAgent extends Agent {
 		}
 	}
 
-	public synchronized Contact getContact(Id contactId) throws Exception {
-		Contact contact = contactMap.get(contactId);
-		if (contact == null) {
-			throw new Exception("contact is null");
-		}
-		return contact;
-	}
-
 	public Id getNodeId(Address address) throws Exception {
 		if (nodeMap.size() == 0) {
 			throw new Exception("nodeMap is not populated.");
@@ -657,7 +647,7 @@ public class OCPAgent extends Agent {
 		return nodeId;
 	}
 
-	public Contact getContactFromNodeId(Id nodeId) {
+	public OCPContact getContactFromNodeId(Id nodeId) {
 		return nodeMap.get(nodeId);
 	}
 
@@ -705,17 +695,17 @@ public class OCPAgent extends Agent {
 
 	public Queue<Contact> makeContactQueue(Id key) throws Exception {
 		Queue<Contact> contactQueue = new LinkedList<Contact>();
-		NavigableMap<Id, Contact> nodeMap = new TreeMap<Id, Contact>(
+		NavigableMap<Id, OCPContact> nodeMap = new TreeMap<Id, OCPContact>(
 				this.nodeMap);
 		if (nodeMap.containsKey(key)) {
 			contactQueue.offer(nodeMap.get(key));
 		}
 
-		NavigableMap<Id, Contact> s = nodeMap.headMap(key, false);
+		NavigableMap<Id, OCPContact> s = nodeMap.headMap(key, false);
 		Iterator<Id> it = s.navigableKeySet().descendingIterator();
 		while (it.hasNext()) {
 			Id nodeId = it.next();
-			Contact contact = s.get(nodeId);
+			OCPContact contact = s.get(nodeId);
 			if (!contactQueue.contains(contact)) {
 				contactQueue.offer(contact);
 			}
@@ -724,7 +714,7 @@ public class OCPAgent extends Agent {
 		it = s.navigableKeySet().descendingIterator();
 		while (it.hasNext()) {
 			Id nodeId = it.next();
-			Contact contact = s.get(nodeId);
+			OCPContact contact = s.get(nodeId);
 			if (!contactQueue.contains(contact)) {
 				contactQueue.offer(contact);
 			}
@@ -732,43 +722,40 @@ public class OCPAgent extends Agent {
 		return contactQueue;
 	}
 
+	@Override
 	public Queue<Contact> makeContactQueue() throws Exception {
 		return makeContactQueue(new Id("0"));
 	}
 
-	public synchronized void addContact(Contact contact) throws Exception {
-
-		contactMap.put(contact.id, contact);
-		if (contact.nodeIdSet.size() == 0) {
+	@Override
+	public void addContact(Contact contact) throws Exception {
+		super.addContact(contact);
+		OCPContact c = (OCPContact) contact;
+		if (c.nodeIdSet.size() == 0) {
 			throw new Exception("contact without node.");
 		}
-		Iterator<Id> it = contact.nodeIdSet.iterator();
+		Iterator<Id> it = c.nodeIdSet.iterator();
 		while (it.hasNext()) {
 			Id id = (Id) it.next();
 			JLG.debug("adding node to nodeMap");
-			nodeMap.put(id, contact);
+			nodeMap.put(id, c);
 		}
 	}
 
 	@Override
-	public Iterator<Contact> getContactIterator() {
-		// we return a snapshot and not the modifiable contact list
-		LinkedList<Contact> linkedList = new LinkedList<Contact>(
-				contactMap.values());
-		return linkedList.iterator();
-	}
-
-	public synchronized void removeContact(Contact contact) {
-		contactMap.remove(contact.id);
-
-	}
-
-	public synchronized boolean hasNoContact() {
-		return contactMap.size() == 0;
-	}
-
-	public synchronized boolean hasContact(Contact contact) {
-		return contactMap.containsValue(contact);
+	public Contact removeContact(Contact contact) {
+		OCPContact c = (OCPContact) super.removeContact(contact);
+		try {
+			Iterator<Id> it = c.nodeIdSet.iterator();
+			while (it.hasNext()) {
+				Id id = (Id) it.next();
+				JLG.debug("removing node to nodeMap");
+				nodeMap.remove(id);
+			}
+			return c;
+		} catch (Exception e) {
+			return null;
+		}
 	}
 
 	public Captcha wantToCreateUser(String login, String password)

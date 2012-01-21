@@ -16,6 +16,7 @@ import com.guenego.misc.Id;
 import com.guenego.misc.JLG;
 import com.guenego.misc.JLGException;
 import com.guenego.misc.URL;
+import com.guenego.storage.Contact;
 
 public class Client {
 
@@ -42,13 +43,13 @@ public class Client {
 		return false;
 	}
 
-	public Contact getContact(Channel channel) throws Exception {
+	public OCPContact getContact(Channel channel) throws Exception {
 		// I have to request to an agent (sending to it a string and then
 		// receiving a response
 		// For that, I need to know the channel to use.
 		JLG.debug("get contact from channel " + channel);
 		if (understand(channel)) {
-			Contact c = channel.getContact();
+			OCPContact c = channel.getContact();
 			return c;
 		}
 		JLG.warn("channel not reachable. get contact returns null.");
@@ -97,9 +98,9 @@ public class Client {
 		if (agent.hasNoContact()) {
 			findSponsor();
 		}
-		Contact contact = null;
+		OCPContact contact = null;
 		while ((!contactQueue.isEmpty()) && (sResponse == null)) {
-			contact = contactQueue.poll();
+			contact = (OCPContact) contactQueue.poll();
 			try {
 				sResponse = request(contact, sRequest);
 			} catch (DetachedAgentException e) {
@@ -125,7 +126,7 @@ public class Client {
 				String sUrl = agent.p.getProperty(key);
 				URL url = new URL(sUrl);
 				Channel channel = Channel.getInstance(url, agent);
-				Contact sponsor = getContact(channel);
+				OCPContact sponsor = getContact(channel);
 				if (sponsor != null) {
 					JLG.debug("we found a pingable sponsor channel");
 					agent.addContact(sponsor);
@@ -142,9 +143,9 @@ public class Client {
 		}
 	}
 
-	public void enrichContact(Contact contact) throws Exception {
+	public void enrichContact(OCPContact contact) throws Exception {
 		String response = request(contact, Protocol.GET_CONTACT);
-		Contact c = (Contact) JLG.deserialize(response);
+		OCPContact c = (OCPContact) JLG.deserialize(response);
 		String host = contact.urlList.iterator().next().getHost();
 		c.updateHost(host);
 		contact.copy(c);
@@ -157,7 +158,7 @@ public class Client {
 				return;
 			}
 			agent.removeContact(contact);
-			sendAll(Protocol.hasBeenDetached(contact));
+			sendAll(Protocol.hasBeenDetached((OCPContact) contact));
 		}
 	}
 
@@ -199,12 +200,13 @@ public class Client {
 	}
 
 	private String request(Contact contact, String string) throws Exception {
+		OCPContact ocpContact = (OCPContact) contact;
 		String response = null;
 		// I have to request to an agent (sending to it a string and then
 		// receiving a response
 		// For that, I need to know the channel to use.
 		// for the time being I know only the TCP channel.
-		Iterator<URL> it = contact.urlList.iterator();
+		Iterator<URL> it = ocpContact.urlList.iterator();
 		while (it.hasNext()) {
 			URL url = it.next();
 

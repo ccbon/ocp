@@ -9,6 +9,7 @@ import java.util.Iterator;
 
 import com.guenego.misc.Id;
 import com.guenego.misc.JLG;
+import com.guenego.storage.Contact;
 
 public class Protocol {
 
@@ -174,7 +175,7 @@ public class Protocol {
 			try {
 				Iterator<String> it = iterator(request);
 				it.next();
-				Contact contact = (Contact) JLG.deserialize(it.next());
+				OCPContact contact = (OCPContact) JLG.deserialize(it.next());
 				InetAddress host = clientSocket.getInetAddress();
 				contact.updateHost(host.getHostAddress());
 				agent.addContact(contact);
@@ -210,7 +211,7 @@ public class Protocol {
 		return Arrays.asList(request.split(SEPARATOR)).iterator();
 	}
 
-	public static String hasBeenDetached(Contact contact) {
+	public static String hasBeenDetached(OCPContact contact) {
 		return "INFORM_DETACH:" + contact.id;
 	}
 

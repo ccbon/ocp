@@ -2,15 +2,15 @@ package com.guenego.ocp;
 
 public class Response {
 
-	private Contact contact;
+	private OCPContact contact;
 	private String response;
 
-	public Response(String sResponse, Contact contact) {
+	public Response(String sResponse, OCPContact contact) {
 		this.response = sResponse;
 		this.contact = contact;
 	}
 
-	public Contact getContact() {
+	public OCPContact getContact() {
 		return contact;
 	}
 
