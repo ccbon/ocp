@@ -68,19 +68,19 @@ public class OCPAgent extends Agent {
 	protected Cipher userCipher;
 	protected PBEParameterSpec userParamSpec;
 
-	public byte[] ucrypt(String password, String string) throws Exception,
+	public byte[] ucrypt(String password, byte[] input) throws Exception,
 			BadPaddingException {
 		SecretKey secretKey = generateSecretKey(password);
 
 		userCipher.init(Cipher.ENCRYPT_MODE, secretKey, userParamSpec);
-		return userCipher.doFinal(string.getBytes());
+		return userCipher.doFinal(input);
 	}
 
-	public String udecrypt(String password, byte[] ciphertext)
+	public byte[] udecrypt(String password, byte[] ciphertext)
 			throws Exception, BadPaddingException {
 		SecretKey secretKey = generateSecretKey(password);
 		userCipher.init(Cipher.DECRYPT_MODE, secretKey, userParamSpec);
-		return new String(userCipher.doFinal(ciphertext));
+		return userCipher.doFinal(ciphertext);
 	}
 
 	private SecretKey generateSecretKey(String password) throws Exception {
@@ -195,8 +195,8 @@ public class OCPAgent extends Agent {
 			server = new Server(this);
 			server.start();
 			attach();
-			//Contact myself = toContactForMyself();
-			Contact myself = toContact();
+			Contact myself = toContactForMyself();
+			//Contact myself = toContact();
 			addContact(myself);
 
 		}
@@ -463,7 +463,7 @@ public class OCPAgent extends Agent {
 	public Pointer set(OCPUser user, Serializable serializable)
 			throws Exception {
 		JLG.debug("set serializable: " + serializable.getClass());
-		return set(user, JLG.serialize(serializable).getBytes());
+		return set(user, JLG.serialize(serializable));
 	}
 
 	public Pointer set(OCPUser user, byte[] bytes) throws Exception {
@@ -485,14 +485,13 @@ public class OCPAgent extends Agent {
 	}
 
 	private Pointer makePointer(OCPUser user, Key[] keys) throws Exception {
-		Data data = new Data(this, user, user.crypt(JLG.serialize(keys)
-				.getBytes()));
+		Data data = new Data(this, user, user.crypt(JLG.serialize(keys)));
 		Pointer pointer = new Pointer(set(data).getBytes());
 		return pointer;
 	}
 
 	public Serializable get(OCPUser user, Pointer pointer) throws Exception {
-		return JLG.deserialize(new String(getBytes(user, pointer)));
+		return JLG.deserialize(getBytes(user, pointer));
 	}
 
 	public byte[] getBytes(OCPUser user, Pointer pointer) throws Exception {
@@ -525,7 +524,7 @@ public class OCPAgent extends Agent {
 		}
 		byte[] ciphertext = data.getContent();
 		byte[] cleartext = user.decrypt(ciphertext);
-		Key[] keys = (Key[]) JLG.deserialize(new String(cleartext));
+		Key[] keys = (Key[]) JLG.deserialize(cleartext);
 		return keys;
 	}
 
@@ -605,7 +604,7 @@ public class OCPAgent extends Agent {
 		// 2) create the private part of the user.
 		// no need captcha because creation of object is checked by the user
 		// public info
-		Key key = new Key(hash(ucrypt(password, login + password)));
+		Key key = new Key(hash(ucrypt(password, (login + password).getBytes())));
 		byte[] content = ucrypt(password, JLG.serialize(user));
 		Content privateUserData = new Data(this, user, content);
 		Link privateUserDataLink = new Link(user, this, key,
@@ -618,7 +617,7 @@ public class OCPAgent extends Agent {
 	@Override
 	public User login(String login, String password) throws Exception {
 		try {
-			Id key = hash(ucrypt(password, login + password));
+			Id key = hash(ucrypt(password, (login + password).getBytes()));
 			byte[] content = client.getUser(key);
 			if (content == null || content.length == 0) {
 				throw new Exception("user unknown");
@@ -653,9 +652,8 @@ public class OCPAgent extends Agent {
 	}
 
 	public void declareContact() throws Exception {
-		Contact contact = toContact();
-		client.sendAll(Protocol.DECLARE_CONTACT + ":" + JLG.serialize(contact));
-
+		byte[] input = Protocol.message(Protocol.DECLARE_CONTACT, toContact());
+		client.sendAll(input);
 	}
 
 	@Override
@@ -763,7 +761,7 @@ public class OCPAgent extends Agent {
 			throws Exception {
 		// TODO check if user already exists ?
 		JLG.debug("want to create a user");
-		Id key = hash(ucrypt(password, login + password));
+		Id key = hash(ucrypt(password, (login + password).getBytes()));
 		JLG.debug("key = " + key);
 		Queue<Contact> contactQueue = makeContactQueue(key);
 		JLG.debug("contact queue established.");
@@ -777,7 +775,7 @@ public class OCPAgent extends Agent {
 
 	@Override
 	public void refreshContactList() throws Exception {
-		client.sendAll(Protocol.PING);
+		client.sendAll(Protocol.PING.getBytes());
 	}
 
 	@Override
@@ -813,7 +811,7 @@ public class OCPAgent extends Agent {
 
 	@Override
 	public FileSystem getFileSystem(User user) {
-		return new OCPFileSystem((OCPUser) user, this) ;
+		return new OCPFileSystem((OCPUser) user, this);
 	}
 
 }

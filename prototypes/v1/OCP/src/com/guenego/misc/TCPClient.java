@@ -74,6 +74,7 @@ public class TCPClient {
 			clientSocket = new Socket(hostname, port);
 			JLG.debug("socket opened to " + hostname + ":" + port);
 			JLG.debug("sending string(length=" + input.length + ")");
+			JLG.debug("sending string: " + input);
 			out = new DataOutputStream(clientSocket.getOutputStream());
 			out.writeInt(input.length);
 			out.write(input);

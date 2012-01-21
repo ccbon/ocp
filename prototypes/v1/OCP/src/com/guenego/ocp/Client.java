@@ -58,12 +58,11 @@ public class Client {
 
 	public Properties getNetworkProperties() throws JLGException {
 		try {
-			Response response = request(Protocol.NETWORK_PROPERTIES);
+			Response response = request(Protocol.message(Protocol.NETWORK_PROPERTIES));
 			Properties network = new Properties();
 			// network.loadFromXML(new
 			// ByteArrayInputStream(response.getBytes()));
-			network.load(new ByteArrayInputStream(response.getString()
-					.getBytes()));
+			network.load(new ByteArrayInputStream(response.getBytes()));
 			return network;
 		} catch (Exception e) {
 			throw new JLGException(e);
@@ -74,13 +73,13 @@ public class Client {
 		Id[] nodeIds = null;
 		// at this time we ask to the network to give us one node_id.
 
-		Response response = request(Protocol.NODE_ID);
+		Response response = request(Protocol.message(Protocol.NODE_ID));
 		nodeIds = new Id[1];
-		nodeIds[0] = new Id(response.getString());
+		nodeIds[0] = new Id(response.getBytes());
 		return nodeIds;
 	}
 
-	public Response request(String string) throws Exception {
+	public Response request(byte[] string) throws Exception {
 		if (agent.hasNoContact()) {
 			findSponsor();
 		}
@@ -92,26 +91,26 @@ public class Client {
 		return response;
 	}
 
-	private Response request(Queue<Contact> contactQueue, String sRequest)
+	private Response request(Queue<Contact> contactQueue, byte[] input)
 			throws Exception {
-		String sResponse = null;
+		byte[] output = null;
 		if (agent.hasNoContact()) {
 			findSponsor();
 		}
 		OCPContact contact = null;
-		while ((!contactQueue.isEmpty()) && (sResponse == null)) {
+		while ((!contactQueue.isEmpty()) && (output == null)) {
 			contact = (OCPContact) contactQueue.poll();
 			try {
-				sResponse = request(contact, sRequest);
+				output = request(contact, input);
 			} catch (DetachedAgentException e) {
 				detach(contact);
 			}
 		}
-		if (sResponse == null) {
+		if (output == null) {
 			throw new NoNetworkException();
 		}
 
-		return new Response(sResponse, contact);
+		return new Response(output, contact);
 	}
 
 	private void findSponsor() throws Exception {
@@ -144,7 +143,7 @@ public class Client {
 	}
 
 	public void enrichContact(OCPContact contact) throws Exception {
-		String response = request(contact, Protocol.GET_CONTACT);
+		byte[] response = request(contact, Protocol.GET_CONTACT.getBytes());
 		OCPContact c = (OCPContact) JLG.deserialize(response);
 		String host = contact.urlList.iterator().next().getHost();
 		c.updateHost(host);
@@ -162,7 +161,7 @@ public class Client {
 		}
 	}
 
-	public void sendAll(String message) throws Exception {
+	public void sendAll(byte[] message) throws Exception {
 		// tell all your contact of what happened
 
 		Set<Contact> contactToBeDetached = new HashSet<Contact>();
@@ -192,16 +191,17 @@ public class Client {
 
 	}
 
-	public void send(Contact c, String message) throws Exception {
-		String response = request(c, message);
-		if (!response.equals(Protocol.SUCCESS)) {
+	public void send(Contact c, byte[] message) throws Exception {
+		byte[] response = request(c, message);
+		Response r = new Response(response, (OCPContact) c);
+		if (!r.isSuccess()) {
 			throw new Exception("error while informing: " + response);
 		}
 	}
 
-	private String request(Contact contact, String string) throws Exception {
+	private byte[] request(Contact contact, byte[] string) throws Exception {
 		OCPContact ocpContact = (OCPContact) contact;
-		String response = null;
+		byte[] output = null;
 		// I have to request to an agent (sending to it a string and then
 		// receiving a response
 		// For that, I need to know the channel to use.
@@ -219,22 +219,22 @@ public class Client {
 			}
 			if (understand(channel)) {
 				try {
-					byte[] output = channel.request(string.getBytes());
-					response = new String(output);
+					output = channel.request(string);
+					
 				} catch (ConnectException e) {
 					continue;
 				} catch (Exception e) {
 					JLG.warn(e);
 				}
-				return response;
+				return output;
 			}
 		}
 		throw new DetachedAgentException();
 	}
 
 	public Captcha askCaptcha(Queue<Contact> contactQueue) throws Exception {
-		Response r = request(contactQueue, Protocol.GENERATE_CAPTCHA);
-		Captcha captcha = (Captcha) JLG.deserialize(r.getString());
+		Response r = request(contactQueue, Protocol.GENERATE_CAPTCHA.getBytes());
+		Captcha captcha = (Captcha) JLG.deserialize(r.getBytes());
 		JLG.debug("captcha content = " + captcha);
 		// if (!captcha.checkSignature(r.getContact())) {
 		// throw new Exception("captcha signature not consistant");
@@ -245,7 +245,7 @@ public class Client {
 
 	public void createUser(Contact contact, ObjectData data, Link link,
 			Captcha captcha, String answer) throws Exception {
-		String request = Protocol.message(Protocol.CREATE_USER, data, link,
+		byte[] request = Protocol.message(Protocol.CREATE_USER, data, link,
 				captcha, answer);
 		send(contact, request);
 	}
@@ -253,10 +253,10 @@ public class Client {
 	public void store(Queue<Contact> contactQueue, Address address,
 			Content content) throws Exception {
 		// store an object at given address and put the content.
-		String request = Protocol.message(Protocol.CREATE_OBJECT,
+		byte[] request = Protocol.message(Protocol.CREATE_OBJECT,
 				address.getBytes(), content);
 		Response response = request(contactQueue, request);
-		if (!response.getString().equals(Protocol.SUCCESS)) {
+		if (!response.isSuccess()) {
 			throw new Exception("cannot store");
 		}
 	}
@@ -265,17 +265,17 @@ public class Client {
 		Response r = request(agent.makeContactQueue(key),
 				Protocol.message(Protocol.GET_USER, key.getBytes()));
 		r.checkForError();
-		return JLG.hexToBytes(r.getString());
+		return r.getBytes();
 	}
 
 	public Content getFromAddress(Address address) throws Exception {
 		Response r = request(agent.makeContactQueue(address),
 				Protocol.message(Protocol.GET_ADDRESS, address.getBytes()));
 		r.checkForError();
-		if (r.getString().equals(Protocol.ADDRESS_NOT_FOUND)) {
+		if (new String(r.getBytes()).equals(new String(Protocol.ADDRESS_NOT_FOUND))) {
 			return null;
 		}
-		return (Content) JLG.deserialize(r.getString());
+		return (Content) JLG.deserialize(r.getBytes());
 	}
 
 	public void remove(Address address, byte[] addressSignature)

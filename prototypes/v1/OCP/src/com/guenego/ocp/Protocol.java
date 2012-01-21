@@ -1,11 +1,15 @@
 package com.guenego.ocp;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.EOFException;
 import java.io.Serializable;
 import java.net.InetAddress;
 import java.net.Socket;
-import java.util.Arrays;
 import java.util.Iterator;
+import java.util.LinkedList;
 
 import com.guenego.misc.Id;
 import com.guenego.misc.JLG;
@@ -13,28 +17,34 @@ import com.guenego.storage.Contact;
 
 public class Protocol {
 
-	public static final String SEPARATOR = ":";
+	public static final int SEPARATOR = 0;
 	public static final String PING = "ping";
 	public static final String NETWORK_PROPERTIES = "network_properties";
-	public static final String ERROR = "ERROR";
+
 	public static final String NODE_ID = "node_id";
 	public static final String GET_CONTACT = "get_contact";
 	public static final String GENERATE_CAPTCHA = "generate_captcha";
 	public static final String CREATE_USER = "create_user";
-	public static final String SUCCESS = "0";
 	public static final String DECLARE_CONTACT = "declare_contact";
 	public static final String CREATE_OBJECT = "create_object";
 	public static final String GET_USER = "get_user";
 	public static final String GET_ADDRESS = "get_address";
-	public static final String ADDRESS_NOT_FOUND = "not_found";
 	public static final String REMOVE_ADDRESS = "remove_address";
+
+	public static final byte[] SUCCESS = "0".getBytes();
+	public static final byte[] ERROR = "ERROR".getBytes();
+	public static final byte[] ADDRESS_NOT_FOUND = "not_found".getBytes();
+
 	private OCPAgent agent;
 
 	public Protocol(OCPAgent agent) {
 		this.agent = agent;
 	}
 
-	public String process(String request, Socket clientSocket) throws InterruptedException {
+	public byte[] process(byte[] input, Socket clientSocket)
+			throws InterruptedException {
+		String request = new String(input);
+		Iterator<byte[]> it = iterator(input);
 		if (request.equalsIgnoreCase(PING)) {
 			return SUCCESS;
 		}
@@ -43,7 +53,7 @@ public class Protocol {
 			try {
 				ByteArrayOutputStream out = new ByteArrayOutputStream();
 				agent.network.store(out, "");
-				String result = out.toString();
+				byte[] result = out.toByteArray();
 				out.close();
 				return result;
 			} catch (Exception e) {
@@ -54,7 +64,7 @@ public class Protocol {
 
 		if (request.equalsIgnoreCase(NODE_ID)) {
 			try {
-				return agent.generateId().toString();
+				return agent.generateId().getBytes();
 			} catch (Exception e) {
 				return ERROR;
 			}
@@ -64,8 +74,7 @@ public class Protocol {
 		if (request.equalsIgnoreCase(GET_CONTACT)) {
 			try {
 				Contact c = agent.toContact();
-				
-				
+
 				JLG.debug("I start to serialize");
 				return JLG.serialize(c);
 			} catch (Exception e) {
@@ -78,14 +87,13 @@ public class Protocol {
 		if (request.startsWith(GET_USER)) {
 			try {
 				// Protocol.GET_USER + ":" + key
-				String[] al = request.split(":");
-				Key key = new Key(new Id(al[1]));
+				Key key = new Key(new Id(it.next()));
 				Content data = agent.get(key);
 				if (data == null) {
 					throw new Exception("Cannot find user for key = " + key);
 				}
 				// serialize it.
-				return JLG.bytesToHex(data.getContent());
+				return data.getContent();
 			} catch (Exception e) {
 				JLG.error(e);
 				return ERROR;
@@ -95,8 +103,7 @@ public class Protocol {
 		if (request.startsWith(GET_ADDRESS)) {
 			try {
 				// Protocol.GET_ADDRESS + ":" + address
-				String[] al = request.split(":");
-				Address address = new Address(al[1]);
+				Address address = new Address(it.next());
 				Content data = agent.get(address);
 				if (data == null) {
 					return ADDRESS_NOT_FOUND;
@@ -122,26 +129,28 @@ public class Protocol {
 
 		if (request.startsWith(CREATE_USER)) {
 			try {
-//				String request = Protocol.message(Protocol.CREATE_USER, data, link, captcha,
-//						answer);
+				// String request = Protocol.message(Protocol.CREATE_USER, data,
+				// link, captcha,
+				// answer);
 
 				// TODO handle when user already exists.
 
-				Iterator<String> it = iterator(request);
-				it.next();
+				
+				
 				ObjectData data = (ObjectData) JLG.deserialize(it.next());
 				Link link = (Link) JLG.deserialize(it.next());
 				Captcha captcha = (Captcha) JLG.deserialize(it.next());
-				String answer = it.next();
-				
+				String answer = new String(it.next());
+
 				captcha.check(agent, answer);
-				
+
 				Key key = link.getKey();
 				Key targetKey = link.getTargetKey();
 				if (agent.exists(key) || agent.exists(targetKey)) {
-					throw new Exception("it seems that the user already exists.");
+					throw new Exception(
+							"it seems that the user already exists.");
 				}
-				
+
 				agent.setWithLink(null, data, link);
 
 				return SUCCESS;
@@ -157,8 +166,6 @@ public class Protocol {
 				// String request = Protocol.CREATE_OBJECT + ":" + address + ":"
 				// + JLG.serialize(content);
 
-				Iterator<String> it = iterator(request);
-				it.next();
 				Address address = new Address(it.next());
 				Content content = (Content) JLG.deserialize(it.next());
 				agent.store(address, content);
@@ -173,8 +180,9 @@ public class Protocol {
 
 		if (request.startsWith(DECLARE_CONTACT)) {
 			try {
-				Iterator<String> it = iterator(request);
-				it.next();
+				JLG.debug("protocol->declare_contact_message hash: "
+						+ agent.hash(input));
+				
 				OCPContact contact = (OCPContact) JLG.deserialize(it.next());
 				InetAddress host = clientSocket.getInetAddress();
 				contact.updateHost(host.getHostAddress());
@@ -190,10 +198,8 @@ public class Protocol {
 
 		if (request.startsWith(REMOVE_ADDRESS)) {
 			try {
-				Iterator<String> it = iterator(request);
-				it.next();
 				Address address = (Address) JLG.deserialize(it.next());
-				byte[] addressSignature = JLG.hexToBytes(it.next());
+				byte[] addressSignature = it.next();
 				agent.remove(address, addressSignature);
 				// serialize it.
 				return SUCCESS;
@@ -204,31 +210,65 @@ public class Protocol {
 
 		}
 
-		return ERROR + ":OCP message not understood";
+		return "ERROR:OCP message not understood".getBytes();
 	}
 
-	private static Iterator<String> iterator(String request) {
-		return Arrays.asList(request.split(SEPARATOR)).iterator();
-	}
-
-	public static String hasBeenDetached(OCPContact contact) {
-		return "INFORM_DETACH:" + contact.id;
-	}
-
-	public static String message(String function, Object... objects)
-			throws Exception {
-		String result = function;
-		for (int i = 0; i < objects.length; i++) {
-			result += Protocol.SEPARATOR;
-			if (objects[i].getClass() == byte[].class) {
-				result += JLG.bytesToHex((byte[]) objects[i]);
-			} else if (objects[i].getClass() == String.class) {
-				result += objects[i];
-			} else {
-				result += JLG.serialize((Serializable) objects[i]);
-			}
-
+	public static Iterator<byte[]> iterator(byte[] input) {
+		LinkedList<byte[]> list = new LinkedList<byte[]>();
+		try {
+		ByteArrayInputStream bis = new ByteArrayInputStream(input);
+		DataInputStream dis = new DataInputStream(bis);
+		int b = -2;
+		while ((b != SEPARATOR) && (b != -1)) {
+			b = dis.read();
 		}
+		while (true) {
+			try {
+				int length = dis.readInt();
+				byte[] serialized = new byte[length];
+				dis.read(serialized, 0, length);
+				list.addLast(serialized);
+			} catch (EOFException e) {
+				break;
+			}
+		}
+		dis.close();
+		bis.close();
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		return list.iterator();
+	}
+
+	public static byte[] hasBeenDetached(OCPContact contact) {
+		return ("INFORM_DETACH:" + contact.id).getBytes();
+	}
+
+	public static byte[] message(String function, Object... objects) throws Exception {
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		DataOutputStream dos = new DataOutputStream(baos);
+
+		dos.write(function.getBytes());
+		dos.write(SEPARATOR);
+		for (int i = 0; i < objects.length; i++) {
+			byte[] serialized = null;
+
+			if (objects[i].getClass() == byte[].class) {
+
+				serialized = (byte[]) objects[i];
+			} else if (objects[i].getClass() == String.class) {
+				serialized = ((String) objects[i]).getBytes();
+			} else {
+				serialized = JLG.serialize((Serializable) objects[i]);
+			}
+			dos.writeInt(serialized.length);
+			dos.write(serialized);
+		}
+		dos.flush();
+
+		byte[] result = baos.toByteArray();
+		dos.close();
+		baos.close();
 		return result;
 	}
 

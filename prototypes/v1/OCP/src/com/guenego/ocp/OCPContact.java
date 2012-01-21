@@ -9,7 +9,7 @@ import com.guenego.misc.Id;
 import com.guenego.misc.URL;
 import com.guenego.storage.Contact;
 
-public class OCPContact extends Contact  {
+public class OCPContact extends Contact {
 
 	/**
 	 * 

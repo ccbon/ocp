@@ -29,7 +29,8 @@ public class OCPUser extends User {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	public OCPUser(OCPAgent agent, String login, int backupNbr) throws Exception {
+	public OCPUser(OCPAgent agent, String login, int backupNbr)
+			throws Exception {
 		super(login);
 		this.backupNbr = backupNbr;
 		this.indexKey = new Key(agent.generateId()); // refer to the list of
@@ -82,8 +83,7 @@ public class OCPUser extends User {
 	public void add(OCPAgent agent, Pointer pointer) throws Exception {
 		UserIndex userIndex = getUserIndex(agent);
 		userIndex.add(pointer);
-		Data data = new Data(agent, this, crypt(JLG.serialize(userIndex)
-				.getBytes()));
+		Data data = new Data(agent, this, crypt(JLG.serialize(userIndex)));
 		Link link = new Link(this, agent, indexKey, data.getKey(agent));
 		agent.setWithLink(this, data, link);
 	}
@@ -95,7 +95,7 @@ public class OCPUser extends User {
 			userIndex = new UserIndex();
 		} else {
 			byte[] content = decrypt(userIndexData.getContent());
-			userIndex = (UserIndex) JLG.deserialize(new String(content));
+			userIndex = (UserIndex) JLG.deserialize(content);
 		}
 
 		return userIndex;
@@ -104,8 +104,7 @@ public class OCPUser extends User {
 	public void remove(OCPAgent agent, Pointer pointer) throws Exception {
 		UserIndex userIndex = getUserIndex(agent);
 		userIndex.remove(pointer);
-		Data data = new Data(agent, this, crypt(JLG.serialize(userIndex)
-				.getBytes()));
+		Data data = new Data(agent, this, crypt(JLG.serialize(userIndex)));
 		Link link = new Link(this, agent, indexKey, data.getKey(agent));
 		agent.setWithLink(this, data, link);
 
@@ -118,7 +117,7 @@ public class OCPUser extends User {
 			return null;
 		} else {
 			byte[] content = decrypt(pointerData.getContent());
-			pointer = (Pointer) JLG.deserialize(new String(content));
+			pointer = (Pointer) JLG.deserialize(content);
 		}
 
 		return pointer;
@@ -126,7 +125,7 @@ public class OCPUser extends User {
 
 	public void setRootPointer(OCPAgent agent, Pointer p) throws Exception {
 
-		Data data = new Data(agent, this, crypt(JLG.serialize(p).getBytes()));
+		Data data = new Data(agent, this, crypt(JLG.serialize(p)));
 		Link link = new Link(this, agent, rootKey, data.getKey(agent));
 		agent.setWithLink(this, data, link);
 
@@ -144,7 +143,5 @@ public class OCPUser extends User {
 				+ keyPair.getPublic().getAlgorithm() + "-"
 				+ JLG.bytesToHex(keyPair.getPublic().getEncoded());
 	}
-
-
 
 }

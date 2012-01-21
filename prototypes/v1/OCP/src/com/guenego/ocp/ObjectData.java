@@ -8,11 +8,11 @@ public class ObjectData extends Data {
 
 	public ObjectData(OCPAgent agent, OCPUser user, Serializable serializable)
 			throws Exception {
-		super(agent, user, JLG.serialize(serializable).getBytes());
+		super(agent, user, JLG.serialize(serializable));
 	}
 
 	public Serializable getObject() throws Exception {
-		return JLG.deserialize(new String(content));
+		return JLG.deserialize(content);
 	}
 
 	@Override

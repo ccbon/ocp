@@ -45,8 +45,10 @@ public class PersistentHashMap implements Map<Address, Content> {
 
 	public PersistentHashMap(Agent agent) {
 		try {
-			String root = agent.p.getProperty("storage.dir",
-					System.getenv("TEMP") + "/ocp_agent_storage/" + agent.getName());
+			String root = agent.p.getProperty(
+					"storage.dir",
+					System.getenv("TEMP") + "/ocp_agent_storage/"
+							+ agent.getName());
 			dir = new File(root);
 			JLG.mkdir(dir);
 		} catch (Exception e) {
@@ -84,8 +86,8 @@ public class PersistentHashMap implements Map<Address, Content> {
 	public boolean containsValue(Object value) {
 		try {
 			for (File child : dir.listFiles()) {
-				Content content = (Content) JLG.deserialize(new String(JLG
-						.getBinaryFile(child)));
+				Content content = (Content) JLG.deserialize(JLG
+						.getBinaryFile(child));
 				if (content.equals(value)) {
 					return true;
 				}
@@ -104,8 +106,8 @@ public class PersistentHashMap implements Map<Address, Content> {
 		try {
 			for (File child : dir.listFiles()) {
 				Address address = new Address(child.getName());
-				Content content = (Content) JLG.deserialize(new String(JLG
-						.getBinaryFile(child)));
+				Content content = (Content) JLG.deserialize(JLG
+						.getBinaryFile(child));
 				PersistentMapEntry entry = new PersistentMapEntry(address,
 						content);
 				result.add(entry);
@@ -123,8 +125,8 @@ public class PersistentHashMap implements Map<Address, Content> {
 		try {
 			File file = new File(dir, key.toString());
 			if (file.exists()) {
-				Content content = (Content) JLG.deserialize(new String(JLG
-						.getBinaryFile(file)));
+				Content content = (Content) JLG.deserialize(JLG
+						.getBinaryFile(file));
 				return content;
 			}
 		} catch (Exception e) {
@@ -157,7 +159,7 @@ public class PersistentHashMap implements Map<Address, Content> {
 	public Content put(Address key, Content value) {
 		try {
 			File file = new File(dir, key.toString());
-			JLG.setBinaryFile(file, JLG.serialize(value).getBytes());
+			JLG.setBinaryFile(file, JLG.serialize(value));
 		} catch (Exception e) {
 			JLG.error(e);
 		}
@@ -179,8 +181,8 @@ public class PersistentHashMap implements Map<Address, Content> {
 		try {
 			File file = new File(dir, key.toString());
 			if (file.exists()) {
-				Content content = (Content) JLG.deserialize(new String(JLG
-						.getBinaryFile(file)));
+				Content content = (Content) JLG.deserialize(JLG
+						.getBinaryFile(file));
 				file.delete();
 				return content;
 			}
@@ -200,8 +202,8 @@ public class PersistentHashMap implements Map<Address, Content> {
 		Collection<Content> result = new HashSet<Content>();
 		try {
 			for (File child : dir.listFiles()) {
-				Content content = (Content) JLG.deserialize(new String(JLG
-						.getBinaryFile(child)));
+				Content content = (Content) JLG.deserialize(JLG
+						.getBinaryFile(child));
 				result.add(content);
 			}
 		} catch (Exception e) {

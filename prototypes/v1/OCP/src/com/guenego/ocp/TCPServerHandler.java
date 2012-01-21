@@ -30,10 +30,8 @@ public class TCPServerHandler implements TCPServerHandlerInterface {
 
 
 			JLG.debug("received length = " + length);
-			String request = new String(input);
-			JLG.debug("request = " + request);
-			byte[] response = (new Protocol(agent)).process(request,
-					clientSocket).getBytes();
+			byte[] response = new Protocol(agent).process(input,
+					clientSocket);
 			out.writeInt(response.length);
 			out.write(response);
 			// JLG.debug("hash(response)=" + JLG.sha1(response.getBytes()));

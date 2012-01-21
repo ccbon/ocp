@@ -71,8 +71,8 @@ public class TestAgent {
 			// test ucrypt and udecrypt
 			String message = "this is my message";
 			JLG.debug(message);
-			byte[] ciphertext = a2.ucrypt(password, message);
-			String decryptedMessage = a2.udecrypt(password, ciphertext);
+			byte[] ciphertext = a2.ucrypt(password, message.getBytes());
+			String decryptedMessage = new String(a2.udecrypt(password, ciphertext));
 			JLG.debug(decryptedMessage);
 			//System.exit(0);
 			

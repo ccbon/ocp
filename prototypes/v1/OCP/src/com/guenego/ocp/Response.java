@@ -3,10 +3,10 @@ package com.guenego.ocp;
 public class Response {
 
 	private OCPContact contact;
-	private String response;
+	private byte[] response;
 
-	public Response(String sResponse, OCPContact contact) {
-		this.response = sResponse;
+	public Response(byte[] response, OCPContact contact) {
+		this.response = response;
 		this.contact = contact;
 	}
 
@@ -14,19 +14,23 @@ public class Response {
 		return contact;
 	}
 
-	public String getString() {
+	public byte[] getBytes() {
 		return response;
 	}
 
 	public void checkForError() throws Exception {
-		if (response.startsWith(Protocol.ERROR)) {
-			String[] al = response.split(":");
+		if (new String(response).startsWith(new String(Protocol.ERROR))) {
+			String[] al = new String(response).split(":");
 			if (al.length > 2) {
 				throw new Exception("Error from server: " + al[1]);
 			} else {
 				throw new Exception("Error from server.");
 			}
 		}
+	}
+
+	public boolean isSuccess() {
+		return new String(response).equals(new String(Protocol.SUCCESS));
 	}
 
 

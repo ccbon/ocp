@@ -114,18 +114,17 @@ public class JLG {
 		}
 	}
 
-	public static String serialize(Serializable object) throws Exception {
+	public static byte[] serialize(Serializable object) throws Exception {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		ObjectOutputStream oos = new ObjectOutputStream(baos);
 		oos.writeObject(object);
-		String response = JLG.bytesToHex(baos.toByteArray());
+		byte[] response = baos.toByteArray();
 		oos.close();
 		baos.close();
 		return response;
 	}
 
-	public static Serializable deserialize(String sInput) throws Exception {
-		byte[] input = JLG.hexToBytes(sInput);
+	public static Serializable deserialize(byte[] input) throws Exception {
 		ObjectInputStream in = new ObjectInputStream(new ByteArrayInputStream(
 				input));
 		Object obj = in.readObject();
