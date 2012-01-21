@@ -33,7 +33,7 @@ import com.guenego.misc.JLG;
 import com.guenego.misc.URL;
 import com.guenego.storage.Agent;
 import com.guenego.storage.Contact;
-import com.guenego.storage.FileInterface;
+import com.guenego.storage.FileSystem;
 import com.guenego.storage.User;
 
 public class OCPAgent extends Agent {
@@ -775,64 +775,6 @@ public class OCPAgent extends Agent {
 	}
 
 	@Override
-	public void checkout(User user, String dir) throws Exception {
-		FileSystem fs = new FileSystem((OCPUser) user, this, dir);
-		fs.checkout();
-	}
-
-	@Override
-	public void commit(User user, String dir) throws Exception {
-		try {
-			FileSystem fs = new FileSystem((OCPUser) user, this, dir);
-			fs.commit();
-		} catch (Exception e) {
-			JLG.error(e);
-		}
-
-	}
-
-	@Override
-	public void mkdir(User user, String existingParentDir, String newDir)
-			throws Exception {
-		FileSystem fs = new FileSystem((OCPUser) user, this);
-		fs.createNewDir(existingParentDir, newDir);
-	}
-
-	@Override
-	public void rm(User user, String existingParentDir, String name)
-			throws Exception {
-		FileSystem fs = new FileSystem((OCPUser) user, this);
-		fs.deleteFile(existingParentDir, name);
-	}
-
-	@Override
-	public void rename(User user, String existingParentDir, String oldName,
-			String newName) throws Exception {
-		FileSystem fs = new FileSystem((OCPUser) user, this);
-		fs.renameFile(existingParentDir, oldName, newName);
-	}
-
-	@Override
-	public FileInterface getDir(User user, String dir) throws Exception {
-		FileSystem fs = new FileSystem((OCPUser) user, this);
-		return fs.getTree(dir);
-	}
-
-	@Override
-	public void checkout(User user, String remoteDir, String remoteFilename,
-			File localDir) throws Exception {
-		FileSystem fs = new FileSystem((OCPUser) user, this);
-		TreeEntry te = fs.getTree(remoteDir).getEntry(remoteFilename);
-		fs.checkout(te, localDir);
-	}
-
-	@Override
-	public void commit(User user, String remoteDir, File file) throws Exception {
-		FileSystem fs = new FileSystem((OCPUser) user, this);
-		fs.commitFile(remoteDir, file);
-	}
-
-	@Override
 	public void refreshContactList() throws Exception {
 		client.sendAll(Protocol.PING);
 	}
@@ -866,6 +808,11 @@ public class OCPAgent extends Agent {
 	@Override
 	public void removeStorage() {
 		storage.removeAll();
+	}
+
+	@Override
+	public FileSystem getFileSystem(User user) {
+		return new OCPFileSystem((OCPUser) user, this) ;
 	}
 
 }

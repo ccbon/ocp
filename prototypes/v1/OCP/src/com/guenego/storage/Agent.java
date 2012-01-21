@@ -3,8 +3,8 @@ package com.guenego.storage;
 import java.io.File;
 import java.io.FileInputStream;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Queue;
@@ -18,9 +18,13 @@ public abstract class Agent {
 	
 	protected Map<Id, Contact> contactMap; // contactid->contact
 
+	public FileSystem fs;
+
 	public Agent() {
 		contactMap = new HashMap<Id, Contact>();
 	}
+	
+	public abstract boolean isConfigFilePresent();
 
 	public void loadConfig() throws Exception {
 		if (!isConfigFilePresent()) {
@@ -41,8 +45,19 @@ public abstract class Agent {
 
 	protected abstract void readConfig() throws Exception;
 
+	
+	
+	
+	
 	public abstract void start() throws Exception;
+	
+	public abstract void stop();
 
+	
+	
+	
+	
+	
 	public boolean isFirstAgent() {
 		if (p == null) {
 			JLG.debug("p is null");
@@ -53,46 +68,23 @@ public abstract class Agent {
 						"yes");
 	}
 
-	public abstract void stop();
-
-
-
-
-
-	public abstract boolean isConfigFilePresent();
+	
 
 	public abstract boolean allowsUserCreation();
 
 	public abstract User login(String login, String password) throws Exception;
 
-	public abstract void checkout(User user, String localDir) throws Exception;
-
-	public abstract void commit(User user, String localDir) throws Exception;
-
-	public abstract void mkdir(User user, String existingParentDir,
-			String newDir) throws Exception;
-
-	public abstract void rm(User user, String existingParentDir, String name)
-			throws Exception;
-
-	public abstract void rename(User user, String existingParentDir,
-			String oldName, String newName) throws Exception;
-
-	public abstract FileInterface getDir(User user, String dir)
-			throws Exception;
-
-	public abstract void checkout(User user, String remoteDir,
-			String remoteFilename, File localDir) throws Exception;
-
-	public abstract void commit(User user, String remoteDir, File file) throws Exception;
-
+	
+	
+	
+	
 	public abstract void refreshContactList() throws Exception;
 
-	public Iterator<Contact> getContactIterator() {
+	public List<Contact> getContactSnapshotList() {
 		// we return a snapshot and not the modifiable contact list
-		LinkedList<Contact> linkedList = new LinkedList<Contact>(
+		return new LinkedList<Contact>(
 				contactMap.values());
-		return linkedList.iterator();
+		
 	}
 	
 	public void addContact(Contact contact) throws Exception {
@@ -102,7 +94,6 @@ public abstract class Agent {
 	public Contact removeContact(Contact contact) {
 		return contactMap.remove(contact.id);
 	}
-
 	
 	public Contact getContact(Id contactId) throws Exception {
 		Contact contact = contactMap.get(contactId);
@@ -124,17 +115,23 @@ public abstract class Agent {
 	
 	public abstract Contact toContact();
 
+	
 
 	public abstract String getProtocolName();
 
 	public abstract String getName();
 
+	
 	public String getHelpURL() {
 		return "http://code.google.com/p/ocp/wiki/Help";
 	}
 
+	
 	public abstract boolean hasStorage();
 
 	public abstract void removeStorage();
+
+	
+	public abstract FileSystem getFileSystem(User user);
 
 }

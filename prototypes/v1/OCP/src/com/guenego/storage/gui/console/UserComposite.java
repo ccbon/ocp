@@ -87,7 +87,7 @@ public class UserComposite extends Composite {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				try {
-					agent.checkout(user, dirText.getText());
+					agent.getFileSystem(user).checkoutAll(dirText.getText());
 				} catch (Exception e1) {
 					JLG.error(e1);
 				}
@@ -102,7 +102,7 @@ public class UserComposite extends Composite {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				try {
-					agent.commit(user, dirText.getText());
+					agent.getFileSystem(user).commitAll(dirText.getText());
 				} catch (Exception e1) {
 					QuickMessage.error(UserComposite.this.getShell(), "Error while commiting.");
 					e1.printStackTrace();

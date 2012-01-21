@@ -442,14 +442,15 @@ public class UserExplorerComposite extends Composite {
 					DIRECTORY_TYPE, DIRECTORY_SIZE });
 			parentTreetableItem.setImage(DIRECTORY_ICON);
 
-			FileInterface currentDir = agent.getDir(user, currentRemoteDirString);
+			FileInterface currentDir = agent.getFileSystem(user).getDir(
+					currentRemoteDirString);
 			if (currentDir == null) {
 				return;
 			}
 			Collection<? extends FileInterface> set = currentDir.listFiles();
 			// Create an array containing the elements in a set
-			FileInterface[] array = (FileInterface[]) set.toArray(new FileInterface[set
-					.size()]);
+			FileInterface[] array = (FileInterface[]) set
+					.toArray(new FileInterface[set.size()]);
 			// Order
 			Arrays.sort(array, new Comparator<FileInterface>() {
 				public int compare(FileInterface f1, FileInterface f2) {
@@ -596,7 +597,7 @@ public class UserExplorerComposite extends Composite {
 		String name = item.getText(0);
 		try {
 			// must work both for dir and file
-			agent.rm(user, currentRemoteDirString, name);
+			agent.getFileSystem(user).rm(currentRemoteDirString, name);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -611,7 +612,7 @@ public class UserExplorerComposite extends Composite {
 
 	public void renameRemoteFile(String oldName, String newName) {
 		try {
-			agent.rename(user, currentRemoteDirString, oldName, newName);
+			agent.getFileSystem(user).rename(currentRemoteDirString, oldName, newName);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -641,7 +642,7 @@ public class UserExplorerComposite extends Composite {
 				DIRECTORY_SIZE });
 		newDirItem.setImage(DIRECTORY_ICON);
 		try {
-			agent.mkdir(user, currentRemoteDirString, DIRECTORY_NEW);
+			agent.getFileSystem(user).mkdir(currentRemoteDirString, DIRECTORY_NEW);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

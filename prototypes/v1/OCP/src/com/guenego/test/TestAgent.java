@@ -6,8 +6,8 @@ import java.util.Properties;
 import com.guenego.misc.JLG;
 import com.guenego.misc.JLGException;
 import com.guenego.ocp.Captcha;
-import com.guenego.ocp.FileSystem;
 import com.guenego.ocp.OCPAgent;
+import com.guenego.ocp.OCPFileSystem;
 import com.guenego.ocp.OCPUser;
 import com.guenego.ocp.Pointer;
 
@@ -112,15 +112,15 @@ public class TestAgent {
 			JLG.debug(a1.toString());
 			JLG.debug(a2.toString());
 
-			FileSystem fs = new FileSystem(user, a2, "C:/jlouis/ocp_dir");
-			fs.checkout();
+			OCPFileSystem fs = new OCPFileSystem(user, a2);
+			fs.checkoutAll("C:/jlouis/ocp_dir");
 			
 			JLG.setFile("C:/jlouis/ocp_dir/first.txt", "this is my first file.");
 			JLG.setFile("C:/jlouis/ocp_dir/second.txt", "this is my second file.");
-			fs.commit();
+			fs.commitAll("C:/jlouis/ocp_dir");
 			
-			FileSystem fs2 = new FileSystem(user, a2, "C:/jlouis/ocp_dir2");
-			fs2.checkout();
+			OCPFileSystem fs2 = new OCPFileSystem(user, a2);
+			fs2.checkoutAll("C:/jlouis/ocp_dir2");
 			
 			a1.stop();
 			a2.stop();

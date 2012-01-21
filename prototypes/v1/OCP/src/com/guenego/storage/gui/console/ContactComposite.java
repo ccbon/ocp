@@ -74,7 +74,7 @@ public class ContactComposite extends Composite {
 		}).start();
 		tree.removeAll();
 
-		Iterator<Contact> it = agent.getContactIterator();
+		Iterator<Contact> it = agent.getContactSnapshotList().iterator();
 		while (it.hasNext()) {
 			Contact contact = it.next();
 			TreeItem contactTreeItem = new TreeItem(tree, SWT.NONE);

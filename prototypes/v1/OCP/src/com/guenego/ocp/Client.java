@@ -166,7 +166,7 @@ public class Client {
 		// tell all your contact of what happened
 
 		Set<Contact> contactToBeDetached = new HashSet<Contact>();
-		Iterator<Contact> itc = agent.getContactIterator();
+		Iterator<Contact> itc = agent.getContactSnapshotList().iterator();
 		while (itc.hasNext()) {
 			Contact c = itc.next();
 			if (c.id.equals(agent.id)) {

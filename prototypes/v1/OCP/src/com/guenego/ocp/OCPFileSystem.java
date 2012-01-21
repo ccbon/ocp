@@ -6,38 +6,25 @@ import java.io.OutputStream;
 import java.util.Iterator;
 
 import com.guenego.misc.JLG;
+import com.guenego.storage.FileInterface;
+import com.guenego.storage.FileSystem;
 
-public class FileSystem {
+public class OCPFileSystem implements FileSystem {
 
 	private OCPAgent agent;
 	private OCPUser user;
-	private String path;
 
-	public FileSystem(OCPUser user, OCPAgent agent, String path) {
+	public OCPFileSystem(OCPUser user, OCPAgent agent, String path) {
 		this.user = user;
 		this.agent = agent;
-		this.path = path;
 	}
 
-	public FileSystem(OCPUser user, OCPAgent agent) {
+	public OCPFileSystem(OCPUser user, OCPAgent agent) {
 		this.user = user;
 		this.agent = agent;
-		this.path = null;
 	}
 
-	public void checkout() throws Exception {
-
-		JLG.rm(path);
-		JLG.mkdir(path);
-		Pointer p = user.getRootPointer(agent);
-		if (p == null) {
-			return;
-		}
-		Tree rootTree = (Tree) agent.get(user, p);
-		checkout(rootTree, new File(this.path));
-	}
-
-	public void checkout(TreeEntry te, File parentDir) throws Exception {
+	private void checkout(TreeEntry te, File parentDir) throws Exception {
 		Pointer p = te.getPointer();
 		if (te.isTree()) {
 			File dirFile = new File(parentDir, te.getName());
@@ -76,16 +63,6 @@ public class FileSystem {
 		}
 	}
 
-	public void commit() throws Exception {
-		// TODO: mettre tout les fichiers dans le cloud... de facon recursive
-		File file = new File(path);
-		if (!file.isDirectory()) {
-			throw new Exception("must be a directory:" + path);
-		}
-		Pointer p = commit(file);
-		user.setRootPointer(agent, p);
-	}
-
 	private Pointer commit(File file) throws Exception {
 		JLG.debug("about to commit " + file.getName());
 		Pointer result = null;
@@ -106,30 +83,6 @@ public class FileSystem {
 			result = agent.set(user, content);
 		}
 		return result;
-	}
-
-	public void commitFile(String path, File file) throws Exception {
-		JLG.debug("path = " + path);
-		String[] dirnames = path.split("/");
-		if (path.equals("/")) {
-			dirnames = new String[] { "" };
-		}
-		JLG.debug("dirnames.length = " + dirnames.length);
-		Tree[] trees = getTreeStack(dirnames);
-		Pointer p = commit(file);
-		Tree tree = trees[trees.length - 1];
-		if (file.isDirectory()) {
-			tree.addTree(file.getName(), p);
-		} else {
-			tree.addFile(file.getName(), p);
-		}
-		p = agent.set(user, tree);
-		for (int i = dirnames.length - 2; i >= 0; i--) {
-			tree = trees[i];
-			tree.addTree(dirnames[i + 1], p);
-			p = agent.set(user, tree);
-		}
-		user.setRootPointer(agent, p);
 	}
 
 	private Tree[] getTreeStack(String[] dirnames) throws Exception {
@@ -244,6 +197,84 @@ public class FileSystem {
 			p = agent.set(user, tree);
 		}
 		user.setRootPointer(agent, p);
+	}
+
+	@Override
+	public void checkoutAll(String localDir) throws Exception {
+		JLG.rm(localDir);
+		JLG.mkdir(localDir);
+		Pointer p = user.getRootPointer(agent);
+		if (p == null) {
+			return;
+		}
+		Tree rootTree = (Tree) agent.get(user, p);
+		checkout(rootTree, new File(localDir));
+
+	}
+
+	@Override
+	public void commitAll(String localDir) throws Exception {
+		File file = new File(localDir);
+		if (!file.isDirectory()) {
+			throw new Exception("must be a directory:" + localDir);
+		}
+		Pointer p = commit(file);
+		user.setRootPointer(agent, p);
+	}
+
+	@Override
+	public void checkout(String remoteDir, String remoteFilename, File localDir)
+			throws Exception {
+		TreeEntry te = getTree(remoteDir).getEntry(remoteFilename);
+		checkout(te, localDir);
+		
+	}
+
+	@Override
+	public void commit(String remoteDir, File file) throws Exception {
+		JLG.debug("path = " + remoteDir);
+		String[] dirnames = remoteDir.split("/");
+		if (remoteDir.equals("/")) {
+			dirnames = new String[] { "" };
+		}
+		JLG.debug("dirnames.length = " + dirnames.length);
+		Tree[] trees = getTreeStack(dirnames);
+		Pointer p = commit(file);
+		Tree tree = trees[trees.length - 1];
+		if (file.isDirectory()) {
+			tree.addTree(file.getName(), p);
+		} else {
+			tree.addFile(file.getName(), p);
+		}
+		p = agent.set(user, tree);
+		for (int i = dirnames.length - 2; i >= 0; i--) {
+			tree = trees[i];
+			tree.addTree(dirnames[i + 1], p);
+			p = agent.set(user, tree);
+		}
+		user.setRootPointer(agent, p);
+	}
+
+	@Override
+	public FileInterface getDir(String dir) throws Exception {
+		return getTree(dir);
+	}
+
+	@Override
+	public void mkdir(String existingParentDir, String newDir) throws Exception {
+		createNewDir(existingParentDir, newDir);
+		
+	}
+
+	@Override
+	public void rm(String existingParentDir, String name) throws Exception {
+		deleteFile(existingParentDir, name);
+	}
+
+	@Override
+	public void rename(String existingParentDir, String oldName, String newName)
+			throws Exception {
+		renameFile(existingParentDir, oldName, newName);
 	}
 
 }

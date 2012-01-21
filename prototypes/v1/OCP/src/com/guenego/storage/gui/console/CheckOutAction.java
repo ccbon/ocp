@@ -25,7 +25,7 @@ public class CheckOutAction extends Action {
 			String name = item.getText(0);
 			try {
 				String remoteDir = composite.currentRemoteDirString;
-				composite.agent.checkout(composite.user, remoteDir, name, localDir);
+				composite.agent.getFileSystem(composite.user).checkout(remoteDir, name, localDir);
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
