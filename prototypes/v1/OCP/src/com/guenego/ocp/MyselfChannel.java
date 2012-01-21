@@ -17,8 +17,8 @@ public class MyselfChannel extends Channel {
 	}
 
 	@Override
-	public String request(String message) throws Exception {
-		return new Protocol(agent).process(message, null);
+	public byte[] request(byte[] input) throws Exception {
+		return (new Protocol(agent).process(new String(input), null)).getBytes();
 	}
 
 	@Override

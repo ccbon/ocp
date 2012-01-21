@@ -26,16 +26,16 @@ public class TCPChannel extends Channel {
 	}
 
 	@Override
-	public String request(String string) throws Exception {
-		return tcpClient.request(string);
+	public byte[] request(byte[] input) throws Exception {
+		return tcpClient.request(input);
 	}
 
 	@Override
 	public OCPContact getContact() throws JLGException {
 		try {
 			JLG.debug("tcp ping");
-			String response = request(Protocol.GET_CONTACT);
-			OCPContact c = (OCPContact) JLG.deserialize(response);
+			byte[] response = request(Protocol.GET_CONTACT.getBytes());
+			OCPContact c = (OCPContact) JLG.deserialize(new String(response));
 			// we update a host because an agent does not see its public address.
 			c.updateHost(url.getHost());
 			return c;

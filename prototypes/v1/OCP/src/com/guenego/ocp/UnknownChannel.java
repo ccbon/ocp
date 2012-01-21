@@ -11,8 +11,7 @@ public class UnknownChannel extends Channel {
 	}
 
 	@Override
-	public String request(String string) throws Exception {
-		// TODO Auto-generated method stub
+	public byte[] request(byte[] input) throws Exception {
 		return null;
 	}
 

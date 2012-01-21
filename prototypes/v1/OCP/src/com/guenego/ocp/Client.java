@@ -219,7 +219,8 @@ public class Client {
 			}
 			if (understand(channel)) {
 				try {
-					response = channel.request(string);
+					byte[] output = channel.request(string.getBytes());
+					response = new String(output);
 				} catch (ConnectException e) {
 					continue;
 				} catch (Exception e) {

@@ -24,7 +24,7 @@ public abstract class Channel {
 		}
 	}
 	
-	public abstract String request(String string) throws Exception;
+	public abstract byte[] request(byte[] input) throws Exception;
 
 	public abstract OCPContact getContact() throws Exception;
 

@@ -65,7 +65,7 @@ public class TCPClient {
 		return response;
 	}
 	
-	public byte[] request(byte[] message) throws Exception {
+	public byte[] request(byte[] input) throws Exception {
 		byte[] output = null;
 		Socket clientSocket = null;
 		DataOutputStream out = null;
@@ -73,14 +73,15 @@ public class TCPClient {
 		try {
 			clientSocket = new Socket(hostname, port);
 			JLG.debug("socket opened to " + hostname + ":" + port);
-			JLG.debug("sending string(length=" + message.length + ")");
+			JLG.debug("sending string(length=" + input.length + ")");
 			out = new DataOutputStream(clientSocket.getOutputStream());
-			out.write(message.length);
-			out.write(message);
+			out.writeInt(input.length);
+			out.write(input);
 			out.flush();
 			
 			in = new DataInputStream(clientSocket.getInputStream());
 			int responseLength = in.readInt();
+			JLG.debug("response length=" + responseLength);
 			output = new byte[responseLength];
 			in.read(output, 0, responseLength);
 			JLG.debug("response length=" + responseLength);

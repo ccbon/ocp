@@ -195,7 +195,8 @@ public class OCPAgent extends Agent {
 			server = new Server(this);
 			server.start();
 			attach();
-			OCPContact myself = toContactForMyself();
+			//Contact myself = toContactForMyself();
+			Contact myself = toContact();
 			addContact(myself);
 
 		}

@@ -1,8 +1,7 @@
 package com.guenego.ocp;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.net.Socket;
 
 import com.guenego.misc.JLG;
@@ -19,17 +18,24 @@ public class TCPServerHandler implements TCPServerHandlerInterface {
 
 	@Override
 	public void run() {
-		BufferedReader in = null;
-		OutputStream out = null;
+		DataInputStream in = null;
+		DataOutputStream out = null;
 		try {
-			in = new BufferedReader(new InputStreamReader(
-					clientSocket.getInputStream()));
-			out = clientSocket.getOutputStream();
-			String request = in.readLine();
-			
-			JLG.debug("received(length=" + request.length() + ": " + request);
-			String response = (new Protocol(agent)).process(request, clientSocket);
-			out.write(response.getBytes());
+			in = new DataInputStream(clientSocket.getInputStream());
+			out = new DataOutputStream(clientSocket.getOutputStream());
+			int length = in.readInt();
+			JLG.debug("length=" + length);
+			byte[] input = new byte[length];
+			in.read(input, 0, length);
+
+
+			JLG.debug("received length = " + length);
+			String request = new String(input);
+			JLG.debug("request = " + request);
+			byte[] response = (new Protocol(agent)).process(request,
+					clientSocket).getBytes();
+			out.writeInt(response.length);
+			out.write(response);
 			// JLG.debug("hash(response)=" + JLG.sha1(response.getBytes()));
 			out.flush();
 
