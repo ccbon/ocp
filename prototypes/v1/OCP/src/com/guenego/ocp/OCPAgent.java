@@ -28,6 +28,7 @@ import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.PBEParameterSpec;
 
 import com.guenego.misc.ByteUtil;
+import com.guenego.misc.Cache;
 import com.guenego.misc.Id;
 import com.guenego.misc.JLG;
 import com.guenego.misc.URL;
@@ -91,10 +92,14 @@ public class OCPAgent extends Agent {
 	// these two attributes are corelated
 	// all access to them must be synchronized
 	protected NavigableMap<Id, OCPContact> nodeMap; // nodeid->contact
+	
+	// it is a very basic way to improve perf...
+	private Cache cache;
 
 	public OCPAgent() {
 		super();
 		nodeMap = new TreeMap<Id, OCPContact>();
+		cache = new Cache();
 	}
 
 	public void setNetworkProperties(Properties network) {
@@ -298,9 +303,9 @@ public class OCPAgent extends Agent {
 			throws Exception {
 		// TODO Auto-generated method stub
 		// do I have this value on myself ?
-		if (storage.contains(address)) {
+		//if (storage.contains(address)) {
 			storage.remove(address, addressSignature);
-		}
+		//}
 		if (!isResponsible(address)) {
 			client.remove(address, addressSignature);
 		}
@@ -574,13 +579,19 @@ public class OCPAgent extends Agent {
 	}
 
 	public UserPublicInfo getUserPublicInfo(byte[] username) throws Exception {
+		String sUsername = new String(username);
+		UserPublicInfo upi = (UserPublicInfo) cache.get(UserPublicInfo.class, sUsername);
+		if (upi != null) {
+			return upi;
+		}
 		Key key = UserPublicInfo.getKey(this, new String(username));
 		ObjectData data = (ObjectData) get(key);
 		if (data == null) {
 			throw new Exception("Cannot get the user public info for "
 					+ new String(username));
 		}
-		UserPublicInfo upi = (UserPublicInfo) data.getObject();
+		upi = (UserPublicInfo) data.getObject();
+		cache.put(UserPublicInfo.class, sUsername, upi);
 		return upi;
 	}
 

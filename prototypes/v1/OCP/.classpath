@@ -11,5 +11,6 @@
 	<classpathentry kind="lib" path="lib/cling-core-1.0.5.jar"/>
 	<classpathentry kind="lib" path="lib/cling-support-1.0.5.jar"/>
 	<classpathentry kind="lib" path="lib/commons-net-3.0.1.jar"/>
+	<classpathentry kind="lib" path="lib/commons-io-2.1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

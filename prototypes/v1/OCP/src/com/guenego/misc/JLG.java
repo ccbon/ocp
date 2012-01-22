@@ -5,11 +5,9 @@ import java.io.BufferedWriter;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -22,17 +20,22 @@ import java.security.PublicKey;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.Properties;
 
+import org.apache.commons.io.FileUtils;
+
 public class JLG {
+
+	public static String NL;
+	private static String[] base16 = null;
+
 	static {
 		NL = System.getProperty("line.separator");
 	}
-	public static String NL;
 	private static boolean sDebug = false;
 
 	public static void debug_on() {
 		sDebug = true;
 	}
-	
+
 	public static void debug_off() {
 		sDebug = false;
 	}
@@ -48,8 +51,8 @@ public class JLG {
 			StackTraceElement ste = t.getStackTrace()[1];
 
 			String sPrefix = "DEBUG [T=" + Thread.currentThread().getName()
-					+ "] (" + ste.getClassName() + ".java:" + ste.getLineNumber()
-					+ ") : ";
+					+ "] (" + ste.getClassName() + ".java:"
+					+ ste.getLineNumber() + ") : ";
 			System.out.println(sPrefix + input);
 		}
 	}
@@ -86,12 +89,18 @@ public class JLG {
 	}
 
 	public static String bytesToHex(byte[] input) {
+		if (base16 == null) {
+			base16 = new String[256];
+			for (int i = 0; i < 256; i++) {
+				base16[i] = String.format("%1$02x", i);
+			}
+		}
 		if (input == null) {
 			return null;
 		}
 		StringBuffer result = new StringBuffer(input.length * 2);
 		for (byte b : input) {
-			result.append(String.format("%1$02x", b));
+			result.append(base16[b & 0xff]);
 		}
 		return result.toString();
 	}
@@ -221,40 +230,7 @@ public class JLG {
 	}
 
 	public static byte[] getBinaryFile(File file) throws Exception {
-		InputStream is = new FileInputStream(file);
-
-		// Get the size of the file
-		long length = file.length();
-
-		// You cannot create an array using a long type.
-		// It needs to be an int type.
-		// Before converting to an int type, check
-		// to ensure that file is not larger than Integer.MAX_VALUE.
-		if (length > Integer.MAX_VALUE) {
-			throw new Exception("file is too large. It cannot exceed "
-					+ Integer.MAX_VALUE);
-		}
-
-		// Create the byte array to hold the data
-		byte[] bytes = new byte[(int) length];
-
-		// Read in the bytes
-		int offset = 0;
-		int numRead = 0;
-		while (offset < bytes.length
-				&& (numRead = is.read(bytes, offset, bytes.length - offset)) >= 0) {
-			offset += numRead;
-		}
-
-		// Ensure all the bytes have been read in
-		if (offset < bytes.length) {
-			throw new IOException("Could not completely read file "
-					+ file.getName());
-		}
-
-		// Close the input stream and return bytes
-		is.close();
-		return bytes;
+		return FileUtils.readFileToByteArray(file);
 	}
 
 	public static boolean isFile(String path) {
@@ -287,7 +263,5 @@ public class JLG {
 		}
 		return true;
 	}
-
-
 
 }

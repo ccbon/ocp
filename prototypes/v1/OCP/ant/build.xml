@@ -26,6 +26,7 @@
 				<zipfileset excludes="META-INF/* .* *.html plugin.properties" src="${lib.dir}/cling-support-1.0.5.jar" />
 				<zipfileset excludes="META-INF/* .* *.html plugin.properties" src="${lib.dir}/teleal-common-1.0.13.jar" />
 				<zipfileset excludes="META-INF/* .* *.html plugin.properties" src="${lib.dir}/commons-net-3.0.1.jar" />
+				<zipfileset excludes="META-INF/* .* *.html plugin.properties" src="${lib.dir}/commons-io-2.1.jar" />
 			</jar>
 			<signjar destDir="${build.dir}" alias="jlg" keystore="C:/cygwin/home/jlouis/jlgkeystore" storepass="jlgpass" preservelastmodified="true" jar="${tmp.dir}/ocp_@{archi}.jar" />
 			<delete dir="${tmp.dir}" />
