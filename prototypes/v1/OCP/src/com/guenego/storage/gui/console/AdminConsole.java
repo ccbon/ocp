@@ -44,6 +44,8 @@ public class AdminConsole extends ApplicationWindow {
 	private SignInAction signInAction;
 	private SignOutAction signOutAction;
 	private ExitAction exitAction;
+	
+	private SelectAllAction selectAllAction;
 
 	private ViewContactTabAction viewAdminTabAction;
 	private ViewUserSyncTabAction viewUserSyncTabAction;
@@ -54,6 +56,7 @@ public class AdminConsole extends ApplicationWindow {
 	private HelpAction helpAction;
 	private AboutAction aboutAction;
 	private DebugAction debugAction;
+	
 
 	/**
 	 * Create the application window.
@@ -131,6 +134,8 @@ public class AdminConsole extends ApplicationWindow {
 		aboutAction = new AboutAction(this);
 		viewUserSyncTabAction = new ViewUserSyncTabAction(this);
 		viewUserExplorerTabAction = new ViewUserExplorerTabAction(this);
+		
+		selectAllAction = new SelectAllAction(this);
 	}
 
 	/**
@@ -151,6 +156,11 @@ public class AdminConsole extends ApplicationWindow {
 		}
 		fileMenu.add(new Separator());
 		fileMenu.add(exitAction);
+
+		MenuManager editMenu = new MenuManager("&Edit");
+		menuBar.add(editMenu);
+		editMenu.add(selectAllAction);
+
 
 		MenuManager viewMenu = new MenuManager("&View");
 		menuBar.add(viewMenu);

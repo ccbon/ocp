@@ -97,6 +97,7 @@ public class UserExplorerComposite extends Composite {
 		localDirectoryLabel.setLayoutData(new GridData(SWT.FILL, SWT.FILL,
 				true, false, 1, 1));
 
+		
 		localDirectoryTable = new Table(leftComposite, SWT.BORDER
 				| SWT.FULL_SELECTION | SWT.MULTI);
 		localDirectoryTable.addKeyListener(new KeyAdapter() {
@@ -118,6 +119,7 @@ public class UserExplorerComposite extends Composite {
 					break;
 				case SWT.ESC:
 					localDirectoryTable.deselectAll();
+					break;
 				default:
 				}
 				JLG.debug("keypressed: keycode:" + e.keyCode

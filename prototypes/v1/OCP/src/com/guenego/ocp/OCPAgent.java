@@ -92,9 +92,10 @@ public class OCPAgent extends Agent {
 	// these two attributes are corelated
 	// all access to them must be synchronized
 	protected NavigableMap<Id, OCPContact> nodeMap; // nodeid->contact
-	
+
 	// it is a very basic way to improve perf...
 	private Cache cache;
+	private MessageDigest md;
 
 	public OCPAgent() {
 		super();
@@ -107,8 +108,6 @@ public class OCPAgent extends Agent {
 	}
 
 	public Id hash(byte[] input) throws Exception {
-		MessageDigest md = MessageDigest.getInstance(network.getProperty(
-				"hash", "SHA-1"));
 		return new Id(md.digest(input));
 	}
 
@@ -184,6 +183,10 @@ public class OCPAgent extends Agent {
 			throw new Exception(
 					"network property error: backupNbr must be an integer between 1 and 255.");
 		}
+		
+		// message digest for hash
+		md = MessageDigest.getInstance(network.getProperty(
+				"hash", "SHA-1"));
 
 		// all agent must have a PKI
 		keyPair = generateKeyPair();
@@ -201,7 +204,7 @@ public class OCPAgent extends Agent {
 			server.start();
 			attach();
 			Contact myself = toContactForMyself();
-			//Contact myself = toContact();
+			// Contact myself = toContact();
 			addContact(myself);
 
 		}
@@ -303,9 +306,9 @@ public class OCPAgent extends Agent {
 			throws Exception {
 		// TODO Auto-generated method stub
 		// do I have this value on myself ?
-		//if (storage.contains(address)) {
-			storage.remove(address, addressSignature);
-		//}
+		// if (storage.contains(address)) {
+		storage.remove(address, addressSignature);
+		// }
 		if (!isResponsible(address)) {
 			client.remove(address, addressSignature);
 		}
@@ -580,15 +583,16 @@ public class OCPAgent extends Agent {
 
 	public UserPublicInfo getUserPublicInfo(byte[] username) throws Exception {
 		String sUsername = new String(username);
-		UserPublicInfo upi = (UserPublicInfo) cache.get(UserPublicInfo.class, sUsername);
+		UserPublicInfo upi = (UserPublicInfo) cache.get(UserPublicInfo.class,
+				sUsername);
 		if (upi != null) {
 			return upi;
 		}
-		Key key = UserPublicInfo.getKey(this, new String(username));
+		Key key = UserPublicInfo.getKey(this, sUsername);
 		ObjectData data = (ObjectData) get(key);
 		if (data == null) {
 			throw new Exception("Cannot get the user public info for "
-					+ new String(username));
+					+ sUsername);
 		}
 		upi = (UserPublicInfo) data.getObject();
 		cache.put(UserPublicInfo.class, sUsername, upi);

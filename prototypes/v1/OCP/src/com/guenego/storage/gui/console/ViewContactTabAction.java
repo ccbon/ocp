@@ -11,7 +11,7 @@ public class ViewContactTabAction extends Action {
 
 	public ViewContactTabAction(AdminConsole adminConsole) {
 		window = adminConsole;
-		setText("Cont&act@Ctrl+A");
+		setText("Cont&act@Ctrl+T");
 		setToolTipText("View Contact Tab");
 		try {
 			ImageDescriptor i = ImageDescriptor.createFromImageData(new ImageData(ViewContactTabAction.class.getResourceAsStream("view_contact.png")));
