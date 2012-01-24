@@ -17,8 +17,8 @@ import com.guenego.storage.Agent;
 public class Main {
 	public static void main(String[] args) {
 		try {
-			Agent agent = new OCPAgent();
-			//Agent agent = new FTPAgent();
+			//Agent agent = new OCPAgent();
+			Agent agent = new FTPAgent();
 			UserInterface ui = new GraphicalUI(agent);
 
 			if (!agent.isConfigFilePresent()) {
@@ -28,9 +28,10 @@ public class Main {
 				// it should mean that the wizard was cancelled by the user.
 				return;
 			}
-
-			agent.loadConfig();
-			agent.start();
+			if (agent.autoStarts()) {
+				agent.loadConfig();
+				agent.start();
+			}
 			(new Thread(ui)).start();
 		} catch (Exception e) {
 			JLG.error(e);

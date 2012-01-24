@@ -208,7 +208,7 @@ public class OCPAgent extends Agent {
 			addContact(myself);
 
 		}
-
+		bIsStarted = true;
 	}
 
 	@Override
@@ -827,6 +827,11 @@ public class OCPAgent extends Agent {
 	@Override
 	public FileSystem getFileSystem(User user) {
 		return new OCPFileSystem((OCPUser) user, this);
+	}
+
+	@Override
+	public boolean autoStarts() {
+		return true;
 	}
 
 }

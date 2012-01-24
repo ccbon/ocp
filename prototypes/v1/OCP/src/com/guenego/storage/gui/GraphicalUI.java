@@ -16,9 +16,6 @@ import org.eclipse.swt.widgets.TrayItem;
 import com.guenego.misc.JLG;
 import com.guenego.ocp.UserInterface;
 import com.guenego.storage.Agent;
-import com.guenego.storage.gui.console.AdminConsole;
-import com.guenego.storage.gui.console.ExitAction;
-import com.guenego.storage.gui.console.OpenConsoleAction;
 
 public class GraphicalUI implements UserInterface {
 

@@ -20,6 +20,8 @@ public abstract class Agent {
 
 	public FileSystem fs;
 
+	protected boolean bIsStarted = false;
+
 	public Agent() {
 		contactMap = new HashMap<Id, Contact>();
 	}
@@ -133,5 +135,11 @@ public abstract class Agent {
 
 	
 	public abstract FileSystem getFileSystem(User user);
+
+	public abstract boolean autoStarts();
+	
+	public boolean isStarted() {
+		return bIsStarted;
+	}
 
 }

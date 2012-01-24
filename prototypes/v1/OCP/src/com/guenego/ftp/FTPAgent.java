@@ -46,12 +46,14 @@ public class FTPAgent extends Agent {
 		addContact(c);
 		FTPContact myself = (FTPContact) toContact();
 		addContact(myself);
+		bIsStarted = true;
 	}
 
 	@Override
 	public void stop() {
 		try {
 			ftp.logout();
+			bIsStarted = false;
 		} catch (IOException e) {
 			// e.printStackTrace();
 		}
@@ -154,6 +156,11 @@ public class FTPAgent extends Agent {
 	@Override
 	public FileSystem getFileSystem(User user) {
 		return new FTPFileSystem((FTPUser) user, this);
+	}
+
+	@Override
+	public boolean autoStarts() {
+		return false;
 	}
 
 }
