@@ -1,6 +1,10 @@
 package org.guenego.storage.gui;
 
 import java.io.File;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
@@ -16,6 +20,7 @@ import org.eclipse.swt.dnd.DragSourceEvent;
 import org.eclipse.swt.dnd.DropTarget;
 import org.eclipse.swt.dnd.DropTargetAdapter;
 import org.eclipse.swt.dnd.DropTargetEvent;
+import org.eclipse.swt.dnd.FileTransfer;
 import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.events.KeyAdapter;
@@ -42,7 +47,6 @@ import org.guenego.misc.JLG;
 import org.guenego.storage.Agent;
 import org.guenego.storage.FileInterface;
 import org.guenego.storage.User;
-
 
 public class UserExplorerComposite extends Composite {
 	private static final String DIRECTORY_SIZE = "";
@@ -97,7 +101,6 @@ public class UserExplorerComposite extends Composite {
 		localDirectoryLabel.setLayoutData(new GridData(SWT.FILL, SWT.FILL,
 				true, false, 1, 1));
 
-		
 		localDirectoryTable = new Table(leftComposite, SWT.BORDER
 				| SWT.FULL_SELECTION | SWT.MULTI);
 		localDirectoryTable.addKeyListener(new KeyAdapter() {
@@ -204,43 +207,8 @@ public class UserExplorerComposite extends Composite {
 		localSizeColumn.setWidth(100);
 		localSizeColumn.setText("Size");
 
-		DragSource dragLocalSource = new DragSource(localDirectoryTable,
-				DND.DROP_MOVE | DND.DROP_COPY);
-		dragLocalSource.addDragListener(new DragSourceAdapter() {
-			@Override
-			public void dragSetData(DragSourceEvent event) {
-				if (TextTransfer.getInstance().isSupportedType(event.dataType)) {
-					// event.data = localDirectoryTable.getSelection();
-					event.data = new String("this is my fake data");
-				}
-			}
+		localDND();
 
-			@Override
-			public void dragStart(DragSourceEvent event) {
-				if (localDirectoryTable.getSelection().length == 0) {
-					event.doit = false;
-				}
-			}
-		});
-		Transfer[] types = new Transfer[] { TextTransfer.getInstance() };
-		dragLocalSource.setTransfer(types);
-
-		DropTarget dropLocalTarget = new DropTarget(localDirectoryTable,
-				DND.DROP_MOVE | DND.DROP_COPY | DND.DROP_DEFAULT);
-		dropLocalTarget.setTransfer(types);
-		dropLocalTarget.addDropListener(new DropTargetAdapter() {
-
-			@Override
-			public void drop(DropTargetEvent event) {
-				JLG.debug("drop");
-				if (TextTransfer.getInstance().isSupportedType(
-						event.currentDataType)) {
-					String text = (String) event.data;
-					JLG.debug("received from transfer: " + text);
-					(new CheckOutAction(UserExplorerComposite.this)).run();
-				}
-			}
-		});
 
 		reloadLocalDirectoryTable();
 
@@ -366,9 +334,13 @@ public class UserExplorerComposite extends Composite {
 		sizeColumn.setWidth(100);
 		sizeColumn.setText("Size");
 
+		remoteDND();
 		reloadRemoteDirectoryTable();
 		sashForm.setWeights(new int[] { 1, 1 });
 
+	}
+
+	private void remoteDND() {
 		DragSource dragRemoteSource = new DragSource(remoteDirectoryTable,
 				DND.DROP_MOVE | DND.DROP_COPY);
 		dragRemoteSource.addDragListener(new DragSourceAdapter() {
@@ -387,6 +359,9 @@ public class UserExplorerComposite extends Composite {
 				}
 			}
 		});
+		Transfer[] types = new Transfer[] { TextTransfer.getInstance(),
+				FileTransfer.getInstance() };
+
 		dragRemoteSource.setTransfer(types);
 
 		DropTarget dropRemoteTarget = new DropTarget(remoteDirectoryTable,
@@ -402,9 +377,77 @@ public class UserExplorerComposite extends Composite {
 					String text = (String) event.data;
 					JLG.debug("received from transfer: " + text);
 					(new CommitAction(UserExplorerComposite.this)).run();
+				} else if (FileTransfer.getInstance().isSupportedType(event.currentDataType)) {
+					for (String path : (String[]) event.data) {
+						File file = new File(path);
+						try {
+							agent.getFileSystem(user).commit(currentRemoteDirString, file);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}
+					reloadRemoteDirectoryTable();
 				}
 			}
 		});
+
+	}
+
+	private void localDND() {
+		DragSource dragLocalSource = new DragSource(localDirectoryTable,
+				DND.DROP_MOVE | DND.DROP_COPY);
+		dragLocalSource.addDragListener(new DragSourceAdapter() {
+			@Override
+			public void dragSetData(DragSourceEvent event) {
+				if (TextTransfer.getInstance().isSupportedType(event.dataType)) {
+					// event.data = localDirectoryTable.getSelection();
+					event.data = new String("this is my fake data");
+				}
+			}
+
+			@Override
+			public void dragStart(DragSourceEvent event) {
+				if (localDirectoryTable.getSelection().length == 0) {
+					event.doit = false;
+				}
+			}
+		});
+		Transfer[] types = new Transfer[] { TextTransfer.getInstance(),
+				FileTransfer.getInstance() };
+
+		dragLocalSource.setTransfer(types);
+
+		DropTarget dropLocalTarget = new DropTarget(localDirectoryTable,
+				DND.DROP_MOVE | DND.DROP_COPY | DND.DROP_DEFAULT);
+		dropLocalTarget.setTransfer(types);
+		dropLocalTarget.addDropListener(new DropTargetAdapter() {
+
+			@Override
+			public void drop(DropTargetEvent event) {
+				JLG.debug("drop");
+				if (TextTransfer.getInstance().isSupportedType(
+						event.currentDataType)) {
+					String text = (String) event.data;
+					JLG.debug("received from transfer: " + text);
+					(new CheckOutAction(UserExplorerComposite.this)).run();
+				} else if (FileTransfer.getInstance().isSupportedType(event.currentDataType)) {
+					for (String path : (String[]) event.data) {
+						File origFile = new File(path);
+						File destFile = new File(currentLocalDirectory, origFile.getName());
+						Path origPath = FileSystems.getDefault().getPath(origFile.getAbsolutePath());
+						Path destPath = FileSystems.getDefault().getPath(destFile.getAbsolutePath());
+						
+						try {
+							Files.copy(origPath, destPath, StandardCopyOption.REPLACE_EXISTING);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}
+					reloadLocalDirectoryTable();
+				}
+			}
+		});
+
 
 	}
 
@@ -614,7 +657,8 @@ public class UserExplorerComposite extends Composite {
 
 	public void renameRemoteFile(String oldName, String newName) {
 		try {
-			agent.getFileSystem(user).rename(currentRemoteDirString, oldName, newName);
+			agent.getFileSystem(user).rename(currentRemoteDirString, oldName,
+					newName);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -644,7 +688,8 @@ public class UserExplorerComposite extends Composite {
 				DIRECTORY_SIZE });
 		newDirItem.setImage(DIRECTORY_ICON);
 		try {
-			agent.getFileSystem(user).mkdir(currentRemoteDirString, DIRECTORY_NEW);
+			agent.getFileSystem(user).mkdir(currentRemoteDirString,
+					DIRECTORY_NEW);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
