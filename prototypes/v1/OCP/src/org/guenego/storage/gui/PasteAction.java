@@ -44,4 +44,22 @@ public class PasteAction extends Action {
 		}
 
 	}
+
+	public boolean canPaste() {
+		if (window.userExplorerComposite == null) {
+			return false;
+		}
+		String[] data = null;
+		Display display = window.getShell().getDisplay();
+		Control c = display.getFocusControl();
+		if (c == window.userExplorerComposite.localDirectoryTable) {
+			data = (String[]) window.clipboard.getContents(FileTransfer
+					.getInstance());
+
+		} else if (c == window.userExplorerComposite.remoteDirectoryTable) {
+			data = (String[]) window.clipboard.getContents(FileTransfer
+					.getInstance());
+		}
+		return (data.length > 0);
+	}
 }

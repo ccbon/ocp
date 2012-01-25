@@ -10,6 +10,8 @@ import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.dnd.Clipboard;
+import org.eclipse.swt.dnd.FileTransfer;
+import org.eclipse.swt.dnd.TransferData;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.graphics.Point;
@@ -22,6 +24,8 @@ import org.eclipse.wb.swt.SWTResourceManager;
 import org.guenego.misc.JLG;
 import org.guenego.storage.Agent;
 import org.guenego.storage.User;
+import org.eclipse.jface.action.IMenuListener;
+import org.eclipse.jface.action.IMenuManager;
 
 
 public class AdminConsole extends ApplicationWindow {
@@ -213,6 +217,12 @@ public class AdminConsole extends ApplicationWindow {
 		fileMenu.add(exitAction);
 
 		MenuManager editMenu = new MenuManager("&Edit");
+		editMenu.addMenuListener(new IMenuListener() {
+			public void menuAboutToShow(IMenuManager arg0) {
+				boolean enabled = pasteAction.canPaste();
+				pasteAction.setEnabled(enabled);
+			}
+		});
 		menuBar.add(editMenu);
 		editMenu.add(selectAllAction);
 		editMenu.add(new Separator());
