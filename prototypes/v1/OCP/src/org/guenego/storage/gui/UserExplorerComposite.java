@@ -209,7 +209,6 @@ public class UserExplorerComposite extends Composite {
 
 		localDND();
 
-
 		reloadLocalDirectoryTable();
 
 		Composite rightComposite = new Composite(sashForm, SWT.NONE);
@@ -377,16 +376,9 @@ public class UserExplorerComposite extends Composite {
 					String text = (String) event.data;
 					JLG.debug("received from transfer: " + text);
 					(new CommitAction(UserExplorerComposite.this)).run();
-				} else if (FileTransfer.getInstance().isSupportedType(event.currentDataType)) {
-					for (String path : (String[]) event.data) {
-						File file = new File(path);
-						try {
-							agent.getFileSystem(user).commit(currentRemoteDirString, file);
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
-					}
-					reloadRemoteDirectoryTable();
+				} else if (FileTransfer.getInstance().isSupportedType(
+						event.currentDataType)) {
+					commitFiles((String[]) event.data);
 				}
 			}
 		});
@@ -430,24 +422,12 @@ public class UserExplorerComposite extends Composite {
 					String text = (String) event.data;
 					JLG.debug("received from transfer: " + text);
 					(new CheckOutAction(UserExplorerComposite.this)).run();
-				} else if (FileTransfer.getInstance().isSupportedType(event.currentDataType)) {
-					for (String path : (String[]) event.data) {
-						File origFile = new File(path);
-						File destFile = new File(currentLocalDirectory, origFile.getName());
-						Path origPath = FileSystems.getDefault().getPath(origFile.getAbsolutePath());
-						Path destPath = FileSystems.getDefault().getPath(destFile.getAbsolutePath());
-						
-						try {
-							Files.copy(origPath, destPath, StandardCopyOption.REPLACE_EXISTING);
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
-					}
-					reloadLocalDirectoryTable();
+				} else if (FileTransfer.getInstance().isSupportedType(
+						event.currentDataType)) {
+					copyFiles((String[]) event.data);
 				}
 			}
 		});
-
 
 	}
 
@@ -698,6 +678,39 @@ public class UserExplorerComposite extends Composite {
 		remoteDirectoryTable.setSelection(newDirItem);
 		(new RenameRemoteFileAction(this)).run();
 
+	}
+
+	public void copyFiles(String[] data) {
+		for (String path : data) {
+			File origFile = new File(path);
+			File destFile = new File(currentLocalDirectory,
+					origFile.getName());
+			Path origPath = FileSystems.getDefault().getPath(
+					origFile.getAbsolutePath());
+			Path destPath = FileSystems.getDefault().getPath(
+					destFile.getAbsolutePath());
+
+			try {
+				Files.copy(origPath, destPath,
+						StandardCopyOption.REPLACE_EXISTING);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		reloadLocalDirectoryTable();
+	}
+
+	public void commitFiles(String[] data) {
+		for (String path : data) {
+			File file = new File(path);
+			try {
+				agent.getFileSystem(user).commit(
+						currentRemoteDirString, file);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		reloadRemoteDirectoryTable();
 	}
 
 }

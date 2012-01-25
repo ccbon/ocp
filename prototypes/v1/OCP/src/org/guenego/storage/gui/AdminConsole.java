@@ -9,6 +9,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabItem;
+import org.eclipse.swt.dnd.Clipboard;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.graphics.Point;
@@ -40,6 +41,7 @@ public class AdminConsole extends ApplicationWindow {
 
 	private CTabItem userCTabItem;
 	private CTabItem userExplorerCTabItem;
+	public UserExplorerComposite userExplorerComposite;
 
 	private StartAgentAction startAgentAction;
 	private StopAgentAction stopAgentAction;
@@ -49,6 +51,9 @@ public class AdminConsole extends ApplicationWindow {
 	private ExitAction exitAction;
 
 	private SelectAllAction selectAllAction;
+	private CopyAction copyAction;
+	private CutAction cutAction;
+	private PasteAction pasteAction;
 
 	private ViewContactTabAction viewAdminTabAction;
 	private ViewUserSyncTabAction viewUserSyncTabAction;
@@ -60,6 +65,8 @@ public class AdminConsole extends ApplicationWindow {
 	private AboutAction aboutAction;
 	private DebugAction debugAction;
 	private boolean bIsConnected;
+	
+	public Clipboard clipboard;
 
 	/**
 	 * Create the application window.
@@ -72,6 +79,7 @@ public class AdminConsole extends ApplicationWindow {
 		addToolBar(SWT.FLAT | SWT.WRAP);
 		addMenuBar();
 		addStatusLine();
+		clipboard = new Clipboard(display);
 	}
 
 	@Override
@@ -175,6 +183,9 @@ public class AdminConsole extends ApplicationWindow {
 		viewUserExplorerTabAction = new ViewUserExplorerTabAction(this);
 
 		selectAllAction = new SelectAllAction(this);
+		copyAction = new CopyAction(this);
+		cutAction = new CutAction(this);
+		pasteAction = new PasteAction(this);
 	}
 
 	/**
@@ -204,6 +215,10 @@ public class AdminConsole extends ApplicationWindow {
 		MenuManager editMenu = new MenuManager("&Edit");
 		menuBar.add(editMenu);
 		editMenu.add(selectAllAction);
+		editMenu.add(new Separator());
+		editMenu.add(cutAction);
+		editMenu.add(copyAction);
+		editMenu.add(pasteAction);
 
 		MenuManager viewMenu = new MenuManager("&View");
 		menuBar.add(viewMenu);
@@ -305,9 +320,9 @@ public class AdminConsole extends ApplicationWindow {
 			userExplorerCTabItem.setShowClose(true);
 			userExplorerCTabItem.setText("Explorer");
 
-			Composite composite = new UserExplorerComposite(tabFolder,
+			userExplorerComposite = new UserExplorerComposite(tabFolder,
 					SWT.NONE, agent, user);
-			userExplorerCTabItem.setControl(composite);
+			userExplorerCTabItem.setControl(userExplorerComposite);
 
 		}
 		tabFolder.setSelection(userExplorerCTabItem);
@@ -345,6 +360,7 @@ public class AdminConsole extends ApplicationWindow {
 			userExplorerCTabItem.dispose();
 			userExplorerCTabItem = null;
 		}
+		userExplorerComposite = null;
 	}
 
 	public void addContactTab() {
