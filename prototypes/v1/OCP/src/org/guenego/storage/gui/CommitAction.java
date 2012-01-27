@@ -9,11 +9,11 @@ import org.guenego.misc.JLG;
 
 public class CommitAction extends Action {
 
-	private UserExplorerComposite composite;
+	private AdminConsole w;
 
 
-	public CommitAction(UserExplorerComposite userExplorerComposite) {
-		this.composite = userExplorerComposite;
+	public CommitAction(AdminConsole w) {
+		this.w = w;
 		// TODO: change the accelerator to ctrl + left arrow
 		setText("&Commit@F7");
 		setToolTipText("Commit");
@@ -22,6 +22,10 @@ public class CommitAction extends Action {
 
 	public void run() {
 		JLG.debug("Commit");
+		UserExplorerComposite composite = w.userExplorerComposite;
+		if (composite == null) {
+			return;
+		}
 		for (TableItem item : composite.localDirectoryTable.getSelection()) {
 			String name = item.getText(0);
 			File file = new File(composite.currentLocalDirectory, name);
@@ -36,5 +40,14 @@ public class CommitAction extends Action {
 
 		}
 		
+	}
+
+
+	public boolean canRun() {
+		UserExplorerComposite composite = w.userExplorerComposite;
+		if (composite == null) {
+			return false;
+		}
+		return composite.localDirectoryTable.getSelection().length > 0;
 	}
 }

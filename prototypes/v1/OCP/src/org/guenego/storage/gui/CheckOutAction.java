@@ -9,10 +9,10 @@ import org.guenego.misc.JLG;
 
 public class CheckOutAction extends Action {
 
-	private UserExplorerComposite composite;
+	private AdminConsole w;
 
-	public CheckOutAction(UserExplorerComposite userExplorerComposite) {
-		this.composite = userExplorerComposite;
+	public CheckOutAction(AdminConsole w) {
+		this.w = w;
 		// TODO: change the accelerator to ctrl + right arrow
 		setText("&Check Out@F6");
 		setToolTipText("Check Out");
@@ -20,6 +20,10 @@ public class CheckOutAction extends Action {
 
 	public void run() {
 		JLG.debug("Check Out");
+		UserExplorerComposite composite = w.userExplorerComposite;
+		if (composite == null) {
+			return;
+		}
 		for (TableItem item : composite.remoteDirectoryTable.getSelection()) {
 			File localDir = composite.currentLocalDirectory;
 			String name = item.getText(0);
@@ -33,5 +37,13 @@ public class CheckOutAction extends Action {
 			composite.reloadLocalDirectoryTable();
 		}
 
+	}
+
+	public boolean canRun() {
+		UserExplorerComposite composite = w.userExplorerComposite;
+		if (composite == null) {
+			return false;
+		}
+		return composite.remoteDirectoryTable.getSelection().length > 0;
 	}
 }

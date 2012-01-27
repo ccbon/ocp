@@ -45,7 +45,7 @@ public class PasteAction extends Action {
 
 	}
 
-	public boolean canPaste() {
+	public boolean canRun() {
 		if (window.userExplorerComposite == null) {
 			return false;
 		}
@@ -59,6 +59,9 @@ public class PasteAction extends Action {
 		} else if (c == window.userExplorerComposite.remoteDirectoryTable) {
 			data = (String[]) window.clipboard.getContents(FileTransfer
 					.getInstance());
+		}
+		if (data == null) {
+			return false;
 		}
 		return (data.length > 0);
 	}

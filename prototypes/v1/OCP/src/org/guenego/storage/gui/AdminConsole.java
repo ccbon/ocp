@@ -1,5 +1,7 @@
 package org.guenego.storage.gui;
 
+import org.eclipse.jface.action.IMenuListener;
+import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.action.StatusLineManager;
@@ -10,8 +12,6 @@ import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.dnd.Clipboard;
-import org.eclipse.swt.dnd.FileTransfer;
-import org.eclipse.swt.dnd.TransferData;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.graphics.Point;
@@ -24,8 +24,6 @@ import org.eclipse.wb.swt.SWTResourceManager;
 import org.guenego.misc.JLG;
 import org.guenego.storage.Agent;
 import org.guenego.storage.User;
-import org.eclipse.jface.action.IMenuListener;
-import org.eclipse.jface.action.IMenuManager;
 
 
 public class AdminConsole extends ApplicationWindow {
@@ -56,8 +54,9 @@ public class AdminConsole extends ApplicationWindow {
 
 	private SelectAllAction selectAllAction;
 	private CopyAction copyAction;
-	private CutAction cutAction;
 	private PasteAction pasteAction;
+	private CommitAction commitAction;
+	private CheckOutAction checkoutAction;
 
 	private ViewContactTabAction viewAdminTabAction;
 	private ViewUserSyncTabAction viewUserSyncTabAction;
@@ -158,6 +157,12 @@ public class AdminConsole extends ApplicationWindow {
 			setStatus(AGENT_OFF);
 			removeUserTab();
 		}
+		
+		// user explorer stuff
+		copyAction.setEnabled(copyAction.canRun());
+		pasteAction.setEnabled(pasteAction.canRun());
+		commitAction.setEnabled(commitAction.canRun());
+		checkoutAction.setEnabled(checkoutAction.canRun());
 
 	}
 
@@ -188,8 +193,9 @@ public class AdminConsole extends ApplicationWindow {
 
 		selectAllAction = new SelectAllAction(this);
 		copyAction = new CopyAction(this);
-		cutAction = new CutAction(this);
 		pasteAction = new PasteAction(this);
+		commitAction = new CommitAction(this);
+		checkoutAction = new CheckOutAction(this);
 	}
 
 	/**
@@ -219,16 +225,17 @@ public class AdminConsole extends ApplicationWindow {
 		MenuManager editMenu = new MenuManager("&Edit");
 		editMenu.addMenuListener(new IMenuListener() {
 			public void menuAboutToShow(IMenuManager arg0) {
-				boolean enabled = pasteAction.canPaste();
-				pasteAction.setEnabled(enabled);
+				AdminConsole.this.updateActions();
 			}
 		});
 		menuBar.add(editMenu);
 		editMenu.add(selectAllAction);
 		editMenu.add(new Separator());
-		editMenu.add(cutAction);
 		editMenu.add(copyAction);
 		editMenu.add(pasteAction);
+		editMenu.add(new Separator());
+		editMenu.add(commitAction);
+		editMenu.add(checkoutAction);
 
 		MenuManager viewMenu = new MenuManager("&View");
 		menuBar.add(viewMenu);
@@ -331,7 +338,7 @@ public class AdminConsole extends ApplicationWindow {
 			userExplorerCTabItem.setText("Explorer");
 
 			userExplorerComposite = new UserExplorerComposite(tabFolder,
-					SWT.NONE, agent, user);
+					SWT.NONE, agent, user, this);
 			userExplorerCTabItem.setControl(userExplorerComposite);
 
 		}
