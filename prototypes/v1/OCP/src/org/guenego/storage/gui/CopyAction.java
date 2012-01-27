@@ -5,6 +5,7 @@ import java.io.File;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.dnd.FileTransfer;
+import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.widgets.Control;
@@ -12,7 +13,6 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 import org.guenego.misc.JLG;
-
 
 public class CopyAction extends Action {
 
@@ -46,13 +46,28 @@ public class CopyAction extends Action {
 			String[] data = new String[length];
 			for (int i = 0; i < length; i++) {
 				TableItem item = t.getSelection()[i];
-				String name  = item.getText(0);
-				File f = new File(window.userExplorerComposite.currentLocalDirectory, name);
+				String name = item.getText(0);
+				File f = new File(
+						window.userExplorerComposite.currentLocalDirectory,
+						name);
 				String path = f.getAbsolutePath();
 				JLG.debug("path=" + path);
 				data[i] = path;
 			}
-			window.clipboard.setContents(new Object[] { data }, new Transfer[] { FileTransfer.getInstance() });
+			window.clipboard.setContents(new Object[] { data },
+					new Transfer[] { FileTransfer.getInstance() });
+		}
+		if (c == window.userExplorerComposite.remoteDirectoryTable) {
+			Table t = (Table) c;
+			int length = t.getSelectionCount();
+			String[] data = new String[length];
+			for (int i = 0; i < length; i++) {
+				TableItem item = t.getSelection()[i];
+				String name = item.getText(0);
+				data[i] = name;
+			}
+			window.clipboard.setContents(new Object[] { JLG.join(";", (Object[]) data) },
+					new Transfer[] { TextTransfer.getInstance() });
 		}
 
 	}
@@ -63,7 +78,7 @@ public class CopyAction extends Action {
 		}
 		Display display = window.getShell().getDisplay();
 		Control c = display.getFocusControl();
-		if (c == window.userExplorerComposite.localDirectoryTable) {
+		if (c.getClass() == Table.class) {
 			Table t = (Table) c;
 			int length = t.getSelectionCount();
 			return (length > 0);

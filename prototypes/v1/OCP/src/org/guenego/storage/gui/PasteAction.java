@@ -3,6 +3,7 @@ package org.guenego.storage.gui;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.dnd.FileTransfer;
+import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
@@ -36,7 +37,13 @@ public class PasteAction extends Action {
 		if (c == window.userExplorerComposite.localDirectoryTable) {
 			String[] data = (String[]) window.clipboard
 					.getContents(FileTransfer.getInstance());
-			window.userExplorerComposite.copyFiles(data);
+			if (data != null) {
+				window.userExplorerComposite.copyFiles(data);
+			}
+			String o = (String) window.clipboard.getContents(TextTransfer
+					.getInstance());
+			String[] s = o.split(";");
+			window.userExplorerComposite.checkout(s);
 		} else if (c == window.userExplorerComposite.remoteDirectoryTable) {
 			String[] data = (String[]) window.clipboard
 					.getContents(FileTransfer.getInstance());
@@ -55,7 +62,11 @@ public class PasteAction extends Action {
 		if (c == window.userExplorerComposite.localDirectoryTable) {
 			data = (String[]) window.clipboard.getContents(FileTransfer
 					.getInstance());
-
+			if (data == null || data.length == 0) {
+				String s = (String) window.clipboard.getContents(TextTransfer
+						.getInstance());
+				return s.length() > 0;
+			}
 		} else if (c == window.userExplorerComposite.remoteDirectoryTable) {
 			data = (String[]) window.clipboard.getContents(FileTransfer
 					.getInstance());
@@ -64,5 +75,6 @@ public class PasteAction extends Action {
 			return false;
 		}
 		return (data.length > 0);
+
 	}
 }

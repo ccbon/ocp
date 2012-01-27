@@ -718,4 +718,16 @@ public class UserExplorerComposite extends Composite {
 		reloadRemoteDirectoryTable();
 	}
 
+	public void checkout(String[] data) {
+		for (String path : data) {
+			try {
+				agent.getFileSystem(user).checkout(currentRemoteDirString, path, currentLocalDirectory);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		reloadLocalDirectoryTable();
+		
+	}
+
 }
