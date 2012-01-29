@@ -24,4 +24,11 @@ public class QuickMessage {
 		return false;
 	}
 
+	public static void inform(Shell shell, String string) {
+		MessageBox messageBox = new MessageBox(shell, SWT.ICON_INFORMATION | SWT.OK);
+		messageBox.setMessage(string);
+		messageBox.setText("Information");
+		messageBox.open();
+	}
+
 }

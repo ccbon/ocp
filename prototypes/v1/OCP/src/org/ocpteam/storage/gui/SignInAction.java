@@ -3,19 +3,13 @@ package org.ocpteam.storage.gui;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.graphics.ImageData;
-import org.eclipse.swt.widgets.Display;
 import org.ocpteam.misc.JLG;
-import org.ocpteam.storage.Agent;
-
+import org.ocpteam.sftp.gui.SSHSignInWizard;
 
 public class SignInAction extends Action {
-	private Display display;
-	private Agent agent;
 	private AdminConsole window;
 
-	public SignInAction(Agent a, Display d, AdminConsole adminConsole) {
-		agent = a;
-		display = d;
+	public SignInAction(AdminConsole adminConsole) {
 		window = adminConsole;
 		setText("&Sign in@Ctrl+L");
 		setToolTipText("User Authentication");
@@ -31,6 +25,10 @@ public class SignInAction extends Action {
 
 	public void run() {
 		JLG.debug("Authentication User: display a wizard...");
-		SignInWizard.start(display, agent, window);
+		if (window.agent.connectsWithSSH()) {
+			SSHSignInWizard.start(window);
+		} else {
+			SignInWizard.start(window);
+		}
 	}
 }

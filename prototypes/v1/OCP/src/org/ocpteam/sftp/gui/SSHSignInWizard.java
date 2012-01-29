@@ -1,4 +1,4 @@
-package org.ocpteam.storage.gui;
+package org.ocpteam.sftp.gui;
 
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.jface.wizard.WizardDialog;
@@ -9,15 +9,16 @@ import org.eclipse.swt.widgets.Shell;
 import org.ocpteam.misc.JLG;
 import org.ocpteam.storage.Agent;
 import org.ocpteam.storage.User;
+import org.ocpteam.storage.gui.AdminConsole;
 
 
-public class SignInWizard extends Wizard {
+public class SSHSignInWizard extends Wizard {
 
 	public static void start(final AdminConsole window) {
 		final Shell shell = new Shell(window.getShell().getDisplay());
 		shell.setLayout(new FillLayout());
 
-		WizardDialog dialog = new WizardDialog(shell, new SignInWizard(window.agent,
+		WizardDialog dialog = new WizardDialog(shell, new SSHSignInWizard(window.agent,
 				window)) {
 			@Override
 			protected void finishPressed() {
@@ -31,19 +32,19 @@ public class SignInWizard extends Wizard {
 		shell.dispose();
 	}
 
-	private SignInWizardPage p1;
+	private SSHSignInWizardPage p1;
 	private Agent agent;
 	private AdminConsole window;
 
-	public SignInWizard(Agent agent, AdminConsole window) {
+	public SSHSignInWizard(Agent agent, AdminConsole window) {
 		this.agent = agent;
 		this.window = window;
-		setWindowTitle("Sign In Wizard");
+		setWindowTitle("SSH Sign In Wizard");
 	}
 
 	@Override
 	public void addPages() {
-		p1 = new SignInWizardPage();
+		p1 = new SSHSignInWizardPage();
 		addPage(p1);
 	}
 
@@ -60,7 +61,7 @@ public class SignInWizard extends Wizard {
 			JLG.error(e);
 			MessageBox messageBox = new MessageBox(getShell(), SWT.ICON_ERROR
 					| SWT.OK);
-			messageBox.setMessage("Bad login/password.");
+			messageBox.setMessage("Bad authentication.");
 			messageBox.setText("Warning");
 			messageBox.open();
 			return false;

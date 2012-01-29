@@ -1,4 +1,4 @@
-package org.ocpteam.ftp.gui.install;
+package org.ocpteam.ftp.gui;
 
 import java.util.Properties;
 
