@@ -52,7 +52,7 @@ public class SSHSignInWizard extends Wizard {
 	public boolean performFinish() {
 		JLG.debug("sign in user");
 		try {
-			User user = agent.login(p1.usernameText.getText(),
+			User user = agent.login(p1.sessionText.getText(),
 					p1.passwordText.getText());
 			window.setUser(user);
 			window.addUserSyncTab();

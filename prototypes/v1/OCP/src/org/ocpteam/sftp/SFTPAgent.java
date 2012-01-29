@@ -17,11 +17,8 @@ import com.jcraft.jsch.UserInfo;
 
 public class SFTPAgent extends Agent {
 
-	private static final File configFile = new File("sftp.properties");
-	private String hostname;
 	private JSch jsch;
 	Session session;
-	private int port;
 	private Channel channel;
 
 	@Override
@@ -31,21 +28,16 @@ public class SFTPAgent extends Agent {
 
 	@Override
 	public boolean isConfigFilePresent() {
-		return configFile.isFile();
+		return true;
 	}
 
 	@Override
 	public File getConfigFile() {
-		return configFile;
+		return null;
 	}
 
 	@Override
 	protected void readConfig() throws Exception {
-		this.hostname = p.getProperty("hostname", "localhost");
-		this.port = Integer.parseInt(p.getProperty("port", "22"));
-		if (p.getProperty("debug", "true").equalsIgnoreCase("true")) {
-			JLG.debug_on();
-		}
 	}
 
 	@Override
@@ -62,22 +54,39 @@ public class SFTPAgent extends Agent {
 
 	@Override
 	public boolean allowsUserCreation() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
-	public User login(String login, String password) throws Exception {
+	public User login(String login, Object challenge) throws Exception {
 		try {
-			session = jsch.getSession(login, hostname, port);
+			String[] array = login.split("@");
+			String username = array[0];
+			String hostname = array[1];
+			int port = 22;
+			int index = hostname.indexOf(':');
+			if (index != -1) {
+				port = Integer.parseInt(hostname.substring(index + 1));
+			}
+			session = jsch.getSession(username, hostname, port);
 			
-			UserInfo ui = new SFTPUserInfo(password);
-			session.setUserInfo(ui);
+			SFTPUserInfo ui = new SFTPUserInfo();
+			SSHChallenge c = (SSHChallenge) challenge;
+			if (c.getType() == SSHChallenge.PASSWORD) {
+				ui.setPassword(c.getPassword());
+				session.setUserInfo(ui);
+			} else if (c.getType() == SSHChallenge.PRIVATE_KEY) {
+				if (c.getPassphrase() == null) {
+					jsch.addIdentity(c.getPrivateKeyFile().getAbsolutePath());
+				} else {
+					jsch.addIdentity(c.getPrivateKeyFile().getAbsolutePath(), c.getPassphrase());
+				}
+			}
+			
 			session.connect();
 			channel = session.openChannel("sftp");
 			channel.connect();
-			FTPUser user = new FTPUser(login, password, p.getProperty(
-					"default.dir", System.getProperty("user.home")));
+			User user = new SFTPUser(login, c);
 			return user;
 		} catch (Exception e) {
 			e.printStackTrace();

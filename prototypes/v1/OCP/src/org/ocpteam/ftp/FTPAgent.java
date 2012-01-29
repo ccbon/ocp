@@ -69,7 +69,8 @@ public class FTPAgent extends Agent {
 	}
 
 	@Override
-	public User login(String login, String password) throws Exception {
+	public User login(String login, Object challenge) throws Exception {
+		String password = (String) challenge;
 		if (ftp.login(login, password)) {
 			JLG.debug("ftp logged in.");
 			FTPUser user = new FTPUser(login, password, p.getProperty(

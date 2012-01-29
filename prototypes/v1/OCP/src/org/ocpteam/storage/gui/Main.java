@@ -32,7 +32,9 @@ public class Main {
 				}
 			}
 			if (agent.autoStarts()) {
-				agent.loadConfig();
+				if (agent.requiresConfigFile()) {
+					agent.loadConfig();
+				}
 				agent.start();
 			}
 			(new Thread(ui)).start();

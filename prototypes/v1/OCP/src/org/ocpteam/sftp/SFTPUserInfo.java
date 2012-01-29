@@ -10,8 +10,8 @@ public class SFTPUserInfo implements UserInfo {
 
 	private String password;
 
-	public SFTPUserInfo(String password) {
-		this.password = password;
+	public SFTPUserInfo() {
+		// TODO Auto-generated constructor stub
 	}
 
 	@Override
@@ -46,6 +46,10 @@ public class SFTPUserInfo implements UserInfo {
 	@Override
 	public void showMessage(String arg0) {
 		QuickMessage.inform(Display.getCurrent().getActiveShell(), arg0);
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
 	}
 
 }
