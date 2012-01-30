@@ -1,5 +1,7 @@
 package org.ocpteam.sftp.gui;
 
+import java.io.File;
+
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.SWT;
@@ -7,6 +9,7 @@ import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 import org.ocpteam.misc.JLG;
+import org.ocpteam.sftp.SSHChallenge;
 import org.ocpteam.storage.Agent;
 import org.ocpteam.storage.User;
 import org.ocpteam.storage.gui.AdminConsole;
@@ -52,8 +55,18 @@ public class SSHSignInWizard extends Wizard {
 	public boolean performFinish() {
 		JLG.debug("sign in user");
 		try {
+			SSHChallenge c = new SSHChallenge();
+			c.setDefaultLocalDir(p1.dirText.getText());
+			if (p1.bIsPassword) {
+				c.setType(SSHChallenge.PASSWORD);
+				c.setPassword(p1.passwordText.getText());
+			} else {
+				c.setType(SSHChallenge.PRIVATE_KEY);
+				//TODO : test if the file exists.
+				c.setPrivateKeyFile(new File(p1.privateKeyFileText.getText()));
+			}
 			User user = agent.login(p1.sessionText.getText(),
-					p1.passwordText.getText());
+					c);
 			window.setUser(user);
 			window.addUserSyncTab();
 			window.addUserExplorerTab();

@@ -32,4 +32,23 @@ public class SSHChallenge {
 		return defaultLocalDir;
 	}
 
+	public void setPassword(String password) {
+		this.password = password;
+		
+	}
+
+	public void setDefaultLocalDir(String dir) {
+		this.defaultLocalDir = dir;
+		
+	}
+
+	public void setPrivateKeyFile(File f) {
+		this.privateKeyFile = f;
+		
+	}
+
+	public void setType(int type) {
+		this.type = type;
+	}
+
 }

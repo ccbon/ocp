@@ -4,17 +4,17 @@ import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.FileDialog;
+import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.ocpteam.misc.JLG;
-import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.widgets.Group;
 
 public class SSHSignInWizardPage extends WizardPage {
 	Text sessionText;
@@ -23,10 +23,10 @@ public class SSHSignInWizardPage extends WizardPage {
 	Group grpPrivateKey;
 	Text passwordText;
 	Label lblPrivateKeyFile;
-	private Text privateKeyFileText;
+	Text privateKeyFileText;
 	private Text text_1;
 	private Text text_2;
-	private Text dirText;
+	Text dirText;
 
 	/**
 	 * Create the wizard.
@@ -102,6 +102,7 @@ public class SSHSignInWizardPage extends WizardPage {
 
 		dirText = new Text(container, SWT.BORDER);
 		dirText.setBounds(10, 261, 261, 19);
+		dirText.setText(System.getProperty("user.home"));
 
 		Button btnChooseDirectory = new Button(container, SWT.NONE);
 		btnChooseDirectory.addSelectionListener(new SelectionAdapter() {
@@ -147,6 +148,7 @@ public class SSHSignInWizardPage extends WizardPage {
 		lblPrivateKeyFile.setText("private key file");
 
 		privateKeyFileText = new Text(grpPrivateKey, SWT.BORDER);
+		privateKeyFileText.setText("C:\\cygwin\\home\\jlouis\\.ssh\\id_rsa");
 		privateKeyFileText.setLocation(10, 36);
 		privateKeyFileText.setSize(187, 19);
 

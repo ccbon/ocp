@@ -3,7 +3,6 @@ package org.ocpteam.sftp;
 import java.io.File;
 import java.util.Queue;
 
-import org.ocpteam.ftp.FTPUser;
 import org.ocpteam.misc.JLG;
 import org.ocpteam.storage.Agent;
 import org.ocpteam.storage.Contact;
@@ -13,7 +12,6 @@ import org.ocpteam.storage.User;
 import com.jcraft.jsch.Channel;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.Session;
-import com.jcraft.jsch.UserInfo;
 
 public class SFTPAgent extends Agent {
 
@@ -77,10 +75,12 @@ public class SFTPAgent extends Agent {
 				session.setUserInfo(ui);
 			} else if (c.getType() == SSHChallenge.PRIVATE_KEY) {
 				if (c.getPassphrase() == null) {
+					JLG.debug("passphrase is null");
 					jsch.addIdentity(c.getPrivateKeyFile().getAbsolutePath());
 				} else {
 					jsch.addIdentity(c.getPrivateKeyFile().getAbsolutePath(), c.getPassphrase());
 				}
+				session.setUserInfo(ui);
 			}
 			
 			session.connect();
