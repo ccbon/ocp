@@ -24,7 +24,7 @@ public class SSHSignInWizardPage extends WizardPage {
 	Text passwordText;
 	Label lblPrivateKeyFile;
 	Text privateKeyFileText;
-	private Text text_1;
+	Text passphraseText;
 	private Text text_2;
 	Text dirText;
 
@@ -173,8 +173,8 @@ public class SSHSignInWizardPage extends WizardPage {
 		lblPassphrase.setBounds(10, 63, 187, 13);
 		lblPassphrase.setText("Passphrase");
 
-		text_1 = new Text(grpPrivateKey, SWT.BORDER);
-		text_1.setBounds(10, 82, 187, 19);
+		passphraseText = new Text(grpPrivateKey, SWT.BORDER | SWT.PASSWORD);
+		passphraseText.setBounds(10, 82, 187, 19);
 		passwordText.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent arg0) {
 				getWizard().getContainer().updateButtons();
