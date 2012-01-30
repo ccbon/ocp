@@ -1,4 +1,4 @@
-package org.ocpteam.ocp.gui.install;
+package org.ocpteam.ocp.gui;
 
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;

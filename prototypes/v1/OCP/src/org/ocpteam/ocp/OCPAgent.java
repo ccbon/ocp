@@ -631,8 +631,9 @@ public class OCPAgent extends Agent {
 	}
 
 	@Override
-	public User login(String login, String password) throws Exception {
+	public User login(String login, Object challenge) throws Exception {
 		try {
+			String password = (String) challenge;
 			Id key = hash(ucrypt(password, (login + password).getBytes()));
 			byte[] content = client.getUser(key);
 			if (content == null || content.length == 0) {

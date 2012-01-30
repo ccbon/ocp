@@ -179,7 +179,7 @@ public class AdminConsole extends ApplicationWindow {
 		if (agent.allowsUserCreation()) {
 			newUserAction = new NewUserAction(agent, display, this);
 		}
-		signInAction = new SignInAction(agent, display, this);
+		signInAction = new SignInAction(this);
 		signOutAction = new SignOutAction(this);
 		viewAdminTabAction = new ViewContactTabAction(this);
 		if (agent.hasStorage()) {

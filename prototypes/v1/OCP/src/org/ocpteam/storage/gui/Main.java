@@ -6,30 +6,35 @@ import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.ocpteam.ftp.FTPAgent;
-import org.ocpteam.ftp.gui.install.FTPConfigWizard;
+import org.ocpteam.ftp.gui.FTPConfigWizard;
 import org.ocpteam.misc.JLG;
 import org.ocpteam.ocp.OCPAgent;
 import org.ocpteam.ocp.UserInterface;
-import org.ocpteam.ocp.gui.install.ConfigWizard;
+import org.ocpteam.ocp.gui.ConfigWizard;
+import org.ocpteam.sftp.SFTPAgent;
 import org.ocpteam.storage.Agent;
-
 
 public class Main {
 	public static void main(String[] args) {
 		try {
-			//Agent agent = new OCPAgent();
-			Agent agent = new FTPAgent();
+			// Agent agent = new OCPAgent();
+			// Agent agent = new FTPAgent();
+			Agent agent = new SFTPAgent();
 			UserInterface ui = new GraphicalUI(agent);
 
-			if (!agent.isConfigFilePresent()) {
-				start(agent);
-			}
-			if (!agent.isConfigFilePresent()) {
-				// it should mean that the wizard was cancelled by the user.
-				return;
+			if (agent.requiresConfigFile()) {
+				if (!agent.isConfigFilePresent()) {
+					start(agent);
+				}
+				if (!agent.isConfigFilePresent()) {
+					// it should mean that the wizard was cancelled by the user.
+					return;
+				}
 			}
 			if (agent.autoStarts()) {
-				agent.loadConfig();
+				if (agent.requiresConfigFile()) {
+					agent.loadConfig();
+				}
 				agent.start();
 			}
 			(new Thread(ui)).start();

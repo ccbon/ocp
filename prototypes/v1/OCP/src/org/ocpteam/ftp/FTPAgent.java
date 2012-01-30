@@ -13,7 +13,6 @@ import org.ocpteam.storage.Contact;
 import org.ocpteam.storage.FileSystem;
 import org.ocpteam.storage.User;
 
-
 public class FTPAgent extends Agent {
 
 	public static final File configFile = new File("ftp.properties");
@@ -70,7 +69,8 @@ public class FTPAgent extends Agent {
 	}
 
 	@Override
-	public User login(String login, String password) throws Exception {
+	public User login(String login, Object challenge) throws Exception {
+		String password = (String) challenge;
 		if (ftp.login(login, password)) {
 			JLG.debug("ftp logged in.");
 			FTPUser user = new FTPUser(login, password, p.getProperty(
@@ -81,9 +81,6 @@ public class FTPAgent extends Agent {
 		}
 	}
 
-
-
-
 	void reconnect(FTPUser ftpUser) throws IOException {
 		ftp.logout();
 		ftp.connect(hostname);
@@ -92,9 +89,7 @@ public class FTPAgent extends Agent {
 		ftp.login(ftpUser.getLogin(), ftpUser.getPassword());
 	}
 
-
-	void commit(User user, File file, String remotePath)
-			throws Exception {
+	void commit(User user, File file, String remotePath) throws Exception {
 		JLG.debug("about to commit " + file.getName());
 
 		for (File child : file.listFiles()) {
