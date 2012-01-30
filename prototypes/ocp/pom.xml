@@ -243,6 +243,7 @@
 					</sourceIncludes>
 					<outputDirectory>${project.build.directory}/eclipse-bin</outputDirectory>
 				</configuration>
+				<!--
 				<executions>
 				  <execution>
 					<phase>package</phase>
@@ -252,6 +253,7 @@
 					</goals>
 				  </execution>
 				</executions>
+				-->
 			</plugin>
 			
 			<plugin>
@@ -307,6 +309,7 @@
 						</manifestEntries>
 					</archive>
 				</configuration>
+				<!--
 				<executions>
 				  <execution>
 					<phase>package</phase>
@@ -315,6 +318,7 @@
 					</goals>
 				  </execution>
 				</executions>
+				-->
 			</plugin>
 
 		</plugins>
