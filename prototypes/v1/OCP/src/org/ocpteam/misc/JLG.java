@@ -264,4 +264,8 @@ public class JLG {
 		return true;
 	}
 
+	public static boolean isNullOrEmpty(String s) {
+		return s == null || s.equals("");
+	}
+
 }

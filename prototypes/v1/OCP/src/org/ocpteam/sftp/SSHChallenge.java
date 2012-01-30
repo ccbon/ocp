@@ -10,6 +10,7 @@ public class SSHChallenge {
 	private String password;
 	private File privateKeyFile;
 	private String defaultLocalDir;
+	private String passphrase;
 
 	public int getType() {
 		return type;
@@ -24,8 +25,7 @@ public class SSHChallenge {
 	}
 
 	public String getPassphrase() {
-		// TODO Auto-generated method stub
-		return null;
+		return passphrase;
 	}
 
 	public String getDefaultLocalDir() {
@@ -49,6 +49,10 @@ public class SSHChallenge {
 
 	public void setType(int type) {
 		this.type = type;
+	}
+
+	public void setPassphrase(String passphrase) {
+		this.passphrase = passphrase;
 	}
 
 }

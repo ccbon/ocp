@@ -64,6 +64,10 @@ public class SSHSignInWizard extends Wizard {
 				c.setType(SSHChallenge.PRIVATE_KEY);
 				//TODO : test if the file exists.
 				c.setPrivateKeyFile(new File(p1.privateKeyFileText.getText()));
+				String passphrase = p1.passphraseText.getText();
+				if (!JLG.isNullOrEmpty(passphrase)) {
+					c.setPassphrase(passphrase);
+				}
 			}
 			User user = agent.login(p1.sessionText.getText(),
 					c);

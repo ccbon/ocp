@@ -10,6 +10,7 @@ import org.ocpteam.storage.FileSystem;
 import org.ocpteam.storage.User;
 
 import com.jcraft.jsch.Channel;
+import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.Session;
 
@@ -17,7 +18,7 @@ public class SFTPAgent extends Agent {
 
 	private JSch jsch;
 	Session session;
-	private Channel channel;
+	public ChannelSftp channel;
 
 	@Override
 	public boolean requiresConfigFile() {
@@ -78,13 +79,14 @@ public class SFTPAgent extends Agent {
 					JLG.debug("passphrase is null");
 					jsch.addIdentity(c.getPrivateKeyFile().getAbsolutePath());
 				} else {
+					JLG.debug("passphrase is set");
 					jsch.addIdentity(c.getPrivateKeyFile().getAbsolutePath(), c.getPassphrase());
 				}
 				session.setUserInfo(ui);
 			}
 			
 			session.connect();
-			channel = session.openChannel("sftp");
+			channel = (ChannelSftp) session.openChannel("sftp");
 			channel.connect();
 			User user = new SFTPUser(login, c);
 			return user;
@@ -134,8 +136,7 @@ public class SFTPAgent extends Agent {
 
 	@Override
 	public FileSystem getFileSystem(User user) {
-		// TODO Auto-generated method stub
-		return null;
+		return new SFTPFileSystem(user, this);
 	}
 
 	@Override
