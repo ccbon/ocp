@@ -10,15 +10,15 @@
 		  <scope>runtime</scope>
 		  <outputDirectory></outputDirectory> 
 		  <useProjectArtifact>false</useProjectArtifact>
-		  <!--
+
 		 <excludes>
 			<exclude>org.eclipse.swt:org.eclipse.swt.win32.win32.x86</exclude>
 			<exclude>org.eclipse.swt:org.eclipse.swt.win32.win32.x86_64</exclude>
 			<exclude>org.eclipse.swt:org.eclipse.swt.gtk.linux.x86_64</exclude>
 			<exclude>org.eclipse.swt:org.eclipse.swt.gtk.linux.x86</exclude>-->
 			<!--<exclude>org.eclipse.swt:org.eclipse.swt.cocoa.macosx.x86_64</exclude>-->
-			<!--<exclude>org.eclipse.swt:org.eclipse.swt.cocoa.macosx</exclude>
-		 </excludes>-->
+			<exclude>org.eclipse.swt:org.eclipse.swt.cocoa.macosx</exclude>
+		 </excludes>
 		</dependencySet>
 		<dependencySet>
 		  <outputDirectory></outputDirectory>
