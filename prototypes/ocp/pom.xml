@@ -229,11 +229,12 @@
 				<version>2.8</version>
 				<inherited>true</inherited>
 				<configuration>
-					<!--
+					
 					<classpathContainers>
-					   <classpathContainer>org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7</classpathContainer>
+						<classpathContainer>org.eclipse.jdt.launching.JRE_CONTAINER</classpathContainer>
+					   <!-- <classpathContainer>org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7</classpathContainer> -->
 					</classpathContainers>
-					-->
+					
 				    <downloadSources>true</downloadSources>
 					<downloadJavadocs>true</downloadJavadocs>
 					<sourceIncludes>
@@ -286,6 +287,7 @@
 				</configuration>
 			</plugin>
 
+			
 			<plugin>
 				<artifactId>maven-assembly-plugin</artifactId>
 				<version>2.2-beta-5</version>
