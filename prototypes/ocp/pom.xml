@@ -9,7 +9,7 @@
 	<packaging>jar</packaging>
 	<name>Open Cloud Protocol</name>
 	<url>http://www.flexible-radio.com/open-cloud-protocol</url>
-
+	
 	<!-- Team -->
 	<developers>
 		<developer>
@@ -32,14 +32,146 @@
 			<organization>www.flexible-radio.com</organization>
 			<timezone>+2</timezone>
 		</developer>  		
-	</developers>	
-
+	</developers>
+	
 	<!-- Properties -->
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
-
 	
+	<!-- Profiles -->
+	<profiles>
+		<!-- Windows 64 - Bit -->
+		<!--
+		<profile>
+			<id>win-x86_64</id>
+			<activation>
+				<os>
+				  <arch>amd64</arch>
+				  <family>windows</family>
+				</os>
+			</activation>
+			<dependencies>
+				<dependency>
+					<groupId>org.eclipse.swt</groupId>
+					<artifactId>org.eclipse.swt.win32.win32.x86_64</artifactId>
+					<version>3.6.2</version>
+					<scope>compile</scope>
+				</dependency>
+			</dependencies>
+		</profile>	
+		-->
+
+		<!-- Windows 7 - 32 Bit -->
+		<!--
+		<profile>
+			<id>win-x86</id>
+			<activation>
+				<os>
+				  <arch>x86</arch>
+				  <family>windows</family>
+				</os>
+			</activation>
+			<dependencies>
+				<dependency>
+					<groupId>org.eclipse.swt</groupId>
+					<artifactId>org.eclipse.swt.win32.win32.x86</artifactId>
+					<version>3.6.2</version>
+					<scope>compile</scope>
+				</dependency>
+			</dependencies>
+		</profile>	
+		-->
+
+		<!-- Linux - 64 Bit -->
+		<!--
+		<profile>
+			<id>linux-x86_64</id>
+			<activation>
+				<os>
+				  <arch>amd64</arch>
+				  <family>unix</family>
+				  <name>linux</name>
+				</os>
+			</activation>
+			<dependencies>
+				<dependency>
+					<groupId>org.eclipse.swt</groupId>
+					<artifactId>org.eclipse.swt.gtk.linux.x86_64</artifactId>
+					<version>3.6.2</version>
+					<scope>compile</scope>
+				</dependency>
+			</dependencies>
+		</profile>
+		-->
+
+		<!-- Linux - 32 Bit -->
+		<!--
+		<profile>
+			<id>linux-x86</id>
+			<properties>
+				<swtName>org.eclipse.swt.gtk.linux.x86</swtName>
+			</properties>
+			<activation>
+				<os>
+				  <arch>i386</arch>
+				  <family>unix</family>
+				  <name>linux</name>
+				</os>
+			</activation>
+			<dependencies>
+				<dependency>
+					<groupId>org.eclipse.swt</groupId>
+					<artifactId>org.eclipse.swt.gtk.linux.x86</artifactId>
+					<version>3.6.2</version>
+					<scope>compile</scope>
+				</dependency>
+			</dependencies>
+		</profile>	
+		-->
+		<!-- Mac OS X - Cocoa 64  Bit -->
+		<!--
+		<profile>
+			<id>macosx-cacao-x86_64</id>
+			<activation>
+				<os>
+				  <name>mac os x</name>
+				  <arch>x86_64</arch>
+				</os>
+			</activation>
+			<dependencies>
+				<dependency>
+					<groupId>org.eclipse.swt</groupId>
+					<artifactId>org.eclipse.swt.cocoa.macosx.x86_64</artifactId>
+					<version>3.6.2</version>
+					<scope>compile</scope>
+				</dependency>
+			</dependencies>
+		</profile>
+		-->
+
+		<!-- Mac OS X - Cocoa 32 Bit -->
+		<!--
+		<profile>
+			<id>macosx-cacao-x86</id>
+			<activation>
+				<os>
+				  <name>mac os x</name>
+				  <arch>i386</arch>
+				</os>
+			</activation>
+			<dependencies>
+				<dependency>
+					<groupId>org.eclipse.swt</groupId>
+					<artifactId>org.eclipse.swt.cocoa.macosx</artifactId>
+					<version>3.6.2</version>
+					<scope>compile</scope>
+				</dependency>
+			</dependencies>
+		</profile>
+		-->
+	</profiles>
+
 	<!-- Dependencies -->
 	<dependencies>
 		<!-- JUnit -->
@@ -63,66 +195,67 @@
 			<groupId>commons-io</groupId>
 			<artifactId>commons-io</artifactId>
 			<version>2.1</version>
-			<scope>compile</scope>
 		</dependency>
+
 		
 		<!-- Eclipse Native SWT (Win 64 Bit) -->
 		<dependency>
 			<groupId>org.eclipse.swt</groupId>
 			<artifactId>org.eclipse.swt.win32.win32.x86_64</artifactId>
 			<version>3.6.2</version>
-			<scope>compile</scope>
+			<scope>provided</scope>
+		</dependency>
+
+		
+		<!-- Eclipse Native SWT (Win 32 Bit) -->
+		<dependency>
+			<groupId>org.eclipse.swt</groupId>
+			<artifactId>org.eclipse.swt.win32.win32.x86_64</artifactId>
+			<version>3.6.2</version>
+			<scope>provided</scope>
 		</dependency>
 		
 		<!-- Eclipse Native SWT (Win 32 Bit) -->
-		<!--
 		<dependency>
 			<groupId>org.eclipse.swt</groupId>
 			<artifactId>org.eclipse.swt.win32.win32.x86</artifactId>
 			<version>3.6.2</version>
-			<scope>runtime</scope>
+			<scope>provided</scope>
 		</dependency>
-		-->
 		
 		<!-- Eclipse Native SWT (Linux 64 Bit) -->
-		<!--
 		<dependency>
 			<groupId>org.eclipse.swt</groupId>
 			<artifactId>org.eclipse.swt.gtk.linux.x86_64</artifactId>
 			<version>3.6.2</version>
-			<scope>runtime</scope>
+			<scope>provided</scope>
 		</dependency>
-		-->
+
 		
 		<!-- Eclipse Native SWT (Linux 32 Bit) -->
-		<!--
 		<dependency>
 			<groupId>org.eclipse.swt</groupId>
 			<artifactId>org.eclipse.swt.gtk.linux.x86</artifactId>
 			<version>3.6.2</version>
-			<scope>runtime</scope>
+			<scope>provided</scope>
 		</dependency>
-		-->
+
 		
 		<!-- Eclipse Native SWT (MacosX 64 Bit) -->
-		<!--
 		<dependency>
 			<groupId>org.eclipse.swt</groupId>
 			<artifactId>org.eclipse.swt.cocoa.macosx.x86_64</artifactId>
 			<version>3.6.2</version>
-			<scope>runtime</scope>
+			<scope>provided</scope>
 		</dependency>
-		-->
 		
 		<!-- Eclipse Native SWT (MacosX 32 Bit) -->
-		<!--
 		<dependency>
 			<groupId>org.eclipse.swt</groupId>
 			<artifactId>org.eclipse.swt.cocoa.macosx</artifactId>
 			<version>3.6.2</version>
-			<scope>runtime</scope>
+			<scope>provided</scope>
 		</dependency>
-		-->
 		
 		<!-- Eclipse JFace -->
 		<dependency>
@@ -244,17 +377,6 @@
 					</sourceIncludes>
 					<outputDirectory>${project.build.directory}/eclipse-bin</outputDirectory>
 				</configuration>
-				<!--
-				<executions>
-				  <execution>
-					<phase>package</phase>
-					<goals>
-						<goal>clean</goal>
-						<goal>eclipse</goal>
-					</goals>
-				  </execution>
-				</executions>
-				-->
 			</plugin>
 			
 			<plugin>
@@ -297,8 +419,8 @@
 						<descriptor>src/main/assembly/win_x86.xml</descriptor>
 						<descriptor>src/main/assembly/linux_x86_64.xml</descriptor>
 						<descriptor>src/main/assembly/linux_x86.xml</descriptor>
-						<descriptor>src/main/assembly/macosx_x86_64.xml</descriptor>
-						<descriptor>src/main/assembly/macosx_x86.xml</descriptor>
+						<descriptor>src/main/assembly/macosx_cocoa_x86_64.xml</descriptor>
+						<descriptor>src/main/assembly/macosx_cocoa_x86.xml</descriptor>
 					</descriptors>
 					<archive>
 						<manifest>
