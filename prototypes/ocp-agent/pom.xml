@@ -1,0 +1,200 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>org.ocpteam</groupId>
+	<artifactId>ocp-agent</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<packaging>jar</packaging>
+
+	<name>ocp-agent</name>
+	<url>http://www.flexible-radio.com/open-cloud-protocol</url>
+
+	<!-- Team -->
+	<developers>
+		<developer>
+			<id>jlg</id>
+			<name>Jean-Louis GUENEGO</name>
+			<email>jlguenego@gmail.com</email>
+			<roles>
+				<role>Developer</role>
+			</roles>
+			<organization>www.flexible-radio.com</organization>
+			<timezone>+2</timezone>
+		</developer>
+		<developer>
+			<id>ejb</id>
+			<name>Ejder BASTUG</name>
+			<email>ejder.bastug@gmail.com</email>
+			<roles>
+				<role>Developer</role>
+			</roles>
+			<organization>www.flexible-radio.com</organization>
+			<timezone>+2</timezone>
+		</developer>
+	</developers>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
+
+	<profiles>
+		<profile>
+			<id>Windows_x86</id>
+			<activation>
+				<os>
+					<arch>x86</arch>
+					<family>windows</family>
+				</os>
+			</activation>
+			<properties>
+				<swt.artefactId>org.eclipse.swt.win32.win32.x86</swt.artefactId>
+			</properties>
+		</profile>
+
+		<profile>
+			<id>win-x86_64</id>
+			<activation>
+				<os>
+					<arch>amd64</arch>
+					<family>windows</family>
+				</os>
+			</activation>
+			<properties>
+				<swt.artefactId>org.eclipse.swt.win32.win32.x86_64</swt.artefactId>
+			</properties>
+		</profile>
+
+	</profiles>
+
+
+	<dependencies>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>3.8.1</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>commons-net</groupId>
+			<artifactId>commons-net</artifactId>
+			<version>3.0.1</version>
+		</dependency>
+
+		<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+			<version>2.1</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.teleal</groupId>
+			<artifactId>teleal-common</artifactId>
+			<version>1.0.14</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.teleal.cling</groupId>
+			<artifactId>cling-core</artifactId>
+			<version>1.0.5</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.teleal.cling</groupId>
+			<artifactId>cling-support</artifactId>
+			<version>1.0.5</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.jcraft</groupId>
+			<artifactId>jsch</artifactId>
+			<version>0.1.45</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.eclipse.swt</groupId>
+			<artifactId>${swt.artefactId}</artifactId>
+			<version>3.6.2</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.eclipse.jface</groupId>
+			<artifactId>org.eclipse.jface</artifactId>
+			<version>3.6.2</version>
+		</dependency>
+
+
+	</dependencies>
+
+	<!-- Repositories -->
+	<repositories>
+		<!-- Local OCP Repository -->
+		<repository>
+			<id>ocp-local</id>
+			<name>Local OCP Repository</name>
+			<url>file:../../maven</url>
+		</repository>
+
+		<!-- Remote OCP Repository -->
+		<repository>
+			<id>ocp-remote</id>
+			<name>Remote OCP Repository</name>
+			<url>http://ocp.googlecode.com/git/maven</url>
+		</repository>
+
+		<repository>
+			<id>nexus</id>
+			<name>Eclipse Nexus - Testing</name>
+			<layout>default</layout>
+			<url>http://maven.eclipse.org/nexus/content/repositories/testing</url>
+		</repository>
+
+		<repository>
+			<id>4thline.org-repo</id>
+			<url>http://4thline.org/m2</url>
+			<snapshots>
+				<enabled>false</enabled> <!-- Or 'true', if you want -->
+			</snapshots>
+		</repository>
+
+		<repository>
+			<id>JSch</id>
+			<name>JCraft JSch Repository</name>
+			<layout>default</layout>
+			<url>http://jsch.sourceforge.net/maven2</url>
+		</repository>
+	</repositories>
+
+	<build>
+		<plugins>
+			<plugin>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<version>2.2-beta-5</version>
+
+				<configuration>
+					<descriptorRefs>
+						<descriptorRef>jar-with-dependencies</descriptorRef>
+					</descriptorRefs>
+					<archive>
+						<manifest>
+							<mainClass>org.ocpteam.storage.gui.Main</mainClass>
+						</manifest>
+						<manifestEntries>
+							<url>${project.url}</url>
+						</manifestEntries>
+					</archive>
+				</configuration>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>single</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
+		</plugins>
+	</build>
+</project>
