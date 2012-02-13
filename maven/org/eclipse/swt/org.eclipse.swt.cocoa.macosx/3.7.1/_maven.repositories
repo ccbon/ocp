@@ -1,0 +1,4 @@
+#NOTE: This is an internal implementation file, its format can be changed without prior notice.
+#Mon Feb 13 22:19:17 CET 2012
+org.eclipse.swt.cocoa.macosx-3.7.1.jar>=
+org.eclipse.swt.cocoa.macosx-3.7.1.pom>=
