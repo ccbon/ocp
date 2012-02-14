@@ -1,13 +1,17 @@
 package org.ocpteam.sftp;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.util.Vector;
 
+import org.apache.commons.net.ftp.FTPClient;
+import org.ocpteam.misc.JLG;
 import org.ocpteam.storage.FileInterface;
 import org.ocpteam.storage.FileSystem;
 import org.ocpteam.storage.User;
 
 import com.jcraft.jsch.ChannelSftp.LsEntry;
+import com.jcraft.jsch.SftpATTRS;
 
 public class SFTPFileSystem implements FileSystem {
 
@@ -40,7 +44,20 @@ public class SFTPFileSystem implements FileSystem {
 
 	@Override
 	public void commit(String remoteDir, File file) throws Exception {
-		// TODO Auto-generated method stub
+		if (!remoteDir.endsWith("/")) {
+			remoteDir += "/";
+		}
+		if (file.isDirectory()) {
+			mkdir(remoteDir, file.getName());
+			for (File child : file.listFiles()) {
+				JLG.debug("child: " + child.getName());
+				commit(remoteDir + file.getName(), child);
+			}
+		} else {
+			FileInputStream fis = new FileInputStream(file);
+			agent.channel.put(fis, remoteDir + file.getName());
+			fis.close();
+		}
 
 	}
 
@@ -61,21 +78,33 @@ public class SFTPFileSystem implements FileSystem {
 
 	@Override
 	public void mkdir(String existingParentDir, String newDir) throws Exception {
-		// TODO Auto-generated method stub
-
+		if (!existingParentDir.endsWith("/")) {
+			existingParentDir += "/";
+		}
+		agent.channel.mkdir(existingParentDir + newDir);
 	}
 
 	@Override
 	public void rm(String existingParentDir, String name) throws Exception {
-		// TODO Auto-generated method stub
-
+		if (!existingParentDir.endsWith("/")) {
+			existingParentDir += "/";
+		}
+		String path = existingParentDir + name;
+		SftpATTRS attr = agent.channel.lstat(path);
+		if (attr.isDir()) {
+			agent.channel.rmdir(path);
+		} else {
+			agent.channel.rm(path);
+		}
 	}
 
 	@Override
 	public void rename(String existingParentDir, String oldName, String newName)
 			throws Exception {
-		// TODO Auto-generated method stub
-
+		if (!existingParentDir.endsWith("/")) {
+			existingParentDir += "/";
+		}
+		agent.channel.rename(existingParentDir + oldName, existingParentDir + newName);
 	}
 
 }

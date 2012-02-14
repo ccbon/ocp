@@ -66,6 +66,8 @@ public abstract class Agent {
 	public abstract boolean allowsUserCreation();
 
 	public abstract User login(String login, Object challenge) throws Exception;
+	
+	public abstract void logout(User user) throws Exception;
 
 	public abstract void refreshContactList() throws Exception;
 

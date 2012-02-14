@@ -120,7 +120,6 @@ public class SFTPAgent extends Agent {
 
 	@Override
 	public String getName() {
-		// TODO Auto-generated method stub
 		return "SFTP-client";
 	}
 
@@ -146,6 +145,12 @@ public class SFTPAgent extends Agent {
 	@Override
 	public boolean connectsWithSSH() {
 		return true;
+	}
+
+	@Override
+	public void logout(User user) throws Exception {
+		channel.exit();
+		session.disconnect();
 	}
 
 }

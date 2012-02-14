@@ -5,7 +5,6 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.graphics.ImageData;
 import org.ocpteam.misc.JLG;
 
-
 public class SignOutAction extends Action {
 	private AdminConsole window;
 
@@ -25,6 +24,11 @@ public class SignOutAction extends Action {
 
 	public void run() {
 		JLG.debug("Disconnect a user...");
-		window.setUser(null);
+		try {
+			window.agent.logout(window.getUser());
+			window.setUser(null);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 }

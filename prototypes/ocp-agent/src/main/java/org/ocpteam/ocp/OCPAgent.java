@@ -836,4 +836,9 @@ public class OCPAgent extends Agent {
 		return true;
 	}
 
+	@Override
+	public void logout(User user) throws Exception {
+		JLG.debug("ocp logout (nothing to do).");
+	}
+
 }

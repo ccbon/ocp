@@ -158,4 +158,9 @@ public class FTPAgent extends Agent {
 		return false;
 	}
 
+	@Override
+	public void logout(User user) throws Exception {
+		ftp.logout();
+	}
+
 }

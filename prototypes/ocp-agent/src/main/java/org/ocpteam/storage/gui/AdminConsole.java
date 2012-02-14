@@ -410,4 +410,8 @@ public class AdminConsole extends ApplicationWindow {
 		updateActions();
 	}
 
+	public User getUser() {
+		return user;
+	}
+
 }
