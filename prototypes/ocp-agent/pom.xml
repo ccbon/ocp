@@ -38,22 +38,9 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 
+
 	<profiles>
-		<!-- Windows - 64 Bit -->
-		<profile>
-			<id>windows-x86_64</id>
-			<activation>
-				<os>
-					<arch>amd64</arch>
-					<family>windows</family>
-				</os>
-			</activation>
-			<properties>
-				<swt.artefactId>org.eclipse.swt.win32.win32.x86_64</swt.artefactId>
-				<asm.Descriptor>src/main/assembly/windows-x86_64.xml</asm.Descriptor>
-			</properties>
-		</profile>
-		
+
 		<!-- Windows - 32 Bit -->
 		<profile>
 			<id>windows-x86</id>
@@ -68,15 +55,30 @@
 				<asm.Descriptor>src/main/assembly/windows-x86.xml</asm.Descriptor>
 			</properties>
 		</profile>
+		
+		<!-- Windows - 64 Bit -->
+		<profile>
+			<id>windows-x86_64</id>
+			<activation>
+				<os>
+					<arch>x64</arch>
+					<family>windows</family>
+				</os>
+			</activation>
+			<properties>
+				<swt.artefactId>org.eclipse.swt.win32.win32.x86_64</swt.artefactId>
+				<asm.Descriptor>src/main/assembly/windows-x86_64.xml</asm.Descriptor>
+			</properties>
+		</profile>
 
 		<!-- Linux - 64 Bit -->
 		<profile>
 			<id>linux-x86_64</id>
 			<activation>
 				<os>
-				  <arch>amd64</arch>
-				  <family>unix</family>
-				  <name>linux</name>
+					<arch>amd64</arch>
+					<family>unix</family>
+					<name>linux</name>
 				</os>
 			</activation>
 			<properties>
@@ -90,24 +92,24 @@
 			<id>linux-x86</id>
 			<activation>
 				<os>
-				  <arch>i386</arch>
-				  <family>unix</family>
-				  <name>linux</name>
+					<arch>i386</arch>
+					<family>unix</family>
+					<name>linux</name>
 				</os>
 			</activation>
 			<properties>
 				<swt.artefactId>org.eclipse.swt.gtk.linux.x86</swt.artefactId>
 				<asm.Descriptor>src/main/assembly/linux-x86.xml</asm.Descriptor>
 			</properties>
-		</profile>	
+		</profile>
 
-		<!-- Mac OS X - Cocoa 64  Bit -->
+		<!-- Mac OS X - Cocoa 64 Bit -->
 		<profile>
 			<id>macosx-cacao-x86_64</id>
 			<activation>
 				<os>
-				  <name>mac os x</name>
-				  <arch>x86_64</arch>
+					<name>mac os x</name>
+					<arch>x86_64</arch>
 				</os>
 			</activation>
 			<properties>
@@ -115,14 +117,14 @@
 				<asm.Descriptor>src/main/assembly/macosx-cacao-x86_64.xml</asm.Descriptor>
 			</properties>
 		</profile>
-		
+
 		<!-- Mac OS X - Cocoa 32 Bit -->
 		<profile>
 			<id>macosx-cacao-x86</id>
 			<activation>
 				<os>
-				  <name>mac os x</name>
-				  <arch>i386</arch>
+					<name>mac os x</name>
+					<arch>i386</arch>
 				</os>
 			</activation>
 			<properties>
@@ -130,7 +132,7 @@
 				<asm.Descriptor>src/main/assembly/macosx-cacao-x86.xml</asm.Descriptor>
 			</properties>
 		</profile>
-		
+
 	</profiles>
 
 
