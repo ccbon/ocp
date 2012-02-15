@@ -51,7 +51,7 @@
 				</os>
 			</activation>
 			<properties>
-				<swt.artefactId>org.eclipse.swt.win32.win32.x86</swt.artefactId>
+				<swt.artifactId>org.eclipse.swt.win32.win32.x86</swt.artifactId>
 				<asm.Descriptor>src/main/assembly/windows-x86.xml</asm.Descriptor>
 			</properties>
 		</profile>
@@ -61,12 +61,12 @@
 			<id>windows-x86_64</id>
 			<activation>
 				<os>
-					<arch>x64</arch>
+					<arch>amd64</arch>
 					<family>windows</family>
 				</os>
 			</activation>
 			<properties>
-				<swt.artefactId>org.eclipse.swt.win32.win32.x86_64</swt.artefactId>
+				<swt.artifactId>org.eclipse.swt.win32.win32.x86_64</swt.artifactId>
 				<asm.Descriptor>src/main/assembly/windows-x86_64.xml</asm.Descriptor>
 			</properties>
 		</profile>
@@ -82,7 +82,7 @@
 				</os>
 			</activation>
 			<properties>
-				<swt.artefactId>org.eclipse.swt.gtk.linux.x86_64</swt.artefactId>
+				<swt.artifactId>org.eclipse.swt.gtk.linux.x86_64</swt.artifactId>
 				<asm.Descriptor>src/main/assembly/linux-x86_64.xml</asm.Descriptor>
 			</properties>
 		</profile>
@@ -98,7 +98,7 @@
 				</os>
 			</activation>
 			<properties>
-				<swt.artefactId>org.eclipse.swt.gtk.linux.x86</swt.artefactId>
+				<swt.artifactId>org.eclipse.swt.gtk.linux.x86</swt.artifactId>
 				<asm.Descriptor>src/main/assembly/linux-x86.xml</asm.Descriptor>
 			</properties>
 		</profile>
@@ -113,7 +113,7 @@
 				</os>
 			</activation>
 			<properties>
-				<swt.artefactId>org.eclipse.swt.cocoa.macosx.x86_64</swt.artefactId>
+				<swt.artifactId>org.eclipse.swt.cocoa.macosx.x86_64</swt.artifactId>
 				<asm.Descriptor>src/main/assembly/macosx-cacao-x86_64.xml</asm.Descriptor>
 			</properties>
 		</profile>
@@ -128,7 +128,7 @@
 				</os>
 			</activation>
 			<properties>
-				<swt.artefactId>org.eclipse.swt.cocoa.macosx</swt.artefactId>
+				<swt.artifactId>org.eclipse.swt.cocoa.macosx</swt.artifactId>
 				<asm.Descriptor>src/main/assembly/macosx-cacao-x86.xml</asm.Descriptor>
 			</properties>
 		</profile>
@@ -182,7 +182,7 @@
 
 		<dependency>
 			<groupId>org.eclipse.swt</groupId>
-			<artifactId>${swt.artefactId}</artifactId>
+			<artifactId>${swt.artifactId}</artifactId>
 			<version>3.7.1</version>
 		</dependency>
 
