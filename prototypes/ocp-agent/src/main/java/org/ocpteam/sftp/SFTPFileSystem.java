@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.util.Vector;
 
-import org.apache.commons.net.ftp.FTPClient;
 import org.ocpteam.misc.JLG;
 import org.ocpteam.storage.FileInterface;
 import org.ocpteam.storage.FileSystem;
@@ -25,21 +24,34 @@ public class SFTPFileSystem implements FileSystem {
 
 	@Override
 	public void checkoutAll(String localDir) throws Exception {
-		// TODO Auto-generated method stub
-
+		throw new Exception("volontary not implemented for security reason.");
 	}
 
 	@Override
 	public void commitAll(String localDir) throws Exception {
-		// TODO Auto-generated method stub
-
+		throw new Exception("volontary not implemented for security reason.");
 	}
 
 	@Override
 	public void checkout(String remoteDir, String remoteFilename, File localDir)
 			throws Exception {
-		// TODO Auto-generated method stub
-
+		if (!remoteDir.endsWith("/")) {
+			remoteDir += "/";
+		}
+		String path = remoteDir + remoteFilename;
+		SftpATTRS attr = agent.channel.lstat(path);
+		if (attr.isDir()) {
+			File dir = new File(localDir, remoteFilename);
+			JLG.mkdir(dir);
+			FileInterface d = getDir(path);
+			for (FileInterface child : d.listFiles()) {
+				JLG.debug("child: " + child.getName());
+				checkout(path, child.getName(), dir);
+			}
+		} else { // file
+			File f = new File(localDir, remoteFilename);
+			agent.channel.get(path, f.getAbsolutePath());
+		}
 	}
 
 	@Override
