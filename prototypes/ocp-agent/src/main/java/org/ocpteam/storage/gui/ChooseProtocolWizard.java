@@ -5,7 +5,6 @@ import java.util.Properties;
 
 import org.eclipse.jface.wizard.Wizard;
 import org.ocpteam.misc.JLG;
-import org.ocpteam.ocp.OCPAgent;
 
 public class ChooseProtocolWizard extends Wizard {
 
