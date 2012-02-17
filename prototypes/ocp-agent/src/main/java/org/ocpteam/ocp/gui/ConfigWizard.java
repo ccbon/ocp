@@ -54,6 +54,11 @@ public class ConfigWizard extends Wizard {
 		} else {
 			p.setProperty("sponsor.1", firstPage.sponsorText.getText());
 		}
+		
+		if (firstPage.btnCheckButton.getSelection()) {
+			p.setProperty("network.type", "public");
+			p.setProperty("network.sponsor.url", firstPage.sponsorPublicServerText.getText());
+		}
 		JLG.storeConfig(p, agent.getConfigFile().getAbsolutePath());
 
 		if (bIsFirstAgent) {

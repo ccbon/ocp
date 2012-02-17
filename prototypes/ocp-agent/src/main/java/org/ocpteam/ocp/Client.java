@@ -6,18 +6,20 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Queue;
 import java.util.Set;
 
+import org.apache.xmlrpc.client.XmlRpcClient;
+import org.apache.xmlrpc.client.XmlRpcClientConfigImpl;
 import org.ocpteam.misc.Id;
 import org.ocpteam.misc.JLG;
 import org.ocpteam.misc.JLGException;
 import org.ocpteam.misc.URL;
 import org.ocpteam.storage.Contact;
-
 
 public class Client {
 
@@ -59,7 +61,8 @@ public class Client {
 
 	public Properties getNetworkProperties() throws JLGException {
 		try {
-			Response response = request(Protocol.message(Protocol.NETWORK_PROPERTIES));
+			Response response = request(Protocol
+					.message(Protocol.NETWORK_PROPERTIES));
 			Properties network = new Properties();
 			// network.loadFromXML(new
 			// ByteArrayInputStream(response.getBytes()));
@@ -115,32 +118,69 @@ public class Client {
 	}
 
 	private void findSponsor() throws Exception {
-		
+
 		// find some contact from your sponsor or die alone...
-		Iterator<String> it = agent.p.stringPropertyNames().iterator();
-		boolean bSponsorInProperty = false;
+		Iterator<String> it = getPotentialSponsorIterator();
 		while (it.hasNext()) {
-			String key = it.next();
-			if (key.startsWith("sponsor.")) {
-				bSponsorInProperty = true;
-				String sUrl = agent.p.getProperty(key);
-				URL url = new URL(sUrl);
-				Channel channel = Channel.getInstance(url, agent);
-				OCPContact sponsor = getContact(channel);
-				if (sponsor != null) {
-					JLG.debug("we found a pingable sponsor channel");
-					agent.addContact(sponsor);
-				} else {
-					JLG.warn("channel not pingable: " + channel);
-				}
+			String sUrl = it.next();
+			URL url = new URL(sUrl);
+			Channel channel = Channel.getInstance(url, agent);
+			OCPContact sponsor = getContact(channel);
+			if (sponsor != null) {
+				JLG.debug("we found a pingable sponsor channel");
+				agent.addContact(sponsor);
+			} else {
+				JLG.warn("channel not pingable: " + channel);
 			}
-		}
-		if (bSponsorInProperty == false) {
-			throw new Exception("sponsor not specified in agent property");
 		}
 		if (agent.hasNoContact()) {
 			throw new Exception("no pingable sponsor found.");
 		}
+	}
+
+	private Iterator<String> getPotentialSponsorIterator() throws Exception {
+		List<String> list = new LinkedList<String>();
+		if (agent.p.getProperty("network.type", "public").equalsIgnoreCase(
+				"public")) {
+			try {
+				XmlRpcClientConfigImpl config = new XmlRpcClientConfigImpl();
+				// TODO: need a ocp dedicated web server. I use mine for the
+				// time being.
+				config.setServerURL(new java.net.URL(agent.p.getProperty(
+						"network.sponsor.url", OCPAgent.DEFAULT_SPONSOR_SERVER_URL)));
+				XmlRpcClient client = new XmlRpcClient();
+				client.setConfig(config);
+				Object[] result = (Object[]) client.execute("list",
+						new Object[] {});
+				for (int i = 0; i < result.length; i++) {
+					@SuppressWarnings("unchecked")
+					Map<String, String> map = (Map<String, String>) result[i];
+					JLG.debug("url = " + map.get("url"));
+					list.add(map.get("url"));
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			if (list.isEmpty()) {
+				JLG.warn("first agent on the public network");
+			}
+
+		} else { // private network... agent properties must have at least one
+					// sponsor specified.
+			Iterator<String> it = agent.p.stringPropertyNames().iterator();
+			while (it.hasNext()) {
+				String key = it.next();
+				if (key.startsWith("sponsor.")) {
+					list.add(agent.p.getProperty(key));
+				}
+			}
+			if (list.isEmpty()) {
+				throw new Exception(
+						"no sponsor provided in agent property file.");
+			}
+		}
+
+		return list.iterator();
 	}
 
 	public void enrichContact(OCPContact contact) throws Exception {
@@ -221,7 +261,7 @@ public class Client {
 			if (understand(channel)) {
 				try {
 					output = channel.request(string);
-					
+
 				} catch (ConnectException e) {
 					continue;
 				} catch (Exception e) {
@@ -273,7 +313,8 @@ public class Client {
 		Response r = request(agent.makeContactQueue(address),
 				Protocol.message(Protocol.GET_ADDRESS, address.getBytes()));
 		r.checkForError();
-		if (new String(r.getBytes()).equals(new String(Protocol.ADDRESS_NOT_FOUND))) {
+		if (new String(r.getBytes()).equals(new String(
+				Protocol.ADDRESS_NOT_FOUND))) {
 			return null;
 		}
 		return (Content) JLG.deserialize(r.getBytes());
@@ -284,6 +325,28 @@ public class Client {
 		Response r = request(agent.makeContactQueue(address), Protocol.message(
 				Protocol.REMOVE_ADDRESS, address, addressSignature));
 		r.checkForError();
+	}
+
+	public void declareSponsor() {
+		try {
+			if (agent.p.getProperty("network.type", "public").equalsIgnoreCase(
+					"public")) {
+				int port = agent.toContact().urlList.get(0).getPort();
+				XmlRpcClientConfigImpl config = new XmlRpcClientConfigImpl();
+				// TODO: need a ocp dedicated web server. I use mine for the
+				// time being.
+				config.setServerURL(new java.net.URL(agent.p.getProperty(
+						"network.sponsor.url", OCPAgent.DEFAULT_SPONSOR_SERVER_URL)));
+				XmlRpcClient client = new XmlRpcClient();
+				client.setConfig(config);
+				String result = (String) client.execute("add",
+						new Object[] { "" + port });
+				JLG.debug("result = " + result);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
 	}
 
 }

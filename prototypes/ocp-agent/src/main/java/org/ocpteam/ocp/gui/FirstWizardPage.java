@@ -11,6 +11,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.ocpteam.misc.JLG;
+import org.ocpteam.ocp.OCPAgent;
 
 
 public class FirstWizardPage extends WizardPage {
@@ -19,6 +20,8 @@ public class FirstWizardPage extends WizardPage {
 	public Text listenerPortText;
 	public Text sponsorText;
 	private Label sponsorLabel;
+	public Text sponsorPublicServerText;
+	Button btnCheckButton;
 
 	/**
 	 * Create the wizard.
@@ -91,14 +94,30 @@ public class FirstWizardPage extends WizardPage {
 		createOCPButton.setText("Create a new OCP network");
 
 		sponsorLabel = new Label(container, SWT.NONE);
-		sponsorLabel.setBounds(102, 192, 177, 13);
+		sponsorLabel.setBounds(102, 177, 177, 13);
 		sponsorLabel.setText("Sponsor URL :");
 		sponsorLabel.setEnabled(false);
 
 		sponsorText = new Text(container, SWT.BORDER);
 		sponsorText.setText("tcp://localhost:22221");
-		sponsorText.setBounds(102, 211, 177, 19);
+		sponsorText.setBounds(102, 196, 177, 19);
 		sponsorText.setEnabled(false);
+		
+		btnCheckButton = new Button(container, SWT.CHECK);
+		btnCheckButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				sponsorPublicServerText.setEnabled(btnCheckButton.getSelection());
+				wizard.getContainer().updateButtons();
+			}
+		});
+		btnCheckButton.setSelection(true);
+		btnCheckButton.setBounds(102, 221, 177, 16);
+		btnCheckButton.setText("Use a public sponsor server");
+		
+		sponsorPublicServerText = new Text(container, SWT.BORDER);
+		sponsorPublicServerText.setText(OCPAgent.DEFAULT_SPONSOR_SERVER_URL);
+		sponsorPublicServerText.setBounds(102, 241, 177, 19);
 	}
 
 	@Override

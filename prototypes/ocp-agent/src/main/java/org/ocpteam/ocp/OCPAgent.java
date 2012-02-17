@@ -41,6 +41,7 @@ import org.ocpteam.storage.User;
 public class OCPAgent extends Agent {
 	private static final String AGENT_PROPERTIES_FILE = "agent.properties";
 	private static final String NETWORK_PROPERTIES_FILE = "network.properties";
+	public static final String DEFAULT_SPONSOR_SERVER_URL = "http://guenego.com/ocp/ocp.php";
 
 	public Id id;
 	private String name;
@@ -671,6 +672,7 @@ public class OCPAgent extends Agent {
 	public void declareContact() throws Exception {
 		byte[] input = Protocol.message(Protocol.DECLARE_CONTACT, toContact());
 		client.sendAll(input);
+		client.declareSponsor();
 	}
 
 	@Override
