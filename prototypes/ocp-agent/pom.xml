@@ -254,7 +254,7 @@
 					</descriptors>
 					<archive>
 						<manifest>
-							<mainClass>org.ocpteam.rsp.gui.Main</mainClass>
+							<mainClass>org.ocpteam.ui.swt.Main</mainClass>
 						</manifest>
 						<manifestEntries>
 							<url>${project.url}</url>
