@@ -1,7 +1,7 @@
 package org.ocpteam.ftp;
 
 import org.ocpteam.misc.Id;
-import org.ocpteam.storage.Contact;
+import org.ocpteam.rsp.Contact;
 
 
 public class FTPContact extends Contact {

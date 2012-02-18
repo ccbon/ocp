@@ -8,8 +8,8 @@ import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPFile;
 import org.apache.commons.net.ftp.FTPFileFilter;
 import org.ocpteam.misc.JLG;
-import org.ocpteam.storage.FileInterface;
-import org.ocpteam.storage.FileSystem;
+import org.ocpteam.rsp.FileInterface;
+import org.ocpteam.rsp.FileSystem;
 
 
 public class FTPFileSystem implements FileSystem {

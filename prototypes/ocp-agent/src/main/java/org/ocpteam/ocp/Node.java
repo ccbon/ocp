@@ -4,7 +4,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import org.ocpteam.misc.Id;
-import org.ocpteam.storage.Agent;
+import org.ocpteam.rsp.Agent;
 
 
 public class Node implements Comparable<Node> {

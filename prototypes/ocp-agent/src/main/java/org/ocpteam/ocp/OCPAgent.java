@@ -32,10 +32,10 @@ import org.ocpteam.misc.Cache;
 import org.ocpteam.misc.Id;
 import org.ocpteam.misc.JLG;
 import org.ocpteam.misc.URL;
-import org.ocpteam.storage.Agent;
-import org.ocpteam.storage.Contact;
-import org.ocpteam.storage.FileSystem;
-import org.ocpteam.storage.User;
+import org.ocpteam.rsp.Agent;
+import org.ocpteam.rsp.Contact;
+import org.ocpteam.rsp.FileSystem;
+import org.ocpteam.rsp.User;
 
 
 public class OCPAgent extends Agent {

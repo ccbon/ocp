@@ -8,10 +8,10 @@ import java.util.Queue;
 import org.apache.commons.net.ftp.FTPClient;
 import org.ocpteam.misc.JLG;
 import org.ocpteam.misc.URL;
-import org.ocpteam.storage.Agent;
-import org.ocpteam.storage.Contact;
-import org.ocpteam.storage.FileSystem;
-import org.ocpteam.storage.User;
+import org.ocpteam.rsp.Agent;
+import org.ocpteam.rsp.Contact;
+import org.ocpteam.rsp.FileSystem;
+import org.ocpteam.rsp.User;
 
 public class FTPAgent extends Agent {
 

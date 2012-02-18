@@ -4,7 +4,7 @@ import java.util.Properties;
 
 import org.ocpteam.misc.JLG;
 import org.ocpteam.ocp.OCPAgent;
-import org.ocpteam.storage.Agent;
+import org.ocpteam.rsp.Agent;
 
 
 public class CoupleOfAgent {

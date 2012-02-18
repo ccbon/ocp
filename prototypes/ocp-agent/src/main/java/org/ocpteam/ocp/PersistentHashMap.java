@@ -8,7 +8,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.ocpteam.misc.JLG;
-import org.ocpteam.storage.Agent;
+import org.ocpteam.rsp.Agent;
 
 
 public class PersistentHashMap implements Map<Address, Content> {

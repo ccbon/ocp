@@ -10,7 +10,7 @@ import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 
 import org.ocpteam.misc.JLG;
-import org.ocpteam.storage.User;
+import org.ocpteam.rsp.User;
 
 
 public class OCPUser extends User {

@@ -3,7 +3,7 @@ package org.ocpteam.ocp;
 import java.io.Serializable;
 import java.util.Collection;
 
-import org.ocpteam.storage.FileInterface;
+import org.ocpteam.rsp.FileInterface;
 
 
 public class TreeEntry implements Serializable, FileInterface {

@@ -5,7 +5,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.ocpteam.storage.FileInterface;
+import org.ocpteam.rsp.FileInterface;
 
 
 public class Tree implements Serializable, FileInterface {

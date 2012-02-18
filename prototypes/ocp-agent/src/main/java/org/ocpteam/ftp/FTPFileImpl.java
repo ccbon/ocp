@@ -4,7 +4,7 @@ import java.util.Collection;
 import java.util.HashSet;
 
 import org.apache.commons.net.ftp.FTPFile;
-import org.ocpteam.storage.FileInterface;
+import org.ocpteam.rsp.FileInterface;
 
 
 public class FTPFileImpl implements FileInterface {

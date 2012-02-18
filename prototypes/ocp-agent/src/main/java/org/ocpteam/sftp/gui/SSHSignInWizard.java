@@ -9,10 +9,10 @@ import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 import org.ocpteam.misc.JLG;
+import org.ocpteam.rsp.Agent;
+import org.ocpteam.rsp.User;
+import org.ocpteam.rsp.gui.AdminConsole;
 import org.ocpteam.sftp.SSHChallenge;
-import org.ocpteam.storage.Agent;
-import org.ocpteam.storage.User;
-import org.ocpteam.storage.gui.AdminConsole;
 
 
 public class SSHSignInWizard extends Wizard {

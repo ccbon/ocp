@@ -3,7 +3,7 @@ package org.ocpteam.sftp;
 import java.util.Collection;
 import java.util.HashSet;
 
-import org.ocpteam.storage.FileInterface;
+import org.ocpteam.rsp.FileInterface;
 
 public class SFTPFileImpl implements FileInterface {
 

@@ -1,6 +1,6 @@
 package org.ocpteam.sftp;
 
-import org.ocpteam.storage.User;
+import org.ocpteam.rsp.User;
 
 public class SFTPUser extends User {
 
