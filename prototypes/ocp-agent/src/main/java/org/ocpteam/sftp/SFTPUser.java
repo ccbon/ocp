@@ -1,6 +1,6 @@
 package org.ocpteam.sftp;
 
-import org.ocpteam.rsp.User;
+import org.ocpteam.layer.rsp.User;
 
 public class SFTPUser extends User {
 
@@ -8,7 +8,7 @@ public class SFTPUser extends User {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private SSHChallenge challenge;
+	protected SSHChallenge challenge;
 	private String dir;
 
 	public SFTPUser(String login, SSHChallenge challenge) {

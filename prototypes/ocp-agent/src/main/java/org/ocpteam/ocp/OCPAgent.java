@@ -27,18 +27,18 @@ import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.PBEParameterSpec;
 
+import org.ocpteam.layer.dsp.Contact;
+import org.ocpteam.layer.dsp.DSPAgent;
+import org.ocpteam.layer.rsp.FileSystem;
+import org.ocpteam.layer.rsp.User;
 import org.ocpteam.misc.ByteUtil;
 import org.ocpteam.misc.Cache;
 import org.ocpteam.misc.Id;
 import org.ocpteam.misc.JLG;
 import org.ocpteam.misc.URL;
-import org.ocpteam.rsp.Agent;
-import org.ocpteam.rsp.Contact;
-import org.ocpteam.rsp.FileSystem;
-import org.ocpteam.rsp.User;
 
 
-public class OCPAgent extends Agent {
+public class OCPAgent extends DSPAgent {
 	private static final String AGENT_PROPERTIES_FILE = "agent.properties";
 	private static final String NETWORK_PROPERTIES_FILE = "network.properties";
 	public static final String DEFAULT_SPONSOR_SERVER_URL = "http://guenego.com/ocp/ocp.php";

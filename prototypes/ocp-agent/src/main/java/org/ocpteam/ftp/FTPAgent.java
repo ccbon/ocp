@@ -3,15 +3,12 @@ package org.ocpteam.ftp;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.Queue;
 
 import org.apache.commons.net.ftp.FTPClient;
+import org.ocpteam.layer.rsp.Agent;
+import org.ocpteam.layer.rsp.FileSystem;
+import org.ocpteam.layer.rsp.User;
 import org.ocpteam.misc.JLG;
-import org.ocpteam.misc.URL;
-import org.ocpteam.rsp.Agent;
-import org.ocpteam.rsp.Contact;
-import org.ocpteam.rsp.FileSystem;
-import org.ocpteam.rsp.User;
 
 public class FTPAgent extends Agent {
 
@@ -40,11 +37,6 @@ public class FTPAgent extends Agent {
 	@Override
 	public void start() throws Exception {
 		ftp.connect(hostname);
-		FTPContact c = new FTPContact("FTP server");
-		c.addURL(new URL("ftp", hostname, 21));
-		addContact(c);
-		FTPContact myself = (FTPContact) toContact();
-		addContact(myself);
 		bIsStarted = true;
 	}
 
@@ -108,12 +100,6 @@ public class FTPAgent extends Agent {
 	}
 
 	@Override
-	public void refreshContactList() throws Exception {
-		// we don't do anything.
-
-	}
-
-	@Override
 	public String getProtocolName() {
 		return "FTP";
 	}
@@ -126,26 +112,6 @@ public class FTPAgent extends Agent {
 	@Override
 	public String getHelpURL() {
 		return "http://code.google.com/p/ocp/wiki/FTPHelp";
-	}
-
-	@Override
-	public boolean hasStorage() {
-		return false;
-	}
-
-	@Override
-	public void removeStorage() {
-	}
-
-	@Override
-	public Queue<Contact> makeContactQueue() throws Exception {
-		throw new Exception(
-				"this function is normally useless or may be it has to be implemented...");
-	}
-
-	@Override
-	public Contact toContact() {
-		return new FTPContact("myself (the client)");
 	}
 
 	@Override

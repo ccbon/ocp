@@ -7,9 +7,9 @@ import java.io.FileOutputStream;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPFile;
 import org.apache.commons.net.ftp.FTPFileFilter;
+import org.ocpteam.layer.rsp.FileInterface;
+import org.ocpteam.layer.rsp.FileSystem;
 import org.ocpteam.misc.JLG;
-import org.ocpteam.rsp.FileInterface;
-import org.ocpteam.rsp.FileSystem;
 
 
 public class FTPFileSystem implements FileSystem {

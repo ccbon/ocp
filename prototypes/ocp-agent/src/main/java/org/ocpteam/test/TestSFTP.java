@@ -1,6 +1,5 @@
 package org.ocpteam.test;
 
-import java.io.InputStream;
 import java.util.Vector;
 
 import com.jcraft.jsch.Channel;
@@ -72,7 +71,7 @@ public class TestSFTP {
 		}
 		sftpChannel.get("remote-file", "local-file");
 		// OR
-		InputStream in = sftpChannel.get("remote-file");
+		// InputStream in = sftpChannel.get("remote-file");
 		// process inputstream as needed
 
 		sftpChannel.exit();

@@ -1,13 +1,11 @@
 package org.ocpteam.sftp;
 
 import java.io.File;
-import java.util.Queue;
 
+import org.ocpteam.layer.rsp.Agent;
+import org.ocpteam.layer.rsp.FileSystem;
+import org.ocpteam.layer.rsp.User;
 import org.ocpteam.misc.JLG;
-import org.ocpteam.rsp.Agent;
-import org.ocpteam.rsp.Contact;
-import org.ocpteam.rsp.FileSystem;
-import org.ocpteam.rsp.User;
 
 import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.JSch;
@@ -96,24 +94,6 @@ public class SFTPAgent extends Agent {
 	}
 
 	@Override
-	public void refreshContactList() throws Exception {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public Queue<Contact> makeContactQueue() throws Exception {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Contact toContact() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public String getProtocolName() {
 		return "SFTP";
 	}
@@ -121,15 +101,6 @@ public class SFTPAgent extends Agent {
 	@Override
 	public String getName() {
 		return "SFTP-client";
-	}
-
-	@Override
-	public boolean hasStorage() {
-		return false;
-	}
-
-	@Override
-	public void removeStorage() {
 	}
 
 	@Override

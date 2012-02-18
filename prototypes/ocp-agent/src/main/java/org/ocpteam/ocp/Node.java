@@ -3,8 +3,8 @@ package org.ocpteam.ocp;
 import java.util.Map;
 import java.util.TreeMap;
 
+import org.ocpteam.layer.rsp.Agent;
 import org.ocpteam.misc.Id;
-import org.ocpteam.rsp.Agent;
 
 
 public class Node implements Comparable<Node> {

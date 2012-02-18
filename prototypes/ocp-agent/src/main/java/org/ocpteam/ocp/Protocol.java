@@ -11,9 +11,9 @@ import java.net.Socket;
 import java.util.Iterator;
 import java.util.LinkedList;
 
+import org.ocpteam.layer.dsp.Contact;
 import org.ocpteam.misc.Id;
 import org.ocpteam.misc.JLG;
-import org.ocpteam.rsp.Contact;
 
 
 public class Protocol {

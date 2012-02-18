@@ -1,6 +1,6 @@
 package org.ocpteam.ftp;
 
-import org.ocpteam.rsp.User;
+import org.ocpteam.layer.rsp.User;
 
 public class FTPUser extends User {
 

@@ -1,7 +1,6 @@
 package org.ocpteam.test;
 
 import java.net.URL;
-import java.util.Map;
 
 import org.apache.xmlrpc.client.XmlRpcClient;
 import org.apache.xmlrpc.client.XmlRpcClientConfigImpl;

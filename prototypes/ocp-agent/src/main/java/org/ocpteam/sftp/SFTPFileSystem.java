@@ -4,10 +4,10 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.util.Vector;
 
+import org.ocpteam.layer.rsp.FileInterface;
+import org.ocpteam.layer.rsp.FileSystem;
+import org.ocpteam.layer.rsp.User;
 import org.ocpteam.misc.JLG;
-import org.ocpteam.rsp.FileInterface;
-import org.ocpteam.rsp.FileSystem;
-import org.ocpteam.rsp.User;
 
 import com.jcraft.jsch.ChannelSftp.LsEntry;
 import com.jcraft.jsch.SftpATTRS;
@@ -15,7 +15,7 @@ import com.jcraft.jsch.SftpATTRS;
 public class SFTPFileSystem implements FileSystem {
 
 	private SFTPAgent agent;
-	private User user;
+	protected User user;
 
 	public SFTPFileSystem(User user, SFTPAgent agent) {
 		this.user = user;

@@ -2,7 +2,7 @@ package org.ocpteam.sftp;
 
 import org.eclipse.swt.widgets.Display;
 import org.ocpteam.misc.JLG;
-import org.ocpteam.rsp.gui.QuickMessage;
+import org.ocpteam.ui.swt.QuickMessage;
 
 import com.jcraft.jsch.UserInfo;
 
