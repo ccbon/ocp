@@ -843,4 +843,9 @@ public class OCPAgent extends DSPAgent {
 		JLG.debug("ocp logout (nothing to do).");
 	}
 
+	@Override
+	public boolean isOnlyClient() {
+		return (!p.getProperty("server", "yes").equals("yes"));
+	}
+
 }

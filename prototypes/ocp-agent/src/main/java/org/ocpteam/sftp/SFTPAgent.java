@@ -124,4 +124,9 @@ public class SFTPAgent extends Agent {
 		session.disconnect();
 	}
 
+	@Override
+	public boolean isOnlyClient() {
+		return true;
+	}
+
 }

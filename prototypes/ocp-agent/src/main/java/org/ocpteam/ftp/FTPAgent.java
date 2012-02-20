@@ -129,4 +129,9 @@ public class FTPAgent extends Agent {
 		ftp.logout();
 	}
 
+	@Override
+	public boolean isOnlyClient() {
+		return true;
+	}
+
 }

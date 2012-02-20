@@ -87,10 +87,15 @@ public class AdminConsole extends ApplicationWindow {
 
 	@Override
 	public boolean close() {
-		// TODO Auto-generated method stub
-		// return super.close();
-		getShell().setVisible(false);
-		return true;
+		if (agent.isOnlyClient()) {
+			agent.stop();
+			display.dispose();
+			return true;
+		} else {
+			// only hide it.
+			getShell().setVisible(false);
+			return true;
+		}
 	}
 
 	/**

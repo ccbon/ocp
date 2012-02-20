@@ -73,4 +73,6 @@ public abstract class Agent {
 		return true;
 	}
 
+	public abstract boolean isOnlyClient();
+
 }

@@ -37,43 +37,46 @@ public class GraphicalUI implements UserInterface {
 			Shell shell = new Shell(display);
 			final AdminConsole window = new AdminConsole(agent, display);
 			window.setBlockOnOpen(true);
+			
+			if (!agent.isOnlyClient()) {
 
-			Tray tray = display.getSystemTray();
-			if (tray != null) {
-				TrayItem item = new TrayItem(tray, SWT.NONE);
-				Image image = new Image(display,
-						GraphicalUI.class.getResourceAsStream("ocp_icon.png"));
-				item.setImage(image);
-				item.setToolTipText("OCP Agent");
-				final MenuManager myMenu = new MenuManager("xxx");
-				final Menu menu = myMenu.createContextMenu(shell);
-				myMenu.add(new ExitAction(agent, display, window));
-				myMenu.add(new OpenConsoleAction(window));
-				menu.setEnabled(true);
-
-				item.addListener(SWT.MenuDetect, new Listener() {
-
-					@Override
-					public void handleEvent(Event arg0) {
-						JLG.debug("coucou");
-						myMenu.setVisible(true);
-						menu.setVisible(true);
-					}
-				});
-				
-				item.addSelectionListener(new SelectionListener() {
+				Tray tray = display.getSystemTray();
+				if (tray != null) {
+					TrayItem item = new TrayItem(tray, SWT.NONE);
+					Image image = new Image(display,
+							GraphicalUI.class.getResourceAsStream("ocp_icon.png"));
+					item.setImage(image);
+					item.setToolTipText("OCP Agent");
+					final MenuManager myMenu = new MenuManager("xxx");
+					final Menu menu = myMenu.createContextMenu(shell);
+					myMenu.add(new ExitAction(agent, display, window));
+					myMenu.add(new OpenConsoleAction(window));
+					menu.setEnabled(true);
+	
+					item.addListener(SWT.MenuDetect, new Listener() {
+	
+						@Override
+						public void handleEvent(Event arg0) {
+							JLG.debug("coucou");
+							myMenu.setVisible(true);
+							menu.setVisible(true);
+						}
+					});
 					
-					@Override
-					public void widgetSelected(SelectionEvent arg0) {
-					}
-					
-					@Override
-					public void widgetDefaultSelected(SelectionEvent arg0) {
-						JLG.debug("item default selected");
-						new OpenConsoleAction(window).run();
-					}
-				});
-
+					item.addSelectionListener(new SelectionListener() {
+						
+						@Override
+						public void widgetSelected(SelectionEvent arg0) {
+						}
+						
+						@Override
+						public void widgetDefaultSelected(SelectionEvent arg0) {
+							JLG.debug("item default selected");
+							new OpenConsoleAction(window).run();
+						}
+					});
+	
+				}
 			}
 			// if you want to open the window when starting...
 			window.open();
