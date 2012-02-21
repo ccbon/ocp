@@ -22,10 +22,13 @@ import org.ocpteam.protocol.ocp.swt.ConfigWizard;
 import org.ocpteam.protocol.sftp.SFTPAgent;
 
 public class Main {
+	public static final String SWT_ASSISTANT = "swt";
+
 	public static void main(String[] args) {
 		try {
 			String agentClass = getAgentClass();
 			Agent agent = (Agent) Class.forName(agentClass).newInstance();
+			agent.setAssistant(SWT_ASSISTANT, SWTAgentAssistant.getInstance(agent));
 			UserInterface ui = new GraphicalUI(agent);
 
 			if (agent.requiresConfigFile()) {

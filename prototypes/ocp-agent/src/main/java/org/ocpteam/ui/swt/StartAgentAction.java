@@ -2,6 +2,7 @@ package org.ocpteam.ui.swt;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.swt.graphics.ImageData;
 import org.ocpteam.misc.JLG;
 
@@ -29,6 +30,9 @@ public class StartAgentAction extends Action {
 			if (w.agent.isStarted()) {
 				QuickMessage.error(w.getShell(), "Agent already started.");
 			} else {
+				SWTAgentAssistant a = (SWTAgentAssistant) w.agent.getAssistant(Main.SWT_ASSISTANT);
+				IWizard wizard = a.getStartActionWizardInstance();
+				a.startWizard(wizard);
 				w.agent.loadConfig();
 				w.agent.start();
 				w.updateActions();

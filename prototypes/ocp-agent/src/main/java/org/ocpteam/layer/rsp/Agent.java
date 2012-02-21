@@ -2,6 +2,8 @@ package org.ocpteam.layer.rsp;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 
 public abstract class Agent {
@@ -10,7 +12,10 @@ public abstract class Agent {
 
 	protected boolean bIsStarted = false;
 
+	protected Map<String, Object> assistantMap;
+
 	public Agent() {
+		assistantMap = new HashMap<String, Object>();
 	}
 
 	public abstract boolean isConfigFilePresent();
@@ -73,4 +78,12 @@ public abstract class Agent {
 
 	public abstract boolean isOnlyClient();
 
+
+	public Object getAssistant(String key) {
+		return assistantMap.get(key);
+	}
+	
+	public Object setAssistant(String key, Object assistant) {
+		return assistantMap.put(key, assistant);
+	}
 }

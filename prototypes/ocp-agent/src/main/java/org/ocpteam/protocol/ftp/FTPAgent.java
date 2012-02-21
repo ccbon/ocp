@@ -17,6 +17,7 @@ public class FTPAgent extends Agent {
 	FTPClient ftp;
 
 	public FTPAgent() {
+		super();
 		ftp = new FTPClient();
 	}
 

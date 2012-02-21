@@ -83,6 +83,10 @@ public class AdminConsole extends ApplicationWindow {
 		addMenuBar();
 		addStatusLine();
 		clipboard = new Clipboard(display);
+		
+		SWTAgentAssistant a = (SWTAgentAssistant) agent.getAssistant(Main.SWT_ASSISTANT);
+		a.display = display;
+		
 	}
 
 	@Override
