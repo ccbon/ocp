@@ -4,7 +4,7 @@ import java.net.URL;
 
 import org.apache.xmlrpc.client.XmlRpcClient;
 import org.apache.xmlrpc.client.XmlRpcClientConfigImpl;
-import org.ocpteam.ocp.OCPAgent;
+import org.ocpteam.protocol.ocp.OCPAgent;
 
 public class SponsorServerReset {
 	public static void main(String[] args) {

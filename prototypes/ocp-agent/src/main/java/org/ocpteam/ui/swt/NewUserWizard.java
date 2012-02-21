@@ -8,7 +8,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.ocpteam.layer.rsp.Agent;
 import org.ocpteam.misc.JLG;
-import org.ocpteam.ocp.Captcha;
+import org.ocpteam.protocol.ocp.Captcha;
 
 
 public class NewUserWizard extends Wizard {

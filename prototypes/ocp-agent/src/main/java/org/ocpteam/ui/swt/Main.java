@@ -12,14 +12,14 @@ import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
-import org.ocpteam.ftp.FTPAgent;
-import org.ocpteam.ftp.swt.FTPConfigWizard;
 import org.ocpteam.layer.rsp.Agent;
 import org.ocpteam.misc.JLG;
-import org.ocpteam.ocp.OCPAgent;
-import org.ocpteam.ocp.UserInterface;
-import org.ocpteam.ocp.swt.ConfigWizard;
-import org.ocpteam.sftp.SFTPAgent;
+import org.ocpteam.protocol.ftp.FTPAgent;
+import org.ocpteam.protocol.ftp.swt.FTPConfigWizard;
+import org.ocpteam.protocol.ocp.OCPAgent;
+import org.ocpteam.protocol.ocp.UserInterface;
+import org.ocpteam.protocol.ocp.swt.ConfigWizard;
+import org.ocpteam.protocol.sftp.SFTPAgent;
 
 public class Main {
 	public static void main(String[] args) {

@@ -5,7 +5,7 @@ import java.util.Map;
 
 import org.apache.xmlrpc.client.XmlRpcClient;
 import org.apache.xmlrpc.client.XmlRpcClientConfigImpl;
-import org.ocpteam.ocp.OCPAgent;
+import org.ocpteam.protocol.ocp.OCPAgent;
 
 public class SponsorServerList {
 	public static void main(String[] args) {

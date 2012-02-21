@@ -4,7 +4,7 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.graphics.ImageData;
 import org.ocpteam.misc.JLG;
-import org.ocpteam.sftp.swt.SSHSignInWizard;
+import org.ocpteam.protocol.sftp.swt.SSHSignInWizard;
 
 public class SignInAction extends Action {
 	private AdminConsole window;

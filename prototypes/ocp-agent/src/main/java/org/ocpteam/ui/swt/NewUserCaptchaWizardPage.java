@@ -12,7 +12,7 @@ import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Text;
 import org.ocpteam.layer.rsp.User;
 import org.ocpteam.misc.JLG;
-import org.ocpteam.ocp.OCPAgent;
+import org.ocpteam.protocol.ocp.OCPAgent;
 
 
 public class NewUserCaptchaWizardPage extends WizardPage {

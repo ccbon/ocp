@@ -14,7 +14,7 @@ import org.eclipse.swt.widgets.Tray;
 import org.eclipse.swt.widgets.TrayItem;
 import org.ocpteam.layer.rsp.Agent;
 import org.ocpteam.misc.JLG;
-import org.ocpteam.ocp.UserInterface;
+import org.ocpteam.protocol.ocp.UserInterface;
 
 
 public class GraphicalUI implements UserInterface {

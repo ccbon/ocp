@@ -10,8 +10,8 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.ocpteam.misc.JLG;
-import org.ocpteam.ocp.Captcha;
-import org.ocpteam.ocp.OCPAgent;
+import org.ocpteam.protocol.ocp.Captcha;
+import org.ocpteam.protocol.ocp.OCPAgent;
 
 
 public class NewUserFormWizardPage extends WizardPage {

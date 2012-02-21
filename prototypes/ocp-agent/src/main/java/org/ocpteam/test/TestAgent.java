@@ -5,11 +5,11 @@ import java.util.Properties;
 
 import org.ocpteam.misc.JLG;
 import org.ocpteam.misc.JLGException;
-import org.ocpteam.ocp.Captcha;
-import org.ocpteam.ocp.OCPAgent;
-import org.ocpteam.ocp.OCPFileSystem;
-import org.ocpteam.ocp.OCPUser;
-import org.ocpteam.ocp.Pointer;
+import org.ocpteam.protocol.ocp.Captcha;
+import org.ocpteam.protocol.ocp.OCPAgent;
+import org.ocpteam.protocol.ocp.OCPFileSystem;
+import org.ocpteam.protocol.ocp.OCPUser;
+import org.ocpteam.protocol.ocp.Pointer;
 
 
 public class TestAgent {
