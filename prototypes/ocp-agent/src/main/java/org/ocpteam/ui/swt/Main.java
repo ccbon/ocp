@@ -20,6 +20,7 @@ import org.ocpteam.protocol.ocp.OCPAgent;
 import org.ocpteam.protocol.ocp.UserInterface;
 import org.ocpteam.protocol.ocp.swt.ConfigWizard;
 import org.ocpteam.protocol.sftp.SFTPAgent;
+import org.ocpteam.protocol.zip.ZipAgent;
 
 public class Main {
 	public static final String SWT_ASSISTANT = "swt";
@@ -61,12 +62,16 @@ public class Main {
 		map.put("OCP", OCPAgent.class.getName());
 		map.put("FTP", FTPAgent.class.getName());
 		map.put("SFTP", SFTPAgent.class.getName());
+		map.put("ZIP", ZipAgent.class.getName());
 		
 		String result = null;
 		Properties p = new Properties();
 		File file = new File("protocol.properties");
 		if (!file.exists()) {
 			chooseProtocolWizard(map);
+		}
+		if (!file.exists()) {
+			System.exit(0);
 		}
 		InputStream fis = new FileInputStream(file);
 		p.load(fis);

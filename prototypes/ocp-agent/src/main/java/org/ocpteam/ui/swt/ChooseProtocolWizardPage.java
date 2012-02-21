@@ -1,5 +1,6 @@
 package org.ocpteam.ui.swt;
 
+import java.util.Arrays;
 import java.util.Map;
 
 import org.eclipse.jface.wizard.WizardPage;
@@ -41,6 +42,7 @@ public class ChooseProtocolWizardPage extends WizardPage {
 		lblProtocol.setText("Protocol");
 		
 		final String[] keys = (String[]) map.keySet().toArray(new String[map.size()]);
+		Arrays.sort(keys);
 		
 		combo = new Combo(container, SWT.READ_ONLY);
 		combo.addSelectionListener(new SelectionAdapter() {

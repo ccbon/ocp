@@ -8,6 +8,7 @@ import java.util.Properties;
 
 public abstract class Agent {
 
+	public Config cfg;
 	public Properties p;
 
 	protected boolean bIsStarted = false;
@@ -16,6 +17,7 @@ public abstract class Agent {
 
 	public Agent() {
 		assistantMap = new HashMap<String, Object>();
+		cfg = new Config();
 	}
 
 	public abstract boolean isConfigFilePresent();
