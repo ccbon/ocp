@@ -6,11 +6,11 @@ import org.ocpteam.misc.JLG;
 
 public class CreateNewRemoteDirAction extends Action {
 
-	private UserExplorerComposite composite;
+	private ExplorerComposite composite;
 
 
-	public CreateNewRemoteDirAction(UserExplorerComposite userExplorerComposite) {
-		this.composite = userExplorerComposite;
+	public CreateNewRemoteDirAction(ExplorerComposite explorerComposite) {
+		this.composite = explorerComposite;
 		setText("&New folder@Ctrl+N");
 		setToolTipText("New folder");
 //		try {

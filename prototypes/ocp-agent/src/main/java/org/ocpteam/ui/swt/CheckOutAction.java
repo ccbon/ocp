@@ -20,7 +20,7 @@ public class CheckOutAction extends Action {
 
 	public void run() {
 		JLG.debug("Check Out");
-		UserExplorerComposite composite = w.userExplorerComposite;
+		ExplorerComposite composite = w.explorerComposite;
 		if (composite == null) {
 			return;
 		}
@@ -29,7 +29,7 @@ public class CheckOutAction extends Action {
 			String name = item.getText(0);
 			try {
 				String remoteDir = composite.currentRemoteDirString;
-				composite.agent.getFileSystem(composite.user).checkout(remoteDir, name, localDir);
+				composite.fs.checkout(remoteDir, name, localDir);
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -40,7 +40,7 @@ public class CheckOutAction extends Action {
 	}
 
 	public boolean canRun() {
-		UserExplorerComposite composite = w.userExplorerComposite;
+		ExplorerComposite composite = w.explorerComposite;
 		if (composite == null) {
 			return false;
 		}

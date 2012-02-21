@@ -278,4 +278,9 @@ public class OCPFileSystem implements FileSystem {
 		renameFile(existingParentDir, oldName, newName);
 	}
 
+	@Override
+	public String getDefaultLocalDir() {
+		return user.getDefaultLocalDir();
+	}
+
 }

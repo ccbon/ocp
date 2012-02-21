@@ -8,8 +8,6 @@ public abstract class Agent {
 
 	public Properties p;
 
-	public FileSystem fs;
-
 	protected boolean bIsStarted = false;
 
 	public Agent() {

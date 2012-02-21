@@ -43,7 +43,7 @@ public class AdminConsole extends ApplicationWindow {
 
 	private CTabItem userCTabItem;
 	private CTabItem userExplorerCTabItem;
-	public UserExplorerComposite userExplorerComposite;
+	public ExplorerComposite explorerComposite;
 
 	private StartAgentAction startAgentAction;
 	private StopAgentAction stopAgentAction;
@@ -350,9 +350,9 @@ public class AdminConsole extends ApplicationWindow {
 			userExplorerCTabItem.setShowClose(true);
 			userExplorerCTabItem.setText("Explorer");
 
-			userExplorerComposite = new UserExplorerComposite(tabFolder,
-					SWT.NONE, agent, user, this);
-			userExplorerCTabItem.setControl(userExplorerComposite);
+			explorerComposite = new ExplorerComposite(tabFolder,
+					SWT.NONE, agent, agent.getFileSystem(user), this);
+			userExplorerCTabItem.setControl(explorerComposite);
 
 		}
 		tabFolder.setSelection(userExplorerCTabItem);
@@ -390,7 +390,7 @@ public class AdminConsole extends ApplicationWindow {
 			userExplorerCTabItem.dispose();
 			userExplorerCTabItem = null;
 		}
-		userExplorerComposite = null;
+		explorerComposite = null;
 	}
 
 	public void addContactTab() {

@@ -35,12 +35,12 @@ public class CopyAction extends Action {
 	public void run() {
 		JLG.debug("Copy");
 		// copy only from the local directory
-		if (window.userExplorerComposite == null) {
+		if (window.explorerComposite == null) {
 			return;
 		}
 		Display display = window.getShell().getDisplay();
 		Control c = display.getFocusControl();
-		if (c == window.userExplorerComposite.localDirectoryTable) {
+		if (c == window.explorerComposite.localDirectoryTable) {
 			Table t = (Table) c;
 			int length = t.getSelectionCount();
 			String[] data = new String[length];
@@ -48,7 +48,7 @@ public class CopyAction extends Action {
 				TableItem item = t.getSelection()[i];
 				String name = item.getText(0);
 				File f = new File(
-						window.userExplorerComposite.currentLocalDirectory,
+						window.explorerComposite.currentLocalDirectory,
 						name);
 				String path = f.getAbsolutePath();
 				JLG.debug("path=" + path);
@@ -57,7 +57,7 @@ public class CopyAction extends Action {
 			window.clipboard.setContents(new Object[] { data },
 					new Transfer[] { FileTransfer.getInstance() });
 		}
-		if (c == window.userExplorerComposite.remoteDirectoryTable) {
+		if (c == window.explorerComposite.remoteDirectoryTable) {
 			Table t = (Table) c;
 			int length = t.getSelectionCount();
 			String[] data = new String[length];
@@ -73,7 +73,7 @@ public class CopyAction extends Action {
 	}
 
 	public boolean canRun() {
-		if (window.userExplorerComposite == null) {
+		if (window.explorerComposite == null) {
 			return false;
 		}
 		Display display = window.getShell().getDisplay();

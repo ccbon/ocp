@@ -24,4 +24,6 @@ public interface FileSystem {
 
 	public void rename(String existingParentDir,
 			String oldName, String newName) throws Exception;
+
+	public String getDefaultLocalDir();
 }

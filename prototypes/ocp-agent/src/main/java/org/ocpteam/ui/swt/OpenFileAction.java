@@ -7,11 +7,11 @@ import org.ocpteam.misc.JLG;
 
 public class OpenFileAction extends Action {
 
-	private UserExplorerComposite composite;
+	private ExplorerComposite composite;
 
 
-	public OpenFileAction(UserExplorerComposite userExplorerComposite) {
-		this.composite = userExplorerComposite;
+	public OpenFileAction(ExplorerComposite explorerComposite) {
+		this.composite = explorerComposite;
 		setText("&Open@Enter");
 		setToolTipText("Open");
 //		try {

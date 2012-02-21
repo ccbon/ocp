@@ -192,4 +192,9 @@ public class FTPFileSystem implements FileSystem {
 		ftp.rename(existingParentDir + oldName, existingParentDir + newName);
 	}
 
+	@Override
+	public String getDefaultLocalDir() {
+		return user.getDefaultLocalDir();
+	}
+
 }

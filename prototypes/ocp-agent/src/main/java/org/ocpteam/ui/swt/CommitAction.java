@@ -22,7 +22,7 @@ public class CommitAction extends Action {
 
 	public void run() {
 		JLG.debug("Commit");
-		UserExplorerComposite composite = w.userExplorerComposite;
+		ExplorerComposite composite = w.explorerComposite;
 		if (composite == null) {
 			return;
 		}
@@ -30,7 +30,7 @@ public class CommitAction extends Action {
 			String name = item.getText(0);
 			File file = new File(composite.currentLocalDirectory, name);
 			try {
-				composite.agent.getFileSystem(composite.user).commit(composite.currentRemoteDirString, file);
+				composite.fs.commit(composite.currentRemoteDirString, file);
 				composite.reloadRemoteDirectoryTable();
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
@@ -44,7 +44,7 @@ public class CommitAction extends Action {
 
 
 	public boolean canRun() {
-		UserExplorerComposite composite = w.userExplorerComposite;
+		ExplorerComposite composite = w.explorerComposite;
 		if (composite == null) {
 			return false;
 		}

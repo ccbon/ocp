@@ -45,19 +45,19 @@ import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.wb.swt.SWTResourceManager;
 import org.ocpteam.layer.rsp.Agent;
 import org.ocpteam.layer.rsp.FileInterface;
-import org.ocpteam.layer.rsp.User;
+import org.ocpteam.layer.rsp.FileSystem;
 import org.ocpteam.misc.JLG;
 
-public class UserExplorerComposite extends Composite {
+public class ExplorerComposite extends Composite {
 	private static final String DIRECTORY_SIZE = "";
 	private static final String DIRECTORY_TYPE = "Directory";
 	private static final String DIRECTORY_PARENT = "..";
 	private static final String DIRECTORY_NEW = "New Folder";
 	private static final String FILE_TYPE = "File";
 	private static final Image DIRECTORY_ICON = SWTResourceManager.getImage(
-			UserExplorerComposite.class, "directory.png");
+			ExplorerComposite.class, "directory.png");
 	private static final Image FILE_ICON = SWTResourceManager.getImage(
-			UserExplorerComposite.class, "file.png");
+			ExplorerComposite.class, "file.png");
 
 	public Table localDirectoryTable;
 	public Table remoteDirectoryTable;
@@ -65,7 +65,7 @@ public class UserExplorerComposite extends Composite {
 	public String currentRemoteDirString;
 
 	public Agent agent;
-	public User user;
+	public FileSystem fs;
 	private Label localDirectoryLabel;
 	private Label remoteDirectoryLabel;
 	private AdminConsole w;
@@ -76,15 +76,15 @@ public class UserExplorerComposite extends Composite {
 	 * @param parent
 	 * @param style
 	 */
-	public UserExplorerComposite(Composite parent, int style, Agent agent,
-			User user, AdminConsole w) {
+	public ExplorerComposite(Composite parent, int style, Agent agent,
+			FileSystem fs, AdminConsole w) {
 		super(parent, style);
 		this.agent = agent;
-		this.user = user;
+		this.fs = fs;
 		this.w = w;
 		final Shell shell = parent.getShell();
 
-		currentLocalDirectory = new File(user.getDefaultLocalDir());
+		currentLocalDirectory = new File(fs.getDefaultLocalDir());
 		currentRemoteDirString = "/";
 
 		setLayout(new FillLayout(SWT.HORIZONTAL));
@@ -111,16 +111,16 @@ public class UserExplorerComposite extends Composite {
 				switch (e.keyCode) {
 				case SWT.KEYPAD_CR:
 				case (int) '\r':
-					(new OpenFileAction(UserExplorerComposite.this)).run();
+					(new OpenFileAction(ExplorerComposite.this)).run();
 					break;
 				case (int) SWT.F2:
-					(new RenameFileAction(UserExplorerComposite.this)).run();
+					(new RenameFileAction(ExplorerComposite.this)).run();
 					break;
 				case (int) SWT.F5:
 					reloadLocalDirectoryTable();
 					break;
 				case SWT.DEL:
-					(new RemoveFileAction(UserExplorerComposite.this)).run();
+					(new RemoveFileAction(ExplorerComposite.this)).run();
 					break;
 				case SWT.ESC:
 					localDirectoryTable.deselectAll();
@@ -129,7 +129,7 @@ public class UserExplorerComposite extends Composite {
 				}
 				JLG.debug("keypressed: keycode:" + e.keyCode
 						+ " and character = '" + e.character + "'");
-				UserExplorerComposite.this.w.updateActions();
+				ExplorerComposite.this.w.updateActions();
 			}
 		});
 		localDirectoryTable.addMenuDetectListener(new MenuDetectListener() {
@@ -141,15 +141,15 @@ public class UserExplorerComposite extends Composite {
 				int sel = localDirectoryTable.getSelection().length;
 				if (sel > 0) {
 					OpenFileAction openFileAction = new OpenFileAction(
-							UserExplorerComposite.this);
+							ExplorerComposite.this);
 					myMenu.add(openFileAction);
 
 					myMenu.add(new Separator());
-					myMenu.add(new CommitAction(UserExplorerComposite.this.w));
+					myMenu.add(new CommitAction(ExplorerComposite.this.w));
 					myMenu.add(new Separator());
-					myMenu.add(new RemoveFileAction(UserExplorerComposite.this));
+					myMenu.add(new RemoveFileAction(ExplorerComposite.this));
 					RenameFileAction renameFileAction = new RenameFileAction(
-							UserExplorerComposite.this);
+							ExplorerComposite.this);
 					myMenu.add(renameFileAction);
 
 					if (sel > 1) {
@@ -159,7 +159,7 @@ public class UserExplorerComposite extends Composite {
 				}
 				if (sel == 0) {
 					myMenu.add(new CreateNewDirAction(
-							UserExplorerComposite.this));
+							ExplorerComposite.this));
 				}
 				menu.setEnabled(true);
 				myMenu.setVisible(true);
@@ -187,7 +187,7 @@ public class UserExplorerComposite extends Composite {
 					JLG.debug("cancel selection");
 					localDirectoryTable.deselectAll();
 				}
-				UserExplorerComposite.this.w.updateActions();
+				ExplorerComposite.this.w.updateActions();
 			}
 		});
 		GridData gd_localDirectoryTable = new GridData(SWT.FILL, SWT.FILL,
@@ -234,18 +234,18 @@ public class UserExplorerComposite extends Composite {
 				switch (e.keyCode) {
 				case SWT.KEYPAD_CR:
 				case (int) '\r':
-					(new OpenRemoteFileAction(UserExplorerComposite.this))
+					(new OpenRemoteFileAction(ExplorerComposite.this))
 							.run();
 					break;
 				case SWT.F2:
-					(new RenameRemoteFileAction(UserExplorerComposite.this))
+					(new RenameRemoteFileAction(ExplorerComposite.this))
 							.run();
 					break;
 				case SWT.F5:
 					reloadRemoteDirectoryTable();
 					break;
 				case SWT.DEL:
-					(new RemoveRemoteFileAction(UserExplorerComposite.this))
+					(new RemoveRemoteFileAction(ExplorerComposite.this))
 							.run();
 				case SWT.ESC:
 					remoteDirectoryTable.deselectAll();
@@ -255,7 +255,7 @@ public class UserExplorerComposite extends Composite {
 
 				JLG.debug("keypressed: keycode:" + e.keyCode
 						+ " and character = '" + e.character + "'");
-				UserExplorerComposite.this.w.updateActions();
+				ExplorerComposite.this.w.updateActions();
 			}
 		});
 		remoteDirectoryTable.addMenuDetectListener(new MenuDetectListener() {
@@ -267,16 +267,16 @@ public class UserExplorerComposite extends Composite {
 				int sel = remoteDirectoryTable.getSelection().length;
 				if (sel > 0) {
 					OpenRemoteFileAction openRemoteFileAction = new OpenRemoteFileAction(
-							UserExplorerComposite.this);
+							ExplorerComposite.this);
 					myMenu.add(openRemoteFileAction);
 
 					myMenu.add(new Separator());
-					myMenu.add(new CheckOutAction(UserExplorerComposite.this.w));
+					myMenu.add(new CheckOutAction(ExplorerComposite.this.w));
 					myMenu.add(new Separator());
 					myMenu.add(new RemoveRemoteFileAction(
-							UserExplorerComposite.this));
+							ExplorerComposite.this));
 					RenameRemoteFileAction renameremoteFileAction = new RenameRemoteFileAction(
-							UserExplorerComposite.this);
+							ExplorerComposite.this);
 					myMenu.add(renameremoteFileAction);
 
 					if (sel > 1) {
@@ -286,7 +286,7 @@ public class UserExplorerComposite extends Composite {
 				}
 				if (sel == 0) {
 					myMenu.add(new CreateNewRemoteDirAction(
-							UserExplorerComposite.this));
+							ExplorerComposite.this));
 				}
 				menu.setEnabled(true);
 				myMenu.setVisible(true);
@@ -316,7 +316,7 @@ public class UserExplorerComposite extends Composite {
 					JLG.debug("cancel selection");
 					remoteDirectoryTable.deselectAll();
 				}
-				UserExplorerComposite.this.w.updateActions();
+				ExplorerComposite.this.w.updateActions();
 			}
 
 		});
@@ -380,7 +380,7 @@ public class UserExplorerComposite extends Composite {
 						event.currentDataType)) {
 					String text = (String) event.data;
 					JLG.debug("received from transfer: " + text);
-					(new CommitAction(UserExplorerComposite.this.w)).run();
+					(new CommitAction(ExplorerComposite.this.w)).run();
 				} else if (FileTransfer.getInstance().isSupportedType(
 						event.currentDataType)) {
 					commitFiles((String[]) event.data);
@@ -426,7 +426,7 @@ public class UserExplorerComposite extends Composite {
 						event.currentDataType)) {
 					String text = (String) event.data;
 					JLG.debug("received from transfer: " + text);
-					(new CheckOutAction(UserExplorerComposite.this.w)).run();
+					(new CheckOutAction(ExplorerComposite.this.w)).run();
 				} else if (FileTransfer.getInstance().isSupportedType(
 						event.currentDataType)) {
 					copyFiles((String[]) event.data);
@@ -472,8 +472,7 @@ public class UserExplorerComposite extends Composite {
 					DIRECTORY_TYPE, DIRECTORY_SIZE });
 			parentTreetableItem.setImage(DIRECTORY_ICON);
 
-			FileInterface currentDir = agent.getFileSystem(user).getDir(
-					currentRemoteDirString);
+			FileInterface currentDir = fs.getDir(currentRemoteDirString);
 			if (currentDir == null) {
 				return;
 			}
@@ -552,7 +551,7 @@ public class UserExplorerComposite extends Composite {
 			parentDirtableItem.setText(new String[] { DIRECTORY_PARENT,
 					DIRECTORY_TYPE, DIRECTORY_SIZE });
 			parentDirtableItem.setImage(SWTResourceManager.getImage(
-					UserExplorerComposite.class, "directory.png"));
+					ExplorerComposite.class, "directory.png"));
 		}
 
 		File[] children = null;
@@ -627,7 +626,7 @@ public class UserExplorerComposite extends Composite {
 		String name = item.getText(0);
 		try {
 			// must work both for dir and file
-			agent.getFileSystem(user).rm(currentRemoteDirString, name);
+			fs.rm(currentRemoteDirString, name);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -642,8 +641,7 @@ public class UserExplorerComposite extends Composite {
 
 	public void renameRemoteFile(String oldName, String newName) {
 		try {
-			agent.getFileSystem(user).rename(currentRemoteDirString, oldName,
-					newName);
+			fs.rename(currentRemoteDirString, oldName, newName);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -673,8 +671,7 @@ public class UserExplorerComposite extends Composite {
 				DIRECTORY_SIZE });
 		newDirItem.setImage(DIRECTORY_ICON);
 		try {
-			agent.getFileSystem(user).mkdir(currentRemoteDirString,
-					DIRECTORY_NEW);
+			fs.mkdir(currentRemoteDirString, DIRECTORY_NEW);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -688,8 +685,7 @@ public class UserExplorerComposite extends Composite {
 	public void copyFiles(String[] data) {
 		for (String path : data) {
 			File origFile = new File(path);
-			File destFile = new File(currentLocalDirectory,
-					origFile.getName());
+			File destFile = new File(currentLocalDirectory, origFile.getName());
 			Path origPath = FileSystems.getDefault().getPath(
 					origFile.getAbsolutePath());
 			Path destPath = FileSystems.getDefault().getPath(
@@ -709,8 +705,7 @@ public class UserExplorerComposite extends Composite {
 		for (String path : data) {
 			File file = new File(path);
 			try {
-				agent.getFileSystem(user).commit(
-						currentRemoteDirString, file);
+				fs.commit(currentRemoteDirString, file);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -721,13 +716,13 @@ public class UserExplorerComposite extends Composite {
 	public void checkout(String[] data) {
 		for (String path : data) {
 			try {
-				agent.getFileSystem(user).checkout(currentRemoteDirString, path, currentLocalDirectory);
+				fs.checkout(currentRemoteDirString, path, currentLocalDirectory);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
 		reloadLocalDirectoryTable();
-		
+
 	}
 
 }

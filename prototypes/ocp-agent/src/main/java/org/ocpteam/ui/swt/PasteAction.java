@@ -29,37 +29,37 @@ public class PasteAction extends Action {
 
 	public void run() {
 		JLG.debug("Paste");
-		if (window.userExplorerComposite == null) {
+		if (window.explorerComposite == null) {
 			return;
 		}
 		Display display = window.getShell().getDisplay();
 		Control c = display.getFocusControl();
-		if (c == window.userExplorerComposite.localDirectoryTable) {
+		if (c == window.explorerComposite.localDirectoryTable) {
 			String[] data = (String[]) window.clipboard
 					.getContents(FileTransfer.getInstance());
 			if (data != null) {
-				window.userExplorerComposite.copyFiles(data);
+				window.explorerComposite.copyFiles(data);
 			}
 			String o = (String) window.clipboard.getContents(TextTransfer
 					.getInstance());
 			String[] s = o.split(";");
-			window.userExplorerComposite.checkout(s);
-		} else if (c == window.userExplorerComposite.remoteDirectoryTable) {
+			window.explorerComposite.checkout(s);
+		} else if (c == window.explorerComposite.remoteDirectoryTable) {
 			String[] data = (String[]) window.clipboard
 					.getContents(FileTransfer.getInstance());
-			window.userExplorerComposite.commitFiles(data);
+			window.explorerComposite.commitFiles(data);
 		}
 
 	}
 
 	public boolean canRun() {
-		if (window.userExplorerComposite == null) {
+		if (window.explorerComposite == null) {
 			return false;
 		}
 		String[] data = null;
 		Display display = window.getShell().getDisplay();
 		Control c = display.getFocusControl();
-		if (c == window.userExplorerComposite.localDirectoryTable) {
+		if (c == window.explorerComposite.localDirectoryTable) {
 			data = (String[]) window.clipboard.getContents(FileTransfer
 					.getInstance());
 			if (data == null || data.length == 0) {
@@ -70,7 +70,7 @@ public class PasteAction extends Action {
 				}
 				return s.length() > 0;
 			}
-		} else if (c == window.userExplorerComposite.remoteDirectoryTable) {
+		} else if (c == window.explorerComposite.remoteDirectoryTable) {
 			data = (String[]) window.clipboard.getContents(FileTransfer
 					.getInstance());
 		}

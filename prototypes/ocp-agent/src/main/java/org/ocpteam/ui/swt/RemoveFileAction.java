@@ -7,11 +7,11 @@ import org.ocpteam.misc.JLG;
 
 public class RemoveFileAction extends Action {
 
-	private UserExplorerComposite composite;
+	private ExplorerComposite composite;
 
 
-	public RemoveFileAction(UserExplorerComposite userExplorerComposite) {
-		this.composite = userExplorerComposite;
+	public RemoveFileAction(ExplorerComposite explorerComposite) {
+		this.composite = explorerComposite;
 		setText("&Delete@DEL");
 		setToolTipText("Delete");
 //		try {

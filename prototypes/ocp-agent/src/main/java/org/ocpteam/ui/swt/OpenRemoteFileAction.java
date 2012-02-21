@@ -7,11 +7,11 @@ import org.ocpteam.misc.JLG;
 
 public class OpenRemoteFileAction extends Action {
 
-	private UserExplorerComposite composite;
+	private ExplorerComposite composite;
 
 
-	public OpenRemoteFileAction(UserExplorerComposite userExplorerComposite) {
-		this.composite = userExplorerComposite;
+	public OpenRemoteFileAction(ExplorerComposite explorerComposite) {
+		this.composite = explorerComposite;
 		setText("&Open");
 		setToolTipText("Open remote file");
 //		try {

@@ -6,11 +6,11 @@ import org.ocpteam.misc.JLG;
 
 public class CreateNewDirAction extends Action {
 
-	private UserExplorerComposite composite;
+	private ExplorerComposite composite;
 
 
-	public CreateNewDirAction(UserExplorerComposite userExplorerComposite) {
-		this.composite = userExplorerComposite;
+	public CreateNewDirAction(ExplorerComposite explorerComposite) {
+		this.composite = explorerComposite;
 		setText("&New folder@Ctrl+N");
 		setToolTipText("New folder");
 //		try {

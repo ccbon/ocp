@@ -13,10 +13,10 @@ import org.ocpteam.misc.JLG;
 
 public class RenameFileAction extends Action {
 
-	private UserExplorerComposite composite;
+	private ExplorerComposite composite;
 
-	public RenameFileAction(UserExplorerComposite userExplorerComposite) {
-		this.composite = userExplorerComposite;
+	public RenameFileAction(ExplorerComposite explorerComposite) {
+		this.composite = explorerComposite;
 		setText("&Rename@F2");
 		setToolTipText("Rename");
 	}

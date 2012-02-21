@@ -119,4 +119,9 @@ public class SFTPFileSystem implements FileSystem {
 		agent.channel.rename(existingParentDir + oldName, existingParentDir + newName);
 	}
 
+	@Override
+	public String getDefaultLocalDir() {
+		return user.getDefaultLocalDir();
+	}
+
 }

@@ -7,11 +7,11 @@ import org.ocpteam.misc.JLG;
 
 public class RemoveRemoteFileAction extends Action {
 
-	private UserExplorerComposite composite;
+	private ExplorerComposite composite;
 
 
-	public RemoveRemoteFileAction(UserExplorerComposite userExplorerComposite) {
-		this.composite = userExplorerComposite;
+	public RemoveRemoteFileAction(ExplorerComposite explorerComposite) {
+		this.composite = explorerComposite;
 		setText("&Delete@DEL");
 		setToolTipText("Delete remote file");
 	}
