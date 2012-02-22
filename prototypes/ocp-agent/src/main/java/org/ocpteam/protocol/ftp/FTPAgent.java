@@ -12,18 +12,12 @@ import org.ocpteam.misc.JLG;
 
 public class FTPAgent extends Agent {
 
-	public static final File configFile = new File("ftp.properties");
 	private String hostname;
 	FTPClient ftp;
 
 	public FTPAgent() {
 		super();
 		ftp = new FTPClient();
-	}
-
-	@Override
-	public File getConfigFile() {
-		return configFile;
 	}
 
 	@Override
@@ -50,11 +44,6 @@ public class FTPAgent extends Agent {
 		} finally {
 			bIsStarted = false;
 		}
-	}
-
-	@Override
-	public boolean isConfigFilePresent() {
-		return configFile.isFile();
 	}
 
 	@Override
@@ -133,6 +122,11 @@ public class FTPAgent extends Agent {
 
 	@Override
 	public boolean isOnlyClient() {
+		return true;
+	}
+
+	@Override
+	public boolean requiresConfigFile() {
 		return true;
 	}
 

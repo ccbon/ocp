@@ -1,7 +1,5 @@
 package org.ocpteam.protocol.sftp;
 
-import java.io.File;
-
 import org.ocpteam.layer.rsp.Agent;
 import org.ocpteam.layer.rsp.FileSystem;
 import org.ocpteam.layer.rsp.User;
@@ -20,20 +18,6 @@ public class SFTPAgent extends Agent {
 	@Override
 	public boolean requiresConfigFile() {
 		return false;
-	}
-
-	@Override
-	public boolean isConfigFilePresent() {
-		return true;
-	}
-
-	@Override
-	public File getConfigFile() {
-		return null;
-	}
-
-	@Override
-	protected void readConfig() throws Exception {
 	}
 
 	@Override

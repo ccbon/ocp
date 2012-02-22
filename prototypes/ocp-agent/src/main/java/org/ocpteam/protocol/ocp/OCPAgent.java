@@ -135,11 +135,6 @@ public class OCPAgent extends DSPAgent {
 	}
 
 	@Override
-	public boolean isConfigFilePresent() {
-		return JLG.isFile(AGENT_PROPERTIES_FILE);
-	}
-
-	@Override
 	public File getConfigFile() {
 		return new File(AGENT_PROPERTIES_FILE);
 	}
@@ -846,6 +841,11 @@ public class OCPAgent extends DSPAgent {
 	@Override
 	public boolean isOnlyClient() {
 		return (!p.getProperty("server", "yes").equals("yes"));
+	}
+
+	@Override
+	public boolean requiresConfigFile() {
+		return true;
 	}
 
 }

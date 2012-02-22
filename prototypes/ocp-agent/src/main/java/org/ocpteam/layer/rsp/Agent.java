@@ -8,7 +8,6 @@ import java.util.Properties;
 
 public abstract class Agent {
 
-	public Config cfg;
 	public Properties p;
 
 	protected boolean bIsStarted = false;
@@ -17,10 +16,11 @@ public abstract class Agent {
 
 	public Agent() {
 		assistantMap = new HashMap<String, Object>();
-		cfg = new Config();
 	}
 
-	public abstract boolean isConfigFilePresent();
+	public boolean isConfigFilePresent() {
+		return getConfigFile().isFile();
+	}
 
 	public void loadConfig() throws Exception {
 		if (requiresConfigFile() && !isConfigFilePresent()) {
@@ -34,14 +34,17 @@ public abstract class Agent {
 		readConfig();
 	}
 
-	public abstract File getConfigFile();
+	public File getConfigFile() {
+		return new File(getProtocolName().toLowerCase() + ".properties");
+	}
 
 	public void loadConfig(Properties properties) throws Exception {
 		p = properties;
 		readConfig();
 	}
 
-	protected abstract void readConfig() throws Exception;
+	protected void readConfig() throws Exception {
+	}
 
 	public abstract void start() throws Exception;
 
@@ -50,9 +53,9 @@ public abstract class Agent {
 	public abstract boolean allowsUserCreation();
 
 	public abstract User login(String login, Object challenge) throws Exception;
-	
+
 	public abstract void logout(User user) throws Exception;
-	
+
 	public abstract String getProtocolName();
 
 	public abstract String getName();
@@ -60,7 +63,6 @@ public abstract class Agent {
 	public String getHelpURL() {
 		return "http://code.google.com/p/ocp/wiki/Help";
 	}
-
 
 	public abstract FileSystem getFileSystem(User user);
 
@@ -74,17 +76,14 @@ public abstract class Agent {
 		return false;
 	}
 
-	public boolean requiresConfigFile() {
-		return true;
-	}
+	public abstract boolean requiresConfigFile();
 
 	public abstract boolean isOnlyClient();
-
 
 	public Object getAssistant(String key) {
 		return assistantMap.get(key);
 	}
-	
+
 	public Object setAssistant(String key, Object assistant) {
 		return assistantMap.put(key, assistant);
 	}
