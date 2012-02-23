@@ -63,9 +63,4 @@ public class ZipAgent extends Agent {
 		
 	}
 
-	@Override
-	public boolean requiresConfigFile() {
-		return false;
-	}
-
 }

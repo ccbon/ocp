@@ -140,13 +140,13 @@ public class Client {
 
 	private Iterator<String> getPotentialSponsorIterator() throws Exception {
 		List<String> list = new LinkedList<String>();
-		if (agent.p.getProperty("network.type", "public").equalsIgnoreCase(
+		if (agent.cfg.getProperty("network.type", "public").equalsIgnoreCase(
 				"public")) {
 			try {
 				XmlRpcClientConfigImpl config = new XmlRpcClientConfigImpl();
 				// TODO: need a ocp dedicated web server. I use mine for the
 				// time being.
-				config.setServerURL(new java.net.URL(agent.p.getProperty(
+				config.setServerURL(new java.net.URL(agent.cfg.getProperty(
 						"network.sponsor.url", OCPAgent.DEFAULT_SPONSOR_SERVER_URL)));
 				XmlRpcClient client = new XmlRpcClient();
 				client.setConfig(config);
@@ -167,11 +167,11 @@ public class Client {
 
 		} else { // private network... agent properties must have at least one
 					// sponsor specified.
-			Iterator<String> it = agent.p.stringPropertyNames().iterator();
+			Iterator<String> it = agent.cfg.stringPropertyNames().iterator();
 			while (it.hasNext()) {
 				String key = it.next();
 				if (key.startsWith("sponsor.")) {
-					list.add(agent.p.getProperty(key));
+					list.add(agent.cfg.getProperty(key));
 				}
 			}
 			if (list.isEmpty()) {
@@ -329,13 +329,13 @@ public class Client {
 
 	public void declareSponsor() {
 		try {
-			if (agent.p.getProperty("network.type", "public").equalsIgnoreCase(
+			if (agent.cfg.getProperty("network.type", "public").equalsIgnoreCase(
 					"public")) {
 				int port = agent.toContact().urlList.get(0).getPort();
 				XmlRpcClientConfigImpl config = new XmlRpcClientConfigImpl();
 				// TODO: need a ocp dedicated web server. I use mine for the
 				// time being.
-				config.setServerURL(new java.net.URL(agent.p.getProperty(
+				config.setServerURL(new java.net.URL(agent.cfg.getProperty(
 						"network.sponsor.url", OCPAgent.DEFAULT_SPONSOR_SERVER_URL)));
 				XmlRpcClient client = new XmlRpcClient();
 				client.setConfig(config);

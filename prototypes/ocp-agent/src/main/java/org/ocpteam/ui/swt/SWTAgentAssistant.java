@@ -10,10 +10,9 @@ import org.ocpteam.misc.JLG;
 
 public class SWTAgentAssistant {
 
-	public Display display;
 	public Agent agent;
 
-	public void startWizard(IWizard wizard) {
+	public void startWizard(Display display, IWizard wizard) {
 		if (wizard != null) {
 			final Shell shell = new Shell(display);
 			shell.setLayout(new FillLayout());
@@ -39,6 +38,10 @@ public class SWTAgentAssistant {
 	}
 
 	public IWizard getStartActionWizardInstance() {
+		return null;
+	}
+
+	public IWizard getConfigWizardInstance() {
 		return null;
 	}
 }

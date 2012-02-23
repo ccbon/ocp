@@ -16,11 +16,6 @@ public class SFTPAgent extends Agent {
 	public ChannelSftp channel;
 
 	@Override
-	public boolean requiresConfigFile() {
-		return false;
-	}
-
-	@Override
 	public void start() throws Exception {
 		jsch = new JSch();
 		bIsStarted = true;

@@ -21,11 +21,11 @@ public class Server {
 			this.agent = agent;
 			
 			listenerList = new ArrayList<Listener>();
-			Iterator<String> it = agent.p.stringPropertyNames().iterator();
+			Iterator<String> it = agent.cfg.stringPropertyNames().iterator();
 			while (it.hasNext()) {
 				String key = it.next();
 				if (key.startsWith("server.listener.")) {
-					URL url = new URL(agent.p.getProperty(key));
+					URL url = new URL(agent.cfg.getProperty(key));
 					String sProtocol = url.getProtocol();
 					Listener listener = null;
 					if (sProtocol.equalsIgnoreCase("tcp")) {

@@ -25,12 +25,12 @@ public abstract class DSPAgent extends Agent {
 	}
 	
 	public boolean isFirstAgent() {
-		if (p == null) {
+		if (cfg == null) {
 			JLG.debug("p is null");
 		}
-		String s = p.getProperty("server", "no");
+		String s = cfg.getProperty("server", "no");
 		return s.equalsIgnoreCase("yes")
-				&& p.getProperty("server.isFirstAgent", "no").equalsIgnoreCase(
+				&& cfg.getProperty("server.isFirstAgent", "no").equalsIgnoreCase(
 						"yes");
 	}
 	

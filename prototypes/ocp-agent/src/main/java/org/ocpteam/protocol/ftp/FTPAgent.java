@@ -21,12 +21,11 @@ public class FTPAgent extends Agent {
 	}
 
 	@Override
-	protected void readConfig() throws Exception {
-		this.hostname = p.getProperty("hostname", "ftp.guenego.com");
-		if (p.getProperty("debug", "true").equalsIgnoreCase("true")) {
+	public void readConfig() throws Exception {
+		this.hostname = cfg.getProperty("hostname", "ftp.guenego.com");
+		if (cfg.getProperty("debug", "true").equalsIgnoreCase("true")) {
 			JLG.debug_on();
 		}
-
 	}
 
 	@Override
@@ -38,7 +37,9 @@ public class FTPAgent extends Agent {
 	@Override
 	public void stop() {
 		try {
-			ftp.logout();
+			if (bIsStarted) {
+				ftp.logout();
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		} finally {
@@ -56,7 +57,7 @@ public class FTPAgent extends Agent {
 		String password = (String) challenge;
 		if (ftp.login(login, password)) {
 			JLG.debug("ftp logged in.");
-			FTPUser user = new FTPUser(login, password, p.getProperty(
+			FTPUser user = new FTPUser(login, password, cfg.getProperty(
 					"default.dir", System.getProperty("user.home")));
 			return user;
 		} else {
@@ -122,11 +123,6 @@ public class FTPAgent extends Agent {
 
 	@Override
 	public boolean isOnlyClient() {
-		return true;
-	}
-
-	@Override
-	public boolean requiresConfigFile() {
 		return true;
 	}
 

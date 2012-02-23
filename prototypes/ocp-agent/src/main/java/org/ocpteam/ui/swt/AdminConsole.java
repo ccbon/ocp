@@ -36,7 +36,7 @@ public class AdminConsole extends ApplicationWindow {
 	public Agent agent;
 	private User user;
 
-	private Display display;
+	public Display display;
 	public CTabFolder tabFolder;
 	CTabItem contactCTabItem;
 	private ContactComposite contactComposite;
@@ -83,9 +83,6 @@ public class AdminConsole extends ApplicationWindow {
 		addMenuBar();
 		addStatusLine();
 		clipboard = new Clipboard(display);
-		
-		SWTAgentAssistant a = (SWTAgentAssistant) agent.getAssistant(Main.SWT_ASSISTANT);
-		a.display = display;
 		
 	}
 

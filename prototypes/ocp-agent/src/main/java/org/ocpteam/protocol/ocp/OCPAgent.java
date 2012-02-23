@@ -10,7 +10,6 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.Arrays;
-import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.NavigableMap;
@@ -39,7 +38,7 @@ import org.ocpteam.misc.URL;
 
 
 public class OCPAgent extends DSPAgent {
-	private static final String AGENT_PROPERTIES_FILE = "agent.properties";
+	
 	private static final String NETWORK_PROPERTIES_FILE = "network.properties";
 	public static final String DEFAULT_SPONSOR_SERVER_URL = "http://guenego.com/ocp/ocp.php";
 
@@ -134,10 +133,6 @@ public class OCPAgent extends DSPAgent {
 		storage.attach();
 	}
 
-	@Override
-	public File getConfigFile() {
-		return new File(AGENT_PROPERTIES_FILE);
-	}
 
 	public File getNetworkConfigFile() {
 		return new File(NETWORK_PROPERTIES_FILE);
@@ -159,11 +154,11 @@ public class OCPAgent extends DSPAgent {
 			network = client.getNetworkProperties();
 		}
 
-		String sId = p.getProperty("id");
+		String sId = cfg.getProperty("id");
 		if (sId == null) {
 			id = generateId();
-			p.setProperty("id", id.toString());
-			JLG.storeConfig(p, getConfigFile().getAbsolutePath());
+			cfg.setProperty("id", id.toString());
+			cfg.storeConfigFile();
 		} else {
 			id = new Id(sId);
 		}
@@ -196,7 +191,7 @@ public class OCPAgent extends DSPAgent {
 		userCipher = Cipher.getInstance(network.getProperty("user.cipher.algo",
 				"PBEWithMD5AndDES"));
 
-		if (p.getProperty("server", "yes").equals("yes")) {
+		if (cfg.getProperty("server", "yes").equals("yes")) {
 			server = new Server(this);
 			server.start();
 			attach();
@@ -671,30 +666,31 @@ public class OCPAgent extends DSPAgent {
 	}
 
 	@Override
-	protected void readConfig() throws Exception {
+	public void readConfig() throws Exception {
 
 		// debugging aspect
-		if (p.getProperty("debug", "true").equalsIgnoreCase("true")) {
+		if (cfg.getProperty("debug", "true").equalsIgnoreCase("true")) {
 			JLG.debug_on();
 			JLG.debug("working directory = " + System.getProperty("user.dir"));
 		}
 
-		for (Enumeration<Object> e = p.keys(); e.hasMoreElements();) {
-			String key = (String) e.nextElement();
-			String value = p.getProperty(key);
+		Iterator<String> it = cfg.stringPropertyNames().iterator();
+		while (it.hasNext()) {
+			String key = it.next();
+			String value = cfg.getProperty(key);
 			JLG.debug(key + "=" + value);
 		}
 		client = new Client(this);
-		name = p.getProperty("name", "anonymous");
+		name = cfg.getProperty("name", "anonymous");
 
 		// each agent has its own symmetric key cipher
 		// TODO: test with other algo than AES
-		KeyGenerator keyGen = KeyGenerator.getInstance(this.p.getProperty(
+		KeyGenerator keyGen = KeyGenerator.getInstance(this.cfg.getProperty(
 				"cypher.algo", "AES"));
-		keyGen.init(Integer.parseInt(this.p
+		keyGen.init(Integer.parseInt(this.cfg
 				.getProperty("cipher.keysize", "128")));
 		secretKey = keyGen.generateKey();
-		cipher = Cipher.getInstance(this.p.getProperty("cipher.algo", "AES"));
+		cipher = Cipher.getInstance(this.cfg.getProperty("cipher.algo", "AES"));
 
 		// user cipher
 		byte[] salt = { 1, 1, 1, 2, 2, 2, 3, 3 };
@@ -840,12 +836,6 @@ public class OCPAgent extends DSPAgent {
 
 	@Override
 	public boolean isOnlyClient() {
-		return (!p.getProperty("server", "yes").equals("yes"));
+		return (!cfg.getProperty("server", "yes").equals("yes"));
 	}
-
-	@Override
-	public boolean requiresConfigFile() {
-		return true;
-	}
-
 }

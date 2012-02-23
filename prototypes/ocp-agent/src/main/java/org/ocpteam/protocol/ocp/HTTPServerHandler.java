@@ -22,7 +22,7 @@ public class HTTPServerHandler implements HttpHandler {
 
 	public HTTPServerHandler(OCPAgent agent) {
 		this.agent = agent;
-		this.root = agent.p.getProperty("http.htdocs", ".");
+		this.root = agent.cfg.getProperty("http.htdocs", ".");
 		extMap = new HashMap<String, String>();
 		extMap.put("txt", "text/plain");
 		extMap.put("html", "text/html");

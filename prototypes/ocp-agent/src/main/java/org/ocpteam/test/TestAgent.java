@@ -3,6 +3,7 @@ package org.ocpteam.test;
 import java.util.Iterator;
 import java.util.Properties;
 
+import org.ocpteam.layer.rsp.AgentConfig;
 import org.ocpteam.misc.JLG;
 import org.ocpteam.misc.JLGException;
 import org.ocpteam.protocol.ocp.Captcha;
@@ -21,14 +22,14 @@ public class TestAgent {
 		try {
 			JLG.rm(System.getenv("TEMP") + "/ocp_agent_storage");
 			// start 2 agents
-			Properties p1 = new Properties();
+			OCPAgent a1 = new OCPAgent();
+			AgentConfig p1 = AgentConfig.newInstance(a1);
 			p1.setProperty("name", "Suzana");
 			p1.setProperty("server", "yes");
 			p1.setProperty("server.listener.1", "tcp://localhost:22220");
 			p1.setProperty("server.listener.2", "http://localhost:11110");
 			p1.setProperty("server.isFirstAgent", "yes");
-			OCPAgent a1 = new OCPAgent();
-			a1.loadConfig(p1);
+			a1.setConfig(p1);
 			Properties network = new Properties();
 			network.setProperty("hello", "didounette");
 			network.setProperty("coucou", "jlg");
@@ -44,14 +45,14 @@ public class TestAgent {
 			
 
 			// starting second agent
-			Properties p2 = new Properties();
+			OCPAgent a2 = new OCPAgent();
+			AgentConfig p2 = AgentConfig.newInstance(a2);
 			p2.setProperty("name", "Jean-Louis");
 			p2.setProperty("server", "yes");
 			p2.setProperty("server.listener.1", "tcp://localhost:22221");
 			p2.setProperty("sponsor.1", "tcp://localhost:22220");
 			p2.setProperty("sponsor.2", "xxx://localhost:22223");
-			OCPAgent a2 = new OCPAgent();
-			a2.loadConfig(p2);
+			a2.setConfig(p2);
 			a2.start();
 			Thread.sleep(2000);
 			JLG.debug(a1.toString());

@@ -59,7 +59,7 @@ public class ConfigWizard extends Wizard {
 			p.setProperty("network.type", "public");
 			p.setProperty("network.sponsor.url", firstPage.sponsorPublicServerText.getText());
 		}
-		JLG.storeConfig(p, agent.getConfigFile().getAbsolutePath());
+		JLG.storeConfig(p, agent.cfg.getConfigFile().getAbsolutePath());
 
 		if (bIsFirstAgent) {
 			NetworkWizardPage networkPage = (NetworkWizardPage) getPage("networkPage");

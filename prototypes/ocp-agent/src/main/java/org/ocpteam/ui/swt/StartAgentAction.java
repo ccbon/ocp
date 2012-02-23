@@ -32,8 +32,9 @@ public class StartAgentAction extends Action {
 			} else {
 				SWTAgentAssistant a = (SWTAgentAssistant) w.agent.getAssistant(Main.SWT_ASSISTANT);
 				IWizard wizard = a.getStartActionWizardInstance();
-				a.startWizard(wizard);
-				w.agent.loadConfig();
+				a.startWizard(w.display, wizard);
+				w.agent.cfg.loadConfigFile();
+				w.agent.readConfig();
 				w.agent.start();
 				w.updateActions();
 			}

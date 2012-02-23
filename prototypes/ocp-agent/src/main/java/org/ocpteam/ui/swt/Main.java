@@ -13,12 +13,11 @@ import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.ocpteam.layer.rsp.Agent;
+import org.ocpteam.layer.rsp.AgentConfig;
 import org.ocpteam.misc.JLG;
 import org.ocpteam.protocol.ftp.FTPAgent;
-import org.ocpteam.protocol.ftp.swt.FTPConfigWizard;
 import org.ocpteam.protocol.ocp.OCPAgent;
 import org.ocpteam.protocol.ocp.UserInterface;
-import org.ocpteam.protocol.ocp.swt.ConfigWizard;
 import org.ocpteam.protocol.sftp.SFTPAgent;
 import org.ocpteam.protocol.zip.ZipAgent;
 
@@ -31,20 +30,21 @@ public class Main {
 			Agent agent = (Agent) Class.forName(agentClass).newInstance();
 			agent.setAssistant(SWT_ASSISTANT, SWTAgentAssistant.getInstance(agent));
 			UserInterface ui = new GraphicalUI(agent);
-
-			if (agent.requiresConfigFile()) {
-				if (!agent.isConfigFilePresent()) {
-					start(agent);
+			AgentConfig cfg = AgentConfig.newInstance(agent);
+			agent.setConfig(cfg);
+			if (cfg.requiresConfigFile()) {
+				if (!cfg.isConfigFilePresent()) {
+					startWizard(cfg);
 				}
-				if (!agent.isConfigFilePresent()) {
+				if (!cfg.isConfigFilePresent()) {
 					// it should mean that the wizard was cancelled by the user.
 					return;
 				}
+				cfg.loadConfigFile();
 			}
+			agent.readConfig();
+			
 			if (agent.autoStarts()) {
-				if (agent.requiresConfigFile()) {
-					agent.loadConfig();
-				}
 				agent.start();
 			}
 			(new Thread(ui)).start();
@@ -97,28 +97,16 @@ public class Main {
 		display.dispose();
 	}
 
-	public static void start(Agent agent) throws Exception {
+	public static void startWizard(AgentConfig cfg) throws Exception {
 		JLG.debug_on();
 		JLG.debug("starting wizard");
 		Display display = Display.getDefault();
 
-		final Shell shell = new Shell(display);
-		shell.setLayout(new FillLayout());
-
-		IWizard wizard;
-		if (agent.getClass() == OCPAgent.class) {
-			wizard = new ConfigWizard(agent);
-		} else if (agent.getClass() == FTPAgent.class) {
-			wizard = new FTPConfigWizard(agent);
-		} else {
-			// no need wizard...
-			throw new Exception("Cannot recognize the Agent class");
-		}
-		WizardDialog dialog = new WizardDialog(shell, wizard);
-		dialog.open();
+		SWTAgentAssistant a = (SWTAgentAssistant) cfg.agent.getAssistant(Main.SWT_ASSISTANT);
+		IWizard wizard = a.getConfigWizardInstance();
+		a.startWizard(display, wizard);
 
 		JLG.debug("about to dispose");
-		shell.dispose();
 		display.dispose();
 	}
 

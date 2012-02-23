@@ -1,14 +1,11 @@
 package org.ocpteam.layer.rsp;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Properties;
 
 public abstract class Agent {
 
-	public Properties p;
+	public AgentConfig cfg;
 
 	protected boolean bIsStarted = false;
 
@@ -18,32 +15,11 @@ public abstract class Agent {
 		assistantMap = new HashMap<String, Object>();
 	}
 
-	public boolean isConfigFilePresent() {
-		return getConfigFile().isFile();
+	public void setConfig(AgentConfig cfg) throws Exception {
+		this.cfg = cfg;
 	}
-
-	public void loadConfig() throws Exception {
-		if (requiresConfigFile() && !isConfigFilePresent()) {
-			throw new Exception("Config file is not found. Expected Path: "
-					+ getConfigFile().getAbsolutePath());
-		}
-		p = new Properties();
-		if (isConfigFilePresent()) {
-			p.load(new FileInputStream(getConfigFile()));
-		}
-		readConfig();
-	}
-
-	public File getConfigFile() {
-		return new File(getProtocolName().toLowerCase() + ".properties");
-	}
-
-	public void loadConfig(Properties properties) throws Exception {
-		p = properties;
-		readConfig();
-	}
-
-	protected void readConfig() throws Exception {
+	
+	public void readConfig() throws Exception {
 	}
 
 	public abstract void start() throws Exception;
@@ -75,8 +51,6 @@ public abstract class Agent {
 	public boolean connectsWithSSH() {
 		return false;
 	}
-
-	public abstract boolean requiresConfigFile();
 
 	public abstract boolean isOnlyClient();
 
