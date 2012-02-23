@@ -139,7 +139,7 @@ public class OCPAgent extends DSPAgent {
 	}
 
 	@Override
-	public void start() throws Exception {
+	public void connect() throws Exception {
 
 		JLG.debug("starting agent " + name);
 
@@ -200,11 +200,11 @@ public class OCPAgent extends DSPAgent {
 			addContact(myself);
 
 		}
-		bIsStarted = true;
+		bIsConnected = true;
 	}
 
 	@Override
-	public void stop() {
+	public void disconnect() {
 		if (server != null) {
 			server.stop();
 			server = null;
@@ -825,7 +825,7 @@ public class OCPAgent extends DSPAgent {
 	}
 
 	@Override
-	public boolean autoStarts() {
+	public boolean autoConnect() {
 		return true;
 	}
 
@@ -837,5 +837,10 @@ public class OCPAgent extends DSPAgent {
 	@Override
 	public boolean isOnlyClient() {
 		return (!cfg.getProperty("server", "yes").equals("yes"));
+	}
+
+	@Override
+	public boolean usesAuthentication() {
+		return true;
 	}
 }

@@ -24,7 +24,7 @@ public class ZipAgent extends Agent {
 	}
 
 	@Override
-	public boolean autoStarts() {
+	public boolean autoConnect() {
 		return false;
 	}
 
@@ -34,13 +34,13 @@ public class ZipAgent extends Agent {
 	}
 
 	@Override
-	public void start() throws Exception {
+	public void connect() throws Exception {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void stop() {
+	public void disconnect() {
 		// TODO Auto-generated method stub
 		
 	}
@@ -61,6 +61,11 @@ public class ZipAgent extends Agent {
 	public void logout(User user) throws Exception {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public boolean usesAuthentication() {
+		return false;
 	}
 
 }

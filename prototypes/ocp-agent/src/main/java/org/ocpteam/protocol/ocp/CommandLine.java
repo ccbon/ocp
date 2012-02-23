@@ -33,7 +33,7 @@ public class CommandLine implements UserInterface {
 
 	private boolean process(String s) {
 		if (s.equalsIgnoreCase("q") || s.equalsIgnoreCase("quit")) {
-			agent.stop();
+			agent.disconnect();
 			return false;
 		}
 

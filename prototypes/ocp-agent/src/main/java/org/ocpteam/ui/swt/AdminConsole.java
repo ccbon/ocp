@@ -28,8 +28,8 @@ import org.ocpteam.misc.JLG;
 
 public class AdminConsole extends ApplicationWindow {
 
-	private static final String NOT_CONNECTED_STATUS = "No user connected.";
-	private static final String CONNECTED_STATUS = "User connected: ";
+	private static final String NOT_AUTHENTICATED_STATUS = "No user connected.";
+	private static final String AUTHENTICATED_STATUS = "User connected: ";
 	private static final String AGENT_OFF = "Agent OFF";
 	private static final String AGENT_ON = "Agent ON";
 
@@ -45,8 +45,8 @@ public class AdminConsole extends ApplicationWindow {
 	private CTabItem userExplorerCTabItem;
 	public ExplorerComposite explorerComposite;
 
-	private StartAgentAction startAgentAction;
-	private StopAgentAction stopAgentAction;
+	private ConnectAgentAction connectAgentAction;
+	private DisconnectAgentAction disconnectAgentAction;
 	private NewUserAction newUserAction;
 	private SignInAction signInAction;
 	private SignOutAction signOutAction;
@@ -67,7 +67,7 @@ public class AdminConsole extends ApplicationWindow {
 	private HelpAction helpAction;
 	private AboutAction aboutAction;
 	private DebugAction debugAction;
-	private boolean bIsConnected;
+	private boolean bIsAuthenticated;
 
 	public Clipboard clipboard;
 
@@ -83,13 +83,13 @@ public class AdminConsole extends ApplicationWindow {
 		addMenuBar();
 		addStatusLine();
 		clipboard = new Clipboard(display);
-		
+
 	}
 
 	@Override
 	public boolean close() {
 		if (agent.isOnlyClient()) {
-			agent.stop();
+			agent.disconnect();
 			display.dispose();
 			return true;
 		} else {
@@ -135,28 +135,30 @@ public class AdminConsole extends ApplicationWindow {
 	}
 
 	public void updateActions() {
-		if (!agent.autoStarts()) {
-			startAgentAction.setEnabled(!agent.isStarted());
-			stopAgentAction.setEnabled(agent.isStarted());
+		if (!agent.autoConnect()) {
+			connectAgentAction.setEnabled(!agent.isConnected());
+			disconnectAgentAction.setEnabled(agent.isConnected());
 
 		}
 
 		// not connected actions
-		signInAction.setEnabled(agent.isStarted() && !bIsConnected);
-		if (agent.allowsUserCreation()) {
-			newUserAction.setEnabled(agent.isStarted() && !bIsConnected);
+		if (agent.usesAuthentication()) {
+			signInAction.setEnabled(agent.isConnected() && !bIsAuthenticated);
+			if (agent.allowsUserCreation()) {
+				newUserAction.setEnabled(agent.isConnected() && !bIsAuthenticated);
+			}
+
+			// connected actions
+			signOutAction.setEnabled(bIsAuthenticated);
+			viewUserSyncTabAction.setEnabled(bIsAuthenticated);
+			viewUserExplorerTabAction.setEnabled(bIsAuthenticated);
 		}
 
-		// connected actions
-		signOutAction.setEnabled(bIsConnected);
-		viewUserSyncTabAction.setEnabled(bIsConnected);
-		viewUserExplorerTabAction.setEnabled(bIsConnected);
-
-		if (agent.isStarted()) {
-			if (bIsConnected) {
-				setStatus(AGENT_ON + " | " + CONNECTED_STATUS + user.getLogin());
+		if (agent.isConnected()) {
+			if (bIsAuthenticated) {
+				setStatus(AGENT_ON + " | " + AUTHENTICATED_STATUS + user.getLogin());
 			} else {
-				setStatus(AGENT_ON + " | " + NOT_CONNECTED_STATUS);
+				setStatus(AGENT_ON + " | " + NOT_AUTHENTICATED_STATUS);
 				removeUserTab();
 			}
 		} else {
@@ -177,16 +179,18 @@ public class AdminConsole extends ApplicationWindow {
 	 */
 	private void createActions() {
 		// Create the actions
-		if (!agent.autoStarts()) {
-			startAgentAction = new StartAgentAction(this);
-			stopAgentAction = new StopAgentAction(this);
+		if (!agent.autoConnect()) {
+			connectAgentAction = new ConnectAgentAction(this);
+			disconnectAgentAction = new DisconnectAgentAction(this);
 		}
 		exitAction = new ExitAction(agent, display, this);
-		if (agent.allowsUserCreation()) {
-			newUserAction = new NewUserAction(agent, display, this);
+		if (agent.usesAuthentication()) {
+			if (agent.allowsUserCreation()) {
+				newUserAction = new NewUserAction(agent, display, this);
+			}
+			signInAction = new SignInAction(this);
+			signOutAction = new SignOutAction(this);
 		}
-		signInAction = new SignInAction(this);
-		signOutAction = new SignOutAction(this);
 		if (DSPAgent.class.isInstance(agent)) {
 			viewContactTabAction = new ViewContactTabAction(this);
 		}
@@ -218,16 +222,18 @@ public class AdminConsole extends ApplicationWindow {
 		MenuManager menuBar = new MenuManager("menu");
 		MenuManager fileMenu = new MenuManager("&File");
 		menuBar.add(fileMenu);
-		if (!agent.autoStarts()) {
-			fileMenu.add(startAgentAction);
-			fileMenu.add(stopAgentAction);
-			fileMenu.add(new Separator());
+		if (!agent.autoConnect()) {
+			fileMenu.add(connectAgentAction);
+			fileMenu.add(disconnectAgentAction);
 		}
-		fileMenu.add(signInAction);
-		fileMenu.add(signOutAction);
-		if (agent.allowsUserCreation()) {
+		if (agent.usesAuthentication()) {
 			fileMenu.add(new Separator());
-			fileMenu.add(newUserAction);
+			fileMenu.add(signInAction);
+			fileMenu.add(signOutAction);
+			if (agent.allowsUserCreation()) {
+				fileMenu.add(new Separator());
+				fileMenu.add(newUserAction);
+			}
 		}
 		fileMenu.add(new Separator());
 		fileMenu.add(exitAction);
@@ -277,17 +283,19 @@ public class AdminConsole extends ApplicationWindow {
 	@Override
 	protected ToolBarManager createToolBarManager(int style) {
 		ToolBarManager toolBarManager = new ToolBarManager(style);
-		if (!agent.autoStarts()) {
-			toolBarManager.add(startAgentAction);
-			toolBarManager.add(stopAgentAction);
+		if (!agent.autoConnect()) {
+			toolBarManager.add(connectAgentAction);
+			toolBarManager.add(disconnectAgentAction);
 			toolBarManager.add(new Separator());
 		}
-		if (agent.allowsUserCreation()) {
-			toolBarManager.add(newUserAction);
-			toolBarManager.add(new Separator());
+		if (agent.usesAuthentication()) {
+			if (agent.allowsUserCreation()) {
+				toolBarManager.add(newUserAction);
+				toolBarManager.add(new Separator());
+			}
+			toolBarManager.add(signInAction);
+			toolBarManager.add(signOutAction);
 		}
-		toolBarManager.add(signInAction);
-		toolBarManager.add(signOutAction);
 		toolBarManager.add(new Separator());
 		if (viewContactTabAction != null) {
 			toolBarManager.add(viewContactTabAction);
@@ -351,8 +359,8 @@ public class AdminConsole extends ApplicationWindow {
 			userExplorerCTabItem.setShowClose(true);
 			userExplorerCTabItem.setText("Explorer");
 
-			explorerComposite = new ExplorerComposite(tabFolder,
-					SWT.NONE, agent, agent.getFileSystem(user), this);
+			explorerComposite = new ExplorerComposite(tabFolder, SWT.NONE,
+					agent, agent.getFileSystem(user), this);
 			userExplorerCTabItem.setControl(explorerComposite);
 
 		}
@@ -420,7 +428,7 @@ public class AdminConsole extends ApplicationWindow {
 
 	public void setUser(User user) {
 		this.user = user;
-		bIsConnected = agent.isStarted() && (user != null);
+		bIsAuthenticated = agent.isConnected() && (user != null);
 
 		updateActions();
 	}

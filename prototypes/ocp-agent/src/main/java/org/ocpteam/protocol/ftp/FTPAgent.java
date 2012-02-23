@@ -29,21 +29,21 @@ public class FTPAgent extends Agent {
 	}
 
 	@Override
-	public void start() throws Exception {
+	public void connect() throws Exception {
 		ftp.connect(hostname);
-		bIsStarted = true;
+		bIsConnected = true;
 	}
 
 	@Override
-	public void stop() {
+	public void disconnect() {
 		try {
-			if (bIsStarted) {
+			if (bIsConnected) {
 				ftp.logout();
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		} finally {
-			bIsStarted = false;
+			bIsConnected = false;
 		}
 	}
 
@@ -112,7 +112,7 @@ public class FTPAgent extends Agent {
 	}
 
 	@Override
-	public boolean autoStarts() {
+	public boolean autoConnect() {
 		return false;
 	}
 
@@ -123,6 +123,11 @@ public class FTPAgent extends Agent {
 
 	@Override
 	public boolean isOnlyClient() {
+		return true;
+	}
+
+	@Override
+	public boolean usesAuthentication() {
 		return true;
 	}
 

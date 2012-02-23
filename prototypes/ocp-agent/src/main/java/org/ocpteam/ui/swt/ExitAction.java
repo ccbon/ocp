@@ -44,7 +44,7 @@ public class ExitAction extends Action {
 		switch (buttonID) {
 		case SWT.YES:
 			display.dispose();
-			agent.stop();
+			agent.disconnect();
 			break;
 		case SWT.NO:
 			Shell shell = window.getShell();

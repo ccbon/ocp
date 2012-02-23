@@ -7,7 +7,7 @@ public abstract class Agent {
 
 	public AgentConfig cfg;
 
-	protected boolean bIsStarted = false;
+	protected boolean bIsConnected = false;
 
 	protected Map<String, Object> assistantMap;
 
@@ -22,9 +22,9 @@ public abstract class Agent {
 	public void readConfig() throws Exception {
 	}
 
-	public abstract void start() throws Exception;
+	public abstract void connect() throws Exception;
 
-	public abstract void stop();
+	public abstract void disconnect();
 
 	public abstract boolean allowsUserCreation();
 
@@ -42,13 +42,13 @@ public abstract class Agent {
 
 	public abstract FileSystem getFileSystem(User user);
 
-	public abstract boolean autoStarts();
+	public abstract boolean autoConnect();
 
-	public boolean isStarted() {
-		return bIsStarted;
+	public boolean isConnected() {
+		return bIsConnected;
 	}
 
-	public boolean connectsWithSSH() {
+	public boolean authenticatesWithSSH() {
 		return false;
 	}
 
@@ -61,4 +61,6 @@ public abstract class Agent {
 	public Object setAssistant(String key, Object assistant) {
 		return assistantMap.put(key, assistant);
 	}
+
+	public abstract boolean usesAuthentication();
 }

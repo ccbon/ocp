@@ -16,15 +16,15 @@ public class SFTPAgent extends Agent {
 	public ChannelSftp channel;
 
 	@Override
-	public void start() throws Exception {
+	public void connect() throws Exception {
 		jsch = new JSch();
-		bIsStarted = true;
+		bIsConnected = true;
 	}
 
 	@Override
-	public void stop() {
+	public void disconnect() {
 		jsch = null;
-		bIsStarted = false;
+		bIsConnected = false;
 	}
 
 	@Override
@@ -88,12 +88,12 @@ public class SFTPAgent extends Agent {
 	}
 
 	@Override
-	public boolean autoStarts() {
+	public boolean autoConnect() {
 		return true;
 	}
 	
 	@Override
-	public boolean connectsWithSSH() {
+	public boolean authenticatesWithSSH() {
 		return true;
 	}
 
@@ -105,6 +105,11 @@ public class SFTPAgent extends Agent {
 
 	@Override
 	public boolean isOnlyClient() {
+		return true;
+	}
+
+	@Override
+	public boolean usesAuthentication() {
 		return true;
 	}
 

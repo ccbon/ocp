@@ -31,7 +31,7 @@ public class CoupleOfAgent {
 			network.setProperty("hash", "SHA-1");
 			network.setProperty("backupNbr", "2");
 			a1.setNetworkProperties(network);
-			a1.start();
+			a1.connect();
 
 			// UserInterface ui = new CommandLine(agent);
 			// (new Thread(ui)).start();
@@ -46,7 +46,7 @@ public class CoupleOfAgent {
 			p2.setProperty("sponsor.1", "tcp://localhost:22220");
 			p2.setProperty("sponsor.2", "xxx://localhost:22223");
 			a2.setConfig(p2);
-			a2.start();
+			a2.connect();
 			JLG.debug("done for me.");
 		} catch (Exception e) {
 			JLG.error(e);

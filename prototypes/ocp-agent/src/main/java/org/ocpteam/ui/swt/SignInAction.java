@@ -25,7 +25,7 @@ public class SignInAction extends Action {
 
 	public void run() {
 		JLG.debug("Authentication User: display a wizard...");
-		if (window.agent.connectsWithSSH()) {
+		if (window.agent.authenticatesWithSSH()) {
 			SSHSignInWizard.start(window);
 		} else {
 			SignInWizard.start(window);

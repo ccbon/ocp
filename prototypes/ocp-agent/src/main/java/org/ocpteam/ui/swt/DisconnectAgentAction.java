@@ -6,16 +6,16 @@ import org.eclipse.swt.graphics.ImageData;
 import org.ocpteam.misc.JLG;
 
 
-public class StopAgentAction extends Action {
+public class DisconnectAgentAction extends Action {
 	private AdminConsole w;
 
-	public StopAgentAction(AdminConsole w) {
+	public DisconnectAgentAction(AdminConsole w) {
 		this.w = w;
-		setText("Stop Agent@Ctrl+2");
-		setToolTipText("Stop " + w.agent.getProtocolName() + " Agent");
+		setText("Disconnect@Ctrl+2");
+		setToolTipText("Disconnect " + w.agent.getProtocolName() + " Agent");
 		try {
 			ImageDescriptor i = ImageDescriptor
-					.createFromImageData(new ImageData(StopAgentAction.class
+					.createFromImageData(new ImageData(DisconnectAgentAction.class
 							.getResourceAsStream("stop_agent.png")));
 			setImageDescriptor(i);
 		} catch (Exception e) {
@@ -24,13 +24,13 @@ public class StopAgentAction extends Action {
 	}
 
 	public void run() {
-		JLG.debug("Stop Agent");
+		JLG.debug("Disconnect Agent");
 		try {
-			if (!w.agent.isStarted()) {
-				QuickMessage.error(w.getShell(), "Agent not started.");
+			if (!w.agent.isConnected()) {
+				QuickMessage.error(w.getShell(), "Agent not connected.");
 			} else {
 				w.setUser(null);
-				w.agent.stop();
+				w.agent.disconnect();
 				w.updateActions();
 			}
 		} catch (Exception e) {

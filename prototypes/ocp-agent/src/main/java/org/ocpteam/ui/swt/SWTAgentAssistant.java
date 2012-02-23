@@ -37,7 +37,7 @@ public class SWTAgentAssistant {
 		return result;
 	}
 
-	public IWizard getStartActionWizardInstance() {
+	public IWizard getConnectActionWizardInstance() {
 		return null;
 	}
 

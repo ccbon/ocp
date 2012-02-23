@@ -36,7 +36,7 @@ public class TestAgent {
 			network.setProperty("hash", "SHA-1");
 			network.setProperty("backupNbr", "2");
 			a1.setNetworkProperties(network);
-			a1.start();
+			a1.connect();
 
 			// UserInterface ui = new CommandLine(agent);
 			// (new Thread(ui)).start();
@@ -53,7 +53,7 @@ public class TestAgent {
 			p2.setProperty("sponsor.1", "tcp://localhost:22220");
 			p2.setProperty("sponsor.2", "xxx://localhost:22223");
 			a2.setConfig(p2);
-			a2.start();
+			a2.connect();
 			Thread.sleep(2000);
 			JLG.debug(a1.toString());
 			JLG.debug(a2.toString());
@@ -124,8 +124,8 @@ public class TestAgent {
 			OCPFileSystem fs2 = new OCPFileSystem(user, a2);
 			fs2.checkoutAll("C:/jlouis/ocp_dir2");
 			
-			a1.stop();
-			a2.stop();
+			a1.disconnect();
+			a2.disconnect();
 
 		} catch (JLGException e) {
 			System.exit(1);

@@ -7,16 +7,16 @@ import org.eclipse.swt.graphics.ImageData;
 import org.ocpteam.misc.JLG;
 
 
-public class StartAgentAction extends Action {
+public class ConnectAgentAction extends Action {
 	private AdminConsole w;
 
-	public StartAgentAction(AdminConsole w) {
+	public ConnectAgentAction(AdminConsole w) {
 		this.w = w;
-		setText("Start Agent@Ctrl+1");
-		setToolTipText("Start " + w.agent.getProtocolName() + " Agent");
+		setText("Connect@Ctrl+1");
+		setToolTipText("Connect " + w.agent.getProtocolName() + " Agent");
 		try {
 			ImageDescriptor i = ImageDescriptor
-					.createFromImageData(new ImageData(StartAgentAction.class
+					.createFromImageData(new ImageData(ConnectAgentAction.class
 							.getResourceAsStream("start_agent.png")));
 			setImageDescriptor(i);
 		} catch (Exception e) {
@@ -25,17 +25,17 @@ public class StartAgentAction extends Action {
 	}
 
 	public void run() {
-		JLG.debug("Start Agent");
+		JLG.debug("Connect");
 		try {
-			if (w.agent.isStarted()) {
-				QuickMessage.error(w.getShell(), "Agent already started.");
+			if (w.agent.isConnected()) {
+				QuickMessage.error(w.getShell(), "Agent already connected.");
 			} else {
 				SWTAgentAssistant a = (SWTAgentAssistant) w.agent.getAssistant(Main.SWT_ASSISTANT);
-				IWizard wizard = a.getStartActionWizardInstance();
+				IWizard wizard = a.getConnectActionWizardInstance();
 				a.startWizard(w.display, wizard);
 				w.agent.cfg.loadConfigFile();
 				w.agent.readConfig();
-				w.agent.start();
+				w.agent.connect();
 				w.updateActions();
 			}
 		} catch (Exception e) {

@@ -44,8 +44,8 @@ public class Main {
 			}
 			agent.readConfig();
 			
-			if (agent.autoStarts()) {
-				agent.start();
+			if (agent.autoConnect()) {
+				agent.connect();
 			}
 			(new Thread(ui)).start();
 		} catch (Exception e) {
