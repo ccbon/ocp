@@ -41,8 +41,8 @@ public class AdminConsole extends ApplicationWindow {
 	CTabItem contactCTabItem;
 	private ContactComposite contactComposite;
 
-	private CTabItem userCTabItem;
-	private CTabItem userExplorerCTabItem;
+	private CTabItem syncCTabItem;
+	private CTabItem explorerCTabItem;
 	public ExplorerComposite explorerComposite;
 
 	private ConnectAgentAction connectAgentAction;
@@ -67,7 +67,7 @@ public class AdminConsole extends ApplicationWindow {
 	private HelpAction helpAction;
 	private AboutAction aboutAction;
 	private DebugAction debugAction;
-	private boolean bIsAuthenticated;
+	boolean bIsAuthenticated;
 
 	public Clipboard clipboard;
 
@@ -145,18 +145,20 @@ public class AdminConsole extends ApplicationWindow {
 		if (agent.usesAuthentication()) {
 			signInAction.setEnabled(agent.isConnected() && !bIsAuthenticated);
 			if (agent.allowsUserCreation()) {
-				newUserAction.setEnabled(agent.isConnected() && !bIsAuthenticated);
+				newUserAction.setEnabled(agent.isConnected()
+						&& !bIsAuthenticated);
 			}
 
 			// connected actions
 			signOutAction.setEnabled(bIsAuthenticated);
-			viewUserSyncTabAction.setEnabled(bIsAuthenticated);
-			viewUserExplorerTabAction.setEnabled(bIsAuthenticated);
 		}
+		viewUserSyncTabAction.setEnabled(bIsAuthenticated);
+		viewUserExplorerTabAction.setEnabled(bIsAuthenticated);
 
 		if (agent.isConnected()) {
 			if (bIsAuthenticated) {
-				setStatus(AGENT_ON + " | " + AUTHENTICATED_STATUS + user.getLogin());
+				setStatus(AGENT_ON + " | " + AUTHENTICATED_STATUS
+						+ user.getLogin());
 			} else {
 				setStatus(AGENT_ON + " | " + NOT_AUTHENTICATED_STATUS);
 				removeUserTab();
@@ -346,58 +348,57 @@ public class AdminConsole extends ApplicationWindow {
 		return new Point(652, 514);
 	}
 
-	public void addUserExplorerTab() {
-		if (userExplorerCTabItem == null) {
-			userExplorerCTabItem = new CTabItem(tabFolder, SWT.NONE);
-			userExplorerCTabItem.addDisposeListener(new DisposeListener() {
+	public void addExplorerTab() {
+		if (explorerCTabItem == null) {
+			explorerCTabItem = new CTabItem(tabFolder, SWT.NONE);
+			explorerCTabItem.addDisposeListener(new DisposeListener() {
 				public void widgetDisposed(DisposeEvent arg0) {
 					JLG.debug("on dispose event");
-					userExplorerCTabItem = null;
+					explorerCTabItem = null;
 				}
 			});
 
-			userExplorerCTabItem.setShowClose(true);
-			userExplorerCTabItem.setText("Explorer");
+			explorerCTabItem.setShowClose(true);
+			explorerCTabItem.setText("Explorer");
 
 			explorerComposite = new ExplorerComposite(tabFolder, SWT.NONE,
 					agent, agent.getFileSystem(user), this);
-			userExplorerCTabItem.setControl(explorerComposite);
+			explorerCTabItem.setControl(explorerComposite);
 
 		}
-		tabFolder.setSelection(userExplorerCTabItem);
+		tabFolder.setSelection(explorerCTabItem);
 
 	}
 
-	public void addUserSyncTab() {
-		if (userCTabItem == null) {
-			userCTabItem = new CTabItem(tabFolder, SWT.NONE);
-			userCTabItem.addDisposeListener(new DisposeListener() {
+	public void addSyncTab() {
+		if (syncCTabItem == null) {
+			syncCTabItem = new CTabItem(tabFolder, SWT.NONE);
+			syncCTabItem.addDisposeListener(new DisposeListener() {
 				public void widgetDisposed(DisposeEvent arg0) {
 					JLG.debug("on dispose event");
-					userCTabItem = null;
+					syncCTabItem = null;
 				}
 			});
 
-			userCTabItem.setShowClose(true);
-			userCTabItem.setText("Synchronize");
+			syncCTabItem.setShowClose(true);
+			syncCTabItem.setText("Synchronize");
 
-			Composite composite = new UserComposite(tabFolder, SWT.NONE, agent,
-					user);
-			userCTabItem.setControl(composite);
+			Composite composite = new SyncComposite(tabFolder, SWT.NONE,
+					agent.getFileSystem(user));
+			syncCTabItem.setControl(composite);
 
 		}
-		tabFolder.setSelection(userCTabItem);
+		tabFolder.setSelection(syncCTabItem);
 	}
 
 	public void removeUserTab() {
-		if (userCTabItem != null && (!userCTabItem.isDisposed())) {
-			userCTabItem.dispose();
-			userCTabItem = null;
+		if (syncCTabItem != null && (!syncCTabItem.isDisposed())) {
+			syncCTabItem.dispose();
+			syncCTabItem = null;
 		}
-		if (userExplorerCTabItem != null
-				&& (!userExplorerCTabItem.isDisposed())) {
-			userExplorerCTabItem.dispose();
-			userExplorerCTabItem = null;
+		if (explorerCTabItem != null && (!explorerCTabItem.isDisposed())) {
+			explorerCTabItem.dispose();
+			explorerCTabItem = null;
 		}
 		explorerComposite = null;
 	}

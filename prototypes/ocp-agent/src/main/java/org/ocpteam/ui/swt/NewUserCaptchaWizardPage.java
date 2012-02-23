@@ -84,8 +84,8 @@ public class NewUserCaptchaWizardPage extends WizardPage {
 					wizard.getCaptcha(), captchaAnswerText.getText());
 			User user = agent.login(wizard.getUsername(), wizard.getPassword());
 			wizard.getAdminConsole().setUser(user);
-			wizard.getAdminConsole().addUserSyncTab();
-			wizard.getAdminConsole().addUserExplorerTab();
+			wizard.getAdminConsole().addSyncTab();
+			wizard.getAdminConsole().addExplorerTab();
 			wizard.bCanFinnish = true;
 		} catch (Exception e) {
 			MessageBox messageBox = new MessageBox(getShell(), SWT.ICON_ERROR

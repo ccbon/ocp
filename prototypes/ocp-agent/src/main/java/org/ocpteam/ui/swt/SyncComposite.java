@@ -11,15 +11,13 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
-import org.ocpteam.layer.rsp.Agent;
-import org.ocpteam.layer.rsp.User;
+import org.ocpteam.layer.rsp.FileSystem;
 import org.ocpteam.misc.JLG;
 
 
-public class UserComposite extends Composite {
+public class SyncComposite extends Composite {
 	private Text dirText;
-	private Agent agent;
-	private User user;
+	private FileSystem fs;
 
 	/**
 	 * Create the composite.
@@ -28,10 +26,9 @@ public class UserComposite extends Composite {
 	 * @param style
 	 * @param agent
 	 */
-	public UserComposite(Composite parent, int style, Agent a, User u) {
+	public SyncComposite(Composite parent, int style, FileSystem fs) {
 		super(parent, style);
-		this.agent = a;
-		this.user = u;
+		this.fs = fs;
 		setLayout(null);
 
 		Label lblLocalDirectory = new Label(this, SWT.NONE);
@@ -39,7 +36,7 @@ public class UserComposite extends Composite {
 		lblLocalDirectory.setText("Local Directory");
 
 		dirText = new Text(this, SWT.BORDER);
-		String defaultDir = user.getDefaultLocalDir();
+		String defaultDir = fs.getDefaultLocalDir();
 		File defaultDirFile = new File(defaultDir);
 		try {
 			JLG.mkdir(defaultDir);
@@ -87,7 +84,7 @@ public class UserComposite extends Composite {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				try {
-					agent.getFileSystem(user).checkoutAll(dirText.getText());
+					SyncComposite.this.fs.checkoutAll(dirText.getText());
 				} catch (Exception e1) {
 					JLG.error(e1);
 				}
@@ -102,9 +99,9 @@ public class UserComposite extends Composite {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				try {
-					agent.getFileSystem(user).commitAll(dirText.getText());
+					SyncComposite.this.fs.commitAll(dirText.getText());
 				} catch (Exception e1) {
-					QuickMessage.error(UserComposite.this.getShell(), "Error while commiting.");
+					QuickMessage.error(SyncComposite.this.getShell(), "Error while commiting.");
 					e1.printStackTrace();
 				}
 

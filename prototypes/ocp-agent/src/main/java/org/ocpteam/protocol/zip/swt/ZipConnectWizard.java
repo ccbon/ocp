@@ -1,33 +1,29 @@
 package org.ocpteam.protocol.zip.swt;
 
-import java.util.Properties;
-
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.Wizard;
 import org.ocpteam.layer.rsp.Agent;
-import org.ocpteam.misc.JLG;
+import org.ocpteam.protocol.zip.ZipAgent;
 
 
 public class ZipConnectWizard extends Wizard {
-	
-	private Agent agent;
+	private ZipConnectWizardPage p;
+	private ZipAgent agent;
 
 	public ZipConnectWizard(Agent agent) {
 		setWindowTitle("FTP Wizard");
-		this.agent = agent;
+		this.agent = (ZipAgent) agent;
 	}
 
 	@Override
 	public void addPages() {
-		addPage(new ZipConnectWizardPage());
+		p = new ZipConnectWizardPage();
+		addPage(p);
 	}
 
 	@Override
 	public boolean performFinish() {
-		Properties p = new Properties();
-		ZipConnectWizardPage firstPage = (ZipConnectWizardPage) getPage("firstPage");
-		p.setProperty("default.dir", firstPage.defaultLocalDirText.getText());
-		JLG.storeConfig(p, agent.cfg.getConfigFile().getAbsolutePath());
+		agent.zipfile = p.fileText.getText();
 		return true;
 	}
 

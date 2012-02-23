@@ -72,8 +72,8 @@ public class SSHSignInWizard extends Wizard {
 			User user = agent.login(p1.sessionText.getText(),
 					c);
 			window.setUser(user);
-			window.addUserSyncTab();
-			window.addUserExplorerTab();
+			window.addSyncTab();
+			window.addExplorerTab();
 		} catch (Exception e) {
 			JLG.error(e);
 			MessageBox messageBox = new MessageBox(getShell(), SWT.ICON_ERROR

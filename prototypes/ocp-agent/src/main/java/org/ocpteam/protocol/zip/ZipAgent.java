@@ -3,9 +3,12 @@ package org.ocpteam.protocol.zip;
 import org.ocpteam.layer.rsp.Agent;
 import org.ocpteam.layer.rsp.FileSystem;
 import org.ocpteam.layer.rsp.User;
+import org.ocpteam.misc.JLG;
 
 public class ZipAgent extends Agent {
 
+
+	public String zipfile;
 
 	@Override
 	public String getProtocolName() {
@@ -19,8 +22,8 @@ public class ZipAgent extends Agent {
 
 	@Override
 	public FileSystem getFileSystem(User user) {
-		// TODO Auto-generated method stub
-		return null;
+		
+		return new ZipFileSystem(this);
 	}
 
 	@Override
@@ -35,7 +38,8 @@ public class ZipAgent extends Agent {
 
 	@Override
 	public void connect() throws Exception {
-		// TODO Auto-generated method stub
+		JLG.debug("opening datasource: " + zipfile);
+		bIsConnected = true;
 		
 	}
 

@@ -36,6 +36,11 @@ public class ConnectAgentAction extends Action {
 				w.agent.cfg.loadConfigFile();
 				w.agent.readConfig();
 				w.agent.connect();
+				if (!w.agent.usesAuthentication()) {
+					w.bIsAuthenticated = true;
+					w.addSyncTab();
+					w.addExplorerTab();
+				}
 				w.updateActions();
 			}
 		} catch (Exception e) {

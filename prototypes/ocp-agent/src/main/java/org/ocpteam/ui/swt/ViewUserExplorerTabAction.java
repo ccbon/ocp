@@ -23,6 +23,6 @@ public class ViewUserExplorerTabAction extends Action {
 
 	public void run() {
 		JLG.debug("View User Explorer.");
-		window.addUserExplorerTab();
+		window.addExplorerTab();
 	}
 }
