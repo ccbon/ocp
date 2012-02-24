@@ -126,7 +126,7 @@ public class FTPFileSystem implements FileSystem {
 	}
 
 	@Override
-	public FileInterface getDir(String dir) throws Exception {
+	public FileInterface getFile(String dir) throws Exception {
 		if (!ftp.changeWorkingDirectory(dir)) {
 			throw new Exception(dir + " is not a remote directory");
 		}

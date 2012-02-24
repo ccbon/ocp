@@ -472,7 +472,7 @@ public class ExplorerComposite extends Composite {
 					DIRECTORY_TYPE, DIRECTORY_SIZE });
 			parentTreetableItem.setImage(DIRECTORY_ICON);
 
-			FileInterface currentDir = fs.getDir(currentRemoteDirString);
+			FileInterface currentDir = fs.getFile(currentRemoteDirString);
 			if (currentDir == null) {
 				return;
 			}

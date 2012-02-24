@@ -257,7 +257,7 @@ public class OCPFileSystem implements FileSystem {
 	}
 
 	@Override
-	public FileInterface getDir(String dir) throws Exception {
+	public FileInterface getFile(String dir) throws Exception {
 		return getTree(dir);
 	}
 

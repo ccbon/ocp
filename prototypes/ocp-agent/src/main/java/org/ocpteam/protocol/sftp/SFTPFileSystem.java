@@ -43,7 +43,7 @@ public class SFTPFileSystem implements FileSystem {
 		if (attr.isDir()) {
 			File dir = new File(localDir, remoteFilename);
 			JLG.mkdir(dir);
-			FileInterface d = getDir(path);
+			FileInterface d = getFile(path);
 			for (FileInterface child : d.listFiles()) {
 				JLG.debug("child: " + child.getName());
 				checkout(path, child.getName(), dir);
@@ -74,7 +74,7 @@ public class SFTPFileSystem implements FileSystem {
 	}
 
 	@Override
-	public FileInterface getDir(String dir) throws Exception {
+	public FileInterface getFile(String dir) throws Exception {
 		@SuppressWarnings("unchecked")
 		Vector<LsEntry> v = (Vector<LsEntry>) agent.channel.ls(dir);
 		SFTPFileImpl result = new SFTPFileImpl();

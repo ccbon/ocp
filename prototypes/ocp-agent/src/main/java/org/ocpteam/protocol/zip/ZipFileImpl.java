@@ -9,7 +9,6 @@ import org.ocpteam.misc.JLG;
 
 public class ZipFileImpl implements FileInterface {
 
-	private ZipEntry zipEntry;
 	private String path;
 	private boolean bIsDirectory;
 	private HashMap<String, ZipFileImpl> map;
@@ -19,7 +18,6 @@ public class ZipFileImpl implements FileInterface {
 		this.path = zipEntry.getName();
 		JLG.debug("zipentry.path=" + path);
 		this.bIsDirectory = zipEntry.isDirectory();
-		this.zipEntry = zipEntry;
 	}
 
 	// root case
@@ -71,6 +69,9 @@ public class ZipFileImpl implements FileInterface {
 	}
 
 	public ZipFileImpl get(String path) {
+		if (path.equals("/")) {
+			return this;
+		}
 		if (path.startsWith("/")) {
 			path = path.substring(1);
 		}

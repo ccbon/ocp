@@ -4,6 +4,7 @@ import java.io.File;
 
 import org.ocpteam.layer.rsp.FileInterface;
 import org.ocpteam.layer.rsp.FileSystem;
+import org.ocpteam.misc.JLG;
 
 public class ZipFileSystem implements FileSystem {
 
@@ -30,7 +31,23 @@ public class ZipFileSystem implements FileSystem {
 	@Override
 	public void checkout(String remoteDir, String remoteFilename, File localDir)
 			throws Exception {
-		// TODO Auto-generated method stub
+		if (!remoteDir.endsWith("/")) {
+			remoteDir += "/";
+		}
+		String path = remoteDir + remoteFilename;
+		FileInterface file = getFile(path);
+		if (file.isDirectory()) {
+			File dir = new File(localDir, remoteFilename);
+			JLG.mkdir(dir);
+			FileInterface d = getFile(path);
+			for (FileInterface child : d.listFiles()) {
+				JLG.debug("child: " + child.getName());
+				checkout(path, child.getName(), dir);
+			}
+		} else { // file
+			ZipUtils.extract(agent.zipfile, path.substring(1), new File(localDir, remoteFilename));
+		}
+
 
 	}
 
@@ -41,11 +58,8 @@ public class ZipFileSystem implements FileSystem {
 	}
 
 	@Override
-	public FileInterface getDir(String dir) throws Exception {
-		if (dir.equals("/")) {
-			return root;
-		}
-		return root.get(dir.substring(1));
+	public FileInterface getFile(String dir) throws Exception {
+		return root.get(dir);
 	}
 
 	@Override

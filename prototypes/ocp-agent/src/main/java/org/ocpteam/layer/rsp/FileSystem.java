@@ -13,7 +13,7 @@ public interface FileSystem {
 
 	public void commit(String remoteDir, File file) throws Exception;
 
-	public FileInterface getDir(String dir)
+	public FileInterface getFile(String dir)
 			throws Exception;
 
 	public void mkdir(String existingParentDir,
