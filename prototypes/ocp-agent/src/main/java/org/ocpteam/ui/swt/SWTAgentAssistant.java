@@ -12,14 +12,17 @@ public class SWTAgentAssistant {
 
 	public Agent agent;
 
-	public void startWizard(Display display, IWizard wizard) {
+	public int startWizard(Display display, IWizard wizard) {
+		int result = 0;
 		if (wizard != null) {
 			final Shell shell = new Shell(display);
 			shell.setLayout(new FillLayout());
 			WizardDialog dialog = new WizardDialog(shell, wizard);
-			dialog.open();
+			result = dialog.open();
+			JLG.debug("result = " + result);
 			shell.dispose();
 		}
+		return result;
 	}
 
 	public static Object getInstance(Agent agent) {

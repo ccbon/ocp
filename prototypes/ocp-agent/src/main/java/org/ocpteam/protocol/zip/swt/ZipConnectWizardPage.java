@@ -1,14 +1,11 @@
 package org.ocpteam.protocol.zip.swt;
 
-import java.io.File;
-
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
@@ -42,7 +39,7 @@ public class ZipConnectWizardPage extends WizardPage {
 		lblAgentName.setText("Please enter the ZIP filename :");
 
 		fileText = new Text(container, SWT.BORDER);
-		fileText.setText("");
+		fileText.setText("C:\\Documents and Settings\\jlouis\\My Documents\\Downloads\\apache_net.zip");
 		fileText.setBounds(102, 75, 289, 19);
 
 		Button btnBrowse = new Button(container, SWT.NONE);

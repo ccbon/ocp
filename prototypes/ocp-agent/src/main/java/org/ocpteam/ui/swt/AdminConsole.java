@@ -155,19 +155,25 @@ public class AdminConsole extends ApplicationWindow {
 		viewUserSyncTabAction.setEnabled(bIsAuthenticated);
 		viewUserExplorerTabAction.setEnabled(bIsAuthenticated);
 
-		if (agent.isConnected()) {
-			if (bIsAuthenticated) {
-				setStatus(AGENT_ON + " | " + AUTHENTICATED_STATUS
-						+ user.getLogin());
-			} else {
-				setStatus(AGENT_ON + " | " + NOT_AUTHENTICATED_STATUS);
-				removeUserTab();
-			}
-		} else {
-			setStatus(AGENT_OFF);
+		if ((!agent.isConnected()) || (!bIsAuthenticated)) {
 			removeUserTab();
 		}
 
+		// status line
+		String statusLine = AGENT_OFF;
+		if (agent.isConnected()) {
+			statusLine = AGENT_ON;
+			if (user != null && bIsAuthenticated) {
+				statusLine += " | " + AUTHENTICATED_STATUS + user.getLogin();
+			}
+			if (agent.usesAuthentication()) {
+				if (!bIsAuthenticated) {
+					statusLine += " | " + NOT_AUTHENTICATED_STATUS;
+				}
+			}
+		}
+		
+		setStatus(statusLine);
 		// user explorer stuff
 		copyAction.setEnabled(copyAction.canRun());
 		pasteAction.setEnabled(pasteAction.canRun());

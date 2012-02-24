@@ -268,4 +268,12 @@ public class JLG {
 		return s == null || s.equals("");
 	}
 
+	public static String basename(String path) {
+		if (path.endsWith("/")) {
+			path = path.substring(0, path.length() - 1);
+		}
+		String[] a = path.split("/");
+		return a[a.length - 1];
+	}
+
 }

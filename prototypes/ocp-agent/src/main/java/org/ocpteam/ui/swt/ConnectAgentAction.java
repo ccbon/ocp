@@ -32,7 +32,9 @@ public class ConnectAgentAction extends Action {
 			} else {
 				SWTAgentAssistant a = (SWTAgentAssistant) w.agent.getAssistant(Main.SWT_ASSISTANT);
 				IWizard wizard = a.getConnectActionWizardInstance();
-				a.startWizard(w.display, wizard);
+				if (a.startWizard(w.display, wizard) != 0) {
+					return;
+				}
 				w.agent.cfg.loadConfigFile();
 				w.agent.readConfig();
 				w.agent.connect();

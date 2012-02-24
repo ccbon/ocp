@@ -8,9 +8,11 @@ import org.ocpteam.layer.rsp.FileSystem;
 public class ZipFileSystem implements FileSystem {
 
 	private ZipAgent agent;
+	public ZipFileImpl root;
 
 	public ZipFileSystem(ZipAgent agent) {
 		this.agent = agent;
+		this.root = new ZipFileImpl();
 	}
 
 	@Override
@@ -40,8 +42,10 @@ public class ZipFileSystem implements FileSystem {
 
 	@Override
 	public FileInterface getDir(String dir) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+		if (dir.equals("/")) {
+			return root;
+		}
+		return root.get(dir.substring(1));
 	}
 
 	@Override
@@ -67,5 +71,7 @@ public class ZipFileSystem implements FileSystem {
 	public String getDefaultLocalDir() {
 		return System.getProperty("user.home");
 	}
+
+
 
 }
