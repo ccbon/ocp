@@ -1,9 +1,5 @@
 package org.ocpteam.protocol.zip;
 
-import java.io.FileInputStream;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
-
 import org.ocpteam.layer.rsp.Agent;
 import org.ocpteam.layer.rsp.FileSystem;
 import org.ocpteam.layer.rsp.User;
@@ -43,27 +39,13 @@ public class ZipAgent extends Agent {
 	@Override
 	public void connect() throws Exception {
 		JLG.debug("opening datasource: " + zipfile);
-		createZipFileSystem(zipfile);
+		createZipFileSystem();
 		bIsConnected = true;
 	}
 
-	private void createZipFileSystem(String zipfile) throws Exception {
+	private void createZipFileSystem() throws Exception {
 		fs = new ZipFileSystem(this);
-		ZipInputStream zipInputStream = null;
-		try {
-			zipInputStream = new ZipInputStream(new FileInputStream(zipfile));
-			ZipEntry zipEntry = null;
-
-			while ((zipEntry = zipInputStream.getNextEntry()) != null) {
-				JLG.debug("adding to fs " + zipEntry.getName());
-				fs.root.add(zipEntry.getName(), zipEntry);
-			}
-
-		} finally {
-			if (zipInputStream != null) {
-				zipInputStream.close();
-			}
-		}
+		fs.refresh();
 	}
 
 	@Override

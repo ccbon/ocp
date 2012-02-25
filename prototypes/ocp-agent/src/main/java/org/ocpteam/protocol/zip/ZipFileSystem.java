@@ -1,6 +1,9 @@
 package org.ocpteam.protocol.zip;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 import org.ocpteam.layer.rsp.FileInterface;
 import org.ocpteam.layer.rsp.FileSystem;
@@ -13,7 +16,6 @@ public class ZipFileSystem implements FileSystem {
 
 	public ZipFileSystem(ZipAgent agent) {
 		this.agent = agent;
-		this.root = new ZipFileImpl();
 	}
 
 	@Override
@@ -70,8 +72,14 @@ public class ZipFileSystem implements FileSystem {
 
 	@Override
 	public void rm(String existingParentDir, String name) throws Exception {
-		// TODO Auto-generated method stub
-
+		if (existingParentDir.startsWith("/")) {
+			existingParentDir = existingParentDir.substring(1);
+		}
+		if (!existingParentDir.endsWith("/")) {
+			existingParentDir += "/";
+		}
+		ZipUtils.rm(new File(agent.zipfile), existingParentDir + name);
+		refresh();
 	}
 
 	@Override
@@ -84,6 +92,25 @@ public class ZipFileSystem implements FileSystem {
 	@Override
 	public String getDefaultLocalDir() {
 		return System.getProperty("user.home");
+	}
+
+	public void refresh() throws Exception {
+		this.root = new ZipFileImpl();
+		ZipInputStream zipInputStream = null;
+		try {
+			zipInputStream = new ZipInputStream(new FileInputStream(agent.zipfile));
+			ZipEntry zipEntry = null;
+
+			while ((zipEntry = zipInputStream.getNextEntry()) != null) {
+				JLG.debug("adding to fs " + zipEntry.getName());
+				this.root.add(zipEntry.getName(), zipEntry);
+			}
+
+		} finally {
+			if (zipInputStream != null) {
+				zipInputStream.close();
+			}
+		}
 	}
 
 
