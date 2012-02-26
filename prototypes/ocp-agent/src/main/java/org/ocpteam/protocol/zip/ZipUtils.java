@@ -3,6 +3,7 @@ package org.ocpteam.protocol.zip;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.nio.file.Files;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
@@ -154,6 +155,47 @@ public class ZipUtils {
 		zout.close();
 		tempFile.delete();
 
+	}
+
+	public static void mkdir(File zipFile, String newDir) throws Exception {
+		File tempFile = File.createTempFile(zipFile.getName(), null);
+
+		tempFile.delete();
+		tempFile.deleteOnExit();
+
+		boolean renameOk = zipFile.renameTo(tempFile);
+		if (!renameOk) {
+			throw new RuntimeException("could not rename the file "
+					+ zipFile.getAbsolutePath() + " to "
+					+ tempFile.getAbsolutePath());
+		}
+		byte[] buf = new byte[1024];
+
+		ZipInputStream zin = new ZipInputStream(new FileInputStream(tempFile));
+		ZipOutputStream zout = new ZipOutputStream(
+				new FileOutputStream(zipFile));
+
+		ZipEntry entry = null;
+		while ((entry = zin.getNextEntry()) != null) {
+			String name = entry.getName();
+			// Add ZIP entry to output stream.
+			zout.putNextEntry(new ZipEntry(name));
+			// Transfer bytes from the ZIP file to the output file
+			int len;
+			while ((len = zin.read(buf)) > 0) {
+				zout.write(buf, 0, len);
+			}
+
+		}
+		// add the empty directory.
+		zout.putNextEntry(new ZipEntry(newDir + "/"));
+		
+		// Close the streams
+		zin.close();
+		// Compress the files
+		// Complete the ZIP file
+		zout.close();
+		tempFile.delete();
 	}
 
 }
