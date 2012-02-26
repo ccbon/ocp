@@ -3,7 +3,7 @@ package org.ocpteam.protocol.zip;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.nio.file.Files;
+import java.io.InputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
@@ -95,7 +95,8 @@ public class ZipUtils {
 
 	}
 
-	public static void rename(File zipFile, String oldname, String newname) throws Exception {
+	public static void rename(File zipFile, String oldname, String newname)
+			throws Exception {
 		if (oldname.startsWith("/")) {
 			oldname = oldname.substring(1);
 		}
@@ -137,7 +138,8 @@ public class ZipUtils {
 			}
 			String newEntryName = name;
 			if (toBeRenamed) {
-				newEntryName = name.replaceFirst("\\Q" + oldname + "\\E", newname);
+				newEntryName = name.replaceFirst("\\Q" + oldname + "\\E",
+						newname);
 			}
 			// Add ZIP entry to output stream.
 			zout.putNextEntry(new ZipEntry(newEntryName));
@@ -189,7 +191,7 @@ public class ZipUtils {
 		}
 		// add the empty directory.
 		zout.putNextEntry(new ZipEntry(newDir + "/"));
-		
+
 		// Close the streams
 		zin.close();
 		// Compress the files
@@ -198,4 +200,112 @@ public class ZipUtils {
 		tempFile.delete();
 	}
 
+	public static void add(File zipFile, String dir, File parent, File[] files)
+			throws Exception {
+
+		if (dir.startsWith("/")) {
+			dir = dir.substring(1);
+		}
+		if (dir.endsWith("/")) {
+			dir = dir.substring(0, dir.length() - 1);
+		}
+
+		File tempFile = File.createTempFile(zipFile.getName(), null);
+		try {
+			tempFile.delete();
+			tempFile.deleteOnExit();
+
+			boolean renameOk = zipFile.renameTo(tempFile);
+			if (!renameOk) {
+				throw new RuntimeException("could not rename the file "
+						+ zipFile.getAbsolutePath() + " to "
+						+ tempFile.getAbsolutePath());
+			}
+			byte[] buf = new byte[1024];
+
+			ZipInputStream zin = new ZipInputStream(new FileInputStream(
+					tempFile));
+			ZipOutputStream zout = new ZipOutputStream(new FileOutputStream(
+					zipFile));
+
+			ZipEntry entry = null;
+			while ((entry = zin.getNextEntry()) != null) {
+				String name = entry.getName();
+				if (name.startsWith("/")) {
+					name = name.substring(1);
+				}
+				JLG.debug("name=" + name);
+
+				boolean toBeReplaced = false;
+				for (File f : files) {
+					String base = parent.getCanonicalFile().toURI().getPath();
+					String fname = f.getCanonicalFile().toURI().getPath()
+							.replaceFirst("\\Q" + base + "\\E", "");
+					JLG.debug("fname=" + fname);
+					if (!dir.equals("")) {
+						fname = dir + "/" + fname;
+					}
+					if (name.startsWith("/" + fname + "/")
+							|| name.startsWith(fname + "/")
+							|| name.equals("/" + fname)
+							|| name.equals(fname)) {
+						JLG.debug("to be replaced.");
+						toBeReplaced = true;
+						break;
+					}
+
+				}
+				if (!toBeReplaced) {
+					// Add ZIP entry to output stream.
+					zout.putNextEntry(new ZipEntry(name));
+					// Transfer bytes from the ZIP file to the output file
+					int len;
+					while ((len = zin.read(buf)) > 0) {
+						zout.write(buf, 0, len);
+					}
+
+				}
+			}
+
+			// add all the files
+			JLG.debug("Adding the new files");
+			for (File f : files) {
+				String base = parent.getCanonicalFile().toURI().getPath();
+				String fname = f.getCanonicalFile().toURI().getPath()
+						.replaceFirst("\\Q" + base + "\\E", "");
+				JLG.debug("fname=" + fname);
+				if (!dir.equals("")) {
+					fname = dir + "/" + fname;
+				}
+				if (f.isDirectory()) {
+					if (!fname.endsWith("/")) {
+						fname += "/";
+					}
+					zout.putNextEntry(new ZipEntry(fname));
+				} else {
+					InputStream in = new FileInputStream(f);
+					// Add ZIP entry to output stream.
+					zout.putNextEntry(new ZipEntry(fname));
+					// Transfer bytes from the file to the ZIP file
+					int len;
+					while ((len = in.read(buf)) > 0) {
+						zout.write(buf, 0, len);
+					}
+					in.close();
+					// Complete the entry
+					
+				}
+
+			}
+			// Close the streams
+			zin.close();
+			// Compress the files
+			// Complete the ZIP file
+			zout.close();
+		} catch (Exception e) {
+			tempFile.renameTo(zipFile);
+			throw e;
+		}
+
+	}
 }

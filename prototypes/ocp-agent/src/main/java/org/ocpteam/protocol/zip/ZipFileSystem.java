@@ -2,6 +2,8 @@ package org.ocpteam.protocol.zip;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -55,12 +57,33 @@ public class ZipFileSystem implements FileSystem {
 
 	@Override
 	public void commit(String remoteDir, File file) throws Exception {
-		// TODO Auto-generated method stub
+		JLG.debug("zip commit: " + file.getName());
+		if (remoteDir.startsWith("/")) {
+			remoteDir = remoteDir.substring(1);
+		}
+		if (!remoteDir.endsWith("/")) {
+			remoteDir += "/";
+		}
+		List<File> list = new LinkedList<File>();
+		makeList(list, file);
+		File[] files = (File[]) list.toArray(new File[list.size()]);
+		File parent = file.getParentFile();
+		ZipUtils.add(new File(agent.zipfile), remoteDir, parent, files);
+		refresh();
+	}
 
+	private void makeList(List<File> list, File file) {
+		list.add(file);
+		if (file.isDirectory()) {
+			for (File child : file.listFiles()) {
+				makeList(list, child);
+			}
+		}
 	}
 
 	@Override
 	public FileInterface getFile(String dir) throws Exception {
+		refresh();
 		return root.get(dir);
 	}
 
