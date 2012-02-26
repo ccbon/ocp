@@ -45,6 +45,9 @@ public class ZipUtils {
 	}
 
 	public static void rm(File zipFile, String filename) throws Exception {
+		if (filename.startsWith("/")) {
+			filename = filename.substring(1);
+		}
 		if (filename.endsWith("/")) {
 			filename = filename.substring(0, filename.length() - 1);
 		}
@@ -55,8 +58,9 @@ public class ZipUtils {
 
 		boolean renameOk = zipFile.renameTo(tempFile);
 		if (!renameOk) {
-			throw new RuntimeException("could not rename the file " + zipFile.getAbsolutePath()
-					+ " to " + tempFile.getAbsolutePath());
+			throw new RuntimeException("could not rename the file "
+					+ zipFile.getAbsolutePath() + " to "
+					+ tempFile.getAbsolutePath());
 		}
 		byte[] buf = new byte[1024];
 
@@ -80,6 +84,68 @@ public class ZipUtils {
 					zout.write(buf, 0, len);
 				}
 			}
+		}
+		// Close the streams
+		zin.close();
+		// Compress the files
+		// Complete the ZIP file
+		zout.close();
+		tempFile.delete();
+
+	}
+
+	public static void rename(File zipFile, String oldname, String newname) throws Exception {
+		if (oldname.startsWith("/")) {
+			oldname = oldname.substring(1);
+		}
+		if (oldname.endsWith("/")) {
+			oldname = oldname.substring(0, oldname.length() - 1);
+		}
+		if (newname.startsWith("/")) {
+			newname = newname.substring(1);
+		}
+		File tempFile = File.createTempFile(zipFile.getName(), null);
+
+		tempFile.delete();
+		tempFile.deleteOnExit();
+
+		boolean renameOk = zipFile.renameTo(tempFile);
+		if (!renameOk) {
+			throw new RuntimeException("could not rename the file "
+					+ zipFile.getAbsolutePath() + " to "
+					+ tempFile.getAbsolutePath());
+		}
+		byte[] buf = new byte[1024];
+
+		ZipInputStream zin = new ZipInputStream(new FileInputStream(tempFile));
+		ZipOutputStream zout = new ZipOutputStream(
+				new FileOutputStream(zipFile));
+
+		ZipEntry entry = null;
+		while ((entry = zin.getNextEntry()) != null) {
+			String name = entry.getName();
+			if (name.startsWith("/")) {
+				name = name.substring(1);
+			}
+			JLG.debug("name=" + name);
+			JLG.debug("oldname=" + oldname);
+			boolean toBeRenamed = false;
+			if (name.startsWith(oldname + "/") || name.equals(oldname)) {
+				JLG.debug("to be renamed.");
+				toBeRenamed = true;
+			}
+			String newEntryName = name;
+			if (toBeRenamed) {
+				newEntryName = name.replaceFirst("\\Q" + oldname + "\\E", newname);
+			}
+			// Add ZIP entry to output stream.
+			zout.putNextEntry(new ZipEntry(newEntryName));
+			// Transfer bytes from the ZIP file to the output file
+			int len;
+			while ((len = zin.read(buf)) > 0) {
+				zout.write(buf, 0, len);
+			}
+
 		}
 		// Close the streams
 		zin.close();

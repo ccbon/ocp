@@ -85,7 +85,14 @@ public class ZipFileSystem implements FileSystem {
 	@Override
 	public void rename(String existingParentDir, String oldName, String newName)
 			throws Exception {
-		// TODO Auto-generated method stub
+		if (existingParentDir.startsWith("/")) {
+			existingParentDir = existingParentDir.substring(1);
+		}
+		if (!existingParentDir.endsWith("/")) {
+			existingParentDir += "/";
+		}
+		ZipUtils.rename(new File(agent.zipfile), existingParentDir + oldName, existingParentDir + newName);
+		refresh();
 
 	}
 
