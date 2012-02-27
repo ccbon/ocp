@@ -1,4 +1,4 @@
-package org.ocpteam.protocol.ocp;
+package org.ocpteam.layer.rsp;
 
 public interface UserInterface extends Runnable {
 	

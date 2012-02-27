@@ -38,7 +38,7 @@ public class ExitAction extends Action {
 		MessageBox messageBox = new MessageBox(new Shell(display),
 				SWT.ICON_WARNING | SWT.YES | SWT.NO);
 		messageBox
-				.setMessage("This will stop the OCP agent. Are you sure you want to exit ?");
+				.setMessage("This will stop the " + agent.getProtocolName() + " agent. Are you sure you want to exit ?");
 		messageBox.setText("Warning");
 		int buttonID = messageBox.open();
 		switch (buttonID) {
