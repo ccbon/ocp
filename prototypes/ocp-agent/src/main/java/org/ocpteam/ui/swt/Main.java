@@ -3,8 +3,6 @@ package org.ocpteam.ui.swt;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Properties;
 
 import org.eclipse.jface.wizard.IWizard;
@@ -15,11 +13,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.ocpteam.layer.rsp.Agent;
 import org.ocpteam.layer.rsp.AgentConfig;
 import org.ocpteam.misc.JLG;
-import org.ocpteam.protocol.ftp.FTPAgent;
-import org.ocpteam.protocol.ocp.OCPAgent;
 import org.ocpteam.protocol.ocp.UserInterface;
-import org.ocpteam.protocol.sftp.SFTPAgent;
-import org.ocpteam.protocol.zip.ZipAgent;
 
 public class Main {
 	public static final String SWT_ASSISTANT = "swt";
@@ -58,17 +52,11 @@ public class Main {
 		// load it and read agent class
 		// else starts a wizard.
 
-		Map<String, String> map = new HashMap<String, String>();
-		map.put("OCP", OCPAgent.class.getName());
-		map.put("FTP", FTPAgent.class.getName());
-		map.put("SFTP", SFTPAgent.class.getName());
-		map.put("ZIP", ZipAgent.class.getName());
-		
 		String result = null;
 		Properties p = new Properties();
 		File file = new File("protocol.properties");
 		if (!file.exists()) {
-			chooseProtocolWizard(map);
+			chooseProtocolWizard();
 		}
 		if (!file.exists()) {
 			System.exit(0);
@@ -80,7 +68,7 @@ public class Main {
 		return result;
 	}
 
-	private static void chooseProtocolWizard(Map<String, String> map) {
+	private static void chooseProtocolWizard() {
 		JLG.debug_on();
 		JLG.debug("starting wizard");
 		Display display = Display.getDefault();
@@ -88,7 +76,7 @@ public class Main {
 		final Shell shell = new Shell(display);
 		shell.setLayout(new FillLayout());
 
-		IWizard wizard = new ChooseProtocolWizard(map);
+		IWizard wizard = new ChooseProtocolWizard();
 		WizardDialog dialog = new WizardDialog(shell, wizard);
 		dialog.open();
 
