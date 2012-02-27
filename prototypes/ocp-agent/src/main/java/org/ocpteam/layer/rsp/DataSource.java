@@ -21,6 +21,8 @@ public class DataSource {
 	public Agent getAgent() throws Exception {
 		String scheme = uri.getScheme().toUpperCase();
 		String agentClassString = protocolResource.getString(scheme);
-		return (Agent) Class.forName(agentClassString).newInstance();
+		Agent agent = (Agent) Class.forName(agentClassString).newInstance();
+		agent.setDataSource(this);
+		return agent;
 	}
 }

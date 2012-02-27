@@ -11,6 +11,8 @@ public abstract class Agent {
 
 	protected Map<String, Object> assistantMap;
 
+	protected DataSource ds;
+
 	public Agent() {
 		assistantMap = new HashMap<String, Object>();
 	}
@@ -63,4 +65,8 @@ public abstract class Agent {
 	}
 
 	public abstract boolean usesAuthentication();
+
+	public void setDataSource(DataSource dataSource) {
+		this.ds = dataSource;
+	}
 }
