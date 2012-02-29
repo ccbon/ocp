@@ -7,6 +7,8 @@ import java.net.URI;
 import java.util.Properties;
 import java.util.ResourceBundle;
 
+import org.ocpteam.misc.JLG;
+
 public class DataSource {
 
 	public static ResourceBundle protocolResource = ResourceBundle
@@ -23,15 +25,21 @@ public class DataSource {
 
 	private File file;
 
-	public DataSource(URI uri) {
-		setURI(uri);
-	}
+	private Agent agent;
 
 	public DataSource() {
 	}
 
 	public DataSource(File file) throws Exception {
 		setFile(file);
+	}
+	
+	public DataSource(URI uri) throws Exception {
+		setURI(uri);
+	}
+	
+	public DataSource(String protocol) {
+		setProtocol(protocol);
 	}
 
 	public void setFile(File file) throws Exception {
@@ -43,6 +51,7 @@ public class DataSource {
 		}
 		String name = file.getName();
 		String extension = name.substring(name.lastIndexOf("."));
+		JLG.debug("extension=" + extension);
 		if (file.exists()) {
 			if (extension.equalsIgnoreCase(".uri")) {
 				Properties p = new Properties();
@@ -51,14 +60,16 @@ public class DataSource {
 				is.close();
 				URI uri = new URI(p.getProperty("uri"));
 				setURI(uri);
+			} else {
+				String protocol = DataSource.extensionResource
+						.getString(extension.toLowerCase());
+				setProtocol(protocol);
+				String path = file.getAbsolutePath();
+				setPath(path);
+
 			}
-		} else {
-			String protocol = DataSource.extensionResource.getString(extension
-					.toLowerCase());
-			setProtocol(protocol);
-			String path = file.getAbsolutePath();
-			setPath(path);
 		}
+
 	}
 
 	public void setPath(String path) {
@@ -81,7 +92,8 @@ public class DataSource {
 
 	public boolean isValid(String protocol) {
 		try {
-			String agentClassString = protocolResource.getString(protocol.toUpperCase());
+			String agentClassString = protocolResource.getString(protocol
+					.toUpperCase());
 			Agent agent = (Agent) Class.forName(agentClassString).newInstance();
 			if (agent != null) {
 				return true;
@@ -91,13 +103,18 @@ public class DataSource {
 		return false;
 	}
 
-	public static DataSource getInstance(URI uri) {
+	public static DataSource getInstance(URI uri) throws Exception {
 		return new DataSource(uri);
 	}
 
 	public Agent getAgent() throws Exception {
-		String agentClassString = protocolResource.getString(protocol.toUpperCase());
-		Agent agent = (Agent) Class.forName(agentClassString).newInstance();
+		JLG.debug("protocol=" + protocol);
+		if (agent != null) {
+			return agent;
+		}
+		String agentClassString = protocolResource.getString(protocol
+				.toUpperCase());
+		agent = (Agent) Class.forName(agentClassString).newInstance();
 		agent.setDataSource(this);
 		return agent;
 	}
@@ -107,4 +124,25 @@ public class DataSource {
 		setProtocol(uri.getScheme().toLowerCase());
 		setPath(uri.getPath());
 	}
+
+	public File getFile() {
+		return this.file;
+	}
+
+	public void close() {
+	}
+
+	public static ResourceBundle getResource(String protocol, String subpackage) throws Exception {
+		String agentClassString = protocolResource.getString(protocol
+				.toUpperCase());
+		String packageString = Class.forName(agentClassString).getPackage().getName() + "." + subpackage.toLowerCase();
+		String resourceClassString = packageString + "." + protocol.toUpperCase() + subpackage.toUpperCase() + "Resource";
+		JLG.debug("class=" + resourceClassString);
+		return (ResourceBundle) Class.forName(resourceClassString).newInstance();
+	}
+
+	public URI getURI() {
+		return uri;
+	}
+
 }

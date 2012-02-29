@@ -3,6 +3,7 @@ package org.ocpteam.ui.swt;
 import org.eclipse.jface.action.Action;
 import org.eclipse.swt.widgets.TableItem;
 import org.ocpteam.misc.JLG;
+import org.ocpteam.misc.swt.QuickMessage;
 
 
 public class RemoveRemoteFileAction extends Action {

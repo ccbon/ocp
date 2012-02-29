@@ -1,5 +1,7 @@
 package org.ocpteam.protocol.zip.swt;
 
+import java.io.File;
+
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.Wizard;
 import org.ocpteam.layer.rsp.Agent;
@@ -23,7 +25,7 @@ public class ZipConnectWizard extends Wizard {
 
 	@Override
 	public boolean performFinish() {
-		agent.zipfile = p.fileText.getText();
+		agent.zipfile = new File(p.fileText.getText());
 		return true;
 	}
 

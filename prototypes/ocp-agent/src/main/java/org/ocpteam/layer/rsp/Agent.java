@@ -13,6 +13,8 @@ public abstract class Agent {
 
 	protected DataSource ds;
 
+	protected Context initialContext;
+
 	public Agent() {
 		assistantMap = new HashMap<String, Object>();
 	}
@@ -68,5 +70,9 @@ public abstract class Agent {
 
 	public void setDataSource(DataSource dataSource) {
 		this.ds = dataSource;
+	}
+
+	public Context getInitialContext() {
+		return initialContext;
 	}
 }

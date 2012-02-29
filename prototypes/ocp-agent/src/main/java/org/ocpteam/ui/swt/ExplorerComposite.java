@@ -47,6 +47,7 @@ import org.ocpteam.layer.rsp.Agent;
 import org.ocpteam.layer.rsp.FileInterface;
 import org.ocpteam.layer.rsp.FileSystem;
 import org.ocpteam.misc.JLG;
+import org.ocpteam.misc.swt.QuickMessage;
 
 public class ExplorerComposite extends Composite {
 	private static final String DIRECTORY_SIZE = "";

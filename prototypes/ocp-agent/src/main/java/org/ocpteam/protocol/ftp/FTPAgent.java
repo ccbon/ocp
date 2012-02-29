@@ -6,6 +6,7 @@ import java.io.IOException;
 
 import org.apache.commons.net.ftp.FTPClient;
 import org.ocpteam.layer.rsp.Agent;
+import org.ocpteam.layer.rsp.Context;
 import org.ocpteam.layer.rsp.FileSystem;
 import org.ocpteam.layer.rsp.User;
 import org.ocpteam.misc.JLG;
@@ -30,8 +31,16 @@ public class FTPAgent extends Agent {
 
 	@Override
 	public void connect() throws Exception {
-		ftp.connect(hostname);
-		bIsConnected = true;
+
+		hostname = ds.getURI().getHost();
+		JLG.debug("hostname=" + hostname);
+		try {
+			ftp.connect(hostname);
+			bIsConnected = true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new Exception("Cannot connect to " + hostname);
+		}
 	}
 
 	@Override
@@ -54,11 +63,20 @@ public class FTPAgent extends Agent {
 
 	@Override
 	public User login(String login, Object challenge) throws Exception {
+		try {
+			ftp.logout();
+		} catch (Exception e) {
+		}
+		try {
+			ftp.connect(hostname);
+		} catch (Exception e) {
+		}
 		String password = (String) challenge;
 		if (ftp.login(login, password)) {
 			JLG.debug("ftp logged in.");
-			FTPUser user = new FTPUser(login, password, cfg.getProperty(
-					"default.dir", System.getProperty("user.home")));
+			FTPUser user = new FTPUser(login, password,
+					System.getProperty("user.home"));
+			initialContext = new Context(this, getFileSystem(user), "/");
 			return user;
 		} else {
 			throw new Exception("Cannot Login.");

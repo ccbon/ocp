@@ -34,7 +34,7 @@ public class DefineDataSourceWizardPage extends WizardPage {
 	 */
 	public DefineDataSourceWizardPage() {
 		super("DefineDataSourceWizardPage");
-		setTitle("Specify a data source.");
+		setTitle("Please specify a data source.");
 		setDescription("Please enter the requested information.");
 		map = new HashMap<String, String>();
 		for (Enumeration<String> e = DataSource.protocolResource.getKeys(); e
@@ -76,8 +76,9 @@ public class DefineDataSourceWizardPage extends WizardPage {
 				refresh();
 			}
 		});
-		btnEnterAFilename.setBounds(10, 10, 248, 16);
-		btnEnterAFilename.setText("Enter a filename");
+		btnEnterAFilename.setBounds(10, 10, 354, 16);
+		btnEnterAFilename
+				.setText("Enter an existing datasource file (*.zip, *.uri, ...):");
 
 		filenameText.setBounds(20, 32, 270, 19);
 
@@ -107,7 +108,6 @@ public class DefineDataSourceWizardPage extends WizardPage {
 				combo.setEnabled(true);
 				mode = PROTOCOL_MODE;
 				refresh();
-
 			}
 
 		});
@@ -134,13 +134,17 @@ public class DefineDataSourceWizardPage extends WizardPage {
 
 	private void refresh() {
 		if (mode == FILE_MODE) {
-			try {
-				new DataSource(new File(filename));
+			if (JLG.isNullOrEmpty(filename)) {
 				setErrorMessage(null);
-			} catch (Exception e1) {
-				JLG.debug("error");
-				// e1.printStackTrace();
-				setErrorMessage("this file is not a valid datasource");
+			} else {
+				try {
+					new DataSource(new File(filename));
+					setErrorMessage(null);
+				} catch (Exception e1) {
+					JLG.debug("error");
+					// e1.printStackTrace();
+					setErrorMessage("this file is not a valid datasource");
+				}
 			}
 		} else {
 			setErrorMessage(null);
@@ -151,6 +155,11 @@ public class DefineDataSourceWizardPage extends WizardPage {
 	@Override
 	public boolean isPageComplete() {
 		JLG.debug("is page complete ?");
+		if (mode == FILE_MODE) {
+			if (JLG.isNullOrEmpty(filename)) {
+				return false;
+			}
+		}
 		if (getErrorMessage() != null) {
 			return false;
 		}

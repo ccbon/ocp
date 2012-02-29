@@ -12,7 +12,7 @@ import org.ocpteam.misc.JLG;
 
 public class ZipUtils {
 
-	public static void extract(String zipfile, String path, File file)
+	public static void extract(File zipfile, String path, File file)
 			throws Exception {
 		JLG.debug("extracting from " + zipfile + " path=" + path);
 		ZipInputStream zipInputStream = null;
@@ -247,8 +247,7 @@ public class ZipUtils {
 					}
 					if (name.startsWith("/" + fname + "/")
 							|| name.startsWith(fname + "/")
-							|| name.equals("/" + fname)
-							|| name.equals(fname)) {
+							|| name.equals("/" + fname) || name.equals(fname)) {
 						JLG.debug("to be replaced.");
 						toBeReplaced = true;
 						break;
@@ -293,7 +292,7 @@ public class ZipUtils {
 					}
 					in.close();
 					// Complete the entry
-					
+
 				}
 
 			}
@@ -307,5 +306,17 @@ public class ZipUtils {
 			throw e;
 		}
 
+	}
+
+	public static File createEmptyFile(String filename) {
+		try {
+			// Create the ZIP file
+			ZipOutputStream out = new ZipOutputStream(new FileOutputStream(
+					filename));
+			// Complete the ZIP file
+			out.close();
+		} catch (Exception e) {
+		}
+		return new File(filename);
 	}
 }

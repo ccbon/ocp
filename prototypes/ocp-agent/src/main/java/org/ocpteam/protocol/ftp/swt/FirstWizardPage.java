@@ -1,19 +1,18 @@
 package org.ocpteam.protocol.ftp.swt;
 
-import java.io.File;
+import java.net.URI;
 
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.ocpteam.layer.rsp.DataSource;
 
 public class FirstWizardPage extends WizardPage {
-	protected boolean bIsPageComplete = true;
+
 	protected Text serverHostnameText;
 	protected Text defaultLocalDirText;
 	protected Text portText;
@@ -44,6 +43,11 @@ public class FirstWizardPage extends WizardPage {
 
 		serverHostnameText = new Text(container, SWT.BORDER);
 		serverHostnameText.setText("127.0.0.1");
+		serverHostnameText.addModifyListener(new ModifyListener() {
+			public void modifyText(ModifyEvent e) {
+				refresh();
+			}
+		});
 		serverHostnameText.setBounds(102, 73, 177, 19);
 		
 		Label lblDefaultLocalDirectory = new Label(container, SWT.NONE);
@@ -51,7 +55,12 @@ public class FirstWizardPage extends WizardPage {
 		lblDefaultLocalDirectory.setText("Default Local directory :");
 		
 		defaultLocalDirText = new Text(container, SWT.BORDER);
-		defaultLocalDirText.setText(System.getProperty("user.home") + File.separator + "ftp" + File.separator + "local");
+		defaultLocalDirText.addModifyListener(new ModifyListener() {
+			public void modifyText(ModifyEvent e) {
+				refresh();
+			}
+		});
+		defaultLocalDirText.setText("/");
 		defaultLocalDirText.setBounds(102, 181, 177, 19);
 		
 		Label lblPort = new Label(container, SWT.NONE);
@@ -59,32 +68,43 @@ public class FirstWizardPage extends WizardPage {
 		lblPort.setText("Port :");
 		
 		portText = new Text(container, SWT.BORDER);
-		portText.setText("21");
-		portText.setBounds(102, 117, 76, 19);
-		
-		Button btnBrowse = new Button(container, SWT.NONE);
-		btnBrowse.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				DirectoryDialog directoryDialog = new DirectoryDialog(
-						getShell());
-				directoryDialog.setFilterPath(defaultLocalDirText.getText());
-				directoryDialog
-						.setMessage("Please select a directory and click OK");
-
-				String dir = directoryDialog.open();
-				if (dir != null) {
-					defaultLocalDirText.setText(dir);
-				}
-
+		portText.addModifyListener(new ModifyListener() {
+			public void modifyText(ModifyEvent e) {
+				refresh();
 			}
 		});
-		btnBrowse.setBounds(285, 179, 68, 23);
-		btnBrowse.setText("Browse");
+		portText.setText("21");
+		portText.setBounds(102, 117, 76, 19);
+	}
+
+	protected void refresh() {
+		try {
+			String hostname = "";
+			if (serverHostnameText != null) {
+				hostname = serverHostnameText.getText();
+			}
+			String port = "";
+			if (portText != null) {
+				port = portText.getText();
+			}
+			String dir = "";
+			if (defaultLocalDirText != null) {
+				dir = defaultLocalDirText.getText();
+			}
+			URI uri = new URI("ftp://" + hostname + ":" + port + dir);
+			new DataSource(uri);
+		} catch (Exception e) {
+			e.printStackTrace();
+			setErrorMessage("bad input");
+		}
+		getWizard().getContainer().updateButtons();
 	}
 
 	@Override
 	public boolean isPageComplete() {
-		return bIsPageComplete;
+		if (getErrorMessage() != null) {
+			return false;
+		}
+		return true;
 	}
 }

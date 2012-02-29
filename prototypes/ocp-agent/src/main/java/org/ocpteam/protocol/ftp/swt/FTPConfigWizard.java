@@ -5,7 +5,6 @@ import java.util.Properties;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.Wizard;
 import org.ocpteam.layer.rsp.Agent;
-import org.ocpteam.misc.JLG;
 
 
 public class FTPConfigWizard extends Wizard {

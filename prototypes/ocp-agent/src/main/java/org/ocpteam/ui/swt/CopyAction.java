@@ -78,7 +78,7 @@ public class CopyAction extends Action {
 		}
 		Display display = window.getShell().getDisplay();
 		Control c = display.getFocusControl();
-		if (c.getClass() == Table.class) {
+		if (c != null && c.getClass() == Table.class) {
 			Table t = (Table) c;
 			int length = t.getSelectionCount();
 			return (length > 0);

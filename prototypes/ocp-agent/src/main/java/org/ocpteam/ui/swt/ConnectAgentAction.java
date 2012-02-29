@@ -5,6 +5,7 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.swt.graphics.ImageData;
 import org.ocpteam.misc.JLG;
+import org.ocpteam.misc.swt.QuickMessage;
 
 
 public class ConnectAgentAction extends Action {

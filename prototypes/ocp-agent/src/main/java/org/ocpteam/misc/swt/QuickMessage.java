@@ -1,4 +1,4 @@
-package org.ocpteam.ui.swt;
+package org.ocpteam.misc.swt;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.MessageBox;
@@ -29,6 +29,17 @@ public class QuickMessage {
 		messageBox.setMessage(string);
 		messageBox.setText("Information");
 		messageBox.open();
+	}
+
+	public static Exception exception(Shell shell, String message, Exception e) {
+		e.printStackTrace();
+		error(shell, message + " - error: " + e.getMessage());
+		return e;
+	}
+
+	public static Exception exception(Shell shell, String message) {
+		error(shell, message);
+		return new Exception(message);
 	}
 
 }

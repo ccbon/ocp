@@ -13,6 +13,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.ocpteam.layer.rsp.FileSystem;
 import org.ocpteam.misc.JLG;
+import org.ocpteam.misc.swt.QuickMessage;
 
 
 public class SyncComposite extends Composite {

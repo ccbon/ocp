@@ -68,7 +68,7 @@ public class ZipFileSystem implements FileSystem {
 		makeList(list, file);
 		File[] files = (File[]) list.toArray(new File[list.size()]);
 		File parent = file.getParentFile();
-		ZipUtils.add(new File(agent.zipfile), remoteDir, parent, files);
+		ZipUtils.add(agent.zipfile, remoteDir, parent, files);
 		refresh();
 	}
 
@@ -95,7 +95,7 @@ public class ZipFileSystem implements FileSystem {
 		if (!existingParentDir.endsWith("/")) {
 			existingParentDir += "/";
 		}
-		ZipUtils.mkdir(new File(agent.zipfile), existingParentDir + newDir);
+		ZipUtils.mkdir(agent.zipfile, existingParentDir + newDir);
 		refresh();
 
 	}
@@ -108,7 +108,7 @@ public class ZipFileSystem implements FileSystem {
 		if (!existingParentDir.endsWith("/")) {
 			existingParentDir += "/";
 		}
-		ZipUtils.rm(new File(agent.zipfile), existingParentDir + name);
+		ZipUtils.rm(agent.zipfile, existingParentDir + name);
 		refresh();
 	}
 
@@ -121,7 +121,7 @@ public class ZipFileSystem implements FileSystem {
 		if (!existingParentDir.endsWith("/")) {
 			existingParentDir += "/";
 		}
-		ZipUtils.rename(new File(agent.zipfile), existingParentDir + oldName, existingParentDir + newName);
+		ZipUtils.rename(agent.zipfile, existingParentDir + oldName, existingParentDir + newName);
 		refresh();
 
 	}

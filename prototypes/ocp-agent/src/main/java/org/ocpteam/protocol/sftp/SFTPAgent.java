@@ -1,6 +1,7 @@
 package org.ocpteam.protocol.sftp;
 
 import org.ocpteam.layer.rsp.Agent;
+import org.ocpteam.layer.rsp.Context;
 import org.ocpteam.layer.rsp.FileSystem;
 import org.ocpteam.layer.rsp.User;
 import org.ocpteam.misc.JLG;
@@ -65,6 +66,7 @@ public class SFTPAgent extends Agent {
 			channel = (ChannelSftp) session.openChannel("sftp");
 			channel.connect();
 			User user = new SFTPUser(login, c);
+			initialContext = new Context(this, getFileSystem(user), "/");
 			return user;
 		} catch (Exception e) {
 			e.printStackTrace();

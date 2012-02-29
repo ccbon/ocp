@@ -130,6 +130,12 @@ public class AdminConsole extends ApplicationWindow {
 		tabFolder.setSelection(tbtmWelcome);
 
 		setUser(null);
+		
+		if (agent.getInitialContext() != null) {
+			bIsAuthenticated = true;
+			addExplorerTab();
+			updateActions();
+		}
 
 		return container;
 	}

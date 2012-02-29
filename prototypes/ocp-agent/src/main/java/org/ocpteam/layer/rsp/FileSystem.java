@@ -2,7 +2,7 @@ package org.ocpteam.layer.rsp;
 
 import java.io.File;
 
-public interface FileSystem {
+public interface FileSystem extends DataModel {
 
 	public void checkoutAll(String localDir) throws Exception;
 	

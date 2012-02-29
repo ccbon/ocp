@@ -19,6 +19,7 @@ import org.ocpteam.misc.JLG;
 public class Main {
 	public static final String SWT_ASSISTANT = "swt";
 	public static final File DEFAULT_FILE = new File("default.uri");
+
 	public static void main(String[] args) {
 		try {
 			JLG.debug_on();
@@ -31,7 +32,7 @@ public class Main {
 					ds = new DataSource(DEFAULT_FILE);
 				} else {
 					ds = getDataSourceFromWizard();
-				}	
+				}
 			}
 
 			Agent agent = ds.getAgent();
@@ -51,13 +52,9 @@ public class Main {
 				cfg.loadConfigFile();
 			}
 			agent.readConfig();
-
-			if (agent.autoConnect()) {
-				agent.connect();
-			}
+			agent.connect();
 			(new Thread(ui)).start();
 
-			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
