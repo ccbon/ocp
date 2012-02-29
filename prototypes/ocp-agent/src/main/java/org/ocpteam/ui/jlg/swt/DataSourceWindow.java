@@ -5,6 +5,8 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.eclipse.jface.action.IMenuListener;
+import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.action.StatusLineManager;
@@ -14,6 +16,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabItem;
+import org.eclipse.swt.dnd.Clipboard;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.graphics.Point;
@@ -29,7 +32,6 @@ import org.ocpteam.layer.rsp.DataSource;
 import org.ocpteam.layer.rsp.FileSystem;
 import org.ocpteam.misc.JLG;
 import org.ocpteam.misc.swt.QuickMessage;
-import org.ocpteam.ui.swt.GraphicalUI;
 
 public class DataSourceWindow extends ApplicationWindow {
 
@@ -41,6 +43,12 @@ public class DataSourceWindow extends ApplicationWindow {
 	SignInAction signInAction;
 	SignOutAction signOutAction;
 
+	SelectAllAction selectAllAction;
+	CopyAction copyAction;
+	PasteAction pasteAction;
+	CommitAction commitAction;
+	CheckOutAction checkOutAction;
+
 	public ViewExplorerAction viewExplorerAction;
 
 	public DataSource ds;
@@ -50,6 +58,8 @@ public class DataSourceWindow extends ApplicationWindow {
 	public CTabFolder tabFolder;
 	private CTabItem explorerCTabItem;
 	public ExplorerComposite explorerComposite;
+
+	public Clipboard clipboard;
 
 	/**
 	 * Launch the application.
@@ -93,6 +103,12 @@ public class DataSourceWindow extends ApplicationWindow {
 		if (context == null && explorerComposite != null) {
 			removeExplorer();
 		}
+
+		// menu edit
+		copyAction.setEnabled(copyAction.canRun());
+		pasteAction.setEnabled(pasteAction.canRun());
+		commitAction.setEnabled(commitAction.canRun());
+		checkOutAction.setEnabled(checkOutAction.canRun());
 	}
 
 	/**
@@ -102,6 +118,9 @@ public class DataSourceWindow extends ApplicationWindow {
 	 */
 	@Override
 	protected Control createContents(Composite parent) {
+
+		clipboard = new Clipboard(parent.getDisplay());
+
 		Composite container = new Composite(parent, SWT.NONE);
 		container.setLayout(new FillLayout(SWT.HORIZONTAL));
 
@@ -144,6 +163,12 @@ public class DataSourceWindow extends ApplicationWindow {
 		}
 		exitAction = new ExitAction(this);
 
+		selectAllAction = new SelectAllAction(this);
+		copyAction = new CopyAction(this);
+		pasteAction = new PasteAction(this);
+		commitAction = new CommitAction(this);
+		checkOutAction = new CheckOutAction(this);
+
 		viewExplorerAction = new ViewExplorerAction(this);
 
 		signInAction = new SignInAction(this);
@@ -177,6 +202,21 @@ public class DataSourceWindow extends ApplicationWindow {
 		fileMenu.add(closeDataSourceAction);
 		fileMenu.add(new Separator());
 		fileMenu.add(exitAction);
+
+		MenuManager editMenu = new MenuManager("&Edit");
+		editMenu.addMenuListener(new IMenuListener() {
+			public void menuAboutToShow(IMenuManager arg0) {
+				DataSourceWindow.this.refresh();
+			}
+		});
+		menuBar.add(editMenu);
+		editMenu.add(selectAllAction);
+		editMenu.add(new Separator());
+		editMenu.add(copyAction);
+		editMenu.add(pasteAction);
+		editMenu.add(new Separator());
+		editMenu.add(commitAction);
+		editMenu.add(checkOutAction);
 
 		MenuManager userMenu = new MenuManager("&User");
 		menuBar.add(userMenu);
@@ -232,7 +272,7 @@ public class DataSourceWindow extends ApplicationWindow {
 	@Override
 	protected void configureShell(Shell newShell) {
 		newShell.setSize(new Point(600, 600));
-		newShell.setImage(SWTResourceManager.getImage(GraphicalUI.class,
+		newShell.setImage(SWTResourceManager.getImage(DataSourceWindow.class,
 				"ocp_icon.png"));
 		super.configureShell(newShell);
 		newShell.setText("Generic Data Source Explorer");
@@ -324,7 +364,8 @@ public class DataSourceWindow extends ApplicationWindow {
 
 			}
 		} catch (Exception e) {
-			throw QuickMessage.exception(getShell(), "Error when opening data source: ", e);
+			throw QuickMessage.exception(getShell(),
+					"Error when opening data source: ", e);
 		}
 	}
 
