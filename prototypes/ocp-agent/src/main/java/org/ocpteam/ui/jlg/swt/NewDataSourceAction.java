@@ -26,11 +26,11 @@ public class NewDataSourceAction extends Action {
 			}
 			ResourceBundle swt = DataSource.getResource(protocol, "swt");
 			NewDataSourceScenario scenario = (NewDataSourceScenario) swt.getObject("NewDataSourceScenario");
-			w.ds = scenario.run();
-			if (w.ds == null) {
+			DataSource ds = scenario.run();
+			if (ds == null) {
 				return;
 			}
-			w.openDataSource();
+			w.openDataSource(ds);
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {

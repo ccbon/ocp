@@ -34,6 +34,7 @@ public class CloseDataSourceAction extends Action {
 			QuickMessage.confirm(w.getShell(), "Are you sure you want to close the datasource ?");
 			w.ds.close();
 			w.ds = null;
+			w.removeProtocolMenu();
 			w.agent = null;
 			w.context = null;
 		} catch (Exception e) {

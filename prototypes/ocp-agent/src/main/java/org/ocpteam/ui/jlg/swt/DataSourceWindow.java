@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.ResourceBundle;
 
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
@@ -50,7 +51,7 @@ public class DataSourceWindow extends ApplicationWindow {
 	CheckOutAction checkOutAction;
 
 	public ViewExplorerAction viewExplorerAction;
-	
+
 	AboutAction aboutAction;
 	HelpAction helpAction;
 
@@ -63,6 +64,7 @@ public class DataSourceWindow extends ApplicationWindow {
 	public ExplorerComposite explorerComposite;
 
 	public Clipboard clipboard;
+	private DynamicMenuManager protocolMenu;
 
 	/**
 	 * Launch the application.
@@ -176,7 +178,7 @@ public class DataSourceWindow extends ApplicationWindow {
 
 		signInAction = new SignInAction(this);
 		signOutAction = new SignOutAction(this);
-		
+
 		helpAction = new HelpAction(this);
 		aboutAction = new AboutAction(this);
 	}
@@ -192,17 +194,16 @@ public class DataSourceWindow extends ApplicationWindow {
 		MenuManager fileMenu = new MenuManager("&File");
 		menuBar.add(fileMenu);
 
-		{
-			MenuManager menuManager = new MenuManager("New");
-			String[] protocols = (String[]) newDataSourceActionMap.keySet()
-					.toArray(new String[newDataSourceActionMap.size()]);
-			Arrays.sort(protocols);
-			for (String protocol : protocols) {
-				menuManager.add(newDataSourceActionMap.get(protocol));
-			}
-
-			fileMenu.add(menuManager);
+		MenuManager menuManager = new MenuManager("New");
+		String[] protocols = (String[]) newDataSourceActionMap.keySet()
+				.toArray(new String[newDataSourceActionMap.size()]);
+		Arrays.sort(protocols);
+		for (String protocol : protocols) {
+			menuManager.add(newDataSourceActionMap.get(protocol));
 		}
+
+		fileMenu.add(menuManager);
+
 		fileMenu.add(new Separator());
 		fileMenu.add(openDataSourceAction);
 		fileMenu.add(closeDataSourceAction);
@@ -233,11 +234,17 @@ public class DataSourceWindow extends ApplicationWindow {
 		menuBar.add(viewMenu);
 		viewMenu.add(viewExplorerAction);
 
-		MenuManager helpMenu = new MenuManager("&Help");
+		// for (String protocol : protocols) {
+		// MenuManager protocolMenu = new MenuManager(protocol);
+		// menuBar.add(protocolMenu);
+		// //protocolMenu.add(viewExplorerAction);
+		// }
+
+		MenuManager helpMenu = new MenuManager("&Help", "&Help");
 		menuBar.add(helpMenu);
 		helpMenu.add(helpAction);
 		helpMenu.add(aboutAction);
-		
+
 		return menuBar;
 	}
 
@@ -260,9 +267,9 @@ public class DataSourceWindow extends ApplicationWindow {
 
 		toolBarManager.add(signInAction);
 		toolBarManager.add(signOutAction);
-		
+
 		toolBarManager.add(new Separator());
-		
+
 		toolBarManager.add(helpAction);
 		toolBarManager.add(aboutAction);
 
@@ -361,8 +368,10 @@ public class DataSourceWindow extends ApplicationWindow {
 		return super.close();
 	}
 
-	public void openDataSource() throws Exception {
+	public void openDataSource(DataSource ds) throws Exception {
 		try {
+			this.ds = ds;
+			addProtocolMenu();
 			agent = ds.getAgent();
 			agent.connect();
 			context = agent.getInitialContext();
@@ -385,6 +394,31 @@ public class DataSourceWindow extends ApplicationWindow {
 		}
 	}
 
+	public void addProtocolMenu() {
+		protocolMenu = null;
+		try {
+			ResourceBundle rb = ds.getResource("swt");
+			protocolMenu = (DynamicMenuManager) rb.getObject("menu");
+			protocolMenu.init(this);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		if (protocolMenu != null) {
+			MenuManager menuBar = getMenuBarManager();
+			menuBar.insertBefore("&Help", protocolMenu);
+			menuBar.updateAll(true);
+		}
+	}
+
+	public void removeProtocolMenu() {
+		if (protocolMenu != null) {
+			MenuManager menuBar = getMenuBarManager();
+			menuBar.remove(protocolMenu);
+			menuBar.updateAll(true);
+		}
+		protocolMenu = null;
+	}
+
 	public void signIn(String login, Object challenge) throws Exception {
 		agent.login(login, challenge);
 		context = agent.getInitialContext();
@@ -402,4 +436,5 @@ public class DataSourceWindow extends ApplicationWindow {
 	public String getHelpURL() {
 		return "http://code.google.com/p/ocp/wiki/Help";
 	}
+
 }

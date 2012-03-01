@@ -131,6 +131,10 @@ public class DataSource {
 
 	public void close() {
 	}
+	
+	public ResourceBundle getResource(String subpackage) throws Exception {
+		return DataSource.getResource(getProtocol(), subpackage);
+	}
 
 	public static ResourceBundle getResource(String protocol, String subpackage) throws Exception {
 		String agentClassString = protocolResource.getString(protocol
