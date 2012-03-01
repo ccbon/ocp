@@ -2,9 +2,6 @@ package org.ocpteam.protocol.zip.swt;
 
 import java.io.File;
 
-import org.eclipse.jface.wizard.IWizardPage;
-import org.eclipse.jface.wizard.Wizard;
-import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Display;

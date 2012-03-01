@@ -2,11 +2,8 @@ package org.ocpteam.ui.jlg.swt;
 
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.jface.wizard.WizardDialog;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
-import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
-import org.ocpteam.layer.rsp.Agent;
 import org.ocpteam.misc.JLG;
 import org.ocpteam.misc.swt.QuickMessage;
 

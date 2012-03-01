@@ -50,6 +50,9 @@ public class DataSourceWindow extends ApplicationWindow {
 	CheckOutAction checkOutAction;
 
 	public ViewExplorerAction viewExplorerAction;
+	
+	AboutAction aboutAction;
+	HelpAction helpAction;
 
 	public DataSource ds;
 	public Agent agent;
@@ -173,6 +176,9 @@ public class DataSourceWindow extends ApplicationWindow {
 
 		signInAction = new SignInAction(this);
 		signOutAction = new SignOutAction(this);
+		
+		helpAction = new HelpAction(this);
+		aboutAction = new AboutAction(this);
 	}
 
 	/**
@@ -227,6 +233,11 @@ public class DataSourceWindow extends ApplicationWindow {
 		menuBar.add(viewMenu);
 		viewMenu.add(viewExplorerAction);
 
+		MenuManager helpMenu = new MenuManager("&Help");
+		menuBar.add(helpMenu);
+		helpMenu.add(helpAction);
+		helpMenu.add(aboutAction);
+		
 		return menuBar;
 	}
 
@@ -249,6 +260,11 @@ public class DataSourceWindow extends ApplicationWindow {
 
 		toolBarManager.add(signInAction);
 		toolBarManager.add(signOutAction);
+		
+		toolBarManager.add(new Separator());
+		
+		toolBarManager.add(helpAction);
+		toolBarManager.add(aboutAction);
 
 		return toolBarManager;
 	}
@@ -381,5 +397,9 @@ public class DataSourceWindow extends ApplicationWindow {
 	public void signOut() throws Exception {
 		context = null;
 		agent.logout(null);
+	}
+
+	public String getHelpURL() {
+		return "http://code.google.com/p/ocp/wiki/Help";
 	}
 }

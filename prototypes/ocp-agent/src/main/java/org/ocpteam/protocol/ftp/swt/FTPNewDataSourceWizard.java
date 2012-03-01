@@ -9,7 +9,6 @@ import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.ocpteam.layer.rsp.DataSource;
-import org.ocpteam.misc.JLG;
 import org.ocpteam.ui.jlg.swt.NewDataSourceScenario;
 
 public class FTPNewDataSourceWizard extends Wizard implements NewDataSourceScenario {
