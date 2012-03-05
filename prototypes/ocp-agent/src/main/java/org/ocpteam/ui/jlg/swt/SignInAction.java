@@ -1,8 +1,11 @@
 package org.ocpteam.ui.jlg.swt;
 
+import java.util.ResourceBundle;
+
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.graphics.ImageData;
+import org.ocpteam.layer.rsp.DataSource;
 import org.ocpteam.misc.JLG;
 
 public class SignInAction extends Action {
@@ -24,10 +27,23 @@ public class SignInAction extends Action {
 
 	public void run() {
 		JLG.debug("Authentication User: display a wizard...");
-		if (window.agent.authenticatesWithSSH()) {
-			SSHSignInWizard.start(window);
-		} else {
-			SignInWizard.start(window);
+		Scenario scenario = null;
+		try {
+			ResourceBundle swt = DataSource.getResource(
+					window.ds.getProtocol(), "swt");
+			scenario = (Scenario) swt.getObject("SignInScenario");
+		} catch (Exception e) {
 		}
+		try {
+			if (scenario != null) {
+				scenario.run(window);
+				window.signIn(window.ds.getAuthentication());
+			} else {
+				SignInWizard.start(window);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
 	}
 }

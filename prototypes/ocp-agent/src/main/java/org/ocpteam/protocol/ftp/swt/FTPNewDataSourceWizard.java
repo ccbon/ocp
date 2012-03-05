@@ -9,9 +9,11 @@ import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.ocpteam.layer.rsp.DataSource;
-import org.ocpteam.ui.jlg.swt.NewDataSourceScenario;
+import org.ocpteam.protocol.ftp.FTPDataSource;
+import org.ocpteam.ui.jlg.swt.DataSourceWindow;
+import org.ocpteam.ui.jlg.swt.Scenario;
 
-public class FTPNewDataSourceWizard extends Wizard implements NewDataSourceScenario {
+public class FTPNewDataSourceWizard extends Wizard implements Scenario {
 	FirstWizardPage p1;
 	private DataSource ds;
 	public FTPNewDataSourceWizard() {
@@ -28,7 +30,7 @@ public class FTPNewDataSourceWizard extends Wizard implements NewDataSourceScena
 	public boolean performFinish() {
 		try {
 			URI uri = new URI("ftp://" + p1.serverHostnameText.getText() + ":" + p1.portText.getText() + p1.defaultLocalDirText.getText());
-			ds = new DataSource(uri);
+			ds = new FTPDataSource(uri);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -47,13 +49,13 @@ public class FTPNewDataSourceWizard extends Wizard implements NewDataSourceScena
 	}
 
 	@Override
-	public DataSource run() {
+	public void run(DataSourceWindow w) throws Exception {
 		Display display = Display.getDefault();
 		final Shell shell = new Shell(display);
 		shell.setLayout(new FillLayout());
 		WizardDialog dialog = new WizardDialog(shell, this);
 		dialog.open();
 		shell.dispose();
-		return ds;
+		w.ds = ds;
 	}
 }

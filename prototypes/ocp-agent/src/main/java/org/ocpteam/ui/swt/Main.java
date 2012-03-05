@@ -26,10 +26,10 @@ public class Main {
 			JLG.debug("args.length=" + args.length);
 			DataSource ds = null;
 			if (args.length > 0) {
-				ds = new DataSource(new File(args[0]));
+				ds = DataSource.getInstance(new File(args[0]));
 			} else {
 				if (DEFAULT_FILE.exists() && DEFAULT_FILE.isFile()) {
-					ds = new DataSource(DEFAULT_FILE);
+					ds = DataSource.getInstance(DEFAULT_FILE);
 				} else {
 					ds = getDataSourceFromWizard();
 				}
@@ -60,14 +60,14 @@ public class Main {
 		}
 	}
 
-	private static DataSource getDataSourceFromWizard() {
+	private static DataSource getDataSourceFromWizard() throws Exception {
 		JLG.debug_on();
 		JLG.debug("starting wizard");
 		Display display = Display.getDefault();
 
 		final Shell shell = new Shell(display);
 		shell.setLayout(new FillLayout());
-		DataSource ds = new DataSource();
+		DataSource ds = DataSource.getInstance(null);
 		IWizard wizard = new DefineDataSourceWizard(ds);
 		WizardDialog dialog = new WizardDialog(shell, wizard);
 		dialog.open();

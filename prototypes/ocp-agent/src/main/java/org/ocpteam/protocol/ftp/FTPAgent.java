@@ -6,7 +6,9 @@ import java.io.IOException;
 
 import org.apache.commons.net.ftp.FTPClient;
 import org.ocpteam.layer.rsp.Agent;
+import org.ocpteam.layer.rsp.Authentication;
 import org.ocpteam.layer.rsp.Context;
+import org.ocpteam.layer.rsp.DataSource;
 import org.ocpteam.layer.rsp.FileSystem;
 import org.ocpteam.layer.rsp.User;
 import org.ocpteam.misc.JLG;
@@ -16,8 +18,8 @@ public class FTPAgent extends Agent {
 	private String hostname;
 	FTPClient ftp;
 
-	public FTPAgent() {
-		super();
+	public FTPAgent(DataSource ds) {
+		super(ds);
 		ftp = new FTPClient();
 	}
 
@@ -50,7 +52,7 @@ public class FTPAgent extends Agent {
 				ftp.logout();
 			}
 		} catch (IOException e) {
-			e.printStackTrace();
+			//e.printStackTrace();
 		} finally {
 			bIsConnected = false;
 		}
@@ -62,7 +64,7 @@ public class FTPAgent extends Agent {
 	}
 
 	@Override
-	public User login(String login, Object challenge) throws Exception {
+	public void login(Authentication a) throws Exception {
 		try {
 			ftp.logout();
 		} catch (Exception e) {
@@ -71,13 +73,14 @@ public class FTPAgent extends Agent {
 			ftp.connect(hostname);
 		} catch (Exception e) {
 		}
-		String password = (String) challenge;
+		String login = a.getLogin();
+		String password = (String) a.getChallenge();
 		if (ftp.login(login, password)) {
 			JLG.debug("ftp logged in.");
 			FTPUser user = new FTPUser(login, password,
 					System.getProperty("user.home"));
 			initialContext = new Context(this, getFileSystem(user), "/");
-			return user;
+			a.setUser(user);
 		} else {
 			throw new Exception("Cannot Login.");
 		}
@@ -135,7 +138,7 @@ public class FTPAgent extends Agent {
 	}
 
 	@Override
-	public void logout(User user) throws Exception {
+	public void logout(Authentication a) throws Exception {
 		ftp.logout();
 	}
 

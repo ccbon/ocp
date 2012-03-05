@@ -3,7 +3,9 @@ package org.ocpteam.protocol.zip;
 import java.io.File;
 
 import org.ocpteam.layer.rsp.Agent;
+import org.ocpteam.layer.rsp.Authentication;
 import org.ocpteam.layer.rsp.Context;
+import org.ocpteam.layer.rsp.DataSource;
 import org.ocpteam.layer.rsp.FileSystem;
 import org.ocpteam.layer.rsp.User;
 import org.ocpteam.misc.JLG;
@@ -12,6 +14,10 @@ public class ZipAgent extends Agent {
 
 	public File zipfile;
 	private ZipFileSystem fs;
+
+	public ZipAgent(DataSource ds) {
+		super(ds);
+	}
 
 	@Override
 	public String getProtocolName() {
@@ -64,21 +70,22 @@ public class ZipAgent extends Agent {
 		return false;
 	}
 
-	@Override
-	public User login(String login, Object challenge) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void logout(User user) throws Exception {
-		// TODO Auto-generated method stub
-
-	}
-
+	
 	@Override
 	public boolean usesAuthentication() {
 		return false;
+	}
+
+	@Override
+	public void login(Authentication a) throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void logout(Authentication a) throws Exception {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

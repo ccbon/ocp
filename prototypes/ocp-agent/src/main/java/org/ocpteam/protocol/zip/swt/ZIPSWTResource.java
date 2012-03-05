@@ -6,7 +6,9 @@ public class ZIPSWTResource extends ListResourceBundle {
 
 	@Override
 	protected Object[][] getContents() {
-		return new Object[][] { { "NewDataSourceScenario", new ZIPNewDataSourceScenario() }, { "menu", new ZIPMenuManager("ZIP", "protocolMenu") } };
+		return new Object[][] {
+				{ "NewDataSourceScenario", new ZIPNewDataSourceScenario() },
+				{ "menu", new ZIPMenuManager("ZIP", "protocolMenu") } };
 	}
 
 }

@@ -7,6 +7,7 @@ import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 import org.ocpteam.layer.rsp.Agent;
+import org.ocpteam.layer.rsp.Authentication;
 import org.ocpteam.layer.rsp.User;
 import org.ocpteam.misc.JLG;
 
@@ -51,8 +52,10 @@ public class SignInWizard extends Wizard {
 	public boolean performFinish() {
 		JLG.debug("sign in user");
 		try {
-			User user = agent.login(p1.usernameText.getText(),
+			Authentication auth = new Authentication(p1.usernameText.getText(),
 					p1.passwordText.getText());
+			agent.login(auth);
+			User user = auth.getUser();
 			window.setUser(user);
 			window.addSyncTab();
 			window.addExplorerTab();

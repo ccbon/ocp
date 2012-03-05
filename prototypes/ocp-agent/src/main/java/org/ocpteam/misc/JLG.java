@@ -5,6 +5,7 @@ import java.io.BufferedWriter;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -292,6 +293,13 @@ public class JLG {
 		}
 
 		return (temp);
+	}
+
+	public static Properties loadConfig(String filename) throws Exception {
+		Properties p = new Properties();
+		File file = new File(filename);
+		p.load(new FileInputStream(file));
+		return p;
 	}
 
 }

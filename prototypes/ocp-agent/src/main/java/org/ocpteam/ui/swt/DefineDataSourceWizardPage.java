@@ -1,6 +1,5 @@
 package org.ocpteam.ui.swt;
 
-import java.io.File;
 import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -138,7 +137,7 @@ public class DefineDataSourceWizardPage extends WizardPage {
 				setErrorMessage(null);
 			} else {
 				try {
-					new DataSource(new File(filename));
+					//new DataSource(new File(filename));
 					setErrorMessage(null);
 				} catch (Exception e1) {
 					JLG.debug("error");

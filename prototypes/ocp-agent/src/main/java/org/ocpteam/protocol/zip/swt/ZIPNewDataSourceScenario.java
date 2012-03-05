@@ -10,12 +10,13 @@ import org.eclipse.swt.widgets.Shell;
 import org.ocpteam.layer.rsp.DataSource;
 import org.ocpteam.misc.JLG;
 import org.ocpteam.protocol.zip.ZipUtils;
-import org.ocpteam.ui.jlg.swt.NewDataSourceScenario;
+import org.ocpteam.ui.jlg.swt.DataSourceWindow;
+import org.ocpteam.ui.jlg.swt.Scenario;
 
-public class ZIPNewDataSourceScenario implements NewDataSourceScenario {
+public class ZIPNewDataSourceScenario implements Scenario {
 
 	@Override
-	public DataSource run() throws Exception {
+	public void run(DataSourceWindow w) throws Exception {
 		Display display = Display.getDefault();
 		final Shell shell = new Shell(display);
 		shell.setLayout(new FillLayout());
@@ -28,13 +29,13 @@ public class ZIPNewDataSourceScenario implements NewDataSourceScenario {
 		JLG.debug(selected);
 		shell.dispose();
 		if (selected == null) {
-			return null;
+			return;
 		}
 		File file = new File(selected);
 		if (!file.exists()) {
 			file = ZipUtils.createEmptyFile(selected);
 		}
-		return new DataSource(file);
+		w.ds = DataSource.getInstance(file);
 	}
 
 }

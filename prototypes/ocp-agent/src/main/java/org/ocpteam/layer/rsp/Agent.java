@@ -19,6 +19,10 @@ public abstract class Agent {
 		assistantMap = new HashMap<String, Object>();
 	}
 
+	public Agent(DataSource ds) {
+		this.ds = ds;
+	}
+
 	public void setConfig(AgentConfig cfg) throws Exception {
 		this.cfg = cfg;
 	}
@@ -32,9 +36,9 @@ public abstract class Agent {
 
 	public abstract boolean allowsUserCreation();
 
-	public abstract User login(String login, Object challenge) throws Exception;
+	public abstract void login(Authentication a) throws Exception;
 
-	public abstract void logout(User user) throws Exception;
+	public abstract void logout(Authentication a) throws Exception;
 
 	public abstract String getProtocolName();
 

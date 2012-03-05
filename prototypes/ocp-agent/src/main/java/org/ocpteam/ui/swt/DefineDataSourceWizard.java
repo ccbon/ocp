@@ -31,7 +31,7 @@ public class DefineDataSourceWizard extends Wizard {
 				ds.setFile(new File(p1.filename));
 			} else {
 				JLG.debug("selection=" + p1.selection);
-				ds.setProtocol(p1.selection);
+				//ds.setProtocol(p1.selection);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

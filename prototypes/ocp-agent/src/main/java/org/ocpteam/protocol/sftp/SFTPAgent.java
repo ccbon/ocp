@@ -1,7 +1,9 @@
 package org.ocpteam.protocol.sftp;
 
 import org.ocpteam.layer.rsp.Agent;
+import org.ocpteam.layer.rsp.Authentication;
 import org.ocpteam.layer.rsp.Context;
+import org.ocpteam.layer.rsp.DataSource;
 import org.ocpteam.layer.rsp.FileSystem;
 import org.ocpteam.layer.rsp.User;
 import org.ocpteam.misc.JLG;
@@ -15,6 +17,10 @@ public class SFTPAgent extends Agent {
 	private JSch jsch;
 	Session session;
 	public ChannelSftp channel;
+
+	public SFTPAgent(DataSource ds) {
+		this.ds = ds;
+	}
 
 	@Override
 	public void connect() throws Exception {
@@ -34,11 +40,13 @@ public class SFTPAgent extends Agent {
 	}
 
 	@Override
-	public User login(String login, Object challenge) throws Exception {
+	public void login(Authentication a) throws Exception {
 		try {
+			String login = a.getLogin();
+			Object challenge = a.getChallenge();
 			String[] array = login.split("@");
 			String username = array[0];
-			String hostname = array[1];
+			String hostname = ds.getURI().getHost();
 			int port = 22;
 			int index = hostname.indexOf(':');
 			if (index != -1) {
@@ -67,7 +75,7 @@ public class SFTPAgent extends Agent {
 			channel.connect();
 			User user = new SFTPUser(login, c);
 			initialContext = new Context(this, getFileSystem(user), "/");
-			return user;
+			a.setUser(user);
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new Exception("Cannot login");
@@ -100,7 +108,8 @@ public class SFTPAgent extends Agent {
 	}
 
 	@Override
-	public void logout(User user) throws Exception {
+	public void logout(Authentication a) throws Exception {
+		a.reset();
 		channel.exit();
 		session.disconnect();
 	}

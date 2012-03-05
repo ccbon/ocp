@@ -28,6 +28,7 @@ import javax.crypto.spec.PBEParameterSpec;
 
 import org.ocpteam.layer.dsp.Contact;
 import org.ocpteam.layer.dsp.DSPAgent;
+import org.ocpteam.layer.rsp.Authentication;
 import org.ocpteam.layer.rsp.FileSystem;
 import org.ocpteam.layer.rsp.User;
 import org.ocpteam.misc.ByteUtil;
@@ -622,9 +623,10 @@ public class OCPAgent extends DSPAgent {
 	}
 
 	@Override
-	public User login(String login, Object challenge) throws Exception {
+	public void login(Authentication a) throws Exception {
 		try {
-			String password = (String) challenge;
+			String password = (String) a.getChallenge();
+			String login = a.getLogin();
 			Id key = hash(ucrypt(password, (login + password).getBytes()));
 			byte[] content = client.getUser(key);
 			if (content == null || content.length == 0) {
@@ -634,7 +636,7 @@ public class OCPAgent extends DSPAgent {
 			if (user == null) {
 				throw new Exception("user unknown");
 			}
-			return user;
+			a.setUser(user);
 		} catch (Exception e) {
 			JLG.error(e);
 			throw e;
@@ -830,8 +832,9 @@ public class OCPAgent extends DSPAgent {
 	}
 
 	@Override
-	public void logout(User user) throws Exception {
+	public void logout(Authentication a) throws Exception {
 		JLG.debug("ocp logout (nothing to do).");
+		a.reset();
 	}
 
 	@Override

@@ -9,7 +9,7 @@ import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
-import org.ocpteam.layer.rsp.DataSource;
+import org.ocpteam.protocol.ftp.FTPDataSource;
 
 public class FirstWizardPage extends WizardPage {
 
@@ -92,7 +92,7 @@ public class FirstWizardPage extends WizardPage {
 				dir = defaultLocalDirText.getText();
 			}
 			URI uri = new URI("ftp://" + hostname + ":" + port + dir);
-			new DataSource(uri);
+			new FTPDataSource(uri);
 		} catch (Exception e) {
 			e.printStackTrace();
 			setErrorMessage("bad input");

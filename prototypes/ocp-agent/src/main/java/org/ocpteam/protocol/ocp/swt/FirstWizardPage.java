@@ -38,7 +38,7 @@ public class FirstWizardPage extends WizardPage {
 	 * @param parent
 	 */
 	public void createControl(Composite parent) {
-		final ConfigWizard wizard = (ConfigWizard) getWizard();
+		final OCPNewDataSourceWizard wizard = (OCPNewDataSourceWizard) getWizard();
 		Composite container = new Composite(parent, SWT.NULL);
 		//container.setTouchEnabled(true);
 

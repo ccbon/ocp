@@ -4,6 +4,7 @@ import java.util.Iterator;
 import java.util.Properties;
 
 import org.ocpteam.layer.rsp.AgentConfig;
+import org.ocpteam.layer.rsp.Authentication;
 import org.ocpteam.misc.JLG;
 import org.ocpteam.misc.JLGException;
 import org.ocpteam.protocol.ocp.Captcha;
@@ -78,7 +79,9 @@ public class TestAgent {
 			JLG.debug(decryptedMessage);
 			//System.exit(0);
 			
-			OCPUser user = (OCPUser) a2.login(username, password);
+			Authentication auth = new Authentication(username, password);
+			a2.login(auth);
+			OCPUser user = (OCPUser) auth.getUser();
 			JLG.debug(user.toString());
 			
 			

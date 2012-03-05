@@ -6,7 +6,9 @@ public class FTPSWTResource extends ListResourceBundle {
 
 	@Override
 	protected Object[][] getContents() {
-		return new Object[][] { { "NewDataSourceScenario", new FTPNewDataSourceWizard() }, { "CancelKey", "Cancel" }, };
+		return new Object[][] {
+				{ "NewDataSourceScenario", new FTPNewDataSourceWizard() },
+				{ "CancelKey", "Cancel" }, };
 	}
 
 }

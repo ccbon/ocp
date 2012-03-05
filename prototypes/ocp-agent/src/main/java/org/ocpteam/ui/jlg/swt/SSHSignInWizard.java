@@ -9,6 +9,7 @@ import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 import org.ocpteam.layer.rsp.Agent;
+import org.ocpteam.layer.rsp.Authentication;
 import org.ocpteam.misc.JLG;
 import org.ocpteam.protocol.sftp.SSHChallenge;
 
@@ -67,8 +68,9 @@ public class SSHSignInWizard extends Wizard {
 					c.setPassphrase(passphrase);
 				}
 			}
-			agent.login(p1.sessionText.getText(),
+			Authentication auth = new Authentication(p1.sessionText.getText(),
 					c);
+			agent.login(auth);
 			window.context = agent.getInitialContext(); 
 			if (window.context != null) {
 				window.viewExplorerAction.run();

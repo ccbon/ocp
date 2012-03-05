@@ -28,6 +28,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.wb.swt.SWTResourceManager;
 import org.ocpteam.layer.rsp.Agent;
+import org.ocpteam.layer.rsp.Authentication;
 import org.ocpteam.layer.rsp.Context;
 import org.ocpteam.layer.rsp.DataSource;
 import org.ocpteam.layer.rsp.FileSystem;
@@ -371,18 +372,20 @@ public class DataSourceWindow extends ApplicationWindow {
 	public void openDataSource(DataSource ds) throws Exception {
 		try {
 			this.ds = ds;
+			JLG.debug("datasource=" + ds);
 			addProtocolMenu();
 			agent = ds.getAgent();
 			agent.connect();
 			context = agent.getInitialContext();
 			if (context != null) {
 				viewExplorerAction.run();
-			} else if (agent.usesAuthentication()) {
+			} else if (ds.usesAuthentication()) {
 				try {
-					String[] array = ds.getURI().getUserInfo().split(":");
-					String username = array[0];
-					String password = array[1];
-					signIn(username, password);
+					Authentication a = ds.getAuthentication();
+					if (JLG.isNullOrEmpty(a.getLogin()) && a.getChallenge() == null) {
+						throw new Exception();
+					}
+					signIn(a);
 				} catch (Exception e) {
 					signInAction.run();
 				}
@@ -401,7 +404,8 @@ public class DataSourceWindow extends ApplicationWindow {
 			protocolMenu = (DynamicMenuManager) rb.getObject("menu");
 			protocolMenu.init(this);
 		} catch (Exception e) {
-			e.printStackTrace();
+			// e.printStackTrace();
+			JLG.debug("no specific menu for " + ds.getProtocol());
 		}
 		if (protocolMenu != null) {
 			MenuManager menuBar = getMenuBarManager();
@@ -419,8 +423,8 @@ public class DataSourceWindow extends ApplicationWindow {
 		protocolMenu = null;
 	}
 
-	public void signIn(String login, Object challenge) throws Exception {
-		agent.login(login, challenge);
+	public void signIn(Authentication a) throws Exception {
+		agent.login(a);
 		context = agent.getInitialContext();
 		if (context != null) {
 			viewExplorerAction.run();
@@ -430,7 +434,7 @@ public class DataSourceWindow extends ApplicationWindow {
 
 	public void signOut() throws Exception {
 		context = null;
-		agent.logout(null);
+		agent.logout(ds.getAuthentication());
 	}
 
 	public String getHelpURL() {
