@@ -376,11 +376,22 @@ public class DataSourceWindow extends ApplicationWindow {
 				getShell().setVisible(false);
 				return true;
 			}
-			if (exitAction.isFirstRun) {
-				exitAction.run();
-				if (exitAction.wantToExit == false) {
-					return true;
-				}
+			if (exitAction.confirm()) {
+				return exitAction.exit();
+			} else {
+				return true;
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return super.close();
+	}
+
+	public boolean exit() {
+		try {
+			if (ds != null) {
+				closeDataSource();
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

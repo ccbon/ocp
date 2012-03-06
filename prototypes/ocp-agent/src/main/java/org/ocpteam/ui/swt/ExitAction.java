@@ -28,25 +28,16 @@ public class ExitAction extends Action {
 
 	public void run() {
 		JLG.debug("Exit");
-		
-		try {
-			wantToExit = false;
-			if (!QuickMessage.confirm(w.getShell(), "Are you sure you want to exit?")) {
-				return;
-			}
-			wantToExit = true;
-			isFirstRun = false;
-			if (w.ds != null) {
-				try {
-					w.ds.getAgent().disconnect();
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-			JLG.debug("calling close from exit action");
-			w.close();
-		} catch (Exception e) {
-			e.printStackTrace();
+		if (confirm()) {
+			exit();
 		}
+	}
+
+	public boolean exit() {
+		return w.exit();
+	}
+
+	public boolean confirm() {
+		return QuickMessage.confirm(w.getShell(), "Are you sure you want to exit?");
 	}
 }
