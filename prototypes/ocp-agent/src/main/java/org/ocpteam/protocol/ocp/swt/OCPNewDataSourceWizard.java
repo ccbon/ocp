@@ -66,6 +66,8 @@ public class OCPNewDataSourceWizard extends Wizard implements Scenario {
 		if (firstPage.btnCheckButton.getSelection()) {
 			p.setProperty("network.type", "public");
 			p.setProperty("network.sponsor.url", firstPage.sponsorPublicServerText.getText());
+		} else {
+			p.setProperty("network.type", "private");
 		}
 		ds.setProperties(p);
 		try {
