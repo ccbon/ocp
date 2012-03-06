@@ -20,12 +20,20 @@ import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.dnd.Clipboard;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.Tray;
+import org.eclipse.swt.widgets.TrayItem;
 import org.eclipse.wb.swt.SWTResourceManager;
 import org.ocpteam.layer.rsp.Agent;
 import org.ocpteam.layer.rsp.Authentication;
@@ -54,6 +62,8 @@ public class DataSourceWindow extends ApplicationWindow {
 
 	public ViewExplorerAction viewExplorerAction;
 
+	DebugAction debugAction;
+	
 	AboutAction aboutAction;
 	HelpAction helpAction;
 
@@ -181,6 +191,8 @@ public class DataSourceWindow extends ApplicationWindow {
 
 		viewExplorerAction = new ViewExplorerAction(this);
 
+		debugAction = new DebugAction();
+		
 		signInAction = new SignInAction(this);
 		signOutAction = new SignOutAction(this);
 		newUserAction = new NewUserAction(this);
@@ -242,11 +254,9 @@ public class DataSourceWindow extends ApplicationWindow {
 		menuBar.add(viewMenu);
 		viewMenu.add(viewExplorerAction);
 
-		// for (String protocol : protocols) {
-		// MenuManager protocolMenu = new MenuManager(protocol);
-		// menuBar.add(protocolMenu);
-		// //protocolMenu.add(viewExplorerAction);
-		// }
+		MenuManager testMenu = new MenuManager("&Test");
+		menuBar.add(testMenu);
+		testMenu.add(debugAction);
 
 		MenuManager helpMenu = new MenuManager("&Help", "&Help");
 		menuBar.add(helpMenu);
@@ -384,6 +394,9 @@ public class DataSourceWindow extends ApplicationWindow {
 			addProtocolMenu();
 			agent = ds.getAgent();
 			agent.connect();
+			if (!agent.isOnlyClient()) {
+				openTray();
+			}
 			context = agent.getInitialContext();
 			if (context != null) {
 				viewExplorerAction.run();
@@ -403,6 +416,48 @@ public class DataSourceWindow extends ApplicationWindow {
 		} catch (Exception e) {
 			throw QuickMessage.exception(getShell(),
 					"Error when opening data source: ", e);
+		}
+	}
+
+	private void openTray() {
+		Display display = getShell().getDisplay();
+		Shell shell = new Shell(display);
+		Tray tray = display.getSystemTray();
+		if (tray != null) {
+			TrayItem item = new TrayItem(tray, SWT.NONE);
+			Image image = new Image(display,
+					DataSourceWindow.class.getResourceAsStream("ocp_icon.png"));
+			item.setImage(image);
+			item.setToolTipText("OCP Agent");
+			final MenuManager myMenu = new MenuManager("xxx");
+			final Menu menu = myMenu.createContextMenu(shell);
+			myMenu.add(new ExitAction(this));
+			myMenu.add(new OpenConsoleAction(this));
+			menu.setEnabled(true);
+
+			item.addListener(SWT.MenuDetect, new Listener() {
+
+				@Override
+				public void handleEvent(Event arg0) {
+					JLG.debug("coucou");
+					myMenu.setVisible(true);
+					menu.setVisible(true);
+				}
+			});
+			
+			item.addSelectionListener(new SelectionListener() {
+				
+				@Override
+				public void widgetSelected(SelectionEvent arg0) {
+				}
+				
+				@Override
+				public void widgetDefaultSelected(SelectionEvent arg0) {
+					JLG.debug("item default selected");
+					new OpenConsoleAction(DataSourceWindow.this).run();
+				}
+			});
+
 		}
 	}
 

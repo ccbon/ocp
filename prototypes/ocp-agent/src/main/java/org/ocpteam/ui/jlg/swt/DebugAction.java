@@ -1,4 +1,4 @@
-package org.ocpteam.ui.swt;
+package org.ocpteam.ui.jlg.swt;
 
 import org.eclipse.jface.action.Action;
 import org.ocpteam.misc.JLG;

@@ -1,4 +1,4 @@
-package org.ocpteam.ui.swt;
+package org.ocpteam.ui.jlg.swt;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -8,9 +8,9 @@ import org.ocpteam.misc.JLG;
 
 public class OpenConsoleAction extends Action {
 
-	private AdminConsole window;
+	private DataSourceWindow window;
 
-	public OpenConsoleAction(AdminConsole w) {
+	public OpenConsoleAction(DataSourceWindow w) {
 		window = w;
 		setText("&Open Console@Ctrl+O");
 		setToolTipText("Open the OCP Agent Administration Console");

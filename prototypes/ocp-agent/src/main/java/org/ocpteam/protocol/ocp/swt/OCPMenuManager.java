@@ -12,6 +12,7 @@ public class OCPMenuManager extends DynamicMenuManager {
 	@Override
 	public void init(DataSourceWindow w) {
 		add(new ViewContactTabAction(w));
+		add(new RemoveStorageAction(w));
 	}
 
 }
