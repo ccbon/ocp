@@ -21,7 +21,7 @@ public class ViewContactTabAction extends Action {
 		setText("Cont&act@Ctrl+T");
 		setToolTipText("View Contact Tab");
 		try {
-			ImageDescriptor i = ImageDescriptor.createFromImageData(new ImageData(ViewContactTabAction.class.getResourceAsStream("view_contact.png")));
+			ImageDescriptor i = ImageDescriptor.createFromImageData(new ImageData(DataSourceWindow.class.getResourceAsStream("view_contact.png")));
 			setImageDescriptor(i);
 		} catch (Exception e) {
 			e.printStackTrace();

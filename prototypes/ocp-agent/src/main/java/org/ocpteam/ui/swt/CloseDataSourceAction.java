@@ -32,11 +32,7 @@ public class CloseDataSourceAction extends Action {
 				throw QuickMessage.exception(w.getShell(), "No datasource is open !");
 			}
 			QuickMessage.confirm(w.getShell(), "Are you sure you want to close the datasource ?");
-			w.ds.close();
-			w.ds = null;
-			w.removeProtocolMenu();
-			w.agent = null;
-			w.context = null;
+			w.closeDataSource();
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {

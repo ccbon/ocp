@@ -10,16 +10,14 @@ import org.ocpteam.ui.swt.DataSourceWindow;
 
 
 public class RemoveStorageAction extends Action {
-	private DSPAgent agent;
 	private DataSourceWindow window;
 
 	public RemoveStorageAction(DataSourceWindow window) {
 		this.window = window;
-		agent = (DSPAgent) window.agent;
 		setText("&Remove local storage");
 		setToolTipText("Remove local storage (Test purpose)");
 		try {
-			ImageDescriptor i = ImageDescriptor.createFromImageData(new ImageData(RemoveStorageAction.class.getResourceAsStream("remove_storage.png")));
+			ImageDescriptor i = ImageDescriptor.createFromImageData(new ImageData(DataSourceWindow.class.getResourceAsStream("remove_storage.png")));
 			setImageDescriptor(i);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -29,6 +27,7 @@ public class RemoveStorageAction extends Action {
 	public void run() {
 		JLG.debug("Removing storage...");
 		if (QuickMessage.confirm(window.getShell(), "This will destroy the storage of this agent. Are you sure ?")) {
+			DSPAgent agent = (DSPAgent) window.ds.getAgent();
 			agent.removeStorage();
 		}
 		window.getShell().setFocus();

@@ -63,7 +63,7 @@ public class DataSourceWindow extends ApplicationWindow {
 	public ViewExplorerAction viewExplorerAction;
 
 	DebugAction debugAction;
-	
+
 	AboutAction aboutAction;
 	HelpAction helpAction;
 
@@ -77,6 +77,7 @@ public class DataSourceWindow extends ApplicationWindow {
 
 	public Clipboard clipboard;
 	private DynamicMenuManager protocolMenu;
+	private TrayItem item;
 
 	/**
 	 * Launch the application.
@@ -116,7 +117,7 @@ public class DataSourceWindow extends ApplicationWindow {
 				&& context != null);
 		newUserAction.setEnabled(ds != null && ds.usesAuthentication()
 				&& ds.getAuthentication().allowsUserCreation());
-		
+
 		viewExplorerAction.setEnabled(context != null);
 
 		// other
@@ -192,7 +193,7 @@ public class DataSourceWindow extends ApplicationWindow {
 		viewExplorerAction = new ViewExplorerAction(this);
 
 		debugAction = new DebugAction();
-		
+
 		signInAction = new SignInAction(this);
 		signOutAction = new SignOutAction(this);
 		newUserAction = new NewUserAction(this);
@@ -286,7 +287,7 @@ public class DataSourceWindow extends ApplicationWindow {
 		toolBarManager.add(signInAction);
 		toolBarManager.add(signOutAction);
 		toolBarManager.add(newUserAction);
-		
+
 		toolBarManager.add(new Separator());
 
 		toolBarManager.add(helpAction);
@@ -419,12 +420,32 @@ public class DataSourceWindow extends ApplicationWindow {
 		}
 	}
 
+	public void closeDataSource() throws Exception {
+		ds.close();
+		if (!agent.isOnlyClient()) {
+			closeTray();
+		}
+		ds = null;
+		agent = null;
+		context = null;
+		removeProtocolMenu();
+	}
+
+	private void closeTray() {
+		if (item != null) {
+			if (!item.isDisposed()) {
+				item.dispose();
+			}
+			item = null;
+		}
+	}
+
 	private void openTray() {
 		Display display = getShell().getDisplay();
 		Shell shell = new Shell(display);
 		Tray tray = display.getSystemTray();
 		if (tray != null) {
-			TrayItem item = new TrayItem(tray, SWT.NONE);
+			item = new TrayItem(tray, SWT.NONE);
 			Image image = new Image(display,
 					DataSourceWindow.class.getResourceAsStream("ocp_icon.png"));
 			item.setImage(image);
@@ -444,13 +465,13 @@ public class DataSourceWindow extends ApplicationWindow {
 					menu.setVisible(true);
 				}
 			});
-			
+
 			item.addSelectionListener(new SelectionListener() {
-				
+
 				@Override
 				public void widgetSelected(SelectionEvent arg0) {
 				}
-				
+
 				@Override
 				public void widgetDefaultSelected(SelectionEvent arg0) {
 					JLG.debug("item default selected");
