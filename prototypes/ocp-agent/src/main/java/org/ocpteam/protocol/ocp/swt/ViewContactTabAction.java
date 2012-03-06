@@ -10,7 +10,7 @@ import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.graphics.ImageData;
 import org.ocpteam.layer.dsp.DSPAgent;
 import org.ocpteam.misc.JLG;
-import org.ocpteam.ui.jlg.swt.DataSourceWindow;
+import org.ocpteam.ui.swt.DataSourceWindow;
 
 
 public class ViewContactTabAction extends Action {

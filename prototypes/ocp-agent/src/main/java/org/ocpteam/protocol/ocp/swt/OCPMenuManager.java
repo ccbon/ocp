@@ -1,7 +1,7 @@
 package org.ocpteam.protocol.ocp.swt;
 
-import org.ocpteam.ui.jlg.swt.DataSourceWindow;
-import org.ocpteam.ui.jlg.swt.DynamicMenuManager;
+import org.ocpteam.ui.swt.DataSourceWindow;
+import org.ocpteam.ui.swt.DynamicMenuManager;
 
 public class OCPMenuManager extends DynamicMenuManager {
 	

@@ -6,7 +6,7 @@ import org.eclipse.swt.graphics.ImageData;
 import org.ocpteam.layer.dsp.DSPAgent;
 import org.ocpteam.misc.JLG;
 import org.ocpteam.misc.swt.QuickMessage;
-import org.ocpteam.ui.jlg.swt.DataSourceWindow;
+import org.ocpteam.ui.swt.DataSourceWindow;
 
 
 public class RemoveStorageAction extends Action {

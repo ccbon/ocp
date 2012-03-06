@@ -14,8 +14,8 @@ import org.eclipse.swt.widgets.Shell;
 import org.ocpteam.layer.rsp.DataSource;
 import org.ocpteam.misc.JLG;
 import org.ocpteam.protocol.ocp.OCPDataSource;
-import org.ocpteam.ui.jlg.swt.DataSourceWindow;
-import org.ocpteam.ui.jlg.swt.Scenario;
+import org.ocpteam.ui.swt.DataSourceWindow;
+import org.ocpteam.ui.swt.Scenario;
 
 
 public class OCPNewDataSourceWizard extends Wizard implements Scenario {

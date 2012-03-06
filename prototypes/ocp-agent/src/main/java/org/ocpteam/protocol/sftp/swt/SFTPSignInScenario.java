@@ -1,7 +1,7 @@
 package org.ocpteam.protocol.sftp.swt;
 
-import org.ocpteam.ui.jlg.swt.DataSourceWindow;
-import org.ocpteam.ui.jlg.swt.Scenario;
+import org.ocpteam.ui.swt.DataSourceWindow;
+import org.ocpteam.ui.swt.Scenario;
 
 public class SFTPSignInScenario implements Scenario {
 

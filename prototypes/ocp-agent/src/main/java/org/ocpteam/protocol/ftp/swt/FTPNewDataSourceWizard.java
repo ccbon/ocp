@@ -10,8 +10,8 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.ocpteam.layer.rsp.DataSource;
 import org.ocpteam.protocol.ftp.FTPDataSource;
-import org.ocpteam.ui.jlg.swt.DataSourceWindow;
-import org.ocpteam.ui.jlg.swt.Scenario;
+import org.ocpteam.ui.swt.DataSourceWindow;
+import org.ocpteam.ui.swt.Scenario;
 
 public class FTPNewDataSourceWizard extends Wizard implements Scenario {
 	FirstWizardPage p1;

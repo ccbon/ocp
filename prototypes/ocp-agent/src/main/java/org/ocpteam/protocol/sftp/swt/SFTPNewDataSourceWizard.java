@@ -13,8 +13,8 @@ import org.ocpteam.misc.JLG;
 import org.ocpteam.misc.swt.QuickMessage;
 import org.ocpteam.protocol.sftp.SFTPDataSource;
 import org.ocpteam.protocol.sftp.SSHChallenge;
-import org.ocpteam.ui.jlg.swt.DataSourceWindow;
-import org.ocpteam.ui.jlg.swt.Scenario;
+import org.ocpteam.ui.swt.DataSourceWindow;
+import org.ocpteam.ui.swt.Scenario;
 
 public class SFTPNewDataSourceWizard extends Wizard implements
 		Scenario {
