@@ -7,6 +7,7 @@ import java.util.TreeSet;
 
 import org.ocpteam.misc.Id;
 import org.ocpteam.misc.JLG;
+import org.ocpteam.misc.PersistentHashMap;
 
 
 public class Storage {
@@ -17,7 +18,11 @@ public class Storage {
 
 	public Storage(OCPAgent agent) {
 		nodeSet = new TreeSet<Id>();
-		contentMap = new PersistentHashMap(agent);
+		String root = agent.cfg.getProperty(
+				"storage.dir",
+				System.getenv("TEMP") + "/ocp_agent_storage/"
+						+ agent.getName());
+		contentMap = new PersistentHashMap(root);
 		this.agent = agent;
 	}
 

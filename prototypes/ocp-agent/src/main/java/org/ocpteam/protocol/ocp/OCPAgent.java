@@ -29,6 +29,8 @@ import javax.crypto.spec.PBEParameterSpec;
 import org.ocpteam.layer.dsp.Contact;
 import org.ocpteam.layer.dsp.DSPAgent;
 import org.ocpteam.layer.rsp.Authentication;
+import org.ocpteam.layer.rsp.Context;
+import org.ocpteam.layer.rsp.DataSource;
 import org.ocpteam.layer.rsp.FileSystem;
 import org.ocpteam.layer.rsp.User;
 import org.ocpteam.misc.ByteUtil;
@@ -99,8 +101,8 @@ public class OCPAgent extends DSPAgent {
 	private Cache cache;
 	private MessageDigest md;
 
-	public OCPAgent() {
-		super();
+	public OCPAgent(DataSource ds) {
+		super(ds);
 		nodeMap = new TreeMap<Id, OCPContact>();
 		cache = new Cache();
 	}
@@ -144,6 +146,8 @@ public class OCPAgent extends DSPAgent {
 
 		JLG.debug("starting agent " + name);
 
+		readConfig();
+		
 		if (isFirstAgent()) {
 			JLG.debug("This is the first agent on the network");
 			if (network == null) {
@@ -159,7 +163,7 @@ public class OCPAgent extends DSPAgent {
 		if (sId == null) {
 			id = generateId();
 			cfg.setProperty("id", id.toString());
-			cfg.storeConfigFile();
+			ds.save();
 		} else {
 			id = new Id(sId);
 		}
@@ -636,6 +640,7 @@ public class OCPAgent extends DSPAgent {
 			if (user == null) {
 				throw new Exception("user unknown");
 			}
+			initialContext = new Context(this, getFileSystem(user), "/");
 			a.setUser(user);
 		} catch (Exception e) {
 			JLG.error(e);

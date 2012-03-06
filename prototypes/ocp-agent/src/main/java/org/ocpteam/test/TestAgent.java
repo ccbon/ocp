@@ -3,12 +3,13 @@ package org.ocpteam.test;
 import java.util.Iterator;
 import java.util.Properties;
 
-import org.ocpteam.layer.rsp.AgentConfig;
 import org.ocpteam.layer.rsp.Authentication;
+import org.ocpteam.layer.rsp.DataSource;
 import org.ocpteam.misc.JLG;
 import org.ocpteam.misc.JLGException;
 import org.ocpteam.protocol.ocp.Captcha;
 import org.ocpteam.protocol.ocp.OCPAgent;
+import org.ocpteam.protocol.ocp.OCPDataSource;
 import org.ocpteam.protocol.ocp.OCPFileSystem;
 import org.ocpteam.protocol.ocp.OCPUser;
 import org.ocpteam.protocol.ocp.Pointer;
@@ -23,14 +24,15 @@ public class TestAgent {
 		try {
 			JLG.rm(System.getenv("TEMP") + "/ocp_agent_storage");
 			// start 2 agents
-			OCPAgent a1 = new OCPAgent();
-			AgentConfig p1 = AgentConfig.newInstance(a1);
+			DataSource ds1 = new OCPDataSource();
+			OCPAgent a1 = (OCPAgent) ds1.getAgent();
+			Properties p1 = ds1.getProperties();
 			p1.setProperty("name", "Suzana");
 			p1.setProperty("server", "yes");
 			p1.setProperty("server.listener.1", "tcp://localhost:22220");
 			p1.setProperty("server.listener.2", "http://localhost:11110");
 			p1.setProperty("server.isFirstAgent", "yes");
-			a1.setConfig(p1);
+			
 			Properties network = new Properties();
 			network.setProperty("hello", "didounette");
 			network.setProperty("coucou", "jlg");
@@ -46,14 +48,14 @@ public class TestAgent {
 			
 
 			// starting second agent
-			OCPAgent a2 = new OCPAgent();
-			AgentConfig p2 = AgentConfig.newInstance(a2);
+			DataSource ds2 = new OCPDataSource();
+			OCPAgent a2 = (OCPAgent) ds2.getAgent();
+			Properties p2 = ds2.getProperties();
 			p2.setProperty("name", "Jean-Louis");
 			p2.setProperty("server", "yes");
 			p2.setProperty("server.listener.1", "tcp://localhost:22221");
 			p2.setProperty("sponsor.1", "tcp://localhost:22220");
 			p2.setProperty("sponsor.2", "xxx://localhost:22223");
-			a2.setConfig(p2);
 			a2.connect();
 			Thread.sleep(2000);
 			JLG.debug(a1.toString());

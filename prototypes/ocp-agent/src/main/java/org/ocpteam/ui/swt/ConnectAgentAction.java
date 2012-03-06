@@ -36,7 +36,7 @@ public class ConnectAgentAction extends Action {
 				if (a.startWizard(w.display, wizard) != 0) {
 					return;
 				}
-				w.agent.cfg.loadConfigFile();
+				
 				w.agent.readConfig();
 				w.agent.connect();
 				if (!w.agent.usesAuthentication()) {

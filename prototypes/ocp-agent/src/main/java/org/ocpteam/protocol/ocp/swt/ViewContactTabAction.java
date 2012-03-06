@@ -1,0 +1,64 @@
+package org.ocpteam.protocol.ocp.swt;
+
+import org.eclipse.jface.action.Action;
+import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.CTabFolder;
+import org.eclipse.swt.custom.CTabItem;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
+import org.eclipse.swt.graphics.ImageData;
+import org.ocpteam.layer.dsp.DSPAgent;
+import org.ocpteam.misc.JLG;
+import org.ocpteam.ui.jlg.swt.DataSourceWindow;
+
+
+public class ViewContactTabAction extends Action {
+	private DataSourceWindow window;
+
+	public ViewContactTabAction(DataSourceWindow w) {
+		window = w;
+		setText("Cont&act@Ctrl+T");
+		setToolTipText("View Contact Tab");
+		try {
+			ImageDescriptor i = ImageDescriptor.createFromImageData(new ImageData(ViewContactTabAction.class.getResourceAsStream("view_contact.png")));
+			setImageDescriptor(i);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void run() {
+		JLG.debug("View Contact");
+		addContactTab();
+	}
+	
+	public void addContactTab() {
+		// if one contact tab is already present, then just select it.
+		CTabFolder tabFolder = window.tabFolder;
+		CTabItem[] items = tabFolder.getItems();
+		for (CTabItem item : items) {
+			if (item.getControl().getClass() == ContactComposite.class) {
+				ContactComposite contactComposite = (ContactComposite) item.getControl();
+				tabFolder.setSelection(item);
+				contactComposite.refresh();
+				return;
+			}
+		}
+		
+		final CTabItem contactCTabItem = new CTabItem(tabFolder, SWT.NONE);
+		contactCTabItem.setShowClose(true);
+		contactCTabItem.setText("Contacts");
+		contactCTabItem.addDisposeListener(new DisposeListener() {
+			public void widgetDisposed(DisposeEvent arg0) {
+				JLG.debug("dispose");
+			}
+		});
+
+		ContactComposite contactComposite = new ContactComposite(tabFolder, SWT.NONE,
+				(DSPAgent) window.agent);
+		contactCTabItem.setControl(contactComposite);
+		tabFolder.setSelection(contactCTabItem);
+
+	}
+}

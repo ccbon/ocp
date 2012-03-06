@@ -37,7 +37,8 @@ public abstract class DataSource {
 
 	protected URI uri;
 	private Agent agent;
-	private File file;
+	protected File file;
+	private Properties p;
 
 	public Agent getAgent() {
 		if (agent == null) {
@@ -104,8 +105,40 @@ public abstract class DataSource {
 		return file;
 	}
 
-	public abstract boolean usesAuthentication();
+	public boolean usesAuthentication() {
+		return getAuthentication() != null;
+	}
 	
-	public abstract Authentication getAuthentication() throws Exception;
+	public abstract Authentication getAuthentication();
+	
+	public Properties getProperties() {
+		if (p == null) {
+			try {
+				if (file != null && file.exists()) {
+					p = JLG.loadConfig(this.getFile().getAbsolutePath());
+				} else {
+					p = new Properties();
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return p;
+	}
+
+
+	public void save() throws Exception {
+		if (file == null) {
+			throw new Exception("Cannot save if file is not specified.");
+		}
+		JLG.storeConfig(this.p, this.getFile().getAbsolutePath());
+	}
+
+
+	public void setProperties(Properties p) {
+		this.p = p;
+	}
+	
+	
 
 }

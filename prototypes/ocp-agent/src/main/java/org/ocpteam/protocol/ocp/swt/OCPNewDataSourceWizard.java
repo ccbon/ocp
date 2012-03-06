@@ -1,24 +1,33 @@
 package org.ocpteam.protocol.ocp.swt;
 
+import java.io.File;
 import java.util.Properties;
 
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.Wizard;
+import org.eclipse.jface.wizard.WizardDialog;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.FileDialog;
+import org.eclipse.swt.widgets.Shell;
+import org.ocpteam.layer.rsp.DataSource;
 import org.ocpteam.misc.JLG;
-import org.ocpteam.protocol.ocp.OCPAgent;
+import org.ocpteam.protocol.ocp.OCPDataSource;
+import org.ocpteam.ui.jlg.swt.DataSourceWindow;
+import org.ocpteam.ui.jlg.swt.Scenario;
 
 
-public class ConfigWizard extends Wizard {
+public class OCPNewDataSourceWizard extends Wizard implements Scenario {
 
 	
 	public boolean bIsFirstAgent = false;
 	public String listenerPort = "22222";
-	private OCPAgent agent;
+	private DataSource ds;
 
 
-	public ConfigWizard(OCPAgent agent) {
+	public OCPNewDataSourceWizard() {
 		setWindowTitle("New Wizard");
-		this.agent = agent;
 	}
 
 	@Override
@@ -58,7 +67,14 @@ public class ConfigWizard extends Wizard {
 			p.setProperty("network.type", "public");
 			p.setProperty("network.sponsor.url", firstPage.sponsorPublicServerText.getText());
 		}
-		JLG.storeConfig(p, "agent.properties");
+		ds.setProperties(p);
+		try {
+			ds.save();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
 
 		if (bIsFirstAgent) {
 			NetworkWizardPage networkPage = (NetworkWizardPage) getPage("networkPage");
@@ -69,10 +85,9 @@ public class ConfigWizard extends Wizard {
 			np.setProperty("SignatureAlgo", "SHA1withDSA");
 			np.setProperty("user.cipher.algo", "PBEWithMD5AndDES");
 
-			JLG.storeConfig(np, ((OCPAgent) agent).getNetworkConfigFile().getAbsolutePath());
+			JLG.storeConfig(np, "network.properties");
 
 		}
-
 		return true;
 	}
 
@@ -86,6 +101,31 @@ public class ConfigWizard extends Wizard {
 		}
 		System.out.println("all pages completed.");
 		return true;
+	}
+
+	@Override
+	public void run(DataSourceWindow w) throws Exception {
+		Display display = Display.getDefault();
+		Shell shell = new Shell(display);
+		shell.setLayout(new FillLayout());
+		FileDialog fd = new FileDialog(shell, SWT.SAVE);
+		fd.setText("Save");
+		fd.setFilterPath(System.getProperty("user.home"));
+		String[] filterExt = { "*.ocp", "*.uri", "*.*" };
+		fd.setFilterExtensions(filterExt);
+		String selected = fd.open();
+		JLG.debug(selected);
+		if (selected == null) {
+			return;
+		}
+		File file = new File(selected);
+		w.ds = new OCPDataSource(file);
+		if (!file.exists()) {
+			ds = w.ds;
+			WizardDialog dialog = new WizardDialog(shell, this);
+			dialog.open();			
+		}		
+		shell.dispose();
 	}
 
 }

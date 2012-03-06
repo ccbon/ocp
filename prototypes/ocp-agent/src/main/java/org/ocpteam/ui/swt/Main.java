@@ -11,7 +11,6 @@ import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.ocpteam.layer.rsp.Agent;
-import org.ocpteam.layer.rsp.AgentConfig;
 import org.ocpteam.layer.rsp.DataSource;
 import org.ocpteam.layer.rsp.UserInterface;
 import org.ocpteam.misc.JLG;
@@ -39,21 +38,7 @@ public class Main {
 			agent.setAssistant(SWT_ASSISTANT,
 					SWTAgentAssistant.getInstance(agent));
 			UserInterface ui = new GraphicalUI(agent);
-			AgentConfig cfg = AgentConfig.newInstance(agent);
-			agent.setConfig(cfg);
-			if (cfg.requiresConfigFile()) {
-				if (!cfg.isConfigFilePresent()) {
-					startWizard(cfg);
-				}
-				if (!cfg.isConfigFilePresent()) {
-					// it should mean that the wizard was cancelled by the user.
-					return;
-				}
-				cfg.loadConfigFile();
-			}
-			agent.readConfig();
-			agent.connect();
-			(new Thread(ui)).start();
+			
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -85,18 +70,6 @@ public class Main {
 			agent.setAssistant(SWT_ASSISTANT,
 					SWTAgentAssistant.getInstance(agent));
 			UserInterface ui = new GraphicalUI(agent);
-			AgentConfig cfg = AgentConfig.newInstance(agent);
-			agent.setConfig(cfg);
-			if (cfg.requiresConfigFile()) {
-				if (!cfg.isConfigFilePresent()) {
-					startWizard(cfg);
-				}
-				if (!cfg.isConfigFilePresent()) {
-					// it should mean that the wizard was cancelled by the user.
-					return;
-				}
-				cfg.loadConfigFile();
-			}
 			agent.readConfig();
 
 			if (agent.autoConnect()) {
@@ -146,18 +119,5 @@ public class Main {
 		display.dispose();
 	}
 
-	public static void startWizard(AgentConfig cfg) throws Exception {
-		JLG.debug_on();
-		JLG.debug("starting wizard");
-		Display display = Display.getDefault();
-
-		SWTAgentAssistant a = (SWTAgentAssistant) cfg.agent
-				.getAssistant(Main.SWT_ASSISTANT);
-		IWizard wizard = a.getConfigWizardInstance();
-		a.startWizard(display, wizard);
-
-		JLG.debug("about to dispose");
-		display.dispose();
-	}
 
 }

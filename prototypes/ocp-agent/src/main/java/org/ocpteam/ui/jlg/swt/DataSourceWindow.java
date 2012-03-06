@@ -44,6 +44,7 @@ public class DataSourceWindow extends ApplicationWindow {
 
 	SignInAction signInAction;
 	SignOutAction signOutAction;
+	NewUserAction newUserAction;
 
 	SelectAllAction selectAllAction;
 	CopyAction copyAction;
@@ -99,10 +100,13 @@ public class DataSourceWindow extends ApplicationWindow {
 	void refresh() {
 		// action status
 		closeDataSourceAction.setEnabled(ds != null);
-		signInAction.setEnabled(ds != null && agent != null
-				&& agent.usesAuthentication() && context == null);
-		signOutAction.setEnabled(ds != null && agent != null
-				&& agent.usesAuthentication() && context != null);
+		signInAction.setEnabled(ds != null && ds.usesAuthentication()
+				&& context == null);
+		signOutAction.setEnabled(ds != null && ds.usesAuthentication()
+				&& context != null);
+		newUserAction.setEnabled(ds != null && ds.usesAuthentication()
+				&& ds.getAuthentication().allowsUserCreation());
+		
 		viewExplorerAction.setEnabled(context != null);
 
 		// other
@@ -179,6 +183,7 @@ public class DataSourceWindow extends ApplicationWindow {
 
 		signInAction = new SignInAction(this);
 		signOutAction = new SignOutAction(this);
+		newUserAction = new NewUserAction(this);
 
 		helpAction = new HelpAction(this);
 		aboutAction = new AboutAction(this);
@@ -230,6 +235,8 @@ public class DataSourceWindow extends ApplicationWindow {
 		menuBar.add(userMenu);
 		userMenu.add(signInAction);
 		userMenu.add(signOutAction);
+		editMenu.add(new Separator());
+		userMenu.add(newUserAction);
 
 		MenuManager viewMenu = new MenuManager("&View");
 		menuBar.add(viewMenu);
@@ -268,7 +275,8 @@ public class DataSourceWindow extends ApplicationWindow {
 
 		toolBarManager.add(signInAction);
 		toolBarManager.add(signOutAction);
-
+		toolBarManager.add(newUserAction);
+		
 		toolBarManager.add(new Separator());
 
 		toolBarManager.add(helpAction);
@@ -382,7 +390,8 @@ public class DataSourceWindow extends ApplicationWindow {
 			} else if (ds.usesAuthentication()) {
 				try {
 					Authentication a = ds.getAuthentication();
-					if (JLG.isNullOrEmpty(a.getLogin()) && a.getChallenge() == null) {
+					if (JLG.isNullOrEmpty(a.getLogin())
+							&& a.getChallenge() == null) {
 						throw new Exception();
 					}
 					signIn(a);

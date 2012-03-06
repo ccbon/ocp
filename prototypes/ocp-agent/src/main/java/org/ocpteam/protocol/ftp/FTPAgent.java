@@ -24,14 +24,6 @@ public class FTPAgent extends Agent {
 	}
 
 	@Override
-	public void readConfig() throws Exception {
-		this.hostname = cfg.getProperty("hostname", "ftp.guenego.com");
-		if (cfg.getProperty("debug", "true").equalsIgnoreCase("true")) {
-			JLG.debug_on();
-		}
-	}
-
-	@Override
 	public void connect() throws Exception {
 
 		hostname = ds.getURI().getHost();

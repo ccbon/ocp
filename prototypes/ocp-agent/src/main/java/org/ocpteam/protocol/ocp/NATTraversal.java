@@ -48,7 +48,7 @@ public class NATTraversal {
 					        );
 
 					upnpService.getControlPoint().search();
-
+					JLG.debug("NAT run done.");
 				} catch (Exception e) {
 					//e.printStackTrace();
 				}

@@ -9,13 +9,9 @@ import org.ocpteam.layer.rsp.Agent;
 
 public class FTPConfigWizard extends Wizard {
 
-	
-	private Agent agent;
-
 
 	public FTPConfigWizard(Agent agent) {
 		setWindowTitle("FTP Wizard");
-		this.agent = agent;
 	}
 
 	@Override
@@ -30,7 +26,7 @@ public class FTPConfigWizard extends Wizard {
 		p.setProperty("hostname", firstPage.serverHostnameText.getText());
 		p.setProperty("port", firstPage.portText.getText());
 		p.setProperty("default.dir", firstPage.defaultLocalDirText.getText());
-		agent.cfg.loadProperties(p);
+		//agent.cfg.loadProperties(p);
 		return true;
 	}
 

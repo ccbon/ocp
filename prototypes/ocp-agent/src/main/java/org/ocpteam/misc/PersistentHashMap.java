@@ -1,4 +1,4 @@
-package org.ocpteam.protocol.ocp;
+package org.ocpteam.misc;
 
 import java.io.File;
 import java.util.Collection;
@@ -7,8 +7,8 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
-import org.ocpteam.layer.rsp.Agent;
-import org.ocpteam.misc.JLG;
+import org.ocpteam.protocol.ocp.Address;
+import org.ocpteam.protocol.ocp.Content;
 
 
 public class PersistentHashMap implements Map<Address, Content> {
@@ -44,12 +44,8 @@ public class PersistentHashMap implements Map<Address, Content> {
 
 	}
 
-	public PersistentHashMap(Agent agent) {
+	public PersistentHashMap(String root) {
 		try {
-			String root = agent.cfg.getProperty(
-					"storage.dir",
-					System.getenv("TEMP") + "/ocp_agent_storage/"
-							+ agent.getName());
 			dir = new File(root);
 			JLG.mkdir(dir);
 		} catch (Exception e) {

@@ -5,8 +5,6 @@ import java.util.Map;
 
 public abstract class Agent {
 
-	public AgentConfig cfg;
-
 	protected boolean bIsConnected = false;
 
 	protected Map<String, Object> assistantMap;
@@ -21,10 +19,6 @@ public abstract class Agent {
 
 	public Agent(DataSource ds) {
 		this.ds = ds;
-	}
-
-	public void setConfig(AgentConfig cfg) throws Exception {
-		this.cfg = cfg;
 	}
 	
 	public void readConfig() throws Exception {

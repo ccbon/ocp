@@ -4,9 +4,11 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Queue;
 
 import org.ocpteam.layer.rsp.Agent;
+import org.ocpteam.layer.rsp.DataSource;
 import org.ocpteam.misc.Id;
 import org.ocpteam.misc.JLG;
 
@@ -17,10 +19,13 @@ import org.ocpteam.misc.JLG;
  */
 public abstract class DSPAgent extends Agent {
 
+	public Properties cfg;
+	
 	protected Map<Id, Contact> contactMap; // contactid->contact
 	
-	public DSPAgent() {
-		super();
+	public DSPAgent(DataSource ds) {
+		super(ds);
+		cfg = this.ds.getProperties();
 		contactMap = new HashMap<Id, Contact>();
 	}
 	
