@@ -36,22 +36,16 @@ public class ZipAgent extends Agent {
 	}
 
 	@Override
-	public boolean autoConnect() {
-		return true;
-	}
-
-	@Override
 	public boolean isOnlyClient() {
 		return true;
 	}
 
 	@Override
-	public void connect() throws Exception {
+	protected void onConnect() throws Exception {
 		zipfile = ds.getFile();
 		JLG.debug("opening datasource: " + zipfile);
 		createZipFileSystem();
-		initialContext = new Context(this, fs, "/");
-		bIsConnected = true;
+		context = new Context(this, fs, "/");
 	}
 
 	private void createZipFileSystem() throws Exception {
@@ -60,32 +54,18 @@ public class ZipAgent extends Agent {
 	}
 
 	@Override
-	public void disconnect() {
-		bIsConnected = false;
-	}
-
-	@Override
-	public boolean allowsUserCreation() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	
-	@Override
-	public boolean usesAuthentication() {
-		return false;
+	protected void onDisconnect() {
 	}
 
 	@Override
 	public void login(Authentication a) throws Exception {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void logout(Authentication a) throws Exception {
 		// TODO Auto-generated method stub
-		
 	}
 
 }

@@ -81,8 +81,8 @@ public class TestAgent {
 			JLG.debug(decryptedMessage);
 			//System.exit(0);
 			
-			Authentication auth = new Authentication(username, password);
-			a2.login(auth);
+			Authentication auth = new Authentication(ds2, username, password);
+			auth.login();
 			OCPUser user = (OCPUser) auth.getUser();
 			JLG.debug(user.toString());
 			

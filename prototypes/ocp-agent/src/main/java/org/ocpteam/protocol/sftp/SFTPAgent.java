@@ -19,24 +19,17 @@ public class SFTPAgent extends Agent {
 	public ChannelSftp channel;
 
 	public SFTPAgent(DataSource ds) {
-		this.ds = ds;
+		super(ds);
 	}
 
 	@Override
-	public void connect() throws Exception {
+	protected void onConnect() throws Exception {
 		jsch = new JSch();
-		bIsConnected = true;
 	}
 
 	@Override
-	public void disconnect() {
+	protected void onDisconnect() {
 		jsch = null;
-		bIsConnected = false;
-	}
-
-	@Override
-	public boolean allowsUserCreation() {
-		return false;
 	}
 
 	@Override
@@ -74,7 +67,7 @@ public class SFTPAgent extends Agent {
 			channel = (ChannelSftp) session.openChannel("sftp");
 			channel.connect();
 			User user = new SFTPUser(login, c);
-			initialContext = new Context(this, getFileSystem(user), "/");
+			context = new Context(this, getFileSystem(user), "/");
 			a.setUser(user);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -98,16 +91,6 @@ public class SFTPAgent extends Agent {
 	}
 
 	@Override
-	public boolean autoConnect() {
-		return true;
-	}
-	
-	@Override
-	public boolean authenticatesWithSSH() {
-		return true;
-	}
-
-	@Override
 	public void logout(Authentication a) throws Exception {
 		a.reset();
 		channel.exit();
@@ -116,11 +99,6 @@ public class SFTPAgent extends Agent {
 
 	@Override
 	public boolean isOnlyClient() {
-		return true;
-	}
-
-	@Override
-	public boolean usesAuthentication() {
 		return true;
 	}
 

@@ -30,7 +30,7 @@ public class FTPDataSource extends DataSource {
 	@Override
 	public Authentication getAuthentication() {
 		if (this.auth == null) {
-			this.auth = new Authentication(uri);
+			this.auth = new Authentication(this);
 		}
 		return this.auth;
 	}

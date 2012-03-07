@@ -2,14 +2,26 @@ package org.ocpteam.layer.rsp;
 
 import java.net.URI;
 
-
 public class Authentication {
 
 	private Object challenge;
 	private String login;
 	private User user;
+	private DataSource ds;
 
-	public Authentication(URI uri) {
+	public Authentication(DataSource ds) {
+		this.ds = ds;
+		initFromURI(ds);
+	}
+
+	private void initFromURI(DataSource ds) {
+		URI uri = null;
+		try {
+			uri = ds.getURI();
+			
+		} catch (Exception e) {
+		}
+
 		if (uri != null && uri.getUserInfo() != null) {
 			String[] array = uri.getUserInfo().split(":");
 			String login = array[0];
@@ -20,7 +32,8 @@ public class Authentication {
 		}
 	}
 
-	public Authentication(String username, Object challenge) {
+	public Authentication(DataSource ds, String username, Object challenge) {
+		this(ds);
 		this.login = username;
 		this.challenge = challenge;
 	}
@@ -36,7 +49,7 @@ public class Authentication {
 	public void setUser(User user) {
 		this.user = user;
 	}
-	
+
 	public User getUser() {
 		return this.user;
 	}
@@ -47,7 +60,7 @@ public class Authentication {
 
 	public void setChallenge(Object challenge) {
 		this.challenge = challenge;
-		
+
 	}
 
 	public void reset() {
@@ -56,8 +69,17 @@ public class Authentication {
 		this.challenge = null;
 	}
 
+	/**
+	 * To be overridden if necessary according protocol rules.
+	 * 
+	 * @return true if the protocol allow user creation, false otherwise
+	 */
 	public boolean allowsUserCreation() {
 		return false;
+	}
+
+	public void login() throws Exception {
+		ds.getAgent().login(this);
 	}
 
 }

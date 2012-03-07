@@ -16,7 +16,7 @@ public class SFTPDataSource extends DataSource {
 	
 	public SFTPDataSource(URI uri, SSHChallenge c) {
 		setURI(uri);
-		auth = new Authentication(uri);
+		auth = new Authentication(this);
 		auth.setChallenge(c);
 	}
 

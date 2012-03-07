@@ -116,7 +116,7 @@ public class DataSourceWindow extends ApplicationWindow {
 		signOutAction.setEnabled(ds != null && ds.usesAuthentication()
 				&& context != null);
 		newUserAction.setEnabled(ds != null && ds.usesAuthentication()
-				&& ds.getAuthentication().allowsUserCreation());
+				&& context == null && ds.getAuthentication().allowsUserCreation());
 
 		viewExplorerAction.setEnabled(context != null);
 
@@ -409,7 +409,7 @@ public class DataSourceWindow extends ApplicationWindow {
 			if (!agent.isOnlyClient()) {
 				openTray();
 			}
-			context = agent.getInitialContext();
+			context = agent.getContext();
 			if (context != null) {
 				viewExplorerAction.run();
 			} else if (ds.usesAuthentication()) {
@@ -519,9 +519,9 @@ public class DataSourceWindow extends ApplicationWindow {
 		protocolMenu = null;
 	}
 
-	public void signIn(Authentication a) throws Exception {
-		agent.login(a);
-		context = agent.getInitialContext();
+	public void signIn(Authentication auth) throws Exception {
+		auth.login();
+		context = agent.getContext();
 		if (context != null) {
 			viewExplorerAction.run();
 		}

@@ -24,13 +24,12 @@ public class FTPAgent extends Agent {
 	}
 
 	@Override
-	public void connect() throws Exception {
+	protected void onConnect() throws Exception {
 
 		hostname = ds.getURI().getHost();
 		JLG.debug("hostname=" + hostname);
 		try {
 			ftp.connect(hostname);
-			bIsConnected = true;
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new Exception("Cannot connect to " + hostname);
@@ -38,21 +37,12 @@ public class FTPAgent extends Agent {
 	}
 
 	@Override
-	public void disconnect() {
+	protected void onDisconnect() {
 		try {
-			if (bIsConnected) {
-				ftp.logout();
-			}
+			ftp.logout();
 		} catch (IOException e) {
-			//e.printStackTrace();
-		} finally {
-			bIsConnected = false;
+			// e.printStackTrace();
 		}
-	}
-
-	@Override
-	public boolean allowsUserCreation() {
-		return false;
 	}
 
 	@Override
@@ -71,7 +61,7 @@ public class FTPAgent extends Agent {
 			JLG.debug("ftp logged in.");
 			FTPUser user = new FTPUser(login, password,
 					System.getProperty("user.home"));
-			initialContext = new Context(this, getFileSystem(user), "/");
+			context = new Context(this, getFileSystem(user), "/");
 			a.setUser(user);
 		} else {
 			throw new Exception("Cannot Login.");
@@ -115,18 +105,8 @@ public class FTPAgent extends Agent {
 	}
 
 	@Override
-	public String getHelpURL() {
-		return "http://code.google.com/p/ocp/wiki/FTPHelp";
-	}
-
-	@Override
 	public FileSystem getFileSystem(User user) {
 		return new FTPFileSystem((FTPUser) user, this);
-	}
-
-	@Override
-	public boolean autoConnect() {
-		return false;
 	}
 
 	@Override
@@ -136,11 +116,6 @@ public class FTPAgent extends Agent {
 
 	@Override
 	public boolean isOnlyClient() {
-		return true;
-	}
-
-	@Override
-	public boolean usesAuthentication() {
 		return true;
 	}
 

@@ -8,10 +8,10 @@ import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Text;
 import org.ocpteam.layer.rsp.Authentication;
 import org.ocpteam.misc.JLG;
+import org.ocpteam.misc.swt.QuickMessage;
 import org.ocpteam.protocol.ocp.OCPAgent;
 
 
@@ -82,16 +82,13 @@ public class NewUserCaptchaWizardPage extends WizardPage {
 			OCPAgent agent = (OCPAgent) wizard.getAgent();
 			agent.createUser(wizard.getUsername(), wizard.getPassword(), 2,
 					wizard.getCaptcha(), captchaAnswerText.getText());
-			Authentication auth = new Authentication(wizard.getUsername(), wizard.getPassword());
-			wizard.getAdminConsole().signIn(auth);
+			Authentication auth = wizard.window.ds.getAuthentication();
+			auth.setLogin(wizard.getUsername());
+			auth.setChallenge(wizard.getPassword());
+			wizard.window.signIn(auth);
 			wizard.bCanFinnish = true;
 		} catch (Exception e) {
-			MessageBox messageBox = new MessageBox(getShell(), SWT.ICON_ERROR
-					| SWT.OK);
-			messageBox.setMessage("Sorry. Cannot create the user.");
-			messageBox.setText("Error !");
-			messageBox.open();
-			throw e;
+			throw QuickMessage.exception(getShell(), "Sorry. Cannot create the user.", e);
 		}
 	}
 

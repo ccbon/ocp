@@ -1,13 +1,12 @@
 package org.ocpteam.protocol.ocp;
 
-import java.net.URI;
-
 import org.ocpteam.layer.rsp.Authentication;
+import org.ocpteam.layer.rsp.DataSource;
 
 public class OCPAuthentication extends Authentication {
 
-	public OCPAuthentication(URI uri) {
-		super(uri);
+	public OCPAuthentication(DataSource ds) {
+		super(ds);
 	}
 	
 	@Override

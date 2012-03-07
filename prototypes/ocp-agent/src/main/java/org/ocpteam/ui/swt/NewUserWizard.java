@@ -60,7 +60,7 @@ public class NewUserWizard extends Wizard {
 	private String username;
 	private String password;
 	public boolean bCanFinnish;
-	private DataSourceWindow window;
+	public DataSourceWindow window;
 
 	public NewUserWizard(DataSourceWindow window) {
 		this.agent = window.agent;
@@ -114,10 +114,6 @@ public class NewUserWizard extends Wizard {
 
 	public Captcha getCaptcha() {
 		return captcha;
-	}
-
-	public DataSourceWindow getAdminConsole() {
-		return window;
 	}
 
 }

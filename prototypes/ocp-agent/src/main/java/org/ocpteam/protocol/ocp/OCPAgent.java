@@ -142,7 +142,7 @@ public class OCPAgent extends DSPAgent {
 	}
 
 	@Override
-	public void connect() throws Exception {
+	protected void onConnect() throws Exception {
 
 		JLG.debug("starting agent " + name);
 
@@ -205,11 +205,10 @@ public class OCPAgent extends DSPAgent {
 			addContact(myself);
 
 		}
-		bIsConnected = true;
 	}
 
 	@Override
-	public void disconnect() {
+	protected void onDisconnect() {
 		if (server != null) {
 			server.stop();
 			server = null;
@@ -632,15 +631,18 @@ public class OCPAgent extends DSPAgent {
 			String password = (String) a.getChallenge();
 			String login = a.getLogin();
 			Id key = hash(ucrypt(password, (login + password).getBytes()));
-			byte[] content = client.getUser(key);
-			if (content == null || content.length == 0) {
+			byte[] content = null;
+			try {
+				content = client.getUser(key);
+			} catch (Exception e) {}
+			if (content == null) {
 				throw new Exception("user unknown");
 			}
 			User user = (User) JLG.deserialize(udecrypt(password, content));
 			if (user == null) {
 				throw new Exception("user unknown");
 			}
-			initialContext = new Context(this, getFileSystem(user), "/");
+			context = new Context(this, getFileSystem(user), "/");
 			a.setUser(user);
 		} catch (Exception e) {
 			JLG.error(e);
@@ -672,8 +674,8 @@ public class OCPAgent extends DSPAgent {
 		client.declareSponsor();
 	}
 
-	@Override
-	public void readConfig() throws Exception {
+	
+	private void readConfig() throws Exception {
 
 		// debugging aspect
 		if (cfg.getProperty("debug", "true").equalsIgnoreCase("true")) {
@@ -786,11 +788,6 @@ public class OCPAgent extends DSPAgent {
 	}
 
 	@Override
-	public boolean allowsUserCreation() {
-		return true;
-	}
-
-	@Override
 	public void refreshContactList() throws Exception {
 		client.sendAll(Protocol.PING.getBytes());
 	}
@@ -832,11 +829,6 @@ public class OCPAgent extends DSPAgent {
 	}
 
 	@Override
-	public boolean autoConnect() {
-		return true;
-	}
-
-	@Override
 	public void logout(Authentication a) throws Exception {
 		JLG.debug("ocp logout (nothing to do).");
 		a.reset();
@@ -845,10 +837,5 @@ public class OCPAgent extends DSPAgent {
 	@Override
 	public boolean isOnlyClient() {
 		return (!cfg.getProperty("server", "yes").equals("yes"));
-	}
-
-	@Override
-	public boolean usesAuthentication() {
-		return true;
 	}
 }

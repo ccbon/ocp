@@ -30,7 +30,7 @@ public class OCPDataSource extends DataSource {
 	@Override
 	public Authentication getAuthentication() {
 		if (this.auth == null) {
-			this.auth = new OCPAuthentication(uri);
+			this.auth = new OCPAuthentication(this);
 		}
 		return this.auth;
 	}

@@ -68,10 +68,11 @@ public class SSHSignInWizard extends Wizard {
 					c.setPassphrase(passphrase);
 				}
 			}
-			Authentication auth = new Authentication(p1.sessionText.getText(),
-					c);
-			agent.login(auth);
-			window.context = agent.getInitialContext(); 
+			Authentication auth = new Authentication(window.ds);
+			auth.setLogin(p1.sessionText.getText());
+			auth.setChallenge(c);
+			auth.login();
+			window.context = agent.getContext(); 
 			if (window.context != null) {
 				window.viewExplorerAction.run();
 			}

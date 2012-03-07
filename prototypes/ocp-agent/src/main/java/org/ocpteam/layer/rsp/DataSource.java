@@ -58,7 +58,11 @@ public abstract class DataSource {
 
 	public void close() {
 		// time to disconnect from the datasource
-		getAgent().disconnect();
+		try {
+			getAgent().disconnect();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	public static DataSource getInstance(File file) throws Exception {
@@ -111,11 +115,15 @@ public abstract class DataSource {
 	
 	public abstract Authentication getAuthentication();
 	
+	public void setProperties(Properties p) {
+		this.p = p;
+	}
+	
 	public Properties getProperties() {
 		if (p == null) {
 			try {
 				if (file != null && file.exists()) {
-					p = JLG.loadConfig(this.getFile().getAbsolutePath());
+					p = JLG.loadConfig(this.file.getAbsolutePath());
 				} else {
 					p = new Properties();
 				}
@@ -126,19 +134,9 @@ public abstract class DataSource {
 		return p;
 	}
 
-
 	public void save() throws Exception {
-		if (file == null) {
-			throw new Exception("Cannot save if file is not specified.");
+		if (file != null) {
+			JLG.storeConfig(this.p, this.file.getAbsolutePath());
 		}
-		JLG.storeConfig(this.p, this.getFile().getAbsolutePath());
 	}
-
-
-	public void setProperties(Properties p) {
-		this.p = p;
-	}
-	
-	
-
 }

@@ -1,34 +1,41 @@
 package org.ocpteam.layer.rsp;
 
-import java.util.HashMap;
-import java.util.Map;
 
 public abstract class Agent {
 
-	protected boolean bIsConnected = false;
-
-	protected Map<String, Object> assistantMap;
+	private boolean bIsConnected = false;
 
 	protected DataSource ds;
 
-	protected Context initialContext;
-
-	public Agent() {
-		assistantMap = new HashMap<String, Object>();
-	}
+	protected Context context;
 
 	public Agent(DataSource ds) {
 		this.ds = ds;
 	}
 	
-	public void readConfig() throws Exception {
+	public void connect() throws Exception {
+		if (bIsConnected == true) {
+			throw new Exception("Already connected");
+		}
+		onConnect();
+		bIsConnected = true;
 	}
 
-	public abstract void connect() throws Exception;
+	public void disconnect() throws Exception {
+		if (bIsConnected == false) {
+			throw new Exception("Already disconnected");
+		}
+		onDisconnect();
+		bIsConnected = false;
+	}
 
-	public abstract void disconnect();
+	protected abstract void onConnect() throws Exception;
 
-	public abstract boolean allowsUserCreation();
+	protected abstract void onDisconnect();
+	
+	public boolean isConnected() {
+		return bIsConnected;
+	}
 
 	public abstract void login(Authentication a) throws Exception;
 
@@ -38,39 +45,13 @@ public abstract class Agent {
 
 	public abstract String getName();
 
-	public String getHelpURL() {
-		return "http://code.google.com/p/ocp/wiki/Help";
-	}
-
 	public abstract FileSystem getFileSystem(User user);
-
-	public abstract boolean autoConnect();
-
-	public boolean isConnected() {
-		return bIsConnected;
-	}
-
-	public boolean authenticatesWithSSH() {
-		return false;
-	}
 
 	public abstract boolean isOnlyClient();
 
-	public Object getAssistant(String key) {
-		return assistantMap.get(key);
-	}
+	
 
-	public Object setAssistant(String key, Object assistant) {
-		return assistantMap.put(key, assistant);
-	}
-
-	public abstract boolean usesAuthentication();
-
-	public void setDataSource(DataSource dataSource) {
-		this.ds = dataSource;
-	}
-
-	public Context getInitialContext() {
-		return initialContext;
+	public Context getContext() {
+		return context;
 	}
 }
