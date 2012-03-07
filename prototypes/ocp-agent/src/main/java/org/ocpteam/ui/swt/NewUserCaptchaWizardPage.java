@@ -85,7 +85,7 @@ public class NewUserCaptchaWizardPage extends WizardPage {
 			Authentication auth = wizard.window.ds.getAuthentication();
 			auth.setLogin(wizard.getUsername());
 			auth.setChallenge(wizard.getPassword());
-			wizard.window.signIn(auth);
+			wizard.window.signIn();
 			wizard.bCanFinnish = true;
 		} catch (Exception e) {
 			throw QuickMessage.exception(getShell(), "Sorry. Cannot create the user.", e);

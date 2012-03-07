@@ -49,7 +49,7 @@ public class SignInWizard extends Wizard {
 			Authentication a = window.ds.getAuthentication();
 			a.setLogin(p1.usernameText.getText());
 			a.setChallenge(p1.passwordText.getText());
-			window.signIn(a);
+			window.signIn();
 		} catch (Exception e) {
 			JLG.error(e);
 			QuickMessage.error(window.getShell(), "Sign in failed: " + e.getMessage());

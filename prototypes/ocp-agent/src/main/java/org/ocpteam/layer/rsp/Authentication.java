@@ -2,6 +2,8 @@ package org.ocpteam.layer.rsp;
 
 import java.net.URI;
 
+import org.ocpteam.misc.JLG;
+
 public class Authentication {
 
 	private Object challenge;
@@ -80,6 +82,14 @@ public class Authentication {
 
 	public void login() throws Exception {
 		ds.getAgent().login(this);
+	}
+
+	public void logout() throws Exception {
+		ds.getAgent().logout(this);
+	}
+
+	public boolean canLogin() {
+		return !JLG.isNullOrEmpty(this.login) && this.challenge != null;
 	}
 
 }

@@ -39,7 +39,6 @@ import org.eclipse.swt.widgets.Tray;
 import org.eclipse.swt.widgets.TrayItem;
 import org.eclipse.wb.swt.SWTResourceManager;
 import org.ocpteam.layer.rsp.Agent;
-import org.ocpteam.layer.rsp.Authentication;
 import org.ocpteam.layer.rsp.Context;
 import org.ocpteam.layer.rsp.DataSource;
 import org.ocpteam.layer.rsp.FileSystem;
@@ -427,17 +426,11 @@ public class DataSourceWindow extends ApplicationWindow {
 			if (context != null) {
 				viewExplorerAction.run();
 			} else if (ds.usesAuthentication()) {
-				try {
-					Authentication a = ds.getAuthentication();
-					if (JLG.isNullOrEmpty(a.getLogin())
-							&& a.getChallenge() == null) {
-						throw new Exception();
+					if (ds.getAuthentication().canLogin()) {
+						signIn();
+					} else {
+						signInAction.run();	
 					}
-					signIn(a);
-				} catch (Exception e) {
-					signInAction.run();
-				}
-
 			}
 		} catch (Exception e) {
 			throw QuickMessage.exception(getShell(),
@@ -540,18 +533,17 @@ public class DataSourceWindow extends ApplicationWindow {
 		protocolMenu = null;
 	}
 
-	public void signIn(Authentication auth) throws Exception {
-		auth.login();
+	public void signIn() throws Exception {
+		ds.getAuthentication().login();
 		context = agent.getContext();
 		if (context != null) {
 			viewExplorerAction.run();
 		}
-
 	}
 
 	public void signOut() throws Exception {
 		context = null;
-		agent.logout(ds.getAuthentication());
+		ds.getAuthentication().logout();
 	}
 
 	public String getHelpURL() {

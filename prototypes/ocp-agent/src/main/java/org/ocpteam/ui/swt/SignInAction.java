@@ -37,7 +37,7 @@ public class SignInAction extends Action {
 		try {
 			if (scenario != null) {
 				scenario.run(window);
-				window.signIn(window.ds.getAuthentication());
+				window.signIn();
 			} else {
 				SignInWizard.start(window);
 			}
