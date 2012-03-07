@@ -76,16 +76,6 @@ public class SFTPAgent extends Agent {
 	}
 
 	@Override
-	public String getProtocolName() {
-		return "SFTP";
-	}
-
-	@Override
-	public String getName() {
-		return "SFTP-client";
-	}
-
-	@Override
 	public FileSystem getFileSystem(User user) {
 		return new SFTPFileSystem(user, this);
 	}

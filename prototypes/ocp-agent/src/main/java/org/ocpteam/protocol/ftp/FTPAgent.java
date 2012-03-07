@@ -95,16 +95,6 @@ public class FTPAgent extends Agent {
 	}
 
 	@Override
-	public String getProtocolName() {
-		return "FTP";
-	}
-
-	@Override
-	public String getName() {
-		return "client";
-	}
-
-	@Override
 	public FileSystem getFileSystem(User user) {
 		return new FTPFileSystem((FTPUser) user, this);
 	}

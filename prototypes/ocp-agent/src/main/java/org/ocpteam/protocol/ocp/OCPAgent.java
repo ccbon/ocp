@@ -793,11 +793,6 @@ public class OCPAgent extends DSPAgent {
 	}
 
 	@Override
-	public String getProtocolName() {
-		return "OCP";
-	}
-
-	@Override
 	public String getName() {
 		return name;
 	}

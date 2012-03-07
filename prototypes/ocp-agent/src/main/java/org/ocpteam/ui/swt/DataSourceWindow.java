@@ -3,6 +3,9 @@ package org.ocpteam.ui.swt;
 import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
 
@@ -45,6 +48,7 @@ import org.ocpteam.misc.swt.QuickMessage;
 
 public class DataSourceWindow extends ApplicationWindow {
 
+	public static final int ON_DS_CLOSE = 0;
 	OpenDataSourceAction openDataSourceAction;
 	CloseDataSourceAction closeDataSourceAction;
 	Map<String, NewDataSourceAction> newDataSourceActionMap;
@@ -78,6 +82,7 @@ public class DataSourceWindow extends ApplicationWindow {
 	public Clipboard clipboard;
 	private DynamicMenuManager protocolMenu;
 	private TrayItem item;
+	private Map<Integer, List<Listener>> listenerMap;
 
 	/**
 	 * Launch the application.
@@ -106,6 +111,7 @@ public class DataSourceWindow extends ApplicationWindow {
 		addMenuBar();
 		addStatusLine();
 		refresh();
+		listenerMap = new HashMap<Integer, List<Listener>>();
 	}
 
 	void refresh() {
@@ -116,7 +122,8 @@ public class DataSourceWindow extends ApplicationWindow {
 		signOutAction.setEnabled(ds != null && ds.usesAuthentication()
 				&& context != null);
 		newUserAction.setEnabled(ds != null && ds.usesAuthentication()
-				&& context == null && ds.getAuthentication().allowsUserCreation());
+				&& context == null
+				&& ds.getAuthentication().allowsUserCreation());
 
 		viewExplorerAction.setEnabled(context != null);
 
@@ -130,6 +137,13 @@ public class DataSourceWindow extends ApplicationWindow {
 		pasteAction.setEnabled(pasteAction.canRun());
 		commitAction.setEnabled(commitAction.canRun());
 		checkOutAction.setEnabled(checkOutAction.canRun());
+
+		// status line
+		String status = "";
+		if (ds != null) {
+			status = "Protocol: " + ds.getProtocol();
+		}
+		setStatus(status);
 	}
 
 	/**
@@ -440,6 +454,13 @@ public class DataSourceWindow extends ApplicationWindow {
 		agent = null;
 		context = null;
 		removeProtocolMenu();
+		Event event = new Event();
+		if (listenerMap.containsKey(ON_DS_CLOSE)) {
+			Iterator<Listener> it = listenerMap.get(ON_DS_CLOSE).iterator();
+			while (it.hasNext()) {
+				it.next().handleEvent(event);
+			}
+		}
 	}
 
 	private void closeTray() {
@@ -535,6 +556,16 @@ public class DataSourceWindow extends ApplicationWindow {
 
 	public String getHelpURL() {
 		return "http://code.google.com/p/ocp/wiki/Help";
+	}
+
+	public void addListener(int eventType, Listener listener) {
+		if (listenerMap.containsKey(eventType)) {
+			listenerMap.get(eventType).add(listener);
+		} else {
+			List<Listener> list = new LinkedList<Listener>();
+			list.add(listener);
+			listenerMap.put(eventType, list);
+		}
 	}
 
 }

@@ -20,16 +20,6 @@ public class ZipAgent extends Agent {
 	}
 
 	@Override
-	public String getProtocolName() {
-		return "ZIP";
-	}
-
-	@Override
-	public String getName() {
-		return "Zip client";
-	}
-
-	@Override
 	public FileSystem getFileSystem(User user) {
 
 		return fs;

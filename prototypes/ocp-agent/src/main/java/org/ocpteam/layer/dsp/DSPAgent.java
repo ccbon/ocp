@@ -29,6 +29,8 @@ public abstract class DSPAgent extends Agent {
 		contactMap = new HashMap<Id, Contact>();
 	}
 	
+	public abstract String getName();
+	
 	public boolean isFirstAgent() {
 		if (cfg == null) {
 			JLG.debug("p is null");

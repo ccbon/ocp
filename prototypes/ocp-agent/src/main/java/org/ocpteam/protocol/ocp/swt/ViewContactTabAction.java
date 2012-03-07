@@ -8,10 +8,11 @@ import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.graphics.ImageData;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Listener;
 import org.ocpteam.layer.dsp.DSPAgent;
 import org.ocpteam.misc.JLG;
 import org.ocpteam.ui.swt.DataSourceWindow;
-
 
 public class ViewContactTabAction extends Action {
 	private DataSourceWindow window;
@@ -21,7 +22,9 @@ public class ViewContactTabAction extends Action {
 		setText("Cont&act@Ctrl+T");
 		setToolTipText("View Contact Tab");
 		try {
-			ImageDescriptor i = ImageDescriptor.createFromImageData(new ImageData(DataSourceWindow.class.getResourceAsStream("view_contact.png")));
+			ImageDescriptor i = ImageDescriptor
+					.createFromImageData(new ImageData(DataSourceWindow.class
+							.getResourceAsStream("view_contact.png")));
 			setImageDescriptor(i);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -32,20 +35,21 @@ public class ViewContactTabAction extends Action {
 		JLG.debug("View Contact");
 		addContactTab();
 	}
-	
+
 	public void addContactTab() {
 		// if one contact tab is already present, then just select it.
 		CTabFolder tabFolder = window.tabFolder;
 		CTabItem[] items = tabFolder.getItems();
 		for (CTabItem item : items) {
 			if (item.getControl().getClass() == ContactComposite.class) {
-				ContactComposite contactComposite = (ContactComposite) item.getControl();
+				ContactComposite contactComposite = (ContactComposite) item
+						.getControl();
 				tabFolder.setSelection(item);
 				contactComposite.refresh();
 				return;
 			}
 		}
-		
+
 		final CTabItem contactCTabItem = new CTabItem(tabFolder, SWT.NONE);
 		contactCTabItem.setShowClose(true);
 		contactCTabItem.setText("Contacts");
@@ -55,10 +59,19 @@ public class ViewContactTabAction extends Action {
 			}
 		});
 
-		ContactComposite contactComposite = new ContactComposite(tabFolder, SWT.NONE,
-				(DSPAgent) window.agent);
+		ContactComposite contactComposite = new ContactComposite(tabFolder,
+				SWT.NONE, (DSPAgent) window.agent);
 		contactCTabItem.setControl(contactComposite);
 		tabFolder.setSelection(contactCTabItem);
+
+		window.addListener(DataSourceWindow.ON_DS_CLOSE, new Listener() {
+
+			@Override
+			public void handleEvent(Event event) {
+				JLG.debug("closing contact list");
+				contactCTabItem.dispose();
+			}
+		});
 
 	}
 }

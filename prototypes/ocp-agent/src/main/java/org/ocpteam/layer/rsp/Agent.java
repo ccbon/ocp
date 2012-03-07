@@ -41,10 +41,6 @@ public abstract class Agent {
 
 	public abstract void logout(Authentication a) throws Exception;
 
-	public abstract String getProtocolName();
-
-	public abstract String getName();
-
 	public abstract FileSystem getFileSystem(User user);
 
 	public abstract boolean isOnlyClient();
