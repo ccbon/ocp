@@ -163,7 +163,6 @@ public class OCPAgent extends DSPAgent {
 		if (sId == null) {
 			id = generateId();
 			cfg.setProperty("id", id.toString());
-			ds.save();
 		} else {
 			id = new Id(sId);
 		}

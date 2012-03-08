@@ -50,6 +50,8 @@ public class DataSourceWindow extends ApplicationWindow {
 	public static final int ON_DS_CLOSE = 0;
 	OpenDataSourceAction openDataSourceAction;
 	CloseDataSourceAction closeDataSourceAction;
+	SaveDataSourceAction saveDataSourceAction;
+	SaveAsDataSourceAction saveAsDataSourceAction;
 	Map<String, NewDataSourceAction> newDataSourceActionMap;
 	ExitAction exitAction;
 
@@ -116,6 +118,8 @@ public class DataSourceWindow extends ApplicationWindow {
 	void refresh() {
 		// action status
 		closeDataSourceAction.setEnabled(ds != null);
+		saveDataSourceAction.setEnabled(ds != null);
+		saveAsDataSourceAction.setEnabled(ds != null);
 		signInAction.setEnabled(ds != null && ds.usesAuthentication()
 				&& context == null);
 		signOutAction.setEnabled(ds != null && ds.usesAuthentication()
@@ -195,6 +199,9 @@ public class DataSourceWindow extends ApplicationWindow {
 			newDataSourceActionMap.put(protocol, new NewDataSourceAction(this,
 					protocol));
 		}
+		saveDataSourceAction = new SaveDataSourceAction(this);
+		saveAsDataSourceAction = new SaveAsDataSourceAction(this);
+
 		exitAction = new ExitAction(this);
 
 		selectAllAction = new SelectAllAction(this);
@@ -239,6 +246,8 @@ public class DataSourceWindow extends ApplicationWindow {
 		fileMenu.add(new Separator());
 		fileMenu.add(openDataSourceAction);
 		fileMenu.add(closeDataSourceAction);
+		fileMenu.add(saveDataSourceAction);
+		fileMenu.add(saveAsDataSourceAction);
 		fileMenu.add(new Separator());
 		fileMenu.add(exitAction);
 
@@ -290,6 +299,8 @@ public class DataSourceWindow extends ApplicationWindow {
 		ToolBarManager toolBarManager = new ToolBarManager(style);
 		toolBarManager.add(openDataSourceAction);
 		toolBarManager.add(closeDataSourceAction);
+		toolBarManager.add(saveDataSourceAction);
+		toolBarManager.add(saveAsDataSourceAction);
 
 		toolBarManager.add(new Separator());
 
@@ -426,11 +437,11 @@ public class DataSourceWindow extends ApplicationWindow {
 			if (context != null) {
 				viewExplorerAction.run();
 			} else if (ds.usesAuthentication()) {
-					if (ds.getAuthentication().canLogin()) {
-						signIn();
-					} else {
-						signInAction.run();	
-					}
+				if (ds.getAuthentication().canLogin()) {
+					signIn();
+				} else {
+					signInAction.run();
+				}
 			}
 		} catch (Exception e) {
 			throw QuickMessage.exception(getShell(),

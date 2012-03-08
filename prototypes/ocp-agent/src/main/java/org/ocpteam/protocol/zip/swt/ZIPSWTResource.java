@@ -8,7 +8,8 @@ public class ZIPSWTResource extends ListResourceBundle {
 	protected Object[][] getContents() {
 		return new Object[][] {
 				{ "NewDataSourceScenario", new ZIPNewDataSourceScenario() },
-				{ "menu", new ZIPMenuManager("ZIP", "protocolMenu") } };
+				{ "menu", new ZIPMenuManager("ZIP", "protocolMenu") },
+				{ "file_ext", new String[] { "*.zip", "*.*" } } };
 	}
 
 }

@@ -1,28 +1,22 @@
 package org.ocpteam.protocol.ocp.swt;
 
-import java.io.File;
 import java.util.Properties;
 
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.jface.wizard.WizardDialog;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.ocpteam.misc.JLG;
 import org.ocpteam.ui.swt.DataSourceWindow;
 import org.ocpteam.ui.swt.Scenario;
 
-
 public class OCPNewDataSourceWizard extends Wizard implements Scenario {
 
-	
 	public boolean bIsFirstAgent = false;
 	public String listenerPort = "22222";
 	private DataSourceWindow w;
-
 
 	public OCPNewDataSourceWizard() {
 		setWindowTitle("New Wizard");
@@ -53,30 +47,28 @@ public class OCPNewDataSourceWizard extends Wizard implements Scenario {
 
 		p.setProperty("name", firstPage.agentNameText.getText());
 		p.setProperty("server", "yes");
-		p.setProperty("server.listener.1", "tcp://localhost:" + firstPage.listenerPortText.getText());
+		p.setProperty("server.listener.1", "tcp://localhost:"
+				+ firstPage.listenerPortText.getText());
 
 		if (bIsFirstAgent) {
 			p.setProperty("server.isFirstAgent", "yes");
 		} else {
 			p.setProperty("sponsor.1", firstPage.sponsorText.getText());
 		}
-		
+
 		if (firstPage.btnCheckButton.getSelection()) {
 			p.setProperty("network.type", "public");
-			p.setProperty("network.sponsor.url", firstPage.sponsorPublicServerText.getText());
+			p.setProperty("network.sponsor.url",
+					firstPage.sponsorPublicServerText.getText());
 		} else {
 			p.setProperty("network.type", "private");
 		}
 		w.ds.setProperties(p);
-		try {
-			w.ds.save();
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
 
 		if (bIsFirstAgent) {
+			// TODO: review this later...
+			// merge this with ocp file
+			// prefix property name with network.
 			NetworkWizardPage networkPage = (NetworkWizardPage) getPage("networkPage");
 			Properties np = new Properties();
 			np.setProperty("hash", networkPage.messageDigestCombo.getText());
@@ -105,32 +97,18 @@ public class OCPNewDataSourceWizard extends Wizard implements Scenario {
 
 	@Override
 	public void run() throws Exception {
-		Display display = Display.getDefault();
+		Display display = w.getShell().getDisplay();
 		Shell shell = new Shell(display);
 		shell.setLayout(new FillLayout());
-		FileDialog fd = new FileDialog(shell, SWT.SAVE);
-		fd.setText("Save");
-		fd.setFilterPath(System.getProperty("user.home"));
-		String[] filterExt = { "*.ocp", "*.uri", "*.*" };
-		fd.setFilterExtensions(filterExt);
-		String selected = fd.open();
-		JLG.debug(selected);
-		if (selected == null) {
-			return;
-		}
-		File file = new File(selected);
-		w.ds.setFile(file);
-		if (!file.exists()) {
-			WizardDialog dialog = new WizardDialog(shell, this);
-			dialog.open();			
-		}		
+		WizardDialog dialog = new WizardDialog(shell, this);
+		dialog.open();
 		shell.dispose();
 	}
 
 	@Override
 	public void setWindow(DataSourceWindow w) {
 		this.w = w;
-		
+
 	}
 
 }

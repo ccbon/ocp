@@ -8,7 +8,8 @@ public class SFTPSWTResource extends ListResourceBundle {
 	protected Object[][] getContents() {
 		return new Object[][] {
 				{ "NewDataSourceScenario", new SFTPNewDataSourceWizard() },
-				{ "SignInScenario", new SFTPNewDataSourceWizard() }, };
+				{ "SignInScenario", new SFTPNewDataSourceWizard() },
+				{ "file_ext", new String[] { "*.uri", "*.*" } } };
 	}
 
 }

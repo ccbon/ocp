@@ -5,7 +5,7 @@ public abstract class Agent {
 
 	private boolean bIsConnected = false;
 
-	protected DataSource ds;
+	public DataSource ds;
 
 	protected Context context;
 

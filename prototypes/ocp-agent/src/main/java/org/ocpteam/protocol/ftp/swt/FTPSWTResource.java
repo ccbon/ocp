@@ -8,7 +8,8 @@ public class FTPSWTResource extends ListResourceBundle {
 	protected Object[][] getContents() {
 		return new Object[][] {
 				{ "NewDataSourceScenario", new FTPNewDataSourceWizard() },
-				{ "CancelKey", "Cancel" }, };
+				{ "CancelKey", "Cancel" },
+				{ "file_ext", new String[] { "*.uri", "*.*" }}};
 	}
 
 }

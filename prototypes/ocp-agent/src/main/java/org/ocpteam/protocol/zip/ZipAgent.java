@@ -1,7 +1,5 @@
 package org.ocpteam.protocol.zip;
 
-import java.io.File;
-
 import org.ocpteam.layer.rsp.Agent;
 import org.ocpteam.layer.rsp.Authentication;
 import org.ocpteam.layer.rsp.Context;
@@ -12,7 +10,6 @@ import org.ocpteam.misc.JLG;
 
 public class ZipAgent extends Agent {
 
-	public File zipfile;
 	private ZipFileSystem fs;
 
 	public ZipAgent(DataSource ds) {
@@ -32,8 +29,7 @@ public class ZipAgent extends Agent {
 
 	@Override
 	protected void onConnect() throws Exception {
-		zipfile = ds.getFile();
-		JLG.debug("opening datasource: " + zipfile);
+		JLG.debug("opening datasource: " + ds.getFile());
 		createZipFileSystem();
 		context = new Context(this, fs, "/");
 	}

@@ -1,7 +1,11 @@
 package org.ocpteam.layer.rsp;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URI;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.Properties;
 import java.util.ResourceBundle;
 
@@ -35,10 +39,14 @@ public abstract class DataSource {
 
 	public abstract String getProtocol();
 
-	protected URI uri;
+	private URI uri;
 	private Agent agent;
-	protected File file;
+	private File file;
+
 	private Properties p;
+
+	private boolean bIsTempFile = false;
+	private File tempfile;
 
 	public Agent getAgent() {
 		if (agent == null) {
@@ -100,17 +108,32 @@ public abstract class DataSource {
 
 	public void setURI(URI uri) {
 		this.uri = uri;
+		if (p == null) {
+			p = new Properties();
+			p.setProperty("uri", uri.toString());
+		}
 	}
 
 	public void setFile(File file) {
+		if (isTempFile()) {
+			this.tempfile = this.file;
+		}
 		this.file = file;
 	}
 
-	public File getFile() throws Exception {
-		if (file == null) {
-			throw new Exception("file not set");
-		}
+	public File getFile() {
 		return file;
+	}
+
+	public void setTempFile(boolean b) throws IOException {
+		if (b == true) {
+			File file = File.createTempFile(
+					"temp" + System.currentTimeMillis(), "zip");
+			file.delete();
+			file.deleteOnExit();
+			this.file = file;
+		}
+		this.bIsTempFile = b;
 	}
 
 	public boolean usesAuthentication() {
@@ -139,8 +162,22 @@ public abstract class DataSource {
 	}
 
 	public void save() throws Exception {
+
 		if (file != null) {
 			JLG.storeConfig(this.p, this.file.getAbsolutePath());
+		} else {
+			throw new Exception("cannot save: file not set");
 		}
+	}
+
+	protected void saveTempFile() throws IOException {
+		Files.copy(Paths.get(tempfile.getAbsolutePath()),
+				Paths.get(file.getAbsolutePath()),
+				StandardCopyOption.REPLACE_EXISTING);
+
+	}
+
+	public boolean isTempFile() {
+		return bIsTempFile;
 	}
 }

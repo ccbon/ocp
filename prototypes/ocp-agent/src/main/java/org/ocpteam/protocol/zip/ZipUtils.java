@@ -308,7 +308,7 @@ public class ZipUtils {
 
 	}
 
-	public static File createEmptyFile(String filename) {
+	public static void createEmptyFile(String filename) {
 		try {
 			// Create the ZIP file
 			ZipOutputStream out = new ZipOutputStream(new FileOutputStream(
@@ -317,6 +317,5 @@ public class ZipUtils {
 			out.close();
 		} catch (Exception e) {
 		}
-		return new File(filename);
 	}
 }
