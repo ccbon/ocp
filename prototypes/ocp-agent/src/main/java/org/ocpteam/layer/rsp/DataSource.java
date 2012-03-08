@@ -3,9 +3,6 @@ package org.ocpteam.layer.rsp;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.util.Properties;
 import java.util.ResourceBundle;
 
@@ -46,7 +43,6 @@ public abstract class DataSource {
 	private Properties p;
 
 	private boolean bIsTempFile = false;
-	private File tempfile;
 
 	public Agent getAgent() {
 		if (agent == null) {
@@ -116,7 +112,8 @@ public abstract class DataSource {
 
 	public void setFile(File file) {
 		if (isTempFile()) {
-			this.tempfile = this.file;
+			file.delete();
+			this.file.renameTo(file);
 		}
 		this.file = file;
 	}
@@ -168,13 +165,6 @@ public abstract class DataSource {
 		} else {
 			throw new Exception("cannot save: file not set");
 		}
-	}
-
-	protected void saveTempFile() throws IOException {
-		Files.copy(Paths.get(tempfile.getAbsolutePath()),
-				Paths.get(file.getAbsolutePath()),
-				StandardCopyOption.REPLACE_EXISTING);
-
 	}
 
 	public boolean isTempFile() {

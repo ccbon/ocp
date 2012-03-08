@@ -8,6 +8,7 @@ import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.widgets.FileDialog;
 import org.ocpteam.layer.rsp.DataSource;
 import org.ocpteam.misc.JLG;
+import org.ocpteam.misc.swt.QuickMessage;
 
 
 public class OpenDataSourceAction extends Action {
@@ -32,6 +33,10 @@ public class OpenDataSourceAction extends Action {
 		try {
 			if (w.ds != null) {
 				w.closeDataSourceAction.run();
+			}
+			if (w.ds != null) {
+				QuickMessage.error(w.getShell(), "Cannot open a datasource if another is already open.");
+				return;
 			}
 
 			FileDialog fileDialog = new FileDialog(w.getShell());

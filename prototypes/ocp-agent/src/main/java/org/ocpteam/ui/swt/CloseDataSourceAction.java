@@ -6,7 +6,6 @@ import org.eclipse.swt.graphics.ImageData;
 import org.ocpteam.misc.JLG;
 import org.ocpteam.misc.swt.QuickMessage;
 
-
 public class CloseDataSourceAction extends Action {
 	private DataSourceWindow w;
 
@@ -16,8 +15,9 @@ public class CloseDataSourceAction extends Action {
 		setToolTipText("Close File");
 		try {
 			ImageDescriptor i = ImageDescriptor
-					.createFromImageData(new ImageData(CloseDataSourceAction.class
-							.getResourceAsStream("close.gif")));
+					.createFromImageData(new ImageData(
+							CloseDataSourceAction.class
+									.getResourceAsStream("close.gif")));
 			setImageDescriptor(i);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -26,13 +26,16 @@ public class CloseDataSourceAction extends Action {
 
 	public void run() {
 		JLG.debug("Close DataSource");
-		
+
 		try {
 			if (w.ds == null) {
-				throw QuickMessage.exception(w.getShell(), "No datasource is open !");
+				throw QuickMessage.exception(w.getShell(),
+						"No datasource is open !");
 			}
-			QuickMessage.confirm(w.getShell(), "Are you sure you want to close the datasource ?");
-			w.closeDataSource();
+			if (QuickMessage.confirm(w.getShell(),
+					"Are you sure you want to close the datasource ?")) {
+				w.closeDataSource();
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {

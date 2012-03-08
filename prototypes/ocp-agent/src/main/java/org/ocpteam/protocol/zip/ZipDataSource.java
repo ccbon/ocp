@@ -25,10 +25,7 @@ public class ZipDataSource extends DataSource {
 	
 	@Override
 	public void save() throws Exception {
-		if (isTempFile()) {
-			saveTempFile();
-			setTempFile(false);
-		}
+		// do nothing
 	}
 
 }
