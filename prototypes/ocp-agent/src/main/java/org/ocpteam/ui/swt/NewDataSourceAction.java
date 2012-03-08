@@ -24,9 +24,11 @@ public class NewDataSourceAction extends Action {
 			if (w.ds != null) {
 				w.closeDataSourceAction.run();
 			}
-			ResourceBundle swt = DataSource.getResource(protocol, "swt");
+			w.ds = DataSource.getInstance(protocol);
+			ResourceBundle swt = w.ds.getResource("swt");
 			Scenario scenario = (Scenario) swt.getObject("NewDataSourceScenario");
-			scenario.run(w);
+			scenario.setWindow(w);
+			scenario.run();
 			if (w.ds == null) {
 				return;
 			}

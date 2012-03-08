@@ -11,9 +11,7 @@ import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Shell;
-import org.ocpteam.layer.rsp.DataSource;
 import org.ocpteam.misc.JLG;
-import org.ocpteam.protocol.ocp.OCPDataSource;
 import org.ocpteam.ui.swt.DataSourceWindow;
 import org.ocpteam.ui.swt.Scenario;
 
@@ -23,7 +21,7 @@ public class OCPNewDataSourceWizard extends Wizard implements Scenario {
 	
 	public boolean bIsFirstAgent = false;
 	public String listenerPort = "22222";
-	private DataSource ds;
+	private DataSourceWindow w;
 
 
 	public OCPNewDataSourceWizard() {
@@ -69,9 +67,9 @@ public class OCPNewDataSourceWizard extends Wizard implements Scenario {
 		} else {
 			p.setProperty("network.type", "private");
 		}
-		ds.setProperties(p);
+		w.ds.setProperties(p);
 		try {
-			ds.save();
+			w.ds.save();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -106,7 +104,7 @@ public class OCPNewDataSourceWizard extends Wizard implements Scenario {
 	}
 
 	@Override
-	public void run(DataSourceWindow w) throws Exception {
+	public void run() throws Exception {
 		Display display = Display.getDefault();
 		Shell shell = new Shell(display);
 		shell.setLayout(new FillLayout());
@@ -121,13 +119,18 @@ public class OCPNewDataSourceWizard extends Wizard implements Scenario {
 			return;
 		}
 		File file = new File(selected);
-		w.ds = new OCPDataSource(file);
+		w.ds.setFile(file);
 		if (!file.exists()) {
-			ds = w.ds;
 			WizardDialog dialog = new WizardDialog(shell, this);
 			dialog.open();			
 		}		
 		shell.dispose();
+	}
+
+	@Override
+	public void setWindow(DataSourceWindow w) {
+		this.w = w;
+		
 	}
 
 }

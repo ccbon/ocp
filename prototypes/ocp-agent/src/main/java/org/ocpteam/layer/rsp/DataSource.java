@@ -14,7 +14,7 @@ public abstract class DataSource {
 	public static ResourceBundle extensionResource = ResourceBundle
 			.getBundle("extensions");
 
-	public static ResourceBundle getResource(String protocol, String subpackage)
+	private static ResourceBundle getResource(String protocol, String subpackage)
 			throws Exception {
 		String agentClassString = protocolResource.getString(protocol
 				.toUpperCase());
@@ -84,14 +84,18 @@ public abstract class DataSource {
 			protocol = DataSource.extensionResource.getString(extension
 					.toLowerCase());
 		}
+		DataSource ds = getInstance(protocol);
+		ds.setFile(file);
+		if (uri != null) {
+			ds.setURI(uri);
+		}
+		return ds;
+	}
+
+	public static DataSource getInstance(String protocol) throws Exception {
 		String datasourceClass = DataSource.protocolResource.getString(protocol
 				.toUpperCase());
-		DataSource ds = (DataSource) Class.forName(datasourceClass)
-				.newInstance();
-		ds.setFile(file);
-		ds.setURI(uri);
-		return ds;
-
+		return (DataSource) Class.forName(datasourceClass).newInstance();
 	}
 
 	public void setURI(URI uri) {
@@ -112,13 +116,13 @@ public abstract class DataSource {
 	public boolean usesAuthentication() {
 		return getAuthentication() != null;
 	}
-	
+
 	public abstract Authentication getAuthentication();
-	
+
 	public void setProperties(Properties p) {
 		this.p = p;
 	}
-	
+
 	public Properties getProperties() {
 		if (p == null) {
 			try {

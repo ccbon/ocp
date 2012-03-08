@@ -5,7 +5,6 @@ import java.util.ResourceBundle;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.graphics.ImageData;
-import org.ocpteam.layer.rsp.DataSource;
 import org.ocpteam.misc.JLG;
 
 public class SignInAction extends Action {
@@ -29,14 +28,14 @@ public class SignInAction extends Action {
 		JLG.debug("Authentication User: display a wizard...");
 		Scenario scenario = null;
 		try {
-			ResourceBundle swt = DataSource.getResource(
-					window.ds.getProtocol(), "swt");
+			ResourceBundle swt = window.ds.getResource("swt");
 			scenario = (Scenario) swt.getObject("SignInScenario");
 		} catch (Exception e) {
 		}
 		try {
 			if (scenario != null) {
-				scenario.run(window);
+				scenario.setWindow(window);
+				scenario.run();
 				window.signIn();
 			} else {
 				SignInWizard.start(window);

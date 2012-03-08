@@ -7,7 +7,6 @@ import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Shell;
-import org.ocpteam.layer.rsp.DataSource;
 import org.ocpteam.misc.JLG;
 import org.ocpteam.protocol.zip.ZipUtils;
 import org.ocpteam.ui.swt.DataSourceWindow;
@@ -15,8 +14,10 @@ import org.ocpteam.ui.swt.Scenario;
 
 public class ZIPNewDataSourceScenario implements Scenario {
 
+	private DataSourceWindow w;
+
 	@Override
-	public void run(DataSourceWindow w) throws Exception {
+	public void run() throws Exception {
 		Display display = Display.getDefault();
 		final Shell shell = new Shell(display);
 		shell.setLayout(new FillLayout());
@@ -35,7 +36,13 @@ public class ZIPNewDataSourceScenario implements Scenario {
 		if (!file.exists()) {
 			file = ZipUtils.createEmptyFile(selected);
 		}
-		w.ds = DataSource.getInstance(file);
+		w.ds.setFile(file);
+	}
+
+	@Override
+	public void setWindow(DataSourceWindow w) {
+		this.w = w;
+		
 	}
 
 }

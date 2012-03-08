@@ -2,6 +2,8 @@ package org.ocpteam.ui.swt;
 
 public interface Scenario {
 
-	public void run(DataSourceWindow window) throws Exception;
+	public void setWindow(DataSourceWindow w);
+	
+	public void run() throws Exception;
 
 }

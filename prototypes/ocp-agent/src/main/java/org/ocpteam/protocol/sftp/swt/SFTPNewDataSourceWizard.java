@@ -8,20 +8,16 @@ import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
-import org.ocpteam.layer.rsp.DataSource;
 import org.ocpteam.misc.JLG;
 import org.ocpteam.misc.swt.QuickMessage;
-import org.ocpteam.protocol.sftp.SFTPDataSource;
 import org.ocpteam.protocol.sftp.SSHChallenge;
 import org.ocpteam.ui.swt.DataSourceWindow;
 import org.ocpteam.ui.swt.Scenario;
 
-public class SFTPNewDataSourceWizard extends Wizard implements
-		Scenario {
+public class SFTPNewDataSourceWizard extends Wizard implements Scenario {
 
 	private SSHSignInWizardPage p1;
-
-	public DataSource ds;
+	private DataSourceWindow w;
 
 	public SFTPNewDataSourceWizard() {
 		setWindowTitle("SSH Sign In Wizard");
@@ -51,8 +47,10 @@ public class SFTPNewDataSourceWizard extends Wizard implements
 					c.setPassphrase(passphrase);
 				}
 			}
-			ds = new SFTPDataSource(new URI("sftp://"
-					+ p1.sessionText.getText()), c);
+			URI uri = new URI("sftp://" + p1.sessionText.getText());
+			w.ds.setURI(uri);
+			w.ds.getAuthentication().setLogin(p1.sessionText.getText());
+			w.ds.getAuthentication().setChallenge(c);
 		} catch (Exception e) {
 			e.printStackTrace();
 			QuickMessage.error(getShell(), "Cannot connect");
@@ -66,13 +64,18 @@ public class SFTPNewDataSourceWizard extends Wizard implements
 	}
 
 	@Override
-	public void run(DataSourceWindow w) throws Exception {
-		Display display = Display.getDefault();
+	public void run() throws Exception {
+		Display display = w.getShell().getDisplay();
 		final Shell shell = new Shell(display);
 		shell.setLayout(new FillLayout());
 		WizardDialog dialog = new WizardDialog(shell, this);
 		dialog.open();
 		shell.dispose();
-		w.ds = ds;
 	}
+
+	@Override
+	public void setWindow(DataSourceWindow w) {
+		this.w = w;
+	}
+
 }

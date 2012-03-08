@@ -32,10 +32,12 @@ public abstract class Agent {
 	protected abstract void onConnect() throws Exception;
 
 	protected abstract void onDisconnect();
-	
+
 	public boolean isConnected() {
 		return bIsConnected;
 	}
+	
+	
 
 	public abstract void login(Authentication a) throws Exception;
 

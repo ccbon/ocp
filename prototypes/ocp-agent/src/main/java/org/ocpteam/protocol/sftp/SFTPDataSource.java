@@ -1,7 +1,5 @@
 package org.ocpteam.protocol.sftp;
 
-import java.net.URI;
-
 import org.ocpteam.layer.rsp.Agent;
 import org.ocpteam.layer.rsp.Authentication;
 import org.ocpteam.layer.rsp.DataSource;
@@ -12,14 +10,9 @@ public class SFTPDataSource extends DataSource {
 
 	
 	public SFTPDataSource() {
+		auth = new Authentication(this);
 	}
 	
-	public SFTPDataSource(URI uri, SSHChallenge c) {
-		setURI(uri);
-		auth = new Authentication(this);
-		auth.setChallenge(c);
-	}
-
 	@Override
 	public String getProtocol() {
 		return "SFTP";
