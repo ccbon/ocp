@@ -4,9 +4,9 @@ import java.io.File;
 
 import org.ocpteam.layer.rsp.Agent;
 import org.ocpteam.layer.rsp.Authentication;
-import org.ocpteam.layer.rsp.DataSource;
+import org.ocpteam.layer.rsp.PropertiesDataSource;
 
-public class OCPDataSource extends DataSource {
+public class OCPDataSource extends PropertiesDataSource {
 
 	public OCPDataSource() throws Exception {
 		super();

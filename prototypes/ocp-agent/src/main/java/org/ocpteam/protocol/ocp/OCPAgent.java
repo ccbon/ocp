@@ -28,10 +28,11 @@ import javax.crypto.spec.PBEParameterSpec;
 
 import org.ocpteam.layer.dsp.Contact;
 import org.ocpteam.layer.dsp.DSPAgent;
+import org.ocpteam.layer.rsp.Authenticable;
 import org.ocpteam.layer.rsp.Authentication;
 import org.ocpteam.layer.rsp.Context;
-import org.ocpteam.layer.rsp.DataSource;
 import org.ocpteam.layer.rsp.FileSystem;
+import org.ocpteam.layer.rsp.PropertiesDataSource;
 import org.ocpteam.layer.rsp.User;
 import org.ocpteam.misc.ByteUtil;
 import org.ocpteam.misc.Cache;
@@ -39,9 +40,8 @@ import org.ocpteam.misc.Id;
 import org.ocpteam.misc.JLG;
 import org.ocpteam.misc.URL;
 
+public class OCPAgent extends DSPAgent implements Authenticable {
 
-public class OCPAgent extends DSPAgent {
-	
 	private static final String NETWORK_PROPERTIES_FILE = "network.properties";
 	public static final String DEFAULT_SPONSOR_SERVER_URL = "http://guenego.com/ocp/ocp.php";
 
@@ -101,10 +101,11 @@ public class OCPAgent extends DSPAgent {
 	private Cache cache;
 	private MessageDigest md;
 
-	public OCPAgent(DataSource ds) {
+	public OCPAgent(PropertiesDataSource ds) {
 		super(ds);
 		nodeMap = new TreeMap<Id, OCPContact>();
 		cache = new Cache();
+		JLG.debug("cfg=" + cfg);
 	}
 
 	public void setNetworkProperties(Properties network) {
@@ -136,18 +137,15 @@ public class OCPAgent extends DSPAgent {
 		storage.attach();
 	}
 
-
 	public File getNetworkConfigFile() {
 		return new File(NETWORK_PROPERTIES_FILE);
 	}
 
 	@Override
 	protected void onConnect() throws Exception {
-
+		readConfig();
 		JLG.debug("starting agent " + name);
 
-		readConfig();
-		
 		if (isFirstAgent()) {
 			JLG.debug("This is the first agent on the network");
 			if (network == null) {
@@ -179,10 +177,9 @@ public class OCPAgent extends DSPAgent {
 			throw new Exception(
 					"network property error: backupNbr must be an integer between 1 and 255.");
 		}
-		
+
 		// message digest for hash
-		md = MessageDigest.getInstance(network.getProperty(
-				"hash", "SHA-1"));
+		md = MessageDigest.getInstance(network.getProperty("hash", "SHA-1"));
 
 		// all agent must have a PKI
 		keyPair = generateKeyPair();
@@ -625,15 +622,17 @@ public class OCPAgent extends DSPAgent {
 	}
 
 	@Override
-	public void login(Authentication a) throws Exception {
+	public void login() throws Exception {
 		try {
+			Authentication a = ds.designer.get(Authentication.class);
 			String password = (String) a.getChallenge();
 			String login = a.getLogin();
 			Id key = hash(ucrypt(password, (login + password).getBytes()));
 			byte[] content = null;
 			try {
 				content = client.getUser(key);
-			} catch (Exception e) {}
+			} catch (Exception e) {
+			}
 			if (content == null) {
 				throw new Exception("user unknown");
 			}
@@ -673,7 +672,6 @@ public class OCPAgent extends DSPAgent {
 		client.declareSponsor();
 	}
 
-	
 	private void readConfig() throws Exception {
 
 		// debugging aspect
@@ -695,8 +693,8 @@ public class OCPAgent extends DSPAgent {
 		// TODO: test with other algo than AES
 		KeyGenerator keyGen = KeyGenerator.getInstance(this.cfg.getProperty(
 				"cypher.algo", "AES"));
-		keyGen.init(Integer.parseInt(this.cfg
-				.getProperty("cipher.keysize", "128")));
+		keyGen.init(Integer.parseInt(this.cfg.getProperty("cipher.keysize",
+				"128")));
 		secretKey = keyGen.generateKey();
 		cipher = Cipher.getInstance(this.cfg.getProperty("cipher.algo", "AES"));
 
@@ -823,9 +821,8 @@ public class OCPAgent extends DSPAgent {
 	}
 
 	@Override
-	public void logout(Authentication a) throws Exception {
+	public void logout() throws Exception {
 		JLG.debug("ocp logout (nothing to do).");
-		a.reset();
 	}
 
 	@Override

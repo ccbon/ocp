@@ -9,6 +9,7 @@ import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.ocpteam.misc.JLG;
+import org.ocpteam.protocol.ocp.OCPDataSource;
 import org.ocpteam.ui.swt.DataSourceWindow;
 import org.ocpteam.ui.swt.Scenario;
 
@@ -63,7 +64,7 @@ public class OCPNewDataSourceWizard extends Wizard implements Scenario {
 		} else {
 			p.setProperty("network.type", "private");
 		}
-		w.ds.setProperties(p);
+		((OCPDataSource) w.ds).setProperties(p);
 
 		if (bIsFirstAgent) {
 			// TODO: review this later...

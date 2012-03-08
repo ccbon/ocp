@@ -79,11 +79,14 @@ public class Authentication implements Functionality<DataSource> {
 	}
 
 	public void login() throws Exception {
-		ds.getAgent().login(this);
+		Authenticable agent = (Authenticable) ds.getAgent();
+		agent.login();
 	}
 
 	public void logout() throws Exception {
-		ds.getAgent().logout(this);
+		Authenticable agent = (Authenticable) ds.getAgent();
+		agent.logout();
+		reset();
 	}
 
 	public boolean canLogin() {

@@ -1,7 +1,6 @@
 package org.ocpteam.protocol.zip;
 
 import org.ocpteam.layer.rsp.Agent;
-import org.ocpteam.layer.rsp.Authentication;
 import org.ocpteam.layer.rsp.Context;
 import org.ocpteam.layer.rsp.DataSource;
 import org.ocpteam.layer.rsp.FileSystem;
@@ -41,17 +40,6 @@ public class ZipAgent extends Agent {
 
 	@Override
 	protected void onDisconnect() {
-	}
-
-	@Override
-	public void login(Authentication a) throws Exception {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void logout(Authentication a) throws Exception {
-		// TODO Auto-generated method stub
 	}
 
 }

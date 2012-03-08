@@ -4,7 +4,6 @@ import java.util.Iterator;
 import java.util.Properties;
 
 import org.ocpteam.layer.rsp.Authentication;
-import org.ocpteam.layer.rsp.DataSource;
 import org.ocpteam.misc.JLG;
 import org.ocpteam.misc.JLGException;
 import org.ocpteam.protocol.ocp.Captcha;
@@ -24,7 +23,7 @@ public class TestAgent {
 		try {
 			JLG.rm(System.getenv("TEMP") + "/ocp_agent_storage");
 			// start 2 agents
-			DataSource ds1 = new OCPDataSource();
+			OCPDataSource ds1 = new OCPDataSource();
 			OCPAgent a1 = (OCPAgent) ds1.getAgent();
 			Properties p1 = ds1.getProperties();
 			p1.setProperty("name", "Suzana");
@@ -48,7 +47,7 @@ public class TestAgent {
 			
 
 			// starting second agent
-			DataSource ds2 = new OCPDataSource();
+			OCPDataSource ds2 = new OCPDataSource();
 			OCPAgent a2 = (OCPAgent) ds2.getAgent();
 			Properties p2 = ds2.getProperties();
 			p2.setProperty("name", "Jean-Louis");

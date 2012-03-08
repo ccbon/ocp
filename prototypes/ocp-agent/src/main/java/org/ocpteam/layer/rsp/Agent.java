@@ -37,11 +37,6 @@ public abstract class Agent {
 		return bIsConnected;
 	}
 	
-	
-
-	public abstract void login(Authentication a) throws Exception;
-
-	public abstract void logout(Authentication a) throws Exception;
 
 	public abstract FileSystem getFileSystem(User user);
 

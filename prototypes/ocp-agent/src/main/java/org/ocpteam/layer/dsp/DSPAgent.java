@@ -8,7 +8,7 @@ import java.util.Properties;
 import java.util.Queue;
 
 import org.ocpteam.layer.rsp.Agent;
-import org.ocpteam.layer.rsp.DataSource;
+import org.ocpteam.layer.rsp.PropertiesDataSource;
 import org.ocpteam.misc.Id;
 import org.ocpteam.misc.JLG;
 
@@ -23,9 +23,9 @@ public abstract class DSPAgent extends Agent {
 	
 	protected Map<Id, Contact> contactMap; // contactid->contact
 	
-	public DSPAgent(DataSource ds) {
+	public DSPAgent(PropertiesDataSource ds) {
 		super(ds);
-		cfg = this.ds.getProperties();
+		cfg = ds.getProperties();
 		contactMap = new HashMap<Id, Contact>();
 	}
 	

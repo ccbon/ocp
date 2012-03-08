@@ -30,52 +30,7 @@ public abstract class DataSource {
 		return (ResourceBundle) Class.forName(resourceClassString)
 				.newInstance();
 	}
-
-	public ResourceBundle getResource(String subpackage) throws Exception {
-		return DataSource.getResource(getProtocol(), subpackage);
-	}
-
-	public abstract String getProtocol();
-
-	private URI uri;
-	private Agent agent;
-	private File file;
-
-	private Properties p;
-
-	private boolean bIsTempFile = false;
 	
-	public Designer<DataSource> designer;
-	
-	public DataSource() {
-		designer = new Designer<DataSource>(this);
-	}
-
-	public Agent getAgent() {
-		if (agent == null) {
-			agent = createAgent();
-		}
-		return agent;
-	}
-
-	protected abstract Agent createAgent();
-
-	public URI getURI() throws Exception {
-		if (this.uri == null) {
-			throw new Exception("uri is null");
-		}
-		return this.uri;
-	}
-
-	public void close() {
-		// time to disconnect from the datasource
-		try {
-			getAgent().disconnect();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
 	public static DataSource getInstance(File file) throws Exception {
 
 		if (file.isDirectory()) {
@@ -109,12 +64,33 @@ public abstract class DataSource {
 		return (DataSource) Class.forName(datasourceClass).newInstance();
 	}
 
-	public void setURI(URI uri) {
-		this.uri = uri;
-		if (p == null) {
-			p = new Properties();
-			p.setProperty("uri", uri.toString());
+	
+
+	private URI uri;
+	private Agent agent;
+	private File file;
+
+	private boolean bIsTempFile = false;
+	
+	public Designer<DataSource> designer;
+	
+	public DataSource() {
+		designer = new Designer<DataSource>(this);
+	}
+
+	public Agent getAgent() {
+		if (agent == null) {
+			agent = createAgent();
 		}
+		return agent;
+	}
+
+	protected abstract Agent createAgent();
+	
+	public abstract String getProtocol();
+
+	public File getFile() {
+		return file;
 	}
 
 	public void setFile(File file) {
@@ -124,9 +100,25 @@ public abstract class DataSource {
 		}
 		this.file = file;
 	}
+	
+	public URI getURI() throws Exception {
+		if (this.uri == null) {
+			throw new Exception("uri is null");
+		}
+		return this.uri;
+	}
+	
+	public void setURI(URI uri) {
+		this.uri = uri;
+	}
 
-	public File getFile() {
-		return file;
+	public void close() {
+		// time to disconnect from the datasource
+		try {
+			getAgent().disconnect();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	public void setTempFile(boolean b) throws IOException {
@@ -140,35 +132,14 @@ public abstract class DataSource {
 		this.bIsTempFile = b;
 	}
 
-	public void setProperties(Properties p) {
-		this.p = p;
-	}
-
-	public Properties getProperties() {
-		if (p == null) {
-			try {
-				if (file != null && file.exists()) {
-					p = JLG.loadConfig(this.file.getAbsolutePath());
-				} else {
-					p = new Properties();
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-		return p;
-	}
-
 	public void save() throws Exception {
-
-		if (file != null) {
-			JLG.storeConfig(this.p, this.file.getAbsolutePath());
-		} else {
-			throw new Exception("cannot save: file not set");
-		}
 	}
 
 	public boolean isTempFile() {
 		return bIsTempFile;
+	}
+	
+	public ResourceBundle getResource(String subpackage) throws Exception {
+		return DataSource.getResource(getProtocol(), subpackage);
 	}
 }

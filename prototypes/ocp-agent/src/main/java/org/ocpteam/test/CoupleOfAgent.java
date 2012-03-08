@@ -3,7 +3,6 @@ package org.ocpteam.test;
 import java.util.Properties;
 
 import org.ocpteam.layer.rsp.Agent;
-import org.ocpteam.layer.rsp.DataSource;
 import org.ocpteam.misc.JLG;
 import org.ocpteam.protocol.ocp.OCPAgent;
 import org.ocpteam.protocol.ocp.OCPDataSource;
@@ -19,7 +18,7 @@ public class CoupleOfAgent {
 
 			// start 2 agents
 			
-			DataSource ds = new OCPDataSource();
+			OCPDataSource ds = new OCPDataSource();
 			OCPAgent a1 = (OCPAgent) ds.getAgent();
 			Properties p1 = ds.getProperties();
 			p1.setProperty("name", "Suzana");
@@ -41,7 +40,7 @@ public class CoupleOfAgent {
 			Thread.sleep(2000);
 
 			// starting second agent
-			DataSource ds2 = new OCPDataSource();
+			OCPDataSource ds2 = new OCPDataSource();
 			Agent a2 = ds2.getAgent();
 			Properties p2 = ds2.getProperties();
 			p2.setProperty("name", "Jean-Louis");

@@ -1,6 +1,7 @@
 package org.ocpteam.protocol.sftp;
 
 import org.ocpteam.layer.rsp.Agent;
+import org.ocpteam.layer.rsp.Authenticable;
 import org.ocpteam.layer.rsp.Authentication;
 import org.ocpteam.layer.rsp.Context;
 import org.ocpteam.layer.rsp.DataSource;
@@ -12,7 +13,7 @@ import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.Session;
 
-public class SFTPAgent extends Agent {
+public class SFTPAgent extends Agent implements Authenticable {
 
 	private JSch jsch;
 	Session session;
@@ -33,8 +34,9 @@ public class SFTPAgent extends Agent {
 	}
 
 	@Override
-	public void login(Authentication a) throws Exception {
+	public void login() throws Exception {
 		try {
+			Authentication a = ds.designer.get(Authentication.class);
 			String login = a.getLogin();
 			Object challenge = a.getChallenge();
 			String[] array = login.split("@");
@@ -46,7 +48,7 @@ public class SFTPAgent extends Agent {
 				port = Integer.parseInt(hostname.substring(index + 1));
 			}
 			session = jsch.getSession(username, hostname, port);
-			
+
 			SFTPUserInfo ui = new SFTPUserInfo();
 			SSHChallenge c = (SSHChallenge) challenge;
 			if (c.getType() == SSHChallenge.PASSWORD) {
@@ -58,11 +60,12 @@ public class SFTPAgent extends Agent {
 					jsch.addIdentity(c.getPrivateKeyFile().getAbsolutePath());
 				} else {
 					JLG.debug("passphrase is set");
-					jsch.addIdentity(c.getPrivateKeyFile().getAbsolutePath(), c.getPassphrase());
+					jsch.addIdentity(c.getPrivateKeyFile().getAbsolutePath(),
+							c.getPassphrase());
 				}
 				session.setUserInfo(ui);
 			}
-			
+
 			session.connect();
 			channel = (ChannelSftp) session.openChannel("sftp");
 			channel.connect();
@@ -81,8 +84,7 @@ public class SFTPAgent extends Agent {
 	}
 
 	@Override
-	public void logout(Authentication a) throws Exception {
-		a.reset();
+	public void logout() throws Exception {
 		channel.exit();
 		session.disconnect();
 	}

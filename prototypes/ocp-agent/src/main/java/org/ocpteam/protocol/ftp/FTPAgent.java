@@ -6,6 +6,7 @@ import java.io.IOException;
 
 import org.apache.commons.net.ftp.FTPClient;
 import org.ocpteam.layer.rsp.Agent;
+import org.ocpteam.layer.rsp.Authenticable;
 import org.ocpteam.layer.rsp.Authentication;
 import org.ocpteam.layer.rsp.Context;
 import org.ocpteam.layer.rsp.DataSource;
@@ -13,7 +14,7 @@ import org.ocpteam.layer.rsp.FileSystem;
 import org.ocpteam.layer.rsp.User;
 import org.ocpteam.misc.JLG;
 
-public class FTPAgent extends Agent {
+public class FTPAgent extends Agent implements Authenticable {
 
 	private String hostname;
 	FTPClient ftp;
@@ -46,7 +47,7 @@ public class FTPAgent extends Agent {
 	}
 
 	@Override
-	public void login(Authentication a) throws Exception {
+	public void login() throws Exception {
 		try {
 			ftp.logout();
 		} catch (Exception e) {
@@ -55,6 +56,7 @@ public class FTPAgent extends Agent {
 			ftp.connect(hostname);
 		} catch (Exception e) {
 		}
+		Authentication a = ds.designer.get(Authentication.class);
 		String login = a.getLogin();
 		String password = (String) a.getChallenge();
 		if (ftp.login(login, password)) {
@@ -100,7 +102,7 @@ public class FTPAgent extends Agent {
 	}
 
 	@Override
-	public void logout(Authentication a) throws Exception {
+	public void logout() throws Exception {
 		ftp.logout();
 	}
 
