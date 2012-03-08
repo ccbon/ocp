@@ -8,6 +8,7 @@ import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
+import org.ocpteam.layer.rsp.Authentication;
 import org.ocpteam.misc.JLG;
 import org.ocpteam.misc.swt.QuickMessage;
 import org.ocpteam.protocol.sftp.SSHChallenge;
@@ -49,8 +50,9 @@ public class SFTPNewDataSourceWizard extends Wizard implements Scenario {
 			}
 			URI uri = new URI("sftp://" + p1.sessionText.getText());
 			w.ds.setURI(uri);
-			w.ds.getAuthentication().setLogin(p1.sessionText.getText());
-			w.ds.getAuthentication().setChallenge(c);
+			Authentication auth = w.ds.designer.get(Authentication.class);
+			auth.setLogin(p1.sessionText.getText());
+			auth.setChallenge(c);
 		} catch (Exception e) {
 			e.printStackTrace();
 			QuickMessage.error(getShell(), "Cannot connect");

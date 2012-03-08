@@ -6,6 +6,7 @@ import java.net.URI;
 import java.util.Properties;
 import java.util.ResourceBundle;
 
+import org.ocpteam.design.Designer;
 import org.ocpteam.misc.JLG;
 
 public abstract class DataSource {
@@ -43,6 +44,12 @@ public abstract class DataSource {
 	private Properties p;
 
 	private boolean bIsTempFile = false;
+	
+	public Designer<DataSource> designer;
+	
+	public DataSource() {
+		designer = new Designer<DataSource>(this);
+	}
 
 	public Agent getAgent() {
 		if (agent == null) {
@@ -132,12 +139,6 @@ public abstract class DataSource {
 		}
 		this.bIsTempFile = b;
 	}
-
-	public boolean usesAuthentication() {
-		return getAuthentication() != null;
-	}
-
-	public abstract Authentication getAuthentication();
 
 	public void setProperties(Properties p) {
 		this.p = p;

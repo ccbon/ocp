@@ -2,21 +2,20 @@ package org.ocpteam.layer.rsp;
 
 import java.net.URI;
 
+import org.ocpteam.design.Functionality;
 import org.ocpteam.misc.JLG;
 
-public class Authentication {
+public class Authentication implements Functionality<DataSource> {
 
 	private Object challenge;
 	private String login;
 	private User user;
 	private DataSource ds;
 
-	public Authentication(DataSource ds) {
-		this.ds = ds;
-		initFromURI(ds);
+	public Authentication() {
 	}
 
-	private void initFromURI(DataSource ds) {
+	private void initFromURI() {
 		URI uri = null;
 		try {
 			uri = ds.getURI();
@@ -35,7 +34,6 @@ public class Authentication {
 	}
 
 	public Authentication(DataSource ds, String username, Object challenge) {
-		this(ds);
 		this.login = username;
 		this.challenge = challenge;
 	}
@@ -90,6 +88,12 @@ public class Authentication {
 
 	public boolean canLogin() {
 		return !JLG.isNullOrEmpty(this.login) && this.challenge != null;
+	}
+
+	@Override
+	public void setParent(DataSource parent) {
+		this.ds = parent;
+		initFromURI();
 	}
 
 }

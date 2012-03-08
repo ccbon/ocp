@@ -6,13 +6,11 @@ import org.ocpteam.layer.rsp.DataSource;
 
 public class SFTPDataSource extends DataSource {
 
-	private Authentication auth;
-
-	
-	public SFTPDataSource() {
-		auth = new Authentication(this);
+	public SFTPDataSource() throws Exception {
+		super();
+		designer.add(Authentication.class);
 	}
-	
+
 	@Override
 	public String getProtocol() {
 		return "SFTP";
@@ -23,13 +21,5 @@ public class SFTPDataSource extends DataSource {
 		SFTPAgent a = new SFTPAgent(this);
 		return a;
 	}
-
-	@Override
-	public Authentication getAuthentication() {
-		return this.auth;
-	}
-
-
-
 
 }

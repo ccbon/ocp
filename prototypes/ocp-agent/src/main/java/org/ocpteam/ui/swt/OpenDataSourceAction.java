@@ -45,8 +45,9 @@ public class OpenDataSourceAction extends Action {
 //			String[] filterExt = { "*.zip", "*.uri", "*.*" };
 //			fileDialog.setFilterExtensions(filterExt);
 			String filename = fileDialog.open();
-			w.openDataSource(DataSource.getInstance(new File(filename)));
-			
+			if (filename != null) {
+				w.openDataSource(DataSource.getInstance(new File(filename)));
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {

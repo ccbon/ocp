@@ -39,6 +39,7 @@ import org.eclipse.swt.widgets.Tray;
 import org.eclipse.swt.widgets.TrayItem;
 import org.eclipse.wb.swt.SWTResourceManager;
 import org.ocpteam.layer.rsp.Agent;
+import org.ocpteam.layer.rsp.Authentication;
 import org.ocpteam.layer.rsp.Context;
 import org.ocpteam.layer.rsp.DataSource;
 import org.ocpteam.layer.rsp.FileSystem;
@@ -120,13 +121,13 @@ public class DataSourceWindow extends ApplicationWindow {
 		closeDataSourceAction.setEnabled(ds != null);
 		saveDataSourceAction.setEnabled(ds != null);
 		saveAsDataSourceAction.setEnabled(ds != null);
-		signInAction.setEnabled(ds != null && ds.usesAuthentication()
+		signInAction.setEnabled(ds != null && ds.designer.uses(Authentication.class)
 				&& context == null);
-		signOutAction.setEnabled(ds != null && ds.usesAuthentication()
+		signOutAction.setEnabled(ds != null && ds.designer.uses(Authentication.class)
 				&& context != null);
-		newUserAction.setEnabled(ds != null && ds.usesAuthentication()
+		newUserAction.setEnabled(ds != null && ds.designer.uses(Authentication.class)
 				&& context == null
-				&& ds.getAuthentication().allowsUserCreation());
+				&& ds.designer.get(Authentication.class).allowsUserCreation());
 
 		viewExplorerAction.setEnabled(context != null);
 
@@ -436,8 +437,8 @@ public class DataSourceWindow extends ApplicationWindow {
 			context = agent.getContext();
 			if (context != null) {
 				viewExplorerAction.run();
-			} else if (ds.usesAuthentication()) {
-				if (ds.getAuthentication().canLogin()) {
+			} else if (ds.designer.uses(Authentication.class)) {
+				if (ds.designer.get(Authentication.class).canLogin()) {
 					signIn();
 				} else {
 					signInAction.run();
@@ -545,7 +546,7 @@ public class DataSourceWindow extends ApplicationWindow {
 	}
 
 	public void signIn() throws Exception {
-		ds.getAuthentication().login();
+		ds.designer.get(Authentication.class).login();
 		context = agent.getContext();
 		if (context != null) {
 			viewExplorerAction.run();
@@ -554,7 +555,7 @@ public class DataSourceWindow extends ApplicationWindow {
 
 	public void signOut() throws Exception {
 		context = null;
-		ds.getAuthentication().logout();
+		ds.designer.get(Authentication.class).logout();
 	}
 
 	public String getHelpURL() {

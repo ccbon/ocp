@@ -8,9 +8,9 @@ import org.ocpteam.layer.rsp.DataSource;
 
 public class FTPDataSource extends DataSource {
 
-	private Authentication auth;
-
-	public FTPDataSource() {
+	public FTPDataSource() throws Exception {
+		super();
+		designer.add(Authentication.class);
 	}
 
 	public FTPDataSource(URI uri) {
@@ -25,14 +25,6 @@ public class FTPDataSource extends DataSource {
 	@Override
 	protected Agent createAgent() {
 		return new FTPAgent(this);
-	}
-
-	@Override
-	public Authentication getAuthentication() {
-		if (this.auth == null) {
-			this.auth = new Authentication(this);
-		}
-		return this.auth;
 	}
 
 }

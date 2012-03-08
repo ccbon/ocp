@@ -8,9 +8,13 @@ import org.ocpteam.layer.rsp.DataSource;
 
 public class OCPDataSource extends DataSource {
 
-	private Authentication auth;
+	public OCPDataSource() throws Exception {
+		super();
+		design();
+	}
 
-	public OCPDataSource() {
+	private void design() throws Exception {
+		designer.add(Authentication.class, new OCPAuthentication());
 	}
 	
 	public OCPDataSource(File file) {
@@ -26,17 +30,5 @@ public class OCPDataSource extends DataSource {
 	protected Agent createAgent() {
 		return new OCPAgent(this);
 	}
-
-	@Override
-	public Authentication getAuthentication() {
-		if (this.auth == null) {
-			this.auth = new OCPAuthentication(this);
-		}
-		return this.auth;
-	}
-
-
-
-
 
 }
