@@ -5,9 +5,9 @@ import java.util.Map;
 import java.util.NavigableSet;
 import java.util.TreeSet;
 
+import org.ocpteam.functionality.PersistentMap;
 import org.ocpteam.misc.Id;
 import org.ocpteam.misc.JLG;
-import org.ocpteam.misc.PersistentHashMap;
 
 
 public class Storage {
@@ -16,13 +16,15 @@ public class Storage {
 	private Map<byte[], byte[]> contentMap;
 	public OCPAgent agent;
 
-	public Storage(OCPAgent agent) {
+	public Storage(OCPAgent agent) throws Exception {
 		nodeSet = new TreeSet<Id>();
 		String root = agent.cfg.getProperty(
 				"storage.dir",
 				System.getenv("TEMP") + "/ocp_agent_storage/"
 						+ agent.getName());
-		contentMap = new PersistentHashMap(root);
+		PersistentMap persistentMap = agent.ds.designer.get(PersistentMap.class);
+		persistentMap.setRoot(root);
+		contentMap = persistentMap;
 		this.agent = agent;
 	}
 

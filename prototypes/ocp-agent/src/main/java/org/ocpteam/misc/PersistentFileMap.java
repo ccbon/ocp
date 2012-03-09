@@ -7,7 +7,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
-public class PersistentHashMap implements Map<byte[], byte[]> {
+public class PersistentFileMap implements Map<byte[], byte[]> {
 
 	private File dir;
 
@@ -39,13 +39,12 @@ public class PersistentHashMap implements Map<byte[], byte[]> {
 
 	}
 
-	public PersistentHashMap(String root) {
-		try {
-			dir = new File(root);
-			JLG.mkdir(dir);
-		} catch (Exception e) {
-			JLG.error(e);
-		}
+	public PersistentFileMap() {
+	}
+
+	public void setRoot(String root) throws Exception {
+		dir = new File(root);
+		JLG.mkdir(dir);
 	}
 
 	@Override
