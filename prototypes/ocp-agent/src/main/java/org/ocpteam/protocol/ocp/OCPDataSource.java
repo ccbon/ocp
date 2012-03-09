@@ -14,10 +14,6 @@ public class OCPDataSource extends PropertiesDataSource {
 
 	public OCPDataSource() throws Exception {
 		super();
-		design();
-	}
-
-	private void design() throws Exception {
 		designer.add(Authentication.class, new OCPAuthentication());
 		designer.add(Server.class);
 		designer.add(ContactMap.class);
