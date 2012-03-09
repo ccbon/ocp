@@ -22,11 +22,6 @@ public class ZipAgent extends Agent {
 	}
 
 	@Override
-	public boolean isOnlyClient() {
-		return true;
-	}
-
-	@Override
 	protected void onConnect() throws Exception {
 		JLG.debug("opening datasource: " + ds.getFile());
 		createZipFileSystem();

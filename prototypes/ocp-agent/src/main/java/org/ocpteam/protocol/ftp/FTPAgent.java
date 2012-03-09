@@ -106,9 +106,4 @@ public class FTPAgent extends Agent implements Authenticable {
 		ftp.logout();
 	}
 
-	@Override
-	public boolean isOnlyClient() {
-		return true;
-	}
-
 }

@@ -5,6 +5,7 @@ import java.io.File;
 import org.ocpteam.layer.rsp.Agent;
 import org.ocpteam.layer.rsp.Authentication;
 import org.ocpteam.layer.rsp.PropertiesDataSource;
+import org.ocpteam.layer.rsp.Server;
 
 public class OCPDataSource extends PropertiesDataSource {
 
@@ -15,6 +16,7 @@ public class OCPDataSource extends PropertiesDataSource {
 
 	private void design() throws Exception {
 		designer.add(Authentication.class, new OCPAuthentication());
+		designer.add(Server.class);
 	}
 	
 	public OCPDataSource(File file) {

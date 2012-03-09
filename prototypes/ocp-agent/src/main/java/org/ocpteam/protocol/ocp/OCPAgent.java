@@ -825,8 +825,4 @@ public class OCPAgent extends DSPAgent implements Authenticable {
 		JLG.debug("ocp logout (nothing to do).");
 	}
 
-	@Override
-	public boolean isOnlyClient() {
-		return (!cfg.getProperty("server", "yes").equals("yes"));
-	}
 }

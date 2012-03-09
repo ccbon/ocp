@@ -43,6 +43,7 @@ import org.ocpteam.layer.rsp.Authentication;
 import org.ocpteam.layer.rsp.Context;
 import org.ocpteam.layer.rsp.DataSource;
 import org.ocpteam.layer.rsp.FileSystem;
+import org.ocpteam.layer.rsp.Server;
 import org.ocpteam.misc.JLG;
 import org.ocpteam.misc.swt.QuickMessage;
 
@@ -396,7 +397,7 @@ public class DataSourceWindow extends ApplicationWindow {
 	@Override
 	public boolean close() {
 		try {
-			if (agent != null && (!agent.isOnlyClient())) {
+			if (agent != null && isDaemon()) {
 				// only hide it.
 				getShell().setVisible(false);
 				return true;
@@ -411,6 +412,14 @@ public class DataSourceWindow extends ApplicationWindow {
 			e.printStackTrace();
 		}
 		return super.close();
+	}
+
+	private boolean isDaemon() {
+		if (ds.designer.uses(Server.class)) {
+			return ds.designer.get(Server.class).isStarted();
+		} else {
+			return false;
+		}
 	}
 
 	public boolean exit() {
@@ -431,7 +440,7 @@ public class DataSourceWindow extends ApplicationWindow {
 			ds.open();
 			addProtocolMenu();
 			agent = ds.getAgent();
-			if (!agent.isOnlyClient()) {
+			if (isDaemon()) {
 				openTray();
 			}
 			context = agent.getContext();
@@ -452,7 +461,7 @@ public class DataSourceWindow extends ApplicationWindow {
 
 	public void closeDataSource() throws Exception {
 		ds.close();
-		if (!agent.isOnlyClient()) {
+		if (isDaemon()) {
 			closeTray();
 		}
 		ds = null;

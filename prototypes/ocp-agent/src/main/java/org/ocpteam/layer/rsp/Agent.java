@@ -1,6 +1,7 @@
 package org.ocpteam.layer.rsp;
 
 
+
 public abstract class Agent {
 
 	private boolean bIsConnected = false;
@@ -39,10 +40,6 @@ public abstract class Agent {
 	
 
 	public abstract FileSystem getFileSystem(User user);
-
-	public abstract boolean isOnlyClient();
-
-	
 
 	public Context getContext() {
 		return context;

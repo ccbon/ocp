@@ -89,9 +89,4 @@ public class SFTPAgent extends Agent implements Authenticable {
 		session.disconnect();
 	}
 
-	@Override
-	public boolean isOnlyClient() {
-		return true;
-	}
-
 }
