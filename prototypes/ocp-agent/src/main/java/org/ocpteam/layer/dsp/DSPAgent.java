@@ -32,8 +32,6 @@ public abstract class DSPAgent extends Agent {
 						"yes");
 	}
 
-	public abstract boolean hasStorage();
-
 	public abstract void removeStorage();
 
 }

@@ -794,11 +794,6 @@ public class OCPAgent extends DSPAgent implements Authenticable {
 		return name;
 	}
 
-	@Override
-	public boolean hasStorage() {
-		return server != null;
-	}
-
 	public byte[] crypt(byte[] cleartext) throws Exception, BadPaddingException {
 		cipher.init(Cipher.ENCRYPT_MODE, secretKey);
 		return cipher.doFinal(cleartext);
