@@ -135,6 +135,9 @@ public class JLG {
 	}
 
 	public static Serializable deserialize(byte[] input) throws Exception {
+		if (input == null) {
+			throw new Exception("input is null");
+		}
 		ObjectInputStream in = new ObjectInputStream(new ByteArrayInputStream(
 				input));
 		Object obj = in.readObject();

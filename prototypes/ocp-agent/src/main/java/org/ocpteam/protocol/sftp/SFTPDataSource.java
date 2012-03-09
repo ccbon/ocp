@@ -2,9 +2,9 @@ package org.ocpteam.protocol.sftp;
 
 import org.ocpteam.layer.rsp.Agent;
 import org.ocpteam.layer.rsp.Authentication;
-import org.ocpteam.layer.rsp.DataSource;
+import org.ocpteam.layer.rsp.PropertiesDataSource;
 
-public class SFTPDataSource extends DataSource {
+public class SFTPDataSource extends PropertiesDataSource {
 
 	public SFTPDataSource() throws Exception {
 		super();

@@ -40,7 +40,6 @@ public abstract class PropertiesDataSource extends DataSource {
 	
 	@Override
 	public void save() throws Exception {
-
 		if (getFile() != null) {
 			JLG.storeConfig(this.p, this.getFile().getAbsolutePath());
 		} else {

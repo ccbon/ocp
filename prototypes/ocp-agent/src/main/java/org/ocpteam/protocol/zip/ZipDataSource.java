@@ -15,9 +15,4 @@ public class ZipDataSource extends DataSource {
 		return new ZipAgent(this);
 	}
 
-	@Override
-	public void save() throws Exception {
-		// do nothing
-	}
-
 }

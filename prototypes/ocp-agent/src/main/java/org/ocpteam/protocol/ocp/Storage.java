@@ -13,7 +13,7 @@ import org.ocpteam.misc.PersistentHashMap;
 public class Storage {
 
 	public NavigableSet<Id> nodeSet; // set of node referenced by their id
-	private Map<Address, Content> contentMap;
+	private Map<byte[], byte[]> contentMap;
 	public OCPAgent agent;
 
 	public Storage(OCPAgent agent) {
@@ -48,14 +48,24 @@ public class Storage {
 
 	}
 
-	public void put(Address address, Content data) throws Exception {
-		contentMap.put(address, data);
+	public void put(Address address, Content content) throws Exception {
+		contentMap.put(address.getBytes(), JLG.serialize(content));
 		// Rude detachment: now tell to your agent backuper what you have stored.
 		// declare(ADD, address, data.getKey(agent));
 	}
 
 	public Content get(Address address) {
-		return contentMap.get(address);
+		try {
+			byte[] array = contentMap.get(address.getBytes());
+			if (array == null) {
+				return null;
+			} else {
+				return (Content) JLG.deserialize(array);
+			}
+		} catch (Exception e) {
+			JLG.error(e);
+			return null;
+		}
 	}
 
 	@Override
@@ -67,23 +77,29 @@ public class Storage {
 			result += id + JLG.NL;
 		}
 		result += "Content=" + JLG.NL;
-		Iterator<Address> itc = contentMap.keySet().iterator();
+		Iterator<byte[]> itc = contentMap.keySet().iterator();
 		while (itc.hasNext()) {
-			Address id = (Address) itc.next();
-			result += id + "->" + contentMap.get(id) + JLG.NL;
-		}
-		
+			byte[] id = itc.next();
+			Address address = new Address(id);
+			Content content = null;
+			try {
+				content = (Content) JLG.deserialize(contentMap.get(id));
+			} catch (Exception e) {
+				JLG.error(e);
+			}
+			result += address + "->" +  content + JLG.NL;
+		}		
 		return result;
 	}
 
 	public boolean contains(Address address) {
-		return contentMap.containsKey(address);
+		return contentMap.containsKey(address.getBytes());
 	}
 
 	public void remove(Address address, byte[] addressSignature) throws Exception {
 		// TODO Auto-generated method stub
 		// retrieve the public key of the user and check the address signature
-		Content content = contentMap.get(address);
+		Content content = get(address);
 		if (content == null) {
 			return;
 		}
@@ -92,7 +108,7 @@ public class Storage {
 			throw new Exception("Cannot remove data. Verifying signature failed.");
 		}
 		//JLG.debug("signature ok");
-		contentMap.remove(address);
+		contentMap.remove(address.getBytes());
 	}
 
 	public void removeAll() {

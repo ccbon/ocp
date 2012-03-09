@@ -111,6 +111,10 @@ public abstract class DataSource {
 	public void setURI(URI uri) {
 		this.uri = uri;
 	}
+	
+	public void open() throws Exception {
+		getAgent().connect();
+	}	
 
 	public void close() {
 		// time to disconnect from the datasource
@@ -120,19 +124,19 @@ public abstract class DataSource {
 			e.printStackTrace();
 		}
 	}
+	
+	public void save() throws Exception {
+	}
 
 	public void setTempFile(boolean b) throws IOException {
 		if (b == true) {
 			File file = File.createTempFile(
-					"temp" + System.currentTimeMillis(), "zip");
+					"temp" + System.currentTimeMillis(), "tmp");
 			file.delete();
 			file.deleteOnExit();
 			this.file = file;
 		}
 		this.bIsTempFile = b;
-	}
-
-	public void save() throws Exception {
 	}
 
 	public boolean isTempFile() {
@@ -142,4 +146,5 @@ public abstract class DataSource {
 	public ResourceBundle getResource(String subpackage) throws Exception {
 		return DataSource.getResource(getProtocol(), subpackage);
 	}
+
 }

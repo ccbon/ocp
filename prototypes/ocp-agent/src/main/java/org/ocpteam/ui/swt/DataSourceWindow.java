@@ -426,11 +426,11 @@ public class DataSourceWindow extends ApplicationWindow {
 
 	public void openDataSource(DataSource ds) throws Exception {
 		try {
-			this.ds = ds;
 			JLG.debug("datasource=" + ds);
+			this.ds = ds;
+			ds.open();
 			addProtocolMenu();
 			agent = ds.getAgent();
-			agent.connect();
 			if (!agent.isOnlyClient()) {
 				openTray();
 			}
