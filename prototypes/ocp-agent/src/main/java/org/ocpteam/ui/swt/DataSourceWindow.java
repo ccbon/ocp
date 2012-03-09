@@ -38,12 +38,12 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Tray;
 import org.eclipse.swt.widgets.TrayItem;
 import org.eclipse.wb.swt.SWTResourceManager;
+import org.ocpteam.functionality.Authentication;
+import org.ocpteam.functionality.Server;
 import org.ocpteam.layer.rsp.Agent;
-import org.ocpteam.layer.rsp.Authentication;
 import org.ocpteam.layer.rsp.Context;
 import org.ocpteam.layer.rsp.DataSource;
 import org.ocpteam.layer.rsp.FileSystem;
-import org.ocpteam.layer.rsp.Server;
 import org.ocpteam.misc.JLG;
 import org.ocpteam.misc.swt.QuickMessage;
 
@@ -533,7 +533,8 @@ public class DataSourceWindow extends ApplicationWindow {
 		try {
 			ResourceBundle rb = ds.getResource("swt");
 			protocolMenu = (DynamicMenuManager) rb.getObject("menu");
-			protocolMenu.init(this);
+			protocolMenu.setParent(this);
+			protocolMenu.init();
 		} catch (Exception e) {
 			// e.printStackTrace();
 			JLG.debug("no specific menu for " + ds.getProtocol());

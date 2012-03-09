@@ -26,10 +26,11 @@ import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.PBEParameterSpec;
 
+import org.ocpteam.functionality.Authentication;
+import org.ocpteam.functionality.ContactMap;
 import org.ocpteam.layer.dsp.Contact;
 import org.ocpteam.layer.dsp.DSPAgent;
 import org.ocpteam.layer.rsp.Authenticable;
-import org.ocpteam.layer.rsp.Authentication;
 import org.ocpteam.layer.rsp.Context;
 import org.ocpteam.layer.rsp.FileSystem;
 import org.ocpteam.layer.rsp.PropertiesDataSource;
@@ -211,7 +212,6 @@ public class OCPAgent extends DSPAgent implements Authenticable {
 		}
 	}
 
-	@Override
 	public Contact toContact() {
 		// convert the agent public information into a contact
 		OCPContact c = new OCPContact(this.id);
@@ -265,6 +265,7 @@ public class OCPAgent extends DSPAgent implements Authenticable {
 		}
 		result += "Contacts:" + JLG.NL;
 		synchronized (this) {
+			ContactMap contactMap = ds.designer.get(ContactMap.class);
 			Iterator<Id> it = contactMap.keySet().iterator();
 			while (it.hasNext()) {
 				Id id = (Id) it.next();
@@ -597,7 +598,8 @@ public class OCPAgent extends DSPAgent implements Authenticable {
 		OCPUser user = new OCPUser(this, login, backupNbr);
 		UserPublicInfo upi = user.getPublicInfo(this);
 
-		Contact contact = getContact(captcha.contactId);
+		ContactMap contactMap = ds.designer.get(ContactMap.class);
+		Contact contact = contactMap.getContact(captcha.contactId);
 
 		// 1) create the public part of the user.
 		// catpcha is required in order to avoid massive fake user creation
@@ -737,14 +739,13 @@ public class OCPAgent extends DSPAgent implements Authenticable {
 		return contactQueue;
 	}
 
-	@Override
 	public Queue<Contact> makeContactQueue() throws Exception {
 		return makeContactQueue(new Id("0"));
 	}
 
-	@Override
 	public void addContact(Contact contact) throws Exception {
-		super.addContact(contact);
+		ContactMap contactMap = ds.designer.get(ContactMap.class);
+		contactMap.put(contact.id, contact);
 		OCPContact c = (OCPContact) contact;
 		if (c.nodeIdSet.size() == 0) {
 			throw new Exception("contact without node.");
@@ -757,9 +758,9 @@ public class OCPAgent extends DSPAgent implements Authenticable {
 		}
 	}
 
-	@Override
 	public Contact removeContact(Contact contact) {
-		OCPContact c = (OCPContact) super.removeContact(contact);
+		ContactMap contactMap = ds.designer.get(ContactMap.class);
+		OCPContact c = (OCPContact) contactMap.remove(contact.id);
 		try {
 			Iterator<Id> it = c.nodeIdSet.iterator();
 			while (it.hasNext()) {
@@ -784,7 +785,6 @@ public class OCPAgent extends DSPAgent implements Authenticable {
 		return client.askCaptcha(contactQueue);
 	}
 
-	@Override
 	public void refreshContactList() throws Exception {
 		client.sendAll(Protocol.PING.getBytes());
 	}

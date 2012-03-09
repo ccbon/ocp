@@ -1,6 +1,5 @@
 package org.ocpteam.protocol.zip.swt;
 
-import org.ocpteam.ui.swt.DataSourceWindow;
 import org.ocpteam.ui.swt.DynamicMenuManager;
 import org.ocpteam.ui.swt.HelpAction;
 
@@ -11,7 +10,7 @@ public class ZIPMenuManager extends DynamicMenuManager {
 	}
 
 	@Override
-	public void init(DataSourceWindow w) {
+	public void init() {
 		add(new HelpAction(w));
 		
 	}

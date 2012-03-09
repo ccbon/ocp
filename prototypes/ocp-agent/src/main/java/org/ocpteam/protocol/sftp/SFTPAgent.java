@@ -1,8 +1,8 @@
 package org.ocpteam.protocol.sftp;
 
+import org.ocpteam.functionality.Authentication;
 import org.ocpteam.layer.rsp.Agent;
 import org.ocpteam.layer.rsp.Authenticable;
-import org.ocpteam.layer.rsp.Authentication;
 import org.ocpteam.layer.rsp.Context;
 import org.ocpteam.layer.rsp.DataSource;
 import org.ocpteam.layer.rsp.FileSystem;

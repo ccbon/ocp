@@ -1,6 +1,5 @@
 package org.ocpteam.protocol.ocp.swt;
 
-import org.ocpteam.ui.swt.DataSourceWindow;
 import org.ocpteam.ui.swt.DynamicMenuManager;
 
 public class OCPMenuManager extends DynamicMenuManager {
@@ -10,7 +9,7 @@ public class OCPMenuManager extends DynamicMenuManager {
 	}
 
 	@Override
-	public void init(DataSourceWindow w) {
+	public void init() {
 		add(new ViewContactTabAction(w));
 		add(new RemoveStorageAction(w));
 	}

@@ -2,10 +2,11 @@ package org.ocpteam.protocol.ocp;
 
 import java.io.File;
 
+import org.ocpteam.functionality.Authentication;
+import org.ocpteam.functionality.ContactMap;
+import org.ocpteam.functionality.Server;
 import org.ocpteam.layer.rsp.Agent;
-import org.ocpteam.layer.rsp.Authentication;
 import org.ocpteam.layer.rsp.PropertiesDataSource;
-import org.ocpteam.layer.rsp.Server;
 
 public class OCPDataSource extends PropertiesDataSource {
 
@@ -17,6 +18,7 @@ public class OCPDataSource extends PropertiesDataSource {
 	private void design() throws Exception {
 		designer.add(Authentication.class, new OCPAuthentication());
 		designer.add(Server.class);
+		designer.add(ContactMap.class);
 	}
 	
 	public OCPDataSource(File file) {

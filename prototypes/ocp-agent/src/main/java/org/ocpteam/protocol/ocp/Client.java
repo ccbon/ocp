@@ -15,6 +15,7 @@ import java.util.Set;
 
 import org.apache.xmlrpc.client.XmlRpcClient;
 import org.apache.xmlrpc.client.XmlRpcClientConfigImpl;
+import org.ocpteam.functionality.ContactMap;
 import org.ocpteam.layer.dsp.Contact;
 import org.ocpteam.misc.Id;
 import org.ocpteam.misc.JLG;
@@ -84,7 +85,8 @@ public class Client {
 	}
 
 	public Response request(byte[] string) throws Exception {
-		if (agent.hasNoContact()) {
+		ContactMap contactMap = agent.ds.designer.get(ContactMap.class);
+		if (contactMap.isEmpty()) {
 			findSponsor();
 		}
 		Response response = request(agent.makeContactQueue(), string);
@@ -98,7 +100,8 @@ public class Client {
 	private Response request(Queue<Contact> contactQueue, byte[] input)
 			throws Exception {
 		byte[] output = null;
-		if (agent.hasNoContact()) {
+		ContactMap contactMap = agent.ds.designer.get(ContactMap.class);
+		if (contactMap.isEmpty()) {
 			findSponsor();
 		}
 		OCPContact contact = null;
@@ -133,7 +136,8 @@ public class Client {
 				JLG.warn("channel not pingable: " + channel);
 			}
 		}
-		if (agent.hasNoContact()) {
+		ContactMap contactMap = agent.ds.designer.get(ContactMap.class);
+		if (contactMap.isEmpty()) {
 			throw new Exception("no pingable sponsor found.");
 		}
 	}
@@ -194,7 +198,8 @@ public class Client {
 	private void detach(Contact contact) throws Exception {
 		// tell to your contacts this contact has disappeared.
 		synchronized (agent) {
-			if (!agent.hasContact(contact)) {
+			ContactMap contactMap = agent.ds.designer.get(ContactMap.class);
+			if (!contactMap.containsValue(contact)) {
 				return;
 			}
 			agent.removeContact(contact);
@@ -206,7 +211,8 @@ public class Client {
 		// tell all your contact of what happened
 
 		Set<Contact> contactToBeDetached = new HashSet<Contact>();
-		Iterator<Contact> itc = agent.getContactSnapshotList().iterator();
+		ContactMap contactMap = agent.ds.designer.get(ContactMap.class);
+		Iterator<Contact> itc = contactMap.getContactSnapshotList().iterator();
 		while (itc.hasNext()) {
 			Contact c = itc.next();
 			if (c.id.equals(agent.id)) {
