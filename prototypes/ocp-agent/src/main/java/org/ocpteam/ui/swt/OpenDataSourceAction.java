@@ -6,7 +6,7 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.widgets.FileDialog;
-import org.ocpteam.layer.rsp.DataSource;
+import org.ocpteam.functionality.DataSourceFactory;
 import org.ocpteam.misc.JLG;
 import org.ocpteam.misc.swt.QuickMessage;
 
@@ -46,7 +46,7 @@ public class OpenDataSourceAction extends Action {
 //			fileDialog.setFilterExtensions(filterExt);
 			String filename = fileDialog.open();
 			if (filename != null) {
-				w.openDataSource(DataSource.getInstance(new File(filename)));
+				w.openDataSource(w.app.designer.get(DataSourceFactory.class).getInstance(new File(filename)));
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

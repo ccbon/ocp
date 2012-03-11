@@ -4,9 +4,6 @@ import java.util.HashSet;
 import java.util.Properties;
 import java.util.Set;
 
-import org.ocpteam.ejder.EjderPersistenceMap;
-import org.ocpteam.layer.rsp.DataSource;
-
 /**
  * A container implementation for Context and dependency injection (CDI)
  * 

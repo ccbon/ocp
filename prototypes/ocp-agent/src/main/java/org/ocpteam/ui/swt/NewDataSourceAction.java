@@ -3,7 +3,7 @@ package org.ocpteam.ui.swt;
 import java.util.ResourceBundle;
 
 import org.eclipse.jface.action.Action;
-import org.ocpteam.layer.rsp.DataSource;
+import org.ocpteam.functionality.DataSourceFactory;
 import org.ocpteam.misc.JLG;
 
 
@@ -24,7 +24,7 @@ public class NewDataSourceAction extends Action {
 			if (w.ds != null) {
 				w.closeDataSourceAction.run();
 			}
-			w.ds = DataSource.getInstance(protocol);
+			w.ds = w.app.designer.get(DataSourceFactory.class).getInstance(protocol);
 			ResourceBundle swt = w.ds.getResource("swt");
 			Scenario scenario = (Scenario) swt.getObject("NewDataSourceScenario");
 			scenario.setWindow(w);

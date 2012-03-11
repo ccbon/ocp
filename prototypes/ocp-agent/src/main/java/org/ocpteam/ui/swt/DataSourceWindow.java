@@ -1,7 +1,6 @@
 package org.ocpteam.ui.swt;
 
 import java.util.Arrays;
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -38,7 +37,10 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Tray;
 import org.eclipse.swt.widgets.TrayItem;
 import org.eclipse.wb.swt.SWTResourceManager;
+import org.ocpteam.core.Application;
+import org.ocpteam.design.Functionality;
 import org.ocpteam.functionality.Authentication;
+import org.ocpteam.functionality.DataSourceFactory;
 import org.ocpteam.functionality.Server;
 import org.ocpteam.layer.rsp.Agent;
 import org.ocpteam.layer.rsp.Context;
@@ -46,8 +48,12 @@ import org.ocpteam.layer.rsp.DataSource;
 import org.ocpteam.layer.rsp.FileSystem;
 import org.ocpteam.misc.JLG;
 import org.ocpteam.misc.swt.QuickMessage;
+import org.ocpteam.protocol.ftp.FTPDataSource;
+import org.ocpteam.protocol.ocp.OCPDataSource;
+import org.ocpteam.protocol.sftp.SFTPDataSource;
+import org.ocpteam.protocol.zip.ZipDataSource;
 
-public class DataSourceWindow extends ApplicationWindow {
+public class DataSourceWindow extends ApplicationWindow implements Functionality<Application> {
 
 	public static final int ON_DS_CLOSE = 0;
 	OpenDataSourceAction openDataSourceAction;
@@ -86,6 +92,7 @@ public class DataSourceWindow extends ApplicationWindow {
 	private DynamicMenuManager protocolMenu;
 	private TrayItem item;
 	private Map<Integer, List<Listener>> listenerMap;
+	protected Application app;
 
 	/**
 	 * Launch the application.
@@ -95,10 +102,19 @@ public class DataSourceWindow extends ApplicationWindow {
 	public static void main(String args[]) {
 		JLG.debug_on();
 		try {
-			DataSourceWindow window = new DataSourceWindow();
-			window.setBlockOnOpen(true);
-			window.open();
-			Display.getCurrent().dispose();
+			Application app = new Application();
+			app.designer.add(DataSourceFactory.class);
+			DataSourceFactory dsf = app.designer.get(DataSourceFactory.class);
+			dsf.designer.add(OCPDataSource.class);
+			dsf.designer.add(FTPDataSource.class);
+			dsf.designer.add(SFTPDataSource.class);
+			dsf.designer.add(ZipDataSource.class);
+
+			
+			app.designer.add(DataSourceWindow.class);
+			
+			
+			app.designer.get(DataSourceWindow.class).start();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -109,6 +125,9 @@ public class DataSourceWindow extends ApplicationWindow {
 	 */
 	public DataSourceWindow() {
 		super(null);
+	}
+	
+	public void init() {
 		createActions();
 		addToolBar(SWT.FLAT | SWT.WRAP);
 		addMenuBar();
@@ -195,9 +214,10 @@ public class DataSourceWindow extends ApplicationWindow {
 		openDataSourceAction = new OpenDataSourceAction(this);
 		closeDataSourceAction = new CloseDataSourceAction(this);
 		newDataSourceActionMap = new HashMap<String, NewDataSourceAction>();
-		for (Enumeration<String> e = DataSource.protocolResource.getKeys(); e
-				.hasMoreElements();) {
-			String protocol = e.nextElement();
+		Iterator<DataSource> it = app.designer.get(DataSourceFactory.class).getDataSourceIterator();
+		while (it.hasNext()) {
+			DataSource ds = it.next();
+			String protocol = ds.getProtocol();
 			newDataSourceActionMap.put(protocol, new NewDataSourceAction(this,
 					protocol));
 		}
@@ -580,6 +600,19 @@ public class DataSourceWindow extends ApplicationWindow {
 			list.add(listener);
 			listenerMap.put(eventType, list);
 		}
+	}
+
+	@Override
+	public void setParent(Application parent) {
+		this.app = parent;
+		
+	}
+
+	public void start() {
+		init();
+		setBlockOnOpen(true);
+		open();
+		//Display.getCurrent().dispose();	
 	}
 
 }

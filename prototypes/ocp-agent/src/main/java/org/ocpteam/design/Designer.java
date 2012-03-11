@@ -1,6 +1,7 @@
 package org.ocpteam.design;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 public class Designer<P> {
@@ -42,6 +43,10 @@ public class Designer<P> {
 			instance.setParent(parent);
 			map.put((Class<Functionality<P>>) functionality, instance);
 		}
+	}
+
+	public Iterator<Functionality<P>> iterator() {
+		return map.values().iterator();
 	}
 
 

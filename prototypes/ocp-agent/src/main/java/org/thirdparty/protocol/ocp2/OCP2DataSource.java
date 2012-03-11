@@ -9,5 +9,10 @@ public class OCP2DataSource extends OCPDataSource {
 		super();
 		designer.add(PersistentMap.class, new ThirdPartyPersistentMap());
 	}
+	
+	@Override
+	public String getProtocol() {
+		return "OCP2";
+	}
 
 }

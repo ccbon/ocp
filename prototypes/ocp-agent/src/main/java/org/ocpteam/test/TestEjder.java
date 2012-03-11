@@ -1,7 +1,6 @@
 package org.ocpteam.test;
 
 import org.ocpteam.core.DefaultCloudContainer;
-import org.ocpteam.design.Designer;
 import org.ocpteam.ejder.EjderAuthentication;
 import org.ocpteam.ejder.EjderGUI;
 import org.ocpteam.ejder.EjderPersistenceMap;
