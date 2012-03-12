@@ -256,7 +256,7 @@
 					</descriptors>
 					<archive>
 						<manifest>
-							<mainClass>org.ocpteam.ui.swt.DataSourceWindow</mainClass>
+							<mainClass>org.ocpteam.example.Main</mainClass>
 						</manifest>
 						<manifestEntries>
 							<url>${project.url}</url>
