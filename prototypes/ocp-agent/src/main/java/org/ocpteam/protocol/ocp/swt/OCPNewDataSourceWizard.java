@@ -66,24 +66,22 @@ public class OCPNewDataSourceWizard extends Wizard implements Scenario {
 			} else {
 				p.setProperty("network.type", "private");
 			}
-			((OCPDataSource) w.ds).setProperties(p);
+			
 
 			if (bIsFirstAgent) {
 				// TODO: review this later...
 				// merge this with ocp file
 				// prefix property name with network.
 				NetworkWizardPage networkPage = (NetworkWizardPage) getPage("networkPage");
-				Properties np = new Properties();
-				np.setProperty("hash", networkPage.messageDigestCombo.getText());
-				np.setProperty("PKAlgo",
+				p.setProperty("network.hash", networkPage.messageDigestCombo.getText());
+				p.setProperty("network.PKAlgo",
 						networkPage.asymmetricAlgoCombo.getText());
-				np.setProperty("backupNbr", networkPage.backupNbrText.getText());
-				np.setProperty("SignatureAlgo", "SHA1withDSA");
-				np.setProperty("user.cipher.algo", "PBEWithMD5AndDES");
-
-				JLG.storeConfig(np, "network.properties");
+				p.setProperty("network.backupNbr", networkPage.backupNbrText.getText());
+				p.setProperty("network.SignatureAlgo", "SHA1withDSA");
+				p.setProperty("network.user.cipher.algo", "PBEWithMD5AndDES");
 
 			}
+			((OCPDataSource) w.ds).setProperties(p);
 		} catch (Exception e) {
 			JLG.error(e);
 			QuickMessage.error(getShell(), e.getMessage());

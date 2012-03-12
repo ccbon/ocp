@@ -10,6 +10,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.Arrays;
+import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.NavigableMap;
@@ -150,8 +151,7 @@ public class OCPAgent extends DSPAgent implements Authenticable {
 		if (isFirstAgent()) {
 			JLG.debug("This is the first agent on the network");
 			if (network == null) {
-				network = new Properties();
-				network.load(new FileInputStream(NETWORK_PROPERTIES_FILE));
+				network = getNetworkProperties();
 			}
 		} else {
 			// even if network is not null...
@@ -202,6 +202,19 @@ public class OCPAgent extends DSPAgent implements Authenticable {
 			addContact(myself);
 
 		}
+	}
+
+	private Properties getNetworkProperties() {
+		Properties p = new Properties();
+		for (Enumeration<?> e = cfg.propertyNames(); e.hasMoreElements();) {
+			String key = (String) e.nextElement();
+			if (key.startsWith("network.")) {
+				String networkKey = key.substring("network.".length());
+				JLG.debug("network key=" + networkKey);
+				p.setProperty(networkKey, cfg.getProperty(key));
+			}
+		}
+		return p;
 	}
 
 	@Override
