@@ -48,10 +48,6 @@ import org.ocpteam.layer.rsp.DataSource;
 import org.ocpteam.layer.rsp.FileSystem;
 import org.ocpteam.misc.JLG;
 import org.ocpteam.misc.swt.QuickMessage;
-import org.ocpteam.protocol.ftp.FTPDataSource;
-import org.ocpteam.protocol.ocp.OCPDataSource;
-import org.ocpteam.protocol.sftp.SFTPDataSource;
-import org.ocpteam.protocol.zip.ZipDataSource;
 
 public class DataSourceWindow extends ApplicationWindow implements
 		Functionality<Application> {
@@ -96,29 +92,6 @@ public class DataSourceWindow extends ApplicationWindow implements
 	public Application app;
 	public DataSourceFactory dsf;
 
-	/**
-	 * Launch the application.
-	 * 
-	 * @param args
-	 */
-	public static void main(String args[]) {
-		JLG.debug_on();
-		try {
-			Application app = new Application();
-			app.designer.add(DataSourceFactory.class);
-			DataSourceFactory dsf = app.designer.get(DataSourceFactory.class);
-			dsf.designer.add(OCPDataSource.class);
-			dsf.designer.add(FTPDataSource.class);
-			dsf.designer.add(SFTPDataSource.class);
-			dsf.designer.add(ZipDataSource.class);
-
-			app.designer.add(DataSourceWindow.class);
-
-			app.designer.get(DataSourceWindow.class).start();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
 
 	/**
 	 * Create the application window.
@@ -219,6 +192,7 @@ public class DataSourceWindow extends ApplicationWindow implements
 		while (it.hasNext()) {
 			DataSource ds = it.next();
 			String protocol = ds.getProtocol();
+			JLG.debug("ds=" + ds.getClass());
 			newDataSourceActionMap.put(protocol, new NewDataSourceAction(this,
 					protocol));
 		}

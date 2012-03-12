@@ -44,9 +44,24 @@ public class Designer<P> {
 			map.put((Class<Functionality<P>>) functionality, instance);
 		}
 	}
+	
+	@SuppressWarnings("unchecked")
+	public <T extends Functionality<P>> void replace(Class<T> functionality, T instance) throws Exception {
+		if (map.containsKey(functionality)) {
+			instance.setParent(parent);
+			map.put((Class<Functionality<P>>) functionality, instance);
+		}  else {
+			throw new Exception("functionality not existing");
+		}
+	}
 
 	public Iterator<Functionality<P>> iterator() {
 		return map.values().iterator();
+	}
+
+	@SuppressWarnings("unchecked")
+	public <T extends Functionality<P>> T remove(Class<T> functionality) {
+		return (T) map.remove(functionality);
 	}
 
 
