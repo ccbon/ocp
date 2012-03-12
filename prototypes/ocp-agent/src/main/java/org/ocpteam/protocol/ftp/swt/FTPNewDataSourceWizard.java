@@ -8,6 +8,7 @@ import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
+import org.ocpteam.protocol.ftp.FTPDataSource;
 import org.ocpteam.ui.swt.DataSourceWindow;
 import org.ocpteam.ui.swt.Scenario;
 
@@ -27,12 +28,19 @@ public class FTPNewDataSourceWizard extends Wizard implements Scenario {
 	@Override
 	public boolean performFinish() {
 		try {
+			w.ds = new FTPDataSource();
 			URI uri = new URI("ftp://" + p1.serverHostnameText.getText() + ":" + p1.portText.getText() + p1.defaultLocalDirText.getText());
 			w.ds.setURI(uri);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return true;
+	}
+	
+	@Override
+	public boolean performCancel() {
+		w.ds = null;
+		return super.performCancel();
 	}
 
 	public boolean canFinish() {

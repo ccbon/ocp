@@ -24,26 +24,6 @@ public abstract class DataSource implements Functionality<DataSourceFactory> {
 	public static ResourceBundle extensionResource = ResourceBundle
 			.getBundle("extensions");
 
-	private static ResourceBundle getResource(String protocol, String subpackage)
-			throws Exception {
-		String agentClassString = protocolResource.getString(protocol
-				.toUpperCase());
-		String packageString = Class.forName(agentClassString).getPackage()
-				.getName()
-				+ "." + subpackage.toLowerCase();
-		String resourceClassString = packageString + "."
-				+ protocol.toUpperCase() + subpackage.toUpperCase()
-				+ "Resource";
-		JLG.debug("class=" + resourceClassString);
-		return (ResourceBundle) Class.forName(resourceClassString)
-				.newInstance();
-	}
-	
-
-
-
-	
-
 	private URI uri;
 	private Agent agent;
 	private File file;
@@ -122,6 +102,14 @@ public abstract class DataSource implements Functionality<DataSourceFactory> {
 	}
 	
 	public ResourceBundle getResource(String subpackage) throws Exception {
-		return DataSource.getResource(getProtocol(), subpackage);
+		String packageString = this.getClass().getPackage()
+				.getName()
+				+ "." + subpackage.toLowerCase();
+		String resourceClassString = packageString + "."
+				+ getProtocol().toUpperCase() + subpackage.toUpperCase()
+				+ "Resource";
+		JLG.debug("class=" + resourceClassString);
+		return (ResourceBundle) Class.forName(resourceClassString)
+				.newInstance();
 	}
 }

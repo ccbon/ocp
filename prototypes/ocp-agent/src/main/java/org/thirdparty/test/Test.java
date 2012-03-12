@@ -25,22 +25,6 @@ public class Test {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
-		try {
-			Application app = new Application();
-			app.designer.add(DataSourceFactory.class);
-			app.designer.add(DataSourceWindow.class);
-			
-			DataSourceFactory dsf = app.designer.get(DataSourceFactory.class);
-			dsf.designer.add(OCPDataSource.class);
-			dsf.designer.add(OCP2DataSource.class);
-			dsf.designer.get(OCP2DataSource.class).designer.add(PersistentMap.class, new ThirdPartyPersistentMap());
-			
-			app.designer.get(DataSourceWindow.class).start();
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 
 	}
 }

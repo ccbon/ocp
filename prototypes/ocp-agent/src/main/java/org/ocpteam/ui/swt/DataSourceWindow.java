@@ -53,7 +53,8 @@ import org.ocpteam.protocol.ocp.OCPDataSource;
 import org.ocpteam.protocol.sftp.SFTPDataSource;
 import org.ocpteam.protocol.zip.ZipDataSource;
 
-public class DataSourceWindow extends ApplicationWindow implements Functionality<Application> {
+public class DataSourceWindow extends ApplicationWindow implements
+		Functionality<Application> {
 
 	public static final int ON_DS_CLOSE = 0;
 	OpenDataSourceAction openDataSourceAction;
@@ -92,7 +93,8 @@ public class DataSourceWindow extends ApplicationWindow implements Functionality
 	private DynamicMenuManager protocolMenu;
 	private TrayItem item;
 	private Map<Integer, List<Listener>> listenerMap;
-	protected Application app;
+	public Application app;
+	public DataSourceFactory dsf;
 
 	/**
 	 * Launch the application.
@@ -110,10 +112,8 @@ public class DataSourceWindow extends ApplicationWindow implements Functionality
 			dsf.designer.add(SFTPDataSource.class);
 			dsf.designer.add(ZipDataSource.class);
 
-			
 			app.designer.add(DataSourceWindow.class);
-			
-			
+
 			app.designer.get(DataSourceWindow.class).start();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -126,8 +126,9 @@ public class DataSourceWindow extends ApplicationWindow implements Functionality
 	public DataSourceWindow() {
 		super(null);
 	}
-	
+
 	public void init() {
+		this.dsf = app.designer.get(DataSourceFactory.class);
 		createActions();
 		addToolBar(SWT.FLAT | SWT.WRAP);
 		addMenuBar();
@@ -141,12 +142,12 @@ public class DataSourceWindow extends ApplicationWindow implements Functionality
 		closeDataSourceAction.setEnabled(ds != null);
 		saveDataSourceAction.setEnabled(ds != null);
 		saveAsDataSourceAction.setEnabled(ds != null);
-		signInAction.setEnabled(ds != null && ds.designer.uses(Authentication.class)
-				&& context == null);
-		signOutAction.setEnabled(ds != null && ds.designer.uses(Authentication.class)
-				&& context != null);
-		newUserAction.setEnabled(ds != null && ds.designer.uses(Authentication.class)
-				&& context == null
+		signInAction.setEnabled(ds != null
+				&& ds.designer.uses(Authentication.class) && context == null);
+		signOutAction.setEnabled(ds != null
+				&& ds.designer.uses(Authentication.class) && context != null);
+		newUserAction.setEnabled(ds != null
+				&& ds.designer.uses(Authentication.class) && context == null
 				&& ds.designer.get(Authentication.class).allowsUserCreation());
 
 		viewExplorerAction.setEnabled(context != null);
@@ -214,7 +215,7 @@ public class DataSourceWindow extends ApplicationWindow implements Functionality
 		openDataSourceAction = new OpenDataSourceAction(this);
 		closeDataSourceAction = new CloseDataSourceAction(this);
 		newDataSourceActionMap = new HashMap<String, NewDataSourceAction>();
-		Iterator<DataSource> it = app.designer.get(DataSourceFactory.class).getDataSourceIterator();
+		Iterator<DataSource> it = dsf.getDataSourceIterator();
 		while (it.hasNext()) {
 			DataSource ds = it.next();
 			String protocol = ds.getProtocol();
@@ -605,14 +606,13 @@ public class DataSourceWindow extends ApplicationWindow implements Functionality
 	@Override
 	public void setParent(Application parent) {
 		this.app = parent;
-		
+
 	}
 
 	public void start() {
 		init();
 		setBlockOnOpen(true);
 		open();
-		//Display.getCurrent().dispose();	
+		Display.getCurrent().dispose();
 	}
-
 }

@@ -11,6 +11,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.ocpteam.functionality.Authentication;
 import org.ocpteam.misc.JLG;
 import org.ocpteam.misc.swt.QuickMessage;
+import org.ocpteam.protocol.sftp.SFTPDataSource;
 import org.ocpteam.protocol.sftp.SSHChallenge;
 import org.ocpteam.ui.swt.DataSourceWindow;
 import org.ocpteam.ui.swt.Scenario;
@@ -34,6 +35,7 @@ public class SFTPNewDataSourceWizard extends Wizard implements Scenario {
 	public boolean performFinish() {
 		JLG.debug("sign in user");
 		try {
+			w.ds = new SFTPDataSource();
 			SSHChallenge c = new SSHChallenge();
 			c.setDefaultLocalDir(p1.dirText.getText());
 			if (p1.bIsPassword) {
@@ -60,6 +62,13 @@ public class SFTPNewDataSourceWizard extends Wizard implements Scenario {
 
 		return true;
 	}
+	
+	@Override
+	public boolean performCancel() {
+		w.ds = null;
+		return super.performCancel();
+	}
+
 
 	public boolean canFinish() {
 		return p1.isPageComplete();
