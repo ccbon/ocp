@@ -26,9 +26,9 @@ public abstract class DSPAgent extends Agent {
 		if (cfg == null) {
 			JLG.debug("p is null");
 		}
-		String s = cfg.getProperty("server", "no");
+		String s = cfg.getProperty("server", "yes");
 		return s.equalsIgnoreCase("yes")
-				&& cfg.getProperty("server.isFirstAgent", "no").equalsIgnoreCase(
+				&& cfg.getProperty("server.isFirstAgent", "yes").equalsIgnoreCase(
 						"yes");
 	}
 

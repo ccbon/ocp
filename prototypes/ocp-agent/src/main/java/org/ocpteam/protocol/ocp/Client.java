@@ -144,7 +144,7 @@ public class Client {
 
 	private Iterator<String> getPotentialSponsorIterator() throws Exception {
 		List<String> list = new LinkedList<String>();
-		if (agent.cfg.getProperty("network.type", "public").equalsIgnoreCase(
+		if (agent.cfg.getProperty("network.type", "private").equalsIgnoreCase(
 				"public")) {
 			try {
 				XmlRpcClientConfigImpl config = new XmlRpcClientConfigImpl();

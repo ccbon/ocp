@@ -20,11 +20,13 @@ public class Server {
 		try {
 			this.agent = agent;
 			
+			boolean bFound = false;
 			listenerList = new ArrayList<Listener>();
 			Iterator<String> it = agent.cfg.stringPropertyNames().iterator();
 			while (it.hasNext()) {
 				String key = it.next();
 				if (key.startsWith("server.listener.")) {
+					bFound = true;
 					URL url = new URL(agent.cfg.getProperty(key));
 					String sProtocol = url.getProtocol();
 					Listener listener = null;
@@ -38,6 +40,9 @@ public class Server {
 					listenerList.add(listener);
 				}
 
+			}
+			if (bFound == false) {
+				listenerList.add(new TCPListener(agent, new URL("tcp://localhost:22222")));
 			}
 		} catch (Exception e) {
 			throw new JLGException(e);

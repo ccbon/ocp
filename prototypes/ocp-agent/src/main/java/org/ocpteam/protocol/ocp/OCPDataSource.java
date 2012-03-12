@@ -1,7 +1,5 @@
 package org.ocpteam.protocol.ocp;
 
-import java.io.File;
-
 import org.ocpteam.functionality.Authentication;
 import org.ocpteam.functionality.ContactMap;
 import org.ocpteam.functionality.NaivePersistentMap;
@@ -18,10 +16,6 @@ public class OCPDataSource extends PropertiesDataSource {
 		designer.add(Server.class);
 		designer.add(ContactMap.class);
 		designer.add(PersistentMap.class, new NaivePersistentMap());
-	}
-	
-	public OCPDataSource(File file) {
-		setFile(file);
 	}
 
 	@Override
