@@ -8,7 +8,7 @@ public class SFTPDataSource extends PropertiesDataSource {
 
 	public SFTPDataSource() throws Exception {
 		super();
-		designer.add(Authentication.class);
+		getDesigner().add(Authentication.class);
 	}
 
 	@Override

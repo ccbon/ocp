@@ -12,20 +12,20 @@ public class DefaultApplication extends Application {
 
 	public DefaultApplication() throws Exception {
 		super();
-		designer.add(DataSourceFactory.class);
-		DataSourceFactory dsf = designer.get(DataSourceFactory.class);
-		dsf.designer.add(OCPDataSource.class);
-		dsf.designer.add(FTPDataSource.class);
-		dsf.designer.add(SFTPDataSource.class);
-		dsf.designer.add(ZipDataSource.class);
+		getDesigner().add(DataSourceFactory.class);
+		DataSourceFactory dsf = getDesigner().get(DataSourceFactory.class);
+		dsf.getDesigner().add(OCPDataSource.class);
+		dsf.getDesigner().add(FTPDataSource.class);
+		dsf.getDesigner().add(SFTPDataSource.class);
+		dsf.getDesigner().add(ZipDataSource.class);
 
-		designer.add(DataSourceWindow.class);
+		getDesigner().add(DataSourceWindow.class);
 	}
 	
 	public void start() {
 		JLG.debug_on();
 		try {
-			designer.get(DataSourceWindow.class).start();
+			getDesigner().get(DataSourceWindow.class).start();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

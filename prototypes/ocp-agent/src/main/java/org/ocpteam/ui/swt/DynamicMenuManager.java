@@ -1,9 +1,8 @@
 package org.ocpteam.ui.swt;
 
 import org.eclipse.jface.action.MenuManager;
-import org.ocpteam.design.Functionality;
 
-public abstract class DynamicMenuManager extends MenuManager implements Functionality<DataSourceWindow> {
+public abstract class DynamicMenuManager extends MenuManager {
 	
 	protected DataSourceWindow w;
 
@@ -13,10 +12,8 @@ public abstract class DynamicMenuManager extends MenuManager implements Function
 
 	public abstract void init();
 
-	@Override
 	public void setParent(DataSourceWindow parent) {
 		this.w = parent;
-		
 	}
 
 }

@@ -1,5 +1,5 @@
 package org.ocpteam.design;
 
-public interface Functionality<P> {
-	public void setParent(P parent);
+public interface Functionality {
+	public void setParent(Container parent);
 }

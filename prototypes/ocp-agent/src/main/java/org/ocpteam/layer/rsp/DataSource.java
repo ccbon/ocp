@@ -5,19 +5,25 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.ResourceBundle;
 
+import org.ocpteam.design.Container;
 import org.ocpteam.design.Designer;
 import org.ocpteam.design.Functionality;
-import org.ocpteam.functionality.DataSourceFactory;
 import org.ocpteam.misc.JLG;
 
-public abstract class DataSource implements Functionality<DataSourceFactory> {
+public abstract class DataSource implements Container, Functionality {
 
-	public DataSourceFactory dsf;
+	public Container parent;
+	private Designer designer;
 
 	@Override
-	public void setParent(DataSourceFactory parent) {
-		this.dsf = parent;
+	public void setParent(Container parent) {
+		this.parent = parent;
 	}
+	
+	@Override
+	public Designer getDesigner() {
+		return designer;
+	};
 
 	public static ResourceBundle protocolResource = ResourceBundle
 			.getBundle("protocols");
@@ -30,10 +36,10 @@ public abstract class DataSource implements Functionality<DataSourceFactory> {
 
 	private boolean bIsTempFile = false;
 	
-	public Designer<DataSource> designer;
+	
 	
 	public DataSource() {
-		designer = new Designer<DataSource>(this);
+		designer = new Designer(this);
 	}
 
 	public Agent getAgent() {

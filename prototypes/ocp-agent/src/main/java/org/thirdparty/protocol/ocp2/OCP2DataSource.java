@@ -10,7 +10,7 @@ public class OCP2DataSource extends OCPDataSource {
 
 	public OCP2DataSource() throws Exception {
 		super();
-		designer.add(PersistentMap.class, new ThirdPartyPersistentMap());
+		getDesigner().add(PersistentMap.class, new ThirdPartyPersistentMap());
 	}
 	
 	@Override

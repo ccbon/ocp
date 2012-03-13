@@ -8,31 +8,36 @@ import java.util.List;
 import java.util.Properties;
 import java.util.ResourceBundle;
 
-import org.ocpteam.core.Application;
+import org.ocpteam.design.Container;
 import org.ocpteam.design.Designer;
 import org.ocpteam.design.Functionality;
 import org.ocpteam.layer.rsp.DataSource;
 import org.ocpteam.misc.JLG;
 
-public class DataSourceFactory implements Functionality<Application> {
+public class DataSourceFactory implements Container, Functionality {
 
-	protected Application app;
-	public Designer<DataSourceFactory> designer;
+	protected Container parent;
+	private Designer designer;
 	
 	public DataSourceFactory() {
-		this.designer = new Designer<DataSourceFactory>(this);
+		this.designer = new Designer(this);
 	}
 
 	@Override
-	public void setParent(Application parent) {
-		this.app = parent;
+	public Designer getDesigner() {
+		return designer;
+	}
+
+	@Override
+	public void setParent(Container parent) {
+		this.parent = parent;
 	}
 
 	public Iterator<DataSource> getDataSourceIterator() {
 		List<DataSource> l = new LinkedList<DataSource>();
-		Iterator<Functionality<DataSourceFactory>> it = designer.iterator();
+		Iterator<Functionality> it = designer.iterator();
 		while (it.hasNext()) {
-			Functionality<DataSourceFactory> functionality = it.next();
+			Functionality functionality = it.next();
 			if (functionality instanceof DataSource) {
 				l.add((DataSource) functionality);
 			}
@@ -90,6 +95,5 @@ public class DataSourceFactory implements Functionality<Application> {
 		}
 		throw new Exception("protocol not understood: " + protocol);
 	}
-
 
 }

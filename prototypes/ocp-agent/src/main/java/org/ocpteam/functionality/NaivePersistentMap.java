@@ -1,15 +1,15 @@
 package org.ocpteam.functionality;
 
-import org.ocpteam.layer.rsp.DataSource;
+import org.ocpteam.design.Container;
 import org.ocpteam.misc.PersistentFileMap;
 
 
 public class NaivePersistentMap extends PersistentFileMap implements PersistentMap {
 
-	public DataSource parent;
+	public Container parent;
 
 	@Override
-	public void setParent(DataSource parent) {
+	public void setParent(Container parent) {
 		this.parent = parent;
 	}
 

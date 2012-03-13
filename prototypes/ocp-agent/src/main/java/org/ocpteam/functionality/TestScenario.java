@@ -1,15 +1,15 @@
 package org.ocpteam.functionality;
 
-import org.ocpteam.core.Application;
+import org.ocpteam.design.Container;
 import org.ocpteam.design.Functionality;
 
-public abstract class TestScenario implements Functionality<Application> {
+public abstract class TestScenario implements Functionality {
 
-	protected Application app;
+	protected Container parent;
 
 	@Override
-	public void setParent(Application parent) {
-		this.app = parent;
+	public void setParent(Container parent) {
+		this.parent = parent;
 	}
 	
 	public abstract boolean test();

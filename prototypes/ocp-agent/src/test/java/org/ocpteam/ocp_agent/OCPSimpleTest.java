@@ -1,6 +1,6 @@
 package org.ocpteam.ocp_agent;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
 import org.ocpteam.core.Application;
 import org.ocpteam.functionality.DataSourceFactory;
@@ -13,12 +13,12 @@ public class OCPSimpleTest extends TestScenario {
 	public void simple() {
 		try {
 			Application app = new Application();
-			app.designer.add(DataSourceFactory.class);
-			DataSourceFactory dsf = app.designer.get(DataSourceFactory.class);
-			dsf.designer.add(OCPDataSource.class);
-			app.designer.add(TestScenario.class, new OCPSimpleTest());
+			app.getDesigner().add(DataSourceFactory.class);
+			DataSourceFactory dsf = app.getDesigner().get(DataSourceFactory.class);
+			dsf.getDesigner().add(OCPDataSource.class);
+			app.getDesigner().add(TestScenario.class, new OCPSimpleTest());
 
-			assertTrue(app.designer.get(TestScenario.class).test());
+			assertTrue(app.getDesigner().get(TestScenario.class).test());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -28,7 +28,7 @@ public class OCPSimpleTest extends TestScenario {
 	public boolean test() {
 		try {
 			System.out.println("Hello Test Scenario");
-			DataSourceFactory dsf = app.designer.get(DataSourceFactory.class);
+			DataSourceFactory dsf = parent.getDesigner().get(DataSourceFactory.class);
 			OCPDataSource ds = (OCPDataSource) dsf.getInstance("OCP");
 			ds.open();
 			ds.close();

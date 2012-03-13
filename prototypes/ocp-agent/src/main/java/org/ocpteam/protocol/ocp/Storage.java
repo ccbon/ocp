@@ -22,7 +22,7 @@ public class Storage {
 				"storage.dir",
 				System.getenv("TEMP") + "/ocp_agent_storage/"
 						+ agent.getName());
-		PersistentMap persistentMap = agent.ds.designer.get(PersistentMap.class);
+		PersistentMap persistentMap = agent.ds.getDesigner().get(PersistentMap.class);
 		persistentMap.setRoot(root);
 		contentMap = persistentMap;
 		this.agent = agent;

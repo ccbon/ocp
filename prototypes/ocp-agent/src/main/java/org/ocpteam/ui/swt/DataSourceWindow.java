@@ -37,7 +37,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Tray;
 import org.eclipse.swt.widgets.TrayItem;
 import org.eclipse.wb.swt.SWTResourceManager;
-import org.ocpteam.core.Application;
+import org.ocpteam.design.Container;
 import org.ocpteam.design.Functionality;
 import org.ocpteam.functionality.Authentication;
 import org.ocpteam.functionality.DataSourceFactory;
@@ -50,7 +50,7 @@ import org.ocpteam.misc.JLG;
 import org.ocpteam.misc.swt.QuickMessage;
 
 public class DataSourceWindow extends ApplicationWindow implements
-		Functionality<Application> {
+		Functionality {
 
 	public static final int ON_DS_CLOSE = 0;
 	OpenDataSourceAction openDataSourceAction;
@@ -89,7 +89,7 @@ public class DataSourceWindow extends ApplicationWindow implements
 	private DynamicMenuManager protocolMenu;
 	private TrayItem item;
 	private Map<Integer, List<Listener>> listenerMap;
-	public Application app;
+	public Container app;
 	public DataSourceFactory dsf;
 
 
@@ -101,7 +101,7 @@ public class DataSourceWindow extends ApplicationWindow implements
 	}
 
 	public void init() {
-		this.dsf = app.designer.get(DataSourceFactory.class);
+		this.dsf = app.getDesigner().get(DataSourceFactory.class);
 		createActions();
 		addToolBar(SWT.FLAT | SWT.WRAP);
 		addMenuBar();
@@ -116,12 +116,12 @@ public class DataSourceWindow extends ApplicationWindow implements
 		saveDataSourceAction.setEnabled(ds != null);
 		saveAsDataSourceAction.setEnabled(ds != null);
 		signInAction.setEnabled(ds != null
-				&& ds.designer.uses(Authentication.class) && context == null);
+				&& ds.getDesigner().uses(Authentication.class) && context == null);
 		signOutAction.setEnabled(ds != null
-				&& ds.designer.uses(Authentication.class) && context != null);
+				&& ds.getDesigner().uses(Authentication.class) && context != null);
 		newUserAction.setEnabled(ds != null
-				&& ds.designer.uses(Authentication.class) && context == null
-				&& ds.designer.get(Authentication.class).allowsUserCreation());
+				&& ds.getDesigner().uses(Authentication.class) && context == null
+				&& ds.getDesigner().get(Authentication.class).allowsUserCreation());
 
 		viewExplorerAction.setEnabled(context != null);
 
@@ -410,8 +410,8 @@ public class DataSourceWindow extends ApplicationWindow implements
 	}
 
 	private boolean isDaemon() {
-		if (ds.designer.uses(Server.class)) {
-			return ds.designer.get(Server.class).isStarted();
+		if (ds.getDesigner().uses(Server.class)) {
+			return ds.getDesigner().get(Server.class).isStarted();
 		} else {
 			return false;
 		}
@@ -441,8 +441,8 @@ public class DataSourceWindow extends ApplicationWindow implements
 			context = agent.getContext();
 			if (context != null) {
 				viewExplorerAction.run();
-			} else if (ds.designer.uses(Authentication.class)) {
-				if (ds.designer.get(Authentication.class).canLogin()) {
+			} else if (ds.getDesigner().uses(Authentication.class)) {
+				if (ds.getDesigner().get(Authentication.class).canLogin()) {
 					signIn();
 				} else {
 					signInAction.run();
@@ -551,7 +551,7 @@ public class DataSourceWindow extends ApplicationWindow implements
 	}
 
 	public void signIn() throws Exception {
-		ds.designer.get(Authentication.class).login();
+		ds.getDesigner().get(Authentication.class).login();
 		context = agent.getContext();
 		if (context != null) {
 			viewExplorerAction.run();
@@ -560,7 +560,7 @@ public class DataSourceWindow extends ApplicationWindow implements
 
 	public void signOut() throws Exception {
 		context = null;
-		ds.designer.get(Authentication.class).logout();
+		ds.getDesigner().get(Authentication.class).logout();
 	}
 
 	public String getHelpURL() {
@@ -578,7 +578,7 @@ public class DataSourceWindow extends ApplicationWindow implements
 	}
 
 	@Override
-	public void setParent(Application parent) {
+	public void setParent(Container parent) {
 		this.app = parent;
 
 	}

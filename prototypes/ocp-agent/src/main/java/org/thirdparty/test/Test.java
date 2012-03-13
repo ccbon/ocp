@@ -11,9 +11,9 @@ public class Test {
 	public static void main(String[] args) {
 		try {
 			DefaultApplication app = new DefaultApplication();
-			DataSourceFactory dsf = app.designer.get(DataSourceFactory.class);
-			dsf.designer.replace(OCPDataSource.class, new OCP2DataSource());
-			dsf.designer.remove(FTPDataSource.class);
+			DataSourceFactory dsf = app.getDesigner().get(DataSourceFactory.class);
+			dsf.getDesigner().replace(OCPDataSource.class, new OCP2DataSource());
+			dsf.getDesigner().remove(FTPDataSource.class);
 			JLG.debug_on();
 			JLG.debug("test");
 			app.start();

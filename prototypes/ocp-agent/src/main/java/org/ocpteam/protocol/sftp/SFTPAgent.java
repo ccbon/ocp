@@ -36,7 +36,7 @@ public class SFTPAgent extends Agent implements Authenticable {
 	@Override
 	public void login() throws Exception {
 		try {
-			Authentication a = ds.designer.get(Authentication.class);
+			Authentication a = ds.getDesigner().get(Authentication.class);
 			String login = a.getLogin();
 			Object challenge = a.getChallenge();
 			String[] array = login.split("@");

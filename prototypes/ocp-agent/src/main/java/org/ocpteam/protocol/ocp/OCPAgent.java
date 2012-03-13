@@ -2,7 +2,6 @@ package org.ocpteam.protocol.ocp;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.Serializable;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
@@ -278,7 +277,7 @@ public class OCPAgent extends DSPAgent implements Authenticable {
 		}
 		result += "Contacts:" + JLG.NL;
 		synchronized (this) {
-			ContactMap contactMap = ds.designer.get(ContactMap.class);
+			ContactMap contactMap = ds.getDesigner().get(ContactMap.class);
 			Iterator<Id> it = contactMap.keySet().iterator();
 			while (it.hasNext()) {
 				Id id = (Id) it.next();
@@ -611,7 +610,7 @@ public class OCPAgent extends DSPAgent implements Authenticable {
 		OCPUser user = new OCPUser(this, login, backupNbr);
 		UserPublicInfo upi = user.getPublicInfo(this);
 
-		ContactMap contactMap = ds.designer.get(ContactMap.class);
+		ContactMap contactMap = ds.getDesigner().get(ContactMap.class);
 		Contact contact = contactMap.getContact(captcha.contactId);
 
 		// 1) create the public part of the user.
@@ -639,7 +638,7 @@ public class OCPAgent extends DSPAgent implements Authenticable {
 	@Override
 	public void login() throws Exception {
 		try {
-			Authentication a = ds.designer.get(Authentication.class);
+			Authentication a = ds.getDesigner().get(Authentication.class);
 			String password = (String) a.getChallenge();
 			String login = a.getLogin();
 			Id key = hash(ucrypt(password, (login + password).getBytes()));
@@ -757,7 +756,7 @@ public class OCPAgent extends DSPAgent implements Authenticable {
 	}
 
 	public void addContact(Contact contact) throws Exception {
-		ContactMap contactMap = ds.designer.get(ContactMap.class);
+		ContactMap contactMap = ds.getDesigner().get(ContactMap.class);
 		contactMap.put(contact.id, contact);
 		OCPContact c = (OCPContact) contact;
 		if (c.nodeIdSet.size() == 0) {
@@ -772,7 +771,7 @@ public class OCPAgent extends DSPAgent implements Authenticable {
 	}
 
 	public Contact removeContact(Contact contact) {
-		ContactMap contactMap = ds.designer.get(ContactMap.class);
+		ContactMap contactMap = ds.getDesigner().get(ContactMap.class);
 		OCPContact c = (OCPContact) contactMap.remove(contact.id);
 		try {
 			Iterator<Id> it = c.nodeIdSet.iterator();

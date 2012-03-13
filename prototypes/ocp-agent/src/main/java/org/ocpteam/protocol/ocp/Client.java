@@ -85,7 +85,7 @@ public class Client {
 	}
 
 	public Response request(byte[] string) throws Exception {
-		ContactMap contactMap = agent.ds.designer.get(ContactMap.class);
+		ContactMap contactMap = agent.ds.getDesigner().get(ContactMap.class);
 		if (contactMap.isEmpty()) {
 			findSponsor();
 		}
@@ -100,7 +100,7 @@ public class Client {
 	private Response request(Queue<Contact> contactQueue, byte[] input)
 			throws Exception {
 		byte[] output = null;
-		ContactMap contactMap = agent.ds.designer.get(ContactMap.class);
+		ContactMap contactMap = agent.ds.getDesigner().get(ContactMap.class);
 		if (contactMap.isEmpty()) {
 			findSponsor();
 		}
@@ -136,7 +136,7 @@ public class Client {
 				JLG.warn("channel not pingable: " + channel);
 			}
 		}
-		ContactMap contactMap = agent.ds.designer.get(ContactMap.class);
+		ContactMap contactMap = agent.ds.getDesigner().get(ContactMap.class);
 		if (contactMap.isEmpty()) {
 			throw new Exception("no pingable sponsor found.");
 		}
@@ -198,7 +198,7 @@ public class Client {
 	private void detach(Contact contact) throws Exception {
 		// tell to your contacts this contact has disappeared.
 		synchronized (agent) {
-			ContactMap contactMap = agent.ds.designer.get(ContactMap.class);
+			ContactMap contactMap = agent.ds.getDesigner().get(ContactMap.class);
 			if (!contactMap.containsValue(contact)) {
 				return;
 			}
@@ -211,7 +211,7 @@ public class Client {
 		// tell all your contact of what happened
 
 		Set<Contact> contactToBeDetached = new HashSet<Contact>();
-		ContactMap contactMap = agent.ds.designer.get(ContactMap.class);
+		ContactMap contactMap = agent.ds.getDesigner().get(ContactMap.class);
 		Iterator<Contact> itc = contactMap.getContactSnapshotList().iterator();
 		while (itc.hasNext()) {
 			Contact c = itc.next();

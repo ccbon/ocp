@@ -82,7 +82,7 @@ public class NewUserCaptchaWizardPage extends WizardPage {
 			OCPAgent agent = (OCPAgent) wizard.getAgent();
 			agent.createUser(wizard.getUsername(), wizard.getPassword(), 2,
 					wizard.getCaptcha(), captchaAnswerText.getText());
-			Authentication auth = wizard.window.ds.designer.get(Authentication.class);
+			Authentication auth = wizard.window.ds.getDesigner().get(Authentication.class);
 			auth.setLogin(wizard.getUsername());
 			auth.setChallenge(wizard.getPassword());
 			wizard.window.signIn();

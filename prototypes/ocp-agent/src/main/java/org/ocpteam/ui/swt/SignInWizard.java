@@ -46,7 +46,7 @@ public class SignInWizard extends Wizard {
 	public boolean performFinish() {
 		JLG.debug("sign in user");
 		try {
-			Authentication a = window.ds.designer.get(Authentication.class);
+			Authentication a = window.ds.getDesigner().get(Authentication.class);
 			a.setLogin(p1.usernameText.getText());
 			a.setChallenge(p1.passwordText.getText());
 			window.signIn();

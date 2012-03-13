@@ -10,7 +10,7 @@ public class FTPDataSource extends DataSource {
 
 	public FTPDataSource() throws Exception {
 		super();
-		designer.add(Authentication.class);
+		getDesigner().add(Authentication.class);
 	}
 
 	public FTPDataSource(URI uri) {

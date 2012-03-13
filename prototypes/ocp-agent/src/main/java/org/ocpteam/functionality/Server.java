@@ -2,16 +2,16 @@ package org.ocpteam.functionality;
 
 import java.util.Properties;
 
+import org.ocpteam.design.Container;
 import org.ocpteam.design.Functionality;
-import org.ocpteam.layer.rsp.DataSource;
 import org.ocpteam.layer.rsp.PropertiesDataSource;
 
-public class Server implements Functionality<DataSource> {
+public class Server implements Functionality {
 
 	private PropertiesDataSource parent;
 
 	@Override
-	public void setParent(DataSource parent) {
+	public void setParent(Container parent) {
 		this.parent = (PropertiesDataSource) parent;
 	}
 

@@ -12,10 +12,10 @@ public class OCPDataSource extends PropertiesDataSource {
 
 	public OCPDataSource() throws Exception {
 		super();
-		designer.add(Authentication.class, new OCPAuthentication());
-		designer.add(Server.class);
-		designer.add(ContactMap.class);
-		designer.add(PersistentMap.class, new NaivePersistentMap());
+		getDesigner().add(Authentication.class, new OCPAuthentication());
+		getDesigner().add(Server.class);
+		getDesigner().add(ContactMap.class);
+		getDesigner().add(PersistentMap.class, new NaivePersistentMap());
 	}
 
 	@Override

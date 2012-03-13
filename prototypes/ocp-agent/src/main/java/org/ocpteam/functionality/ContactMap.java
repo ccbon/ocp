@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.ocpteam.design.Container;
 import org.ocpteam.design.Functionality;
 import org.ocpteam.layer.dsp.Contact;
 import org.ocpteam.layer.rsp.DataSource;
@@ -11,14 +12,14 @@ import org.ocpteam.misc.Id;
 import org.ocpteam.protocol.ocp.OCPAgent;
 import org.ocpteam.protocol.ocp.Protocol;
 
-public class ContactMap extends HashMap<Id, Contact> implements Functionality<DataSource> {
+public class ContactMap extends HashMap<Id, Contact> implements Functionality {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	private DataSource parent;
+	private Container parent;
 
 	public Contact getContact(Id contactId) throws Exception {
 		Contact contact = get(contactId);
@@ -30,14 +31,14 @@ public class ContactMap extends HashMap<Id, Contact> implements Functionality<Da
 
 	
 	@Override
-	public void setParent(DataSource parent) {
+	public void setParent(Container parent) {
 		this.parent = parent;
 	}
 
 
 	public void refreshContactList() throws Exception {
 		// TODO: make independant of ocp by adding the P2P client functionality.
-		OCPAgent agent = (OCPAgent) parent.getAgent();
+		OCPAgent agent = (OCPAgent) ((DataSource) parent).getAgent();
 		agent.client.sendAll(Protocol.PING.getBytes());
 	}
 	

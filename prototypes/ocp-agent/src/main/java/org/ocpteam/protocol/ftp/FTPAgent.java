@@ -56,7 +56,7 @@ public class FTPAgent extends Agent implements Authenticable {
 			ftp.connect(hostname);
 		} catch (Exception e) {
 		}
-		Authentication a = ds.designer.get(Authentication.class);
+		Authentication a = ds.getDesigner().get(Authentication.class);
 		String login = a.getLogin();
 		String password = (String) a.getChallenge();
 		if (ftp.login(login, password)) {
