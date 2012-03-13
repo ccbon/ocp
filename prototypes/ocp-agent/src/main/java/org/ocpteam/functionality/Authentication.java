@@ -2,8 +2,8 @@ package org.ocpteam.functionality;
 
 import java.net.URI;
 
-import org.ocpteam.design.Container;
-import org.ocpteam.design.Functionality;
+import org.ocpteam.core.Container;
+import org.ocpteam.core.Functionality;
 import org.ocpteam.layer.rsp.Authenticable;
 import org.ocpteam.layer.rsp.User;
 import org.ocpteam.misc.JLG;
@@ -82,12 +82,12 @@ public class Authentication implements Functionality {
 	}
 
 	public void login() throws Exception {
-		Authenticable agent = (Authenticable) ds.getAgent();
+		Authenticable agent = (Authenticable) ds.getDesigner().get(Agent.class);
 		agent.login();
 	}
 
 	public void logout() throws Exception {
-		Authenticable agent = (Authenticable) ds.getAgent();
+		Authenticable agent = (Authenticable) ds.getDesigner().get(Agent.class);
 		agent.logout();
 		reset();
 	}

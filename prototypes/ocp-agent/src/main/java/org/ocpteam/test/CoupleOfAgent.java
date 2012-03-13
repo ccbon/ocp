@@ -19,7 +19,7 @@ public class CoupleOfAgent {
 			// start 2 agents
 			
 			OCPDataSource ds = new OCPDataSource();
-			OCPAgent a1 = (OCPAgent) ds.getAgent();
+			OCPAgent a1 = (OCPAgent) ds.getDesigner().get(Agent.class);
 			Properties p1 = ds.getProperties();
 			p1.setProperty("name", "Suzana");
 			p1.setProperty("server", "yes");
@@ -41,7 +41,7 @@ public class CoupleOfAgent {
 
 			// starting second agent
 			OCPDataSource ds2 = new OCPDataSource();
-			Agent a2 = ds2.getAgent();
+			Agent a2 = ds2.getDesigner().get(Agent.class);
 			Properties p2 = ds2.getProperties();
 			p2.setProperty("name", "Jean-Louis");
 			p2.setProperty("server", "yes");

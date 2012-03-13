@@ -1,7 +1,5 @@
 package org.ocpteam.core;
 
-import org.ocpteam.design.Container;
-import org.ocpteam.design.Designer;
 
 public class Application implements Container {
 	

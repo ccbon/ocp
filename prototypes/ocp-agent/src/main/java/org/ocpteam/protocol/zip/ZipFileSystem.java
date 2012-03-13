@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
-import org.ocpteam.design.Container;
+import org.ocpteam.core.Container;
 import org.ocpteam.functionality.DataSource;
 import org.ocpteam.functionality.FileSystem;
 import org.ocpteam.layer.rsp.FileInterface;

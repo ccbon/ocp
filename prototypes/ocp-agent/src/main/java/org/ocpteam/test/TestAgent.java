@@ -3,6 +3,7 @@ package org.ocpteam.test;
 import java.util.Iterator;
 import java.util.Properties;
 
+import org.ocpteam.functionality.Agent;
 import org.ocpteam.functionality.Authentication;
 import org.ocpteam.misc.JLG;
 import org.ocpteam.misc.JLGException;
@@ -24,7 +25,7 @@ public class TestAgent {
 			JLG.rm(System.getenv("TEMP") + "/ocp_agent_storage");
 			// start 2 agents
 			OCPDataSource ds1 = new OCPDataSource();
-			OCPAgent a1 = (OCPAgent) ds1.getAgent();
+			OCPAgent a1 = (OCPAgent) ds1.getDesigner().get(Agent.class);
 			Properties p1 = ds1.getProperties();
 			p1.setProperty("name", "Suzana");
 			p1.setProperty("server", "yes");
@@ -48,7 +49,7 @@ public class TestAgent {
 
 			// starting second agent
 			OCPDataSource ds2 = new OCPDataSource();
-			OCPAgent a2 = (OCPAgent) ds2.getAgent();
+			OCPAgent a2 = (OCPAgent) ds2.getDesigner().get(Agent.class);
 			Properties p2 = ds2.getProperties();
 			p2.setProperty("name", "Jean-Louis");
 			p2.setProperty("server", "yes");

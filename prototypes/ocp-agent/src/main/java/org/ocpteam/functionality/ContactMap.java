@@ -4,8 +4,8 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.ocpteam.design.Container;
-import org.ocpteam.design.Functionality;
+import org.ocpteam.core.Container;
+import org.ocpteam.core.Functionality;
 import org.ocpteam.layer.dsp.Contact;
 import org.ocpteam.misc.Id;
 import org.ocpteam.protocol.ocp.OCPAgent;
@@ -37,7 +37,7 @@ public class ContactMap extends HashMap<Id, Contact> implements Functionality {
 
 	public void refreshContactList() throws Exception {
 		// TODO: make independant of ocp by adding the P2P client functionality.
-		OCPAgent agent = (OCPAgent) ((DataSource) parent).getAgent();
+		OCPAgent agent = (OCPAgent) ((DataSource) parent).getDesigner().get(Agent.class);
 		agent.client.sendAll(Protocol.PING.getBytes());
 	}
 	

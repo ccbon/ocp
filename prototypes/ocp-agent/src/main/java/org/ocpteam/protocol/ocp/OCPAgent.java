@@ -655,7 +655,7 @@ public class OCPAgent extends DSPAgent implements Authenticable {
 				throw new Exception("user unknown");
 			}
 			DataModel dm = new OCPFileSystem((OCPUser) user, this);
-			context = new Context(this, dm, "/");
+			ds.setContext(new Context(this, dm, "/"));
 			a.setUser(user);
 		} catch (Exception e) {
 			JLG.error(e);

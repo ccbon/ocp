@@ -1,6 +1,6 @@
 package org.ocpteam.functionality;
 
-import org.ocpteam.design.Functionality;
+import org.ocpteam.core.Functionality;
 
 public interface DataModel extends Functionality {
 

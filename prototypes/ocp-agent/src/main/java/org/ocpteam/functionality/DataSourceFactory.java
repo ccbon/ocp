@@ -8,9 +8,9 @@ import java.util.List;
 import java.util.Properties;
 import java.util.ResourceBundle;
 
-import org.ocpteam.design.Container;
-import org.ocpteam.design.Designer;
-import org.ocpteam.design.Functionality;
+import org.ocpteam.core.Container;
+import org.ocpteam.core.Designer;
+import org.ocpteam.core.Functionality;
 import org.ocpteam.misc.JLG;
 
 public class DataSourceFactory implements Container, Functionality {

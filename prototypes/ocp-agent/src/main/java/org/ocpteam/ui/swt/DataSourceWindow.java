@@ -37,8 +37,8 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Tray;
 import org.eclipse.swt.widgets.TrayItem;
 import org.eclipse.wb.swt.SWTResourceManager;
-import org.ocpteam.design.Container;
-import org.ocpteam.design.Functionality;
+import org.ocpteam.core.Container;
+import org.ocpteam.core.Functionality;
 import org.ocpteam.functionality.Agent;
 import org.ocpteam.functionality.Authentication;
 import org.ocpteam.functionality.DataSource;
@@ -402,7 +402,7 @@ public class DataSourceWindow extends ApplicationWindow implements
 	@Override
 	public boolean close() {
 		try {
-			if (agent != null && isDaemon()) {
+			if (isDaemon()) {
 				// only hide it.
 				getShell().setVisible(false);
 				return true;
@@ -444,7 +444,7 @@ public class DataSourceWindow extends ApplicationWindow implements
 			this.ds = ds;
 			ds.open();
 			addProtocolMenu();
-			agent = ds.getAgent();
+			agent = ds.getDesigner().get(Agent.class);
 			if (isDaemon()) {
 				openTray();
 			}
@@ -562,7 +562,7 @@ public class DataSourceWindow extends ApplicationWindow implements
 
 	public void signIn() throws Exception {
 		ds.getDesigner().get(Authentication.class).login();
-		context = agent.getContext();
+		context = ds.getContext();
 		if (context != null) {
 			viewExplorerAction.run();
 		}

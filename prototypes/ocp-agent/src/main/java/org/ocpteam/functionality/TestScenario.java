@@ -1,7 +1,7 @@
 package org.ocpteam.functionality;
 
-import org.ocpteam.design.Container;
-import org.ocpteam.design.Functionality;
+import org.ocpteam.core.Container;
+import org.ocpteam.core.Functionality;
 
 public abstract class TestScenario implements Functionality {
 

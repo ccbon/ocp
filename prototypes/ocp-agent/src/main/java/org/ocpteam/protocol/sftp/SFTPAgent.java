@@ -66,7 +66,7 @@ public class SFTPAgent extends Agent implements Authenticable {
 			channel.connect();
 			User user = new SFTPUser(login, c);
 			DataModel dm = new SFTPFileSystem(user, this);
-			context = new Context(this, dm, "/");
+			ds.setContext(new Context(this, dm, "/"));
 			a.setUser(user);
 		} catch (Exception e) {
 			e.printStackTrace();

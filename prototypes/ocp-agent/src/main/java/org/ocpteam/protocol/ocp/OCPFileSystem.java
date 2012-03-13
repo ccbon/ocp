@@ -5,7 +5,7 @@ import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.util.Iterator;
 
-import org.ocpteam.design.Container;
+import org.ocpteam.core.Container;
 import org.ocpteam.functionality.DataSource;
 import org.ocpteam.functionality.FileSystem;
 import org.ocpteam.layer.rsp.FileInterface;

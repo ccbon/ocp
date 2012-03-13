@@ -1,8 +1,9 @@
-package org.ocpteam.design;
+package org.ocpteam.core;
 
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+
 
 public class Designer {
 

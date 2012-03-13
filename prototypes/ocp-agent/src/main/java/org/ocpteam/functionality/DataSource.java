@@ -5,9 +5,9 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.ResourceBundle;
 
-import org.ocpteam.design.Container;
-import org.ocpteam.design.Designer;
-import org.ocpteam.design.Functionality;
+import org.ocpteam.core.Container;
+import org.ocpteam.core.Designer;
+import org.ocpteam.core.Functionality;
 import org.ocpteam.layer.rsp.Context;
 import org.ocpteam.misc.JLG;
 
@@ -20,7 +20,7 @@ public abstract class DataSource implements Container, Functionality {
 	public void setParent(Container parent) {
 		this.parent = parent;
 	}
-	
+
 	@Override
 	public Designer getDesigner() {
 		return designer;
@@ -33,20 +33,12 @@ public abstract class DataSource implements Container, Functionality {
 	private File file;
 
 	private boolean bIsTempFile = false;
-	
-	
-	
+	protected Context context;
+
 	public DataSource() {
 		designer = new Designer(this);
 	}
 
-	public Agent getAgent() {
-		if (getDesigner().uses(Agent.class)) {
-			return getDesigner().get(Agent.class);
-		}
-		return null;
-	}
-	
 	public abstract String getProtocol();
 
 	public File getFile() {
@@ -60,35 +52,38 @@ public abstract class DataSource implements Container, Functionality {
 		}
 		this.file = file;
 	}
-	
+
 	public URI getURI() throws Exception {
 		if (this.uri == null) {
 			throw new Exception("uri is null");
 		}
 		return this.uri;
 	}
-	
+
 	public void setURI(URI uri) {
 		this.uri = uri;
 	}
-	
-	public void open() throws Exception {
-		getAgent().connect();
-	}
-	
-	public Context getContext() {
-		return getAgent().getContext();
-	}
 
-	public void close() {
-		// time to disconnect from the datasource
-		try {
-			getAgent().disconnect();
-		} catch (Exception e) {
-			e.printStackTrace();
+	public void open() throws Exception {
+		if (getDesigner().uses(Agent.class)) {
+			getDesigner().get(Agent.class).connect();
 		}
 	}
-	
+
+	public void setContext(Context context) {
+		this.context = context;
+	}
+
+	public Context getContext() {
+		return context;
+	}
+
+	public void close() throws Exception {
+		if (getDesigner().uses(Agent.class)) {
+			getDesigner().get(Agent.class).disconnect();
+		}
+	}
+
 	public void save() throws Exception {
 	}
 
@@ -106,11 +101,10 @@ public abstract class DataSource implements Container, Functionality {
 	public boolean isTempFile() {
 		return bIsTempFile;
 	}
-	
+
 	public ResourceBundle getResource(String subpackage) throws Exception {
-		String packageString = this.getClass().getPackage()
-				.getName()
-				+ "." + subpackage.toLowerCase();
+		String packageString = this.getClass().getPackage().getName() + "."
+				+ subpackage.toLowerCase();
 		String resourceClassString = packageString + "."
 				+ getProtocol().toUpperCase() + subpackage.toUpperCase()
 				+ "Resource";

@@ -2,8 +2,8 @@ package org.ocpteam.functionality;
 
 import java.util.Properties;
 
-import org.ocpteam.design.Container;
-import org.ocpteam.design.Functionality;
+import org.ocpteam.core.Container;
+import org.ocpteam.core.Functionality;
 import org.ocpteam.layer.rsp.PropertiesDataSource;
 
 public class Server implements Functionality {

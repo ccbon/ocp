@@ -1,8 +1,7 @@
 package org.ocpteam.functionality;
 
-import org.ocpteam.design.Container;
-import org.ocpteam.design.Functionality;
-import org.ocpteam.layer.rsp.Context;
+import org.ocpteam.core.Container;
+import org.ocpteam.core.Functionality;
 
 
 
@@ -16,8 +15,6 @@ public abstract class Agent implements Functionality {
 	private boolean bIsConnected = false;
 
 	public DataSource ds;
-
-	protected Context context;
 	
 	public void connect() throws Exception {
 		if (bIsConnected == true) {
@@ -41,9 +38,5 @@ public abstract class Agent implements Functionality {
 
 	public boolean isConnected() {
 		return bIsConnected;
-	}
-
-	public Context getContext() {
-		return context;
 	}
 }

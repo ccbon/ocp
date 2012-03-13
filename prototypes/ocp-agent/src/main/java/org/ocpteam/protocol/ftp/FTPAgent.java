@@ -62,7 +62,7 @@ public class FTPAgent extends Agent implements Authenticable {
 			FTPUser user = new FTPUser(login, password,
 					System.getProperty("user.home"));
 			DataModel dm = new FTPFileSystem((FTPUser) user, this);
-			context = new Context(this, dm, "/");
+			ds.setContext(new Context(this, dm, "/"));
 			a.setUser(user);
 		} else {
 			throw new Exception("Cannot Login.");

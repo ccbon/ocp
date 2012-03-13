@@ -2,7 +2,7 @@ package org.ocpteam.functionality;
 
 import java.util.Map;
 
-import org.ocpteam.design.Container;
+import org.ocpteam.core.Container;
 
 public class MapDataModel implements DataModel {
 

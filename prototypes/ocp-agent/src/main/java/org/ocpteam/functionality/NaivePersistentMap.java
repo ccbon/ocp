@@ -1,6 +1,6 @@
 package org.ocpteam.functionality;
 
-import org.ocpteam.design.Container;
+import org.ocpteam.core.Container;
 import org.ocpteam.misc.PersistentFileMap;
 
 
