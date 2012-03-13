@@ -1,5 +1,7 @@
 package org.ocpteam.layer.rsp;
 
-public interface DataModel {
+import org.ocpteam.design.Functionality;
+
+public interface DataModel extends Functionality {
 
 }

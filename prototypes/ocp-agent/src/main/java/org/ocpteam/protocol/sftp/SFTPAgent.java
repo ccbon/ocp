@@ -4,7 +4,6 @@ import org.ocpteam.functionality.Authentication;
 import org.ocpteam.layer.rsp.Agent;
 import org.ocpteam.layer.rsp.Authenticable;
 import org.ocpteam.layer.rsp.Context;
-import org.ocpteam.layer.rsp.DataSource;
 import org.ocpteam.layer.rsp.FileSystem;
 import org.ocpteam.layer.rsp.User;
 import org.ocpteam.misc.JLG;
@@ -18,10 +17,6 @@ public class SFTPAgent extends Agent implements Authenticable {
 	private JSch jsch;
 	Session session;
 	public ChannelSftp channel;
-
-	public SFTPAgent(DataSource ds) {
-		super(ds);
-	}
 
 	@Override
 	protected void onConnect() throws Exception {

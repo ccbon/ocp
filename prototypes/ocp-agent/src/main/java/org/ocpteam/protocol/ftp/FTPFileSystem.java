@@ -7,6 +7,8 @@ import java.io.FileOutputStream;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPFile;
 import org.apache.commons.net.ftp.FTPFileFilter;
+import org.ocpteam.design.Container;
+import org.ocpteam.layer.rsp.DataSource;
 import org.ocpteam.layer.rsp.FileInterface;
 import org.ocpteam.layer.rsp.FileSystem;
 import org.ocpteam.misc.JLG;
@@ -17,6 +19,7 @@ public class FTPFileSystem implements FileSystem {
 	private FTPAgent agent;
 	private FTPUser user;
 	private FTPClient ftp;
+	protected DataSource ds;
 
 	public FTPFileSystem(FTPUser user, FTPAgent agent) {
 		this.user = user;
@@ -195,6 +198,12 @@ public class FTPFileSystem implements FileSystem {
 	@Override
 	public String getDefaultLocalDir() {
 		return user.getDefaultLocalDir();
+	}
+
+	@Override
+	public void setParent(Container parent) {
+		this.ds = (DataSource) parent;
+		
 	}
 
 }

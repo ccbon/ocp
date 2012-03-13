@@ -3,7 +3,6 @@ package org.ocpteam.layer.dsp;
 import java.util.Properties;
 
 import org.ocpteam.layer.rsp.Agent;
-import org.ocpteam.layer.rsp.PropertiesDataSource;
 import org.ocpteam.misc.JLG;
 
 /**
@@ -15,9 +14,8 @@ public abstract class DSPAgent extends Agent {
 
 	public Properties cfg;
 	
-	public DSPAgent(PropertiesDataSource ds) {
-		super(ds);
-		cfg = ds.getProperties();
+	public DSPAgent() {
+		super();
 	}
 	
 	public abstract String getName();

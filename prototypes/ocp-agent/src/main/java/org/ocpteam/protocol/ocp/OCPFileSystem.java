@@ -5,6 +5,8 @@ import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.util.Iterator;
 
+import org.ocpteam.design.Container;
+import org.ocpteam.layer.rsp.DataSource;
 import org.ocpteam.layer.rsp.FileInterface;
 import org.ocpteam.layer.rsp.FileSystem;
 import org.ocpteam.misc.JLG;
@@ -14,6 +16,7 @@ public class OCPFileSystem implements FileSystem {
 
 	private OCPAgent agent;
 	private OCPUser user;
+	protected DataSource ds;
 
 	public OCPFileSystem(OCPUser user, OCPAgent agent, String path) {
 		this.user = user;
@@ -281,6 +284,11 @@ public class OCPFileSystem implements FileSystem {
 	@Override
 	public String getDefaultLocalDir() {
 		return user.getDefaultLocalDir();
+	}
+
+	@Override
+	public void setParent(Container parent) {
+		this.ds = (DataSource) parent;
 	}
 
 }

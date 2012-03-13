@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.util.Vector;
 
+import org.ocpteam.design.Container;
+import org.ocpteam.layer.rsp.DataSource;
 import org.ocpteam.layer.rsp.FileInterface;
 import org.ocpteam.layer.rsp.FileSystem;
 import org.ocpteam.layer.rsp.User;
@@ -16,6 +18,7 @@ public class SFTPFileSystem implements FileSystem {
 
 	private SFTPAgent agent;
 	protected User user;
+	protected DataSource ds;
 
 	public SFTPFileSystem(User user, SFTPAgent agent) {
 		this.user = user;
@@ -122,6 +125,11 @@ public class SFTPFileSystem implements FileSystem {
 	@Override
 	public String getDefaultLocalDir() {
 		return user.getDefaultLocalDir();
+	}
+
+	@Override
+	public void setParent(Container parent) {
+		this.ds = (DataSource) parent;
 	}
 
 }

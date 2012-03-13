@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
+import org.ocpteam.design.Container;
+import org.ocpteam.layer.rsp.DataSource;
 import org.ocpteam.layer.rsp.FileInterface;
 import org.ocpteam.layer.rsp.FileSystem;
 import org.ocpteam.misc.JLG;
@@ -15,6 +17,7 @@ public class ZipFileSystem implements FileSystem {
 
 	private ZipAgent agent;
 	public ZipFileImpl root;
+	protected DataSource ds;
 
 	public ZipFileSystem(ZipAgent agent) {
 		this.agent = agent;
@@ -148,6 +151,11 @@ public class ZipFileSystem implements FileSystem {
 				zipInputStream.close();
 			}
 		}
+	}
+
+	@Override
+	public void setParent(Container parent) {
+		this.ds = (DataSource) parent;
 	}
 
 

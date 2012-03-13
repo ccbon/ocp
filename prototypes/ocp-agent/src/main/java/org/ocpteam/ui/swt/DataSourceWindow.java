@@ -46,6 +46,7 @@ import org.ocpteam.layer.rsp.Agent;
 import org.ocpteam.layer.rsp.Context;
 import org.ocpteam.layer.rsp.DataSource;
 import org.ocpteam.layer.rsp.FileSystem;
+import org.ocpteam.layer.rsp.MapDataModel;
 import org.ocpteam.misc.JLG;
 import org.ocpteam.misc.swt.QuickMessage;
 
@@ -83,7 +84,7 @@ public class DataSourceWindow extends ApplicationWindow implements
 
 	public CTabFolder tabFolder;
 	private CTabItem explorerCTabItem;
-	public ExplorerComposite explorerComposite;
+	public Composite explorerComposite;
 
 	public Clipboard clipboard;
 	private DynamicMenuManager protocolMenu;
@@ -91,7 +92,6 @@ public class DataSourceWindow extends ApplicationWindow implements
 	private Map<Integer, List<Listener>> listenerMap;
 	public Container app;
 	public DataSourceFactory dsf;
-
 
 	/**
 	 * Create the application window.
@@ -116,12 +116,16 @@ public class DataSourceWindow extends ApplicationWindow implements
 		saveDataSourceAction.setEnabled(ds != null);
 		saveAsDataSourceAction.setEnabled(ds != null);
 		signInAction.setEnabled(ds != null
-				&& ds.getDesigner().uses(Authentication.class) && context == null);
+				&& ds.getDesigner().uses(Authentication.class)
+				&& context == null);
 		signOutAction.setEnabled(ds != null
-				&& ds.getDesigner().uses(Authentication.class) && context != null);
+				&& ds.getDesigner().uses(Authentication.class)
+				&& context != null);
 		newUserAction.setEnabled(ds != null
-				&& ds.getDesigner().uses(Authentication.class) && context == null
-				&& ds.getDesigner().get(Authentication.class).allowsUserCreation());
+				&& ds.getDesigner().uses(Authentication.class)
+				&& context == null
+				&& ds.getDesigner().get(Authentication.class)
+						.allowsUserCreation());
 
 		viewExplorerAction.setEnabled(context != null);
 
@@ -355,9 +359,7 @@ public class DataSourceWindow extends ApplicationWindow implements
 		if (context == null) {
 			throw new Exception("missing context");
 		}
-		if (!(context.dataModel instanceof FileSystem)) {
-			throw new Exception("not filesystem");
-		}
+		
 
 		if (explorerCTabItem == null) {
 			explorerCTabItem = new CTabItem(tabFolder, SWT.NONE);
@@ -369,9 +371,17 @@ public class DataSourceWindow extends ApplicationWindow implements
 			});
 
 			explorerCTabItem.setShowClose(true);
-			explorerCTabItem.setText("Explorer");
-
-			explorerComposite = new ExplorerComposite(tabFolder, SWT.NONE, this);
+			
+			if (context.dataModel instanceof FileSystem) {
+				explorerCTabItem.setText("Explorer");
+				explorerComposite = new ExplorerComposite(tabFolder, SWT.NONE, this);
+			} else if (context.dataModel instanceof MapDataModel) {
+				explorerCTabItem.setText("Map");
+				explorerComposite = new MapComposite(tabFolder, SWT.NONE, this);
+			} else {
+				throw new Exception("datamodel not understood");
+			}
+			
 			explorerCTabItem.setControl(explorerComposite);
 
 		}
@@ -438,7 +448,7 @@ public class DataSourceWindow extends ApplicationWindow implements
 			if (isDaemon()) {
 				openTray();
 			}
-			context = agent.getContext();
+			context = ds.getContext();
 			if (context != null) {
 				viewExplorerAction.run();
 			} else if (ds.getDesigner().uses(Authentication.class)) {
@@ -589,4 +599,5 @@ public class DataSourceWindow extends ApplicationWindow implements
 		open();
 		Display.getCurrent().dispose();
 	}
+
 }

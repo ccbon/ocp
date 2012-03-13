@@ -12,6 +12,7 @@ public class OCPDataSource extends PropertiesDataSource {
 
 	public OCPDataSource() throws Exception {
 		super();
+		getDesigner().add(Agent.class, new OCPAgent());
 		getDesigner().add(Authentication.class, new OCPAuthentication());
 		getDesigner().add(Server.class);
 		getDesigner().add(ContactMap.class);
@@ -21,11 +22,6 @@ public class OCPDataSource extends PropertiesDataSource {
 	@Override
 	public String getProtocol() {
 		return "OCP";
-	}
-
-	@Override
-	protected Agent createAgent() {
-		return new OCPAgent(this);
 	}
 
 }

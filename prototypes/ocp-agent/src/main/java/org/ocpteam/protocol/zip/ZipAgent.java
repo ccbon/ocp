@@ -2,7 +2,6 @@ package org.ocpteam.protocol.zip;
 
 import org.ocpteam.layer.rsp.Agent;
 import org.ocpteam.layer.rsp.Context;
-import org.ocpteam.layer.rsp.DataSource;
 import org.ocpteam.layer.rsp.FileSystem;
 import org.ocpteam.layer.rsp.User;
 import org.ocpteam.misc.JLG;
@@ -11,13 +10,8 @@ public class ZipAgent extends Agent {
 
 	private ZipFileSystem fs;
 
-	public ZipAgent(DataSource ds) {
-		super(ds);
-	}
-
 	@Override
 	public FileSystem getFileSystem(User user) {
-
 		return fs;
 	}
 

@@ -1,18 +1,22 @@
 package org.ocpteam.layer.rsp;
 
+import org.ocpteam.design.Container;
+import org.ocpteam.design.Functionality;
 
 
-public abstract class Agent {
+
+public abstract class Agent implements Functionality {
+	
+	@Override
+	public void setParent(Container parent) {
+		this.ds = (DataSource) parent;		
+	}
 
 	private boolean bIsConnected = false;
 
 	public DataSource ds;
 
 	protected Context context;
-
-	public Agent(DataSource ds) {
-		this.ds = ds;
-	}
 	
 	public void connect() throws Exception {
 		if (bIsConnected == true) {

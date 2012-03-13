@@ -38,9 +38,14 @@ public class CopyAction extends Action {
 		if (window.explorerComposite == null) {
 			return;
 		}
+		
+		if (!(window.explorerComposite instanceof ExplorerComposite)) {
+			return;			
+		}
+		ExplorerComposite explorerComposite = (ExplorerComposite) window.explorerComposite;
 		Display display = window.getShell().getDisplay();
 		Control c = display.getFocusControl();
-		if (c == window.explorerComposite.localDirectoryTable) {
+		if (c == explorerComposite.localDirectoryTable) {
 			Table t = (Table) c;
 			int length = t.getSelectionCount();
 			String[] data = new String[length];
@@ -48,7 +53,7 @@ public class CopyAction extends Action {
 				TableItem item = t.getSelection()[i];
 				String name = item.getText(0);
 				File f = new File(
-						window.explorerComposite.currentLocalDirectory,
+						explorerComposite.currentLocalDirectory,
 						name);
 				String path = f.getAbsolutePath();
 				JLG.debug("path=" + path);
@@ -57,7 +62,7 @@ public class CopyAction extends Action {
 			window.clipboard.setContents(new Object[] { data },
 					new Transfer[] { FileTransfer.getInstance() });
 		}
-		if (c == window.explorerComposite.remoteDirectoryTable) {
+		if (c == explorerComposite.remoteDirectoryTable) {
 			Table t = (Table) c;
 			int length = t.getSelectionCount();
 			String[] data = new String[length];

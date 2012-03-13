@@ -5,7 +5,6 @@ import java.util.ResourceBundle;
 import org.eclipse.jface.action.Action;
 import org.ocpteam.misc.JLG;
 
-
 public class NewDataSourceAction extends Action {
 	private DataSourceWindow w;
 	private String protocol;
@@ -25,11 +24,14 @@ public class NewDataSourceAction extends Action {
 			}
 			w.ds = w.dsf.getInstance(protocol);
 			ResourceBundle swt = w.dsf.getResource(protocol, "swt");
-			Scenario scenario = (Scenario) swt.getObject("NewDataSourceScenario");
-			scenario.setWindow(w);
-			scenario.run();
-			if (w.ds == null) {
-				return;
+			if (swt.containsKey("NewDataSourceScenario")) {
+				Scenario scenario = (Scenario) swt
+						.getObject("NewDataSourceScenario");
+				scenario.setWindow(w);
+				scenario.run();
+				if (w.ds == null) {
+					return;
+				}
 			}
 			w.openDataSource(w.ds);
 		} catch (Exception e) {

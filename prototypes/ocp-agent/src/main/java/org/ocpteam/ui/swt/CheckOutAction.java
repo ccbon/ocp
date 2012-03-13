@@ -20,7 +20,11 @@ public class CheckOutAction extends Action {
 
 	public void run() {
 		JLG.debug("Check Out");
-		ExplorerComposite composite = w.explorerComposite;
+		if (!(w.explorerComposite instanceof ExplorerComposite)) {
+			return;			
+		}
+
+		ExplorerComposite composite = (ExplorerComposite) w.explorerComposite;
 		if (composite == null) {
 			return;
 		}
@@ -40,7 +44,10 @@ public class CheckOutAction extends Action {
 	}
 
 	public boolean canRun() {
-		ExplorerComposite composite = w.explorerComposite;
+		if (!(w.explorerComposite instanceof ExplorerComposite)) {
+			return false;			
+		}
+		ExplorerComposite composite = (ExplorerComposite) w.explorerComposite;
 		if (composite == null) {
 			return false;
 		}

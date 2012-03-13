@@ -32,34 +32,41 @@ public class PasteAction extends Action {
 		if (window.explorerComposite == null) {
 			return;
 		}
-		Display display = window.getShell().getDisplay();
-		Control c = display.getFocusControl();
-		if (c == window.explorerComposite.localDirectoryTable) {
-			String[] data = (String[]) window.clipboard
-					.getContents(FileTransfer.getInstance());
-			if (data != null) {
-				window.explorerComposite.copyFiles(data);
+		if (window.explorerComposite instanceof ExplorerComposite) {
+			ExplorerComposite explorerComposite = (ExplorerComposite) window.explorerComposite;
+			Display display = window.getShell().getDisplay();
+			Control c = display.getFocusControl();
+			if (c == explorerComposite.localDirectoryTable) {
+				String[] data = (String[]) window.clipboard
+						.getContents(FileTransfer.getInstance());
+				if (data != null) {
+					explorerComposite.copyFiles(data);
+				}
+				String o = (String) window.clipboard.getContents(TextTransfer
+						.getInstance());
+				String[] s = o.split(";");
+				explorerComposite.checkout(s);
+			} else if (c == explorerComposite.remoteDirectoryTable) {
+				String[] data = (String[]) window.clipboard
+						.getContents(FileTransfer.getInstance());
+				explorerComposite.commitFiles(data);
 			}
-			String o = (String) window.clipboard.getContents(TextTransfer
-					.getInstance());
-			String[] s = o.split(";");
-			window.explorerComposite.checkout(s);
-		} else if (c == window.explorerComposite.remoteDirectoryTable) {
-			String[] data = (String[]) window.clipboard
-					.getContents(FileTransfer.getInstance());
-			window.explorerComposite.commitFiles(data);
 		}
-
 	}
 
 	public boolean canRun() {
 		if (window.explorerComposite == null) {
 			return false;
 		}
+		if (!(window.explorerComposite instanceof ExplorerComposite)) {
+			return false;			
+		}
+		ExplorerComposite explorerComposite = (ExplorerComposite) window.explorerComposite;
+
 		String[] data = null;
 		Display display = window.getShell().getDisplay();
 		Control c = display.getFocusControl();
-		if (c == window.explorerComposite.localDirectoryTable) {
+		if (c == explorerComposite.localDirectoryTable) {
 			data = (String[]) window.clipboard.getContents(FileTransfer
 					.getInstance());
 			if (data == null || data.length == 0) {
@@ -70,7 +77,7 @@ public class PasteAction extends Action {
 				}
 				return s.length() > 0;
 			}
-		} else if (c == window.explorerComposite.remoteDirectoryTable) {
+		} else if (c == explorerComposite.remoteDirectoryTable) {
 			data = (String[]) window.clipboard.getContents(FileTransfer
 					.getInstance());
 		}

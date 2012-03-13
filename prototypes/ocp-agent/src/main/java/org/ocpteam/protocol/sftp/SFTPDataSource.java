@@ -8,18 +8,13 @@ public class SFTPDataSource extends PropertiesDataSource {
 
 	public SFTPDataSource() throws Exception {
 		super();
+		getDesigner().add(Agent.class, new SFTPAgent());
 		getDesigner().add(Authentication.class);
 	}
 
 	@Override
 	public String getProtocol() {
 		return "SFTP";
-	}
-
-	@Override
-	protected Agent createAgent() {
-		SFTPAgent a = new SFTPAgent(this);
-		return a;
 	}
 
 }

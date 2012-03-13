@@ -102,11 +102,10 @@ public class OCPAgent extends DSPAgent implements Authenticable {
 	private Cache cache;
 	private MessageDigest md;
 
-	public OCPAgent(PropertiesDataSource ds) {
-		super(ds);
+	public OCPAgent() {
+		super();
 		nodeMap = new TreeMap<Id, OCPContact>();
 		cache = new Cache();
-		JLG.debug("cfg=" + cfg);
 	}
 
 	public void setNetworkProperties(Properties network) {
@@ -144,6 +143,7 @@ public class OCPAgent extends DSPAgent implements Authenticable {
 
 	@Override
 	protected void onConnect() throws Exception {
+		cfg = ((PropertiesDataSource) ds).getProperties();
 		readConfig();
 		JLG.debug("starting agent " + name);
 

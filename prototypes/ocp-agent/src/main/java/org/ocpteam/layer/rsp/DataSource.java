@@ -31,7 +31,6 @@ public abstract class DataSource implements Container, Functionality {
 			.getBundle("extensions");
 
 	private URI uri;
-	private Agent agent;
 	private File file;
 
 	private boolean bIsTempFile = false;
@@ -43,13 +42,11 @@ public abstract class DataSource implements Container, Functionality {
 	}
 
 	public Agent getAgent() {
-		if (agent == null) {
-			agent = createAgent();
+		if (getDesigner().uses(Agent.class)) {
+			return getDesigner().get(Agent.class);
 		}
-		return agent;
+		return null;
 	}
-
-	protected abstract Agent createAgent();
 	
 	public abstract String getProtocol();
 
@@ -78,7 +75,11 @@ public abstract class DataSource implements Container, Functionality {
 	
 	public void open() throws Exception {
 		getAgent().connect();
-	}	
+	}
+	
+	public Context getContext() {
+		return getAgent().getContext();
+	}
 
 	public void close() {
 		// time to disconnect from the datasource
@@ -118,4 +119,5 @@ public abstract class DataSource implements Container, Functionality {
 		return (ResourceBundle) Class.forName(resourceClassString)
 				.newInstance();
 	}
+
 }

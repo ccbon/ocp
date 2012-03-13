@@ -10,6 +10,7 @@ public class FTPDataSource extends DataSource {
 
 	public FTPDataSource() throws Exception {
 		super();
+		getDesigner().add(Agent.class, new FTPAgent());
 		getDesigner().add(Authentication.class);
 	}
 
@@ -20,11 +21,6 @@ public class FTPDataSource extends DataSource {
 	@Override
 	public String getProtocol() {
 		return "FTP";
-	}
-
-	@Override
-	protected Agent createAgent() {
-		return new FTPAgent(this);
 	}
 
 }

@@ -9,7 +9,6 @@ import org.ocpteam.functionality.Authentication;
 import org.ocpteam.layer.rsp.Agent;
 import org.ocpteam.layer.rsp.Authenticable;
 import org.ocpteam.layer.rsp.Context;
-import org.ocpteam.layer.rsp.DataSource;
 import org.ocpteam.layer.rsp.FileSystem;
 import org.ocpteam.layer.rsp.User;
 import org.ocpteam.misc.JLG;
@@ -19,8 +18,7 @@ public class FTPAgent extends Agent implements Authenticable {
 	private String hostname;
 	FTPClient ftp;
 
-	public FTPAgent(DataSource ds) {
-		super(ds);
+	public FTPAgent() {
 		ftp = new FTPClient();
 	}
 
