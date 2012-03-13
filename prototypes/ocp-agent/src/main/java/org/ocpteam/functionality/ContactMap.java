@@ -7,7 +7,6 @@ import java.util.List;
 import org.ocpteam.design.Container;
 import org.ocpteam.design.Functionality;
 import org.ocpteam.layer.dsp.Contact;
-import org.ocpteam.layer.rsp.DataSource;
 import org.ocpteam.misc.Id;
 import org.ocpteam.protocol.ocp.OCPAgent;
 import org.ocpteam.protocol.ocp.Protocol;

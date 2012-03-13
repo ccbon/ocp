@@ -5,11 +5,11 @@ import java.io.FileInputStream;
 import java.io.IOException;
 
 import org.apache.commons.net.ftp.FTPClient;
+import org.ocpteam.functionality.Agent;
 import org.ocpteam.functionality.Authentication;
-import org.ocpteam.layer.rsp.Agent;
+import org.ocpteam.functionality.DataModel;
 import org.ocpteam.layer.rsp.Authenticable;
 import org.ocpteam.layer.rsp.Context;
-import org.ocpteam.layer.rsp.FileSystem;
 import org.ocpteam.layer.rsp.User;
 import org.ocpteam.misc.JLG;
 
@@ -61,7 +61,8 @@ public class FTPAgent extends Agent implements Authenticable {
 			JLG.debug("ftp logged in.");
 			FTPUser user = new FTPUser(login, password,
 					System.getProperty("user.home"));
-			context = new Context(this, getFileSystem(user), "/");
+			DataModel dm = new FTPFileSystem((FTPUser) user, this);
+			context = new Context(this, dm, "/");
 			a.setUser(user);
 		} else {
 			throw new Exception("Cannot Login.");
@@ -94,10 +95,9 @@ public class FTPAgent extends Agent implements Authenticable {
 		}
 	}
 
-	@Override
-	public FileSystem getFileSystem(User user) {
-		return new FTPFileSystem((FTPUser) user, this);
-	}
+	
+		
+	
 
 	@Override
 	public void logout() throws Exception {

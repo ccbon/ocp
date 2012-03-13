@@ -5,9 +5,9 @@ import java.io.FileInputStream;
 import java.util.Vector;
 
 import org.ocpteam.design.Container;
-import org.ocpteam.layer.rsp.DataSource;
+import org.ocpteam.functionality.DataSource;
+import org.ocpteam.functionality.FileSystem;
 import org.ocpteam.layer.rsp.FileInterface;
-import org.ocpteam.layer.rsp.FileSystem;
 import org.ocpteam.layer.rsp.User;
 import org.ocpteam.misc.JLG;
 

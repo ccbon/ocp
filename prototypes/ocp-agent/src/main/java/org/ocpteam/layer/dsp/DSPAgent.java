@@ -2,7 +2,7 @@ package org.ocpteam.layer.dsp;
 
 import java.util.Properties;
 
-import org.ocpteam.layer.rsp.Agent;
+import org.ocpteam.functionality.Agent;
 import org.ocpteam.misc.JLG;
 
 /**

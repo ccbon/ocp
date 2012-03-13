@@ -39,14 +39,14 @@ import org.eclipse.swt.widgets.TrayItem;
 import org.eclipse.wb.swt.SWTResourceManager;
 import org.ocpteam.design.Container;
 import org.ocpteam.design.Functionality;
+import org.ocpteam.functionality.Agent;
 import org.ocpteam.functionality.Authentication;
+import org.ocpteam.functionality.DataSource;
 import org.ocpteam.functionality.DataSourceFactory;
+import org.ocpteam.functionality.FileSystem;
+import org.ocpteam.functionality.MapDataModel;
 import org.ocpteam.functionality.Server;
-import org.ocpteam.layer.rsp.Agent;
 import org.ocpteam.layer.rsp.Context;
-import org.ocpteam.layer.rsp.DataSource;
-import org.ocpteam.layer.rsp.FileSystem;
-import org.ocpteam.layer.rsp.MapDataModel;
 import org.ocpteam.misc.JLG;
 import org.ocpteam.misc.swt.QuickMessage;
 

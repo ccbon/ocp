@@ -1,4 +1,4 @@
-package org.ocpteam.layer.rsp;
+package org.ocpteam.functionality;
 
 import java.io.File;
 import java.io.IOException;
@@ -8,6 +8,7 @@ import java.util.ResourceBundle;
 import org.ocpteam.design.Container;
 import org.ocpteam.design.Designer;
 import org.ocpteam.design.Functionality;
+import org.ocpteam.layer.rsp.Context;
 import org.ocpteam.misc.JLG;
 
 public abstract class DataSource implements Container, Functionality {
@@ -25,8 +26,6 @@ public abstract class DataSource implements Container, Functionality {
 		return designer;
 	};
 
-	public static ResourceBundle protocolResource = ResourceBundle
-			.getBundle("protocols");
 	public static ResourceBundle extensionResource = ResourceBundle
 			.getBundle("extensions");
 

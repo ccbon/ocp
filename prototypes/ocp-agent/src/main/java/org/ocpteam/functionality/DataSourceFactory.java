@@ -11,7 +11,6 @@ import java.util.ResourceBundle;
 import org.ocpteam.design.Container;
 import org.ocpteam.design.Designer;
 import org.ocpteam.design.Functionality;
-import org.ocpteam.layer.rsp.DataSource;
 import org.ocpteam.misc.JLG;
 
 public class DataSourceFactory implements Container, Functionality {

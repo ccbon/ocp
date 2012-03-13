@@ -3,14 +3,15 @@ package org.ocpteam.protocol.map;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.ocpteam.functionality.DataModel;
+import org.ocpteam.functionality.DataSource;
+import org.ocpteam.functionality.MapDataModel;
 import org.ocpteam.layer.rsp.Context;
-import org.ocpteam.layer.rsp.DataModel;
-import org.ocpteam.layer.rsp.DataSource;
-import org.ocpteam.layer.rsp.MapDataModel;
 
 public class MapDataSource extends DataSource {
 
 	private Map<byte[], byte[]> map;
+	private Context context;
 	
 	public MapDataSource() throws Exception {
 		super();
@@ -27,11 +28,17 @@ public class MapDataSource extends DataSource {
 		map = new HashMap<byte[], byte[]>();
 		MapDataModel dm = (MapDataModel) getDesigner().get(DataModel.class);
 		dm.setMap(map);
+		context = new Context(null, getDesigner().get(DataModel.class), null);
+	}
+	
+	@Override
+	public void close() {
+		context = null;
 	}
 	
 	@Override
 	public Context getContext() {
-		return new Context(null, getDesigner().get(DataModel.class), null);
+		return context;
 	}
 
 }

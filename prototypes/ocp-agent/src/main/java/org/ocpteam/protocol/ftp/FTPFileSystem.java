@@ -8,9 +8,9 @@ import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPFile;
 import org.apache.commons.net.ftp.FTPFileFilter;
 import org.ocpteam.design.Container;
-import org.ocpteam.layer.rsp.DataSource;
+import org.ocpteam.functionality.DataSource;
+import org.ocpteam.functionality.FileSystem;
 import org.ocpteam.layer.rsp.FileInterface;
-import org.ocpteam.layer.rsp.FileSystem;
 import org.ocpteam.misc.JLG;
 
 
@@ -25,6 +25,9 @@ public class FTPFileSystem implements FileSystem {
 		this.user = user;
 		this.agent = agent;
 		this.ftp = agent.ftp;
+	}
+
+	public FTPFileSystem() {
 	}
 
 	@Override

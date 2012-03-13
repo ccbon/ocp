@@ -8,31 +8,27 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 import org.ocpteam.design.Container;
-import org.ocpteam.layer.rsp.DataSource;
+import org.ocpteam.functionality.DataSource;
+import org.ocpteam.functionality.FileSystem;
 import org.ocpteam.layer.rsp.FileInterface;
-import org.ocpteam.layer.rsp.FileSystem;
 import org.ocpteam.misc.JLG;
 
 public class ZipFileSystem implements FileSystem {
 
-	private ZipAgent agent;
 	public ZipFileImpl root;
 	protected DataSource ds;
 
-	public ZipFileSystem(ZipAgent agent) {
-		this.agent = agent;
+	public ZipFileSystem() {
 	}
 
 	@Override
 	public void checkoutAll(String localDir) throws Exception {
 		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void commitAll(String localDir) throws Exception {
 		// TODO Auto-generated method stub
-
 	}
 
 	@Override
@@ -52,7 +48,7 @@ public class ZipFileSystem implements FileSystem {
 				checkout(path, child.getName(), dir);
 			}
 		} else { // file
-			ZipUtils.extract(agent.ds.getFile(), path.substring(1), new File(localDir, remoteFilename));
+			ZipUtils.extract(ds.getFile(), path.substring(1), new File(localDir, remoteFilename));
 		}
 
 
@@ -71,7 +67,7 @@ public class ZipFileSystem implements FileSystem {
 		makeList(list, file);
 		File[] files = (File[]) list.toArray(new File[list.size()]);
 		File parent = file.getParentFile();
-		ZipUtils.add(agent.ds.getFile(), remoteDir, parent, files);
+		ZipUtils.add(ds.getFile(), remoteDir, parent, files);
 		refresh();
 	}
 
@@ -98,7 +94,7 @@ public class ZipFileSystem implements FileSystem {
 		if (!existingParentDir.endsWith("/")) {
 			existingParentDir += "/";
 		}
-		ZipUtils.mkdir(agent.ds.getFile(), existingParentDir + newDir);
+		ZipUtils.mkdir(ds.getFile(), existingParentDir + newDir);
 		refresh();
 
 	}
@@ -111,7 +107,7 @@ public class ZipFileSystem implements FileSystem {
 		if (!existingParentDir.endsWith("/")) {
 			existingParentDir += "/";
 		}
-		ZipUtils.rm(agent.ds.getFile(), existingParentDir + name);
+		ZipUtils.rm(ds.getFile(), existingParentDir + name);
 		refresh();
 	}
 
@@ -124,7 +120,7 @@ public class ZipFileSystem implements FileSystem {
 		if (!existingParentDir.endsWith("/")) {
 			existingParentDir += "/";
 		}
-		ZipUtils.rename(agent.ds.getFile(), existingParentDir + oldName, existingParentDir + newName);
+		ZipUtils.rename(ds.getFile(), existingParentDir + oldName, existingParentDir + newName);
 		refresh();
 
 	}
@@ -138,7 +134,7 @@ public class ZipFileSystem implements FileSystem {
 		this.root = new ZipFileImpl();
 		ZipInputStream zipInputStream = null;
 		try {
-			zipInputStream = new ZipInputStream(new FileInputStream(agent.ds.getFile()));
+			zipInputStream = new ZipInputStream(new FileInputStream(ds.getFile()));
 			ZipEntry zipEntry = null;
 
 			while ((zipEntry = zipInputStream.getNextEntry()) != null) {

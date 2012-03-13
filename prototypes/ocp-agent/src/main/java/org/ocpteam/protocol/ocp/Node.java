@@ -3,7 +3,7 @@ package org.ocpteam.protocol.ocp;
 import java.util.Map;
 import java.util.TreeMap;
 
-import org.ocpteam.layer.rsp.Agent;
+import org.ocpteam.functionality.Agent;
 import org.ocpteam.misc.Id;
 
 

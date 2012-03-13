@@ -1,6 +1,8 @@
-package org.ocpteam.layer.rsp;
+package org.ocpteam.functionality;
 
 import java.io.File;
+
+import org.ocpteam.layer.rsp.FileInterface;
 
 public interface FileSystem extends DataModel {
 

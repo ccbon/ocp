@@ -1,10 +1,10 @@
 package org.ocpteam.protocol.sftp;
 
+import org.ocpteam.functionality.Agent;
 import org.ocpteam.functionality.Authentication;
-import org.ocpteam.layer.rsp.Agent;
+import org.ocpteam.functionality.DataModel;
 import org.ocpteam.layer.rsp.Authenticable;
 import org.ocpteam.layer.rsp.Context;
-import org.ocpteam.layer.rsp.FileSystem;
 import org.ocpteam.layer.rsp.User;
 import org.ocpteam.misc.JLG;
 
@@ -65,17 +65,13 @@ public class SFTPAgent extends Agent implements Authenticable {
 			channel = (ChannelSftp) session.openChannel("sftp");
 			channel.connect();
 			User user = new SFTPUser(login, c);
-			context = new Context(this, getFileSystem(user), "/");
+			DataModel dm = new SFTPFileSystem(user, this);
+			context = new Context(this, dm, "/");
 			a.setUser(user);
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new Exception("Cannot login");
 		}
-	}
-
-	@Override
-	public FileSystem getFileSystem(User user) {
-		return new SFTPFileSystem(user, this);
 	}
 
 	@Override

@@ -28,11 +28,11 @@ import javax.crypto.spec.PBEParameterSpec;
 
 import org.ocpteam.functionality.Authentication;
 import org.ocpteam.functionality.ContactMap;
+import org.ocpteam.functionality.DataModel;
 import org.ocpteam.layer.dsp.Contact;
 import org.ocpteam.layer.dsp.DSPAgent;
 import org.ocpteam.layer.rsp.Authenticable;
 import org.ocpteam.layer.rsp.Context;
-import org.ocpteam.layer.rsp.FileSystem;
 import org.ocpteam.layer.rsp.PropertiesDataSource;
 import org.ocpteam.layer.rsp.User;
 import org.ocpteam.misc.ByteUtil;
@@ -654,7 +654,8 @@ public class OCPAgent extends DSPAgent implements Authenticable {
 			if (user == null) {
 				throw new Exception("user unknown");
 			}
-			context = new Context(this, getFileSystem(user), "/");
+			DataModel dm = new OCPFileSystem((OCPUser) user, this);
+			context = new Context(this, dm, "/");
 			a.setUser(user);
 		} catch (Exception e) {
 			JLG.error(e);
@@ -820,11 +821,6 @@ public class OCPAgent extends DSPAgent implements Authenticable {
 	@Override
 	public void removeStorage() {
 		storage.removeAll();
-	}
-
-	@Override
-	public FileSystem getFileSystem(User user) {
-		return new OCPFileSystem((OCPUser) user, this);
 	}
 
 	@Override

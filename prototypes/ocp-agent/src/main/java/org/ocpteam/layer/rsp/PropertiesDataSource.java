@@ -4,6 +4,7 @@ import java.io.File;
 import java.net.URI;
 import java.util.Properties;
 
+import org.ocpteam.functionality.DataSource;
 import org.ocpteam.misc.JLG;
 
 public abstract class PropertiesDataSource extends DataSource {

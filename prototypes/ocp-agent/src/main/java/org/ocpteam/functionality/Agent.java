@@ -1,7 +1,8 @@
-package org.ocpteam.layer.rsp;
+package org.ocpteam.functionality;
 
 import org.ocpteam.design.Container;
 import org.ocpteam.design.Functionality;
+import org.ocpteam.layer.rsp.Context;
 
 
 
@@ -41,9 +42,6 @@ public abstract class Agent implements Functionality {
 	public boolean isConnected() {
 		return bIsConnected;
 	}
-	
-
-	public abstract FileSystem getFileSystem(User user);
 
 	public Context getContext() {
 		return context;

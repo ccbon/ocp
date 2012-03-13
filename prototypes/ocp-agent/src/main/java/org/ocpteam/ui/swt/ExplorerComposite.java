@@ -42,9 +42,9 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.wb.swt.SWTResourceManager;
-import org.ocpteam.layer.rsp.Agent;
+import org.ocpteam.functionality.Agent;
+import org.ocpteam.functionality.FileSystem;
 import org.ocpteam.layer.rsp.FileInterface;
-import org.ocpteam.layer.rsp.FileSystem;
 import org.ocpteam.misc.JLG;
 import org.ocpteam.misc.swt.QuickMessage;
 
