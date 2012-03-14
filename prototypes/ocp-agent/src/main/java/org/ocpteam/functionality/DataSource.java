@@ -13,9 +13,22 @@ import org.ocpteam.misc.JLG;
 
 public abstract class DataSource implements Container, Functionality {
 
+	public static ResourceBundle extensionResource = ResourceBundle
+			.getBundle("extensions");
+
 	public Container parent;
 	private Designer designer;
+	
+	private URI uri;
+	private File file;
 
+	private boolean bIsTempFile = false;
+	protected Context context;
+
+	public DataSource() {
+		designer = new Designer(this);
+	}
+	
 	@Override
 	public void setParent(Container parent) {
 		this.parent = parent;
@@ -26,18 +39,6 @@ public abstract class DataSource implements Container, Functionality {
 		return designer;
 	};
 
-	public static ResourceBundle extensionResource = ResourceBundle
-			.getBundle("extensions");
-
-	private URI uri;
-	private File file;
-
-	private boolean bIsTempFile = false;
-	protected Context context;
-
-	public DataSource() {
-		designer = new Designer(this);
-	}
 
 	public abstract String getProtocol();
 
@@ -79,6 +80,7 @@ public abstract class DataSource implements Container, Functionality {
 	}
 
 	public void close() throws Exception {
+		context = null;
 		if (getDesigner().uses(Agent.class)) {
 			getDesigner().get(Agent.class).disconnect();
 		}

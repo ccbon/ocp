@@ -18,4 +18,8 @@ public class MapDataModel implements DataModel {
 		this.map = map;
 	}
 
+	public Map<byte[], byte[]> getMap() {
+		return this.map;
+	}
+
 }

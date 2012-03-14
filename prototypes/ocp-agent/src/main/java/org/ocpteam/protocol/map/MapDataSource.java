@@ -11,11 +11,14 @@ import org.ocpteam.layer.rsp.Context;
 public class MapDataSource extends DataSource {
 
 	private Map<byte[], byte[]> map;
-	private Context context;
 	
 	public MapDataSource() throws Exception {
 		super();
 		getDesigner().add(DataModel.class, new MapDataModel());
+		// for example
+		map = new HashMap<byte[], byte[]>();
+		map.put("Hello".getBytes(), "World".getBytes());
+		map.put("Foo".getBytes(), "Bar".getBytes());
 	}
 	
 	@Override
@@ -25,20 +28,9 @@ public class MapDataSource extends DataSource {
 	
 	@Override
 	public void open() throws Exception {
-		map = new HashMap<byte[], byte[]>();
 		MapDataModel dm = (MapDataModel) getDesigner().get(DataModel.class);
 		dm.setMap(map);
 		context = new Context(null, getDesigner().get(DataModel.class), null);
-	}
-	
-	@Override
-	public void close() {
-		context = null;
-	}
-	
-	@Override
-	public Context getContext() {
-		return context;
 	}
 
 }
