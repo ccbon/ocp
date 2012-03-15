@@ -7,18 +7,18 @@ import org.ocpteam.core.Container;
 public class MapDataModel implements DataModel {
 
 	protected Container parent;
-	protected Map<byte[], byte[]> map;
+	protected Map<String, byte[]> map;
 	
 	@Override
 	public void setParent(Container parent) {
 		this.parent = parent;
 	}
 	
-	public void setMap(Map<byte[], byte[]> map) {
+	public void setMap(Map<String, byte[]> map) {
 		this.map = map;
 	}
 
-	public Map<byte[], byte[]> getMap() {
+	public Map<String, byte[]> getMap() {
 		return this.map;
 	}
 

@@ -10,15 +10,16 @@ import org.ocpteam.layer.rsp.Context;
 
 public class MapDataSource extends DataSource {
 
-	private Map<byte[], byte[]> map;
+	private Map<String, byte[]> map;
 	
 	public MapDataSource() throws Exception {
 		super();
 		getDesigner().add(DataModel.class, new MapDataModel());
 		// for example
-		map = new HashMap<byte[], byte[]>();
-		map.put("Hello".getBytes(), "World".getBytes());
-		map.put("Foo".getBytes(), "Bar".getBytes());
+		map = new HashMap<String, byte[]>();
+		map.put("Hello", "World".getBytes());
+		map.put("Foo", "Bar".getBytes());
+		map.put("Foo", "WWW".getBytes());
 	}
 	
 	@Override
