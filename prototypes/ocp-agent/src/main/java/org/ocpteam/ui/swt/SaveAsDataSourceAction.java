@@ -12,7 +12,6 @@ import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.ocpteam.misc.JLG;
 
-
 public class SaveAsDataSourceAction extends Action {
 	private DataSourceWindow window;
 
@@ -39,9 +38,13 @@ public class SaveAsDataSourceAction extends Action {
 			FileDialog fd = new FileDialog(shell, SWT.SAVE);
 			fd.setText("Save As");
 			fd.setFilterPath(System.getProperty("user.home"));
-			String[] filterExt = (String[]) window.ds.getResource("swt").getObject(
-					"file_ext");
-			fd.setFilterExtensions(filterExt);
+			try {
+				String[] filterExt = (String[]) window.ds.getResource("swt")
+						.getObject("file_ext");
+				fd.setFilterExtensions(filterExt);
+			} catch (Exception e) {
+				fd.setFilterExtensions(new String[] {"*." + window.ds.getProtocol().toLowerCase(), "*.*"});
+			}
 			String selected = fd.open();
 			window.getShell().setFocus();
 			JLG.debug(selected);
