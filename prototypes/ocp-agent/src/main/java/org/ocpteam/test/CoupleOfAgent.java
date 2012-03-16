@@ -41,7 +41,7 @@ public class CoupleOfAgent {
 
 			// starting second agent
 			OCPDataSource ds2 = new OCPDataSource();
-			Agent a2 = ds2.getDesigner().get(Agent.class);
+			OCPAgent a2 = (OCPAgent) ds2.getDesigner().get(Agent.class);
 			Properties p2 = ds2.getProperties();
 			p2.setProperty("name", "Jean-Louis");
 			p2.setProperty("server", "yes");

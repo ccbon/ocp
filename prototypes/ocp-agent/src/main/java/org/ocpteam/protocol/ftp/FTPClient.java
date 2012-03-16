@@ -5,12 +5,11 @@ import java.io.IOException;
 import org.ocpteam.component.Authentication;
 import org.ocpteam.component.Client;
 import org.ocpteam.component.DataModel;
-import org.ocpteam.component.IConnect;
 import org.ocpteam.layer.rsp.Authenticable;
 import org.ocpteam.layer.rsp.Context;
 import org.ocpteam.misc.JLG;
 
-public class FTPClient extends Client implements IConnect, Authenticable {
+public class FTPClient extends Client implements Authenticable {
 
 	private String hostname;
 	org.apache.commons.net.ftp.FTPClient ftp;

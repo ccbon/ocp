@@ -12,4 +12,17 @@ public class Client implements IComponent, IClient {
 		this.ds = (DataSource) parent;	
 	}
 
+	@Override
+	public void connect() throws Exception {
+	}
+
+	@Override
+	public void disconnect() throws Exception {
+	}
+
+	@Override
+	public boolean testConnection() {
+		return false;
+	}
+
 }

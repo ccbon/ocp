@@ -128,7 +128,6 @@ public class OCPAgent extends DSPAgent {
 		return keyGen.generateKeyPair();
 	}
 
-	@Override
 	public void connect() throws Exception {
 		cfg = ((PropertiesDataSource) ds).getProperties();
 		readConfig();
@@ -205,7 +204,6 @@ public class OCPAgent extends DSPAgent {
 		return p;
 	}
 
-	@Override
 	public void disconnect() {
 		if (server != null) {
 			server.stop();

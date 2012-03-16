@@ -7,10 +7,6 @@ public abstract class Agent implements IComponent {
 
 	public DataSource ds;
 
-	public abstract void connect() throws Exception;
-
-	public abstract void disconnect() throws Exception;
-
 	@Override
 	public void setParent(IContainer parent) {
 		ds = (DataSource) parent;

@@ -66,8 +66,8 @@ public abstract class DataSource implements IContainer, IComponent {
 	}
 
 	public void open() throws Exception {
-		if (getDesigner().uses(Agent.class)) {
-			getDesigner().get(Agent.class).connect();
+		if (getDesigner().uses(Client.class)) {
+			getDesigner().get(Client.class).connect();
 		}
 	}
 
@@ -81,8 +81,8 @@ public abstract class DataSource implements IContainer, IComponent {
 
 	public void close() throws Exception {
 		context = null;
-		if (getDesigner().uses(Agent.class)) {
-			getDesigner().get(Agent.class).disconnect();
+		if (getDesigner().uses(Client.class)) {
+			getDesigner().get(Client.class).disconnect();
 		}
 	}
 

@@ -15,6 +15,7 @@ import java.util.Set;
 
 import org.apache.xmlrpc.client.XmlRpcClient;
 import org.apache.xmlrpc.client.XmlRpcClientConfigImpl;
+import org.ocpteam.component.Agent;
 import org.ocpteam.component.Authentication;
 import org.ocpteam.component.Client;
 import org.ocpteam.component.ContactMap;
@@ -156,7 +157,8 @@ public class OCPClient extends Client implements Authenticable {
 				// TODO: need a ocp dedicated web server. I use mine for the
 				// time being.
 				config.setServerURL(new java.net.URL(agent.cfg.getProperty(
-						"network.sponsor.url", OCPAgent.DEFAULT_SPONSOR_SERVER_URL)));
+						"network.sponsor.url",
+						OCPAgent.DEFAULT_SPONSOR_SERVER_URL)));
 				XmlRpcClient client = new XmlRpcClient();
 				client.setConfig(config);
 				Object[] result = (Object[]) client.execute("list",
@@ -203,7 +205,8 @@ public class OCPClient extends Client implements Authenticable {
 	private void detach(Contact contact) throws Exception {
 		// tell to your contacts this contact has disappeared.
 		synchronized (agent) {
-			ContactMap contactMap = agent.ds.getDesigner().get(ContactMap.class);
+			ContactMap contactMap = agent.ds.getDesigner()
+					.get(ContactMap.class);
 			if (!contactMap.containsValue(contact)) {
 				return;
 			}
@@ -340,14 +343,15 @@ public class OCPClient extends Client implements Authenticable {
 
 	public void declareSponsor() {
 		try {
-			if (agent.cfg.getProperty("network.type", "public").equalsIgnoreCase(
-					"public")) {
+			if (agent.cfg.getProperty("network.type", "public")
+					.equalsIgnoreCase("public")) {
 				int port = agent.toContact().urlList.get(0).getPort();
 				XmlRpcClientConfigImpl config = new XmlRpcClientConfigImpl();
 				// TODO: need a ocp dedicated web server. I use mine for the
 				// time being.
 				config.setServerURL(new java.net.URL(agent.cfg.getProperty(
-						"network.sponsor.url", OCPAgent.DEFAULT_SPONSOR_SERVER_URL)));
+						"network.sponsor.url",
+						OCPAgent.DEFAULT_SPONSOR_SERVER_URL)));
 				XmlRpcClient client = new XmlRpcClient();
 				client.setConfig(config);
 				String result = (String) client.execute("add",
@@ -366,7 +370,8 @@ public class OCPClient extends Client implements Authenticable {
 			Authentication a = ds.getDesigner().get(Authentication.class);
 			String password = (String) a.getChallenge();
 			String login = a.getLogin();
-			Id key = agent.hash(agent.ucrypt(password, (login + password).getBytes()));
+			Id key = agent.hash(agent.ucrypt(password,
+					(login + password).getBytes()));
 			byte[] content = null;
 			try {
 				content = getUser(key);
@@ -375,7 +380,8 @@ public class OCPClient extends Client implements Authenticable {
 			if (content == null) {
 				throw new Exception("user unknown");
 			}
-			User user = (User) JLG.deserialize(agent.udecrypt(password, content));
+			User user = (User) JLG.deserialize(agent
+					.udecrypt(password, content));
 			if (user == null) {
 				throw new Exception("user unknown");
 			}
@@ -395,6 +401,25 @@ public class OCPClient extends Client implements Authenticable {
 
 	public void setAgent(OCPAgent agent) {
 		this.agent = agent;
+	}
+	
+	public OCPAgent getAgent() {
+		if (agent == null) {
+			agent = (OCPAgent) ds.getDesigner().get(Agent.class);
+		}
+		return agent;
+	}
+
+	@Override
+	public void connect() throws Exception {
+		getAgent().connect();
+	}
+
+	
+
+	@Override
+	public void disconnect() throws Exception {
+		getAgent().disconnect();
 	}
 
 }
