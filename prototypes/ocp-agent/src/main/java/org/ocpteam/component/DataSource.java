@@ -5,9 +5,9 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.ResourceBundle;
 
-import org.ocpteam.core.IContainer;
 import org.ocpteam.core.Designer;
 import org.ocpteam.core.IComponent;
+import org.ocpteam.core.IContainer;
 import org.ocpteam.layer.rsp.Context;
 import org.ocpteam.misc.JLG;
 
@@ -17,7 +17,7 @@ public abstract class DataSource implements IContainer, IComponent {
 			.getBundle("extensions");
 
 	public IContainer parent;
-	private Designer designer;
+	private Designer<DataSource> designer;
 	
 	private URI uri;
 	private File file;
@@ -26,7 +26,7 @@ public abstract class DataSource implements IContainer, IComponent {
 	protected Context context;
 
 	public DataSource() {
-		designer = new Designer(this);
+		designer = new Designer<DataSource>(this);
 	}
 	
 	@Override
@@ -35,7 +35,7 @@ public abstract class DataSource implements IContainer, IComponent {
 	}
 
 	@Override
-	public Designer getDesigner() {
+	public Designer<DataSource> getDesigner() {
 		return designer;
 	};
 

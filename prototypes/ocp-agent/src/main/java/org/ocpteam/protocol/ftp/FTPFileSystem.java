@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 
-import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPFile;
 import org.apache.commons.net.ftp.FTPFileFilter;
 import org.ocpteam.component.DataSource;
@@ -16,14 +15,13 @@ import org.ocpteam.misc.JLG;
 
 public class FTPFileSystem implements FileSystem {
 
-	private FTPAgent agent;
+	
 	private FTPUser user;
-	private FTPClient ftp;
+	private org.apache.commons.net.ftp.FTPClient ftp;
 	protected DataSource ds;
 
-	public FTPFileSystem(FTPUser user, FTPAgent agent) {
+	public FTPFileSystem(FTPUser user, FTPClient agent) {
 		this.user = user;
-		this.agent = agent;
 		this.ftp = agent.ftp;
 	}
 
@@ -32,25 +30,10 @@ public class FTPFileSystem implements FileSystem {
 
 	@Override
 	public void checkoutAll(String localDir) throws Exception {
-		// make sure you are at the top directory
-		agent.reconnect((FTPUser) user);
-		// now remove the local dir
-		JLG.rm(localDir);
-		JLG.mkdir(localDir);
-		checkoutDir("/", new File(localDir));
 	}
 
 	@Override
 	public void commitAll(String localDir) throws Exception {
-		// make sure you are at the top directory
-		agent.reconnect((FTPUser) user);
-		ftp.removeDirectory("/");
-		File file = new File(localDir);
-		if (!file.isDirectory()) {
-			throw new Exception("must be a directory:" + localDir);
-		}
-		agent.commit(user, file, "/");
-
 	}
 
 	@Override
@@ -124,7 +107,7 @@ public class FTPFileSystem implements FileSystem {
 			}
 		} else {
 			FileInputStream fis = new FileInputStream(file);
-			ftp.setFileType(FTPClient.BINARY_FILE_TYPE);
+			ftp.setFileType(org.apache.commons.net.ftp.FTPClient.BINARY_FILE_TYPE);
 			ftp.storeFile(remoteDir + file.getName(), fis);
 			fis.close();
 		}

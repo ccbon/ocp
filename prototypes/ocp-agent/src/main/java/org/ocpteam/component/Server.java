@@ -2,8 +2,8 @@ package org.ocpteam.component;
 
 import java.util.Properties;
 
-import org.ocpteam.core.IContainer;
 import org.ocpteam.core.IComponent;
+import org.ocpteam.core.IContainer;
 import org.ocpteam.layer.rsp.PropertiesDataSource;
 
 public class Server implements IComponent {

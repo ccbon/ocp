@@ -2,5 +2,5 @@ package org.ocpteam.core;
 
 
 public interface IContainer {
-	public Designer getDesigner();
+	public Designer<? extends IContainer> getDesigner();
 }

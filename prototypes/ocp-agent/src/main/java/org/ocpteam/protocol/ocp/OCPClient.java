@@ -15,21 +15,26 @@ import java.util.Set;
 
 import org.apache.xmlrpc.client.XmlRpcClient;
 import org.apache.xmlrpc.client.XmlRpcClientConfigImpl;
+import org.ocpteam.component.Authentication;
+import org.ocpteam.component.Client;
 import org.ocpteam.component.ContactMap;
+import org.ocpteam.component.DataModel;
 import org.ocpteam.layer.dsp.Contact;
+import org.ocpteam.layer.rsp.Authenticable;
+import org.ocpteam.layer.rsp.Context;
+import org.ocpteam.layer.rsp.User;
 import org.ocpteam.misc.Id;
 import org.ocpteam.misc.JLG;
 import org.ocpteam.misc.JLGException;
 import org.ocpteam.misc.URL;
 
-public class Client {
+public class OCPClient extends Client implements Authenticable {
 
 	private OCPAgent agent;
 	private List<Channel> understandableChannelList;
 	private Map<URL, Channel> channelMap;
 
-	public Client(OCPAgent agent) {
-		this.agent = agent;
+	public OCPClient() {
 		understandableChannelList = new ArrayList<Channel>();
 		understandableChannelList.add(new TCPChannel());
 		understandableChannelList.add(new MyselfChannel());
@@ -353,6 +358,43 @@ public class Client {
 			e.printStackTrace();
 		}
 
+	}
+
+	@Override
+	public void login() throws Exception {
+		try {
+			Authentication a = ds.getDesigner().get(Authentication.class);
+			String password = (String) a.getChallenge();
+			String login = a.getLogin();
+			Id key = agent.hash(agent.ucrypt(password, (login + password).getBytes()));
+			byte[] content = null;
+			try {
+				content = getUser(key);
+			} catch (Exception e) {
+			}
+			if (content == null) {
+				throw new Exception("user unknown");
+			}
+			User user = (User) JLG.deserialize(agent.udecrypt(password, content));
+			if (user == null) {
+				throw new Exception("user unknown");
+			}
+			DataModel dm = new OCPFileSystem((OCPUser) user, agent);
+			ds.setContext(new Context(dm, "/"));
+			a.setUser(user);
+		} catch (Exception e) {
+			JLG.error(e);
+			throw e;
+		}
+	}
+
+	@Override
+	public void logout() throws Exception {
+		JLG.debug("ocp logout (nothing to do).");
+	}
+
+	public void setAgent(OCPAgent agent) {
+		this.agent = agent;
 	}
 
 }

@@ -1,7 +1,7 @@
 package org.ocpteam.protocol.sftp;
 
-import org.ocpteam.component.Agent;
 import org.ocpteam.component.Authentication;
+import org.ocpteam.component.Client;
 import org.ocpteam.component.DataModel;
 import org.ocpteam.layer.rsp.Authenticable;
 import org.ocpteam.layer.rsp.Context;
@@ -12,25 +12,16 @@ import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.Session;
 
-public class SFTPAgent extends Agent implements Authenticable {
+public class SFTPClient extends Client implements Authenticable {
 
 	private JSch jsch;
 	Session session;
 	public ChannelSftp channel;
 
 	@Override
-	protected void onConnect() throws Exception {
-		jsch = new JSch();
-	}
-
-	@Override
-	protected void onDisconnect() {
-		jsch = null;
-	}
-
-	@Override
 	public void login() throws Exception {
 		try {
+			jsch = new JSch();
 			Authentication a = ds.getDesigner().get(Authentication.class);
 			String login = a.getLogin();
 			Object challenge = a.getChallenge();
@@ -66,7 +57,7 @@ public class SFTPAgent extends Agent implements Authenticable {
 			channel.connect();
 			User user = new SFTPUser(login, c);
 			DataModel dm = new SFTPFileSystem(user, this);
-			ds.setContext(new Context(this, dm, "/"));
+			ds.setContext(new Context(dm, "/"));
 			a.setUser(user);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -78,6 +69,7 @@ public class SFTPAgent extends Agent implements Authenticable {
 	public void logout() throws Exception {
 		channel.exit();
 		session.disconnect();
+		jsch = null;
 	}
 
 }

@@ -22,7 +22,7 @@ public class ZipDataSource extends DataSource {
 		JLG.debug("opening datasource: " + getFile());
 		ZipFileSystem fs = (ZipFileSystem) getDesigner().get(DataModel.class);
 		fs.refresh();
-		context = new Context(null, fs, "/");
+		context = new Context(fs, "/");
 	}
 	
 	@Override

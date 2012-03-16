@@ -2,6 +2,7 @@ package org.ocpteam.protocol.ocp;
 
 import org.ocpteam.component.Agent;
 import org.ocpteam.component.Authentication;
+import org.ocpteam.component.Client;
 import org.ocpteam.component.ContactMap;
 import org.ocpteam.component.NaivePersistentMap;
 import org.ocpteam.component.PersistentMap;
@@ -13,6 +14,7 @@ public class OCPDataSource extends PropertiesDataSource {
 	public OCPDataSource() throws Exception {
 		super();
 		getDesigner().add(Agent.class, new OCPAgent());
+		getDesigner().add(Client.class, new OCPClient());
 		getDesigner().add(Authentication.class, new OCPAuthentication());
 		getDesigner().add(Server.class);
 		getDesigner().add(ContactMap.class);

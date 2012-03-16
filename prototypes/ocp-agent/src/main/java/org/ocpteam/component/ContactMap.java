@@ -4,8 +4,8 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.ocpteam.core.IContainer;
 import org.ocpteam.core.IComponent;
+import org.ocpteam.core.IContainer;
 import org.ocpteam.layer.dsp.Contact;
 import org.ocpteam.misc.Id;
 import org.ocpteam.protocol.ocp.OCPAgent;

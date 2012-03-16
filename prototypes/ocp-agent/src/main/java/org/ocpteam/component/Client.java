@@ -3,15 +3,13 @@ package org.ocpteam.component;
 import org.ocpteam.core.IComponent;
 import org.ocpteam.core.IContainer;
 
-public abstract class TestScenario implements IComponent {
+public class Client implements IComponent, IClient {
 
-	protected IContainer parent;
+	protected DataSource ds;
 
 	@Override
 	public void setParent(IContainer parent) {
-		this.parent = parent;
+		this.ds = (DataSource) parent;	
 	}
-	
-	public abstract boolean test();
 
 }

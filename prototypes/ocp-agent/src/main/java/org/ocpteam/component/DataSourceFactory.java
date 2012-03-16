@@ -8,22 +8,22 @@ import java.util.List;
 import java.util.Properties;
 import java.util.ResourceBundle;
 
-import org.ocpteam.core.IContainer;
 import org.ocpteam.core.Designer;
 import org.ocpteam.core.IComponent;
+import org.ocpteam.core.IContainer;
 import org.ocpteam.misc.JLG;
 
 public class DataSourceFactory implements IContainer, IComponent {
 
 	protected IContainer parent;
-	private Designer designer;
+	private Designer<DataSourceFactory> designer;
 	
 	public DataSourceFactory() {
-		this.designer = new Designer(this);
+		this.designer = new Designer<DataSourceFactory>(this);
 	}
 
 	@Override
-	public Designer getDesigner() {
+	public Designer<DataSourceFactory> getDesigner() {
 		return designer;
 	}
 

@@ -16,11 +16,11 @@ import com.jcraft.jsch.SftpATTRS;
 
 public class SFTPFileSystem implements FileSystem {
 
-	private SFTPAgent agent;
+	private SFTPClient agent;
 	protected User user;
 	protected DataSource ds;
 
-	public SFTPFileSystem(User user, SFTPAgent agent) {
+	public SFTPFileSystem(User user, SFTPClient agent) {
 		this.user = user;
 		this.agent = agent;
 	}

@@ -31,7 +31,7 @@ public class MapDataSource extends DataSource {
 	public void open() throws Exception {
 		MapDataModel dm = (MapDataModel) getDesigner().get(DataModel.class);
 		dm.setMap(map);
-		context = new Context(null, getDesigner().get(DataModel.class), null);
+		context = new Context(getDesigner().get(DataModel.class), null);
 	}
 
 }

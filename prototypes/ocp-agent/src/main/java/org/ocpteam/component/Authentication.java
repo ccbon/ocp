@@ -2,8 +2,8 @@ package org.ocpteam.component;
 
 import java.net.URI;
 
-import org.ocpteam.core.IContainer;
 import org.ocpteam.core.IComponent;
+import org.ocpteam.core.IContainer;
 import org.ocpteam.layer.rsp.Authenticable;
 import org.ocpteam.layer.rsp.User;
 import org.ocpteam.misc.JLG;
@@ -82,13 +82,13 @@ public class Authentication implements IComponent {
 	}
 
 	public void login() throws Exception {
-		Authenticable agent = (Authenticable) ds.getDesigner().get(Agent.class);
-		agent.login();
+		Authenticable client = (Authenticable) ds.getDesigner().get(Client.class);
+		client.login();
 	}
 
 	public void logout() throws Exception {
-		Authenticable agent = (Authenticable) ds.getDesigner().get(Agent.class);
-		agent.logout();
+		Authenticable client = (Authenticable) ds.getDesigner().get(Client.class);
+		client.logout();
 		reset();
 	}
 

@@ -1,7 +1,6 @@
 package org.ocpteam.protocol.ocp;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.Serializable;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
@@ -26,13 +25,10 @@ import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.PBEParameterSpec;
 
-import org.ocpteam.component.Authentication;
+import org.ocpteam.component.Client;
 import org.ocpteam.component.ContactMap;
-import org.ocpteam.component.DataModel;
 import org.ocpteam.layer.dsp.Contact;
 import org.ocpteam.layer.dsp.DSPAgent;
-import org.ocpteam.layer.rsp.Authenticable;
-import org.ocpteam.layer.rsp.Context;
 import org.ocpteam.layer.rsp.PropertiesDataSource;
 import org.ocpteam.layer.rsp.User;
 import org.ocpteam.misc.ByteUtil;
@@ -41,9 +37,8 @@ import org.ocpteam.misc.Id;
 import org.ocpteam.misc.JLG;
 import org.ocpteam.misc.URL;
 
-public class OCPAgent extends DSPAgent implements Authenticable {
+public class OCPAgent extends DSPAgent {
 
-	private static final String NETWORK_PROPERTIES_FILE = "network.properties";
 	public static final String DEFAULT_SPONSOR_SERVER_URL = "http://guenego.com/ocp/ocp.php";
 
 	public Id id;
@@ -60,7 +55,7 @@ public class OCPAgent extends DSPAgent implements Authenticable {
 	public String signatureAlgorithm;
 
 	// an OCP agent acts as a server and a client
-	public Client client;
+	public OCPClient client;
 	public Server server;
 
 	// storage
@@ -133,14 +128,12 @@ public class OCPAgent extends DSPAgent implements Authenticable {
 		return keyGen.generateKeyPair();
 	}
 
-	public File getNetworkConfigFile() {
-		return new File(NETWORK_PROPERTIES_FILE);
-	}
-
 	@Override
-	protected void onConnect() throws Exception {
+	public void connect() throws Exception {
 		cfg = ((PropertiesDataSource) ds).getProperties();
 		readConfig();
+		client = (OCPClient) ds.getDesigner().get(Client.class);
+		client.setAgent(this);
 		JLG.debug("starting agent " + name);
 
 		if (isFirstAgent()) {
@@ -213,7 +206,7 @@ public class OCPAgent extends DSPAgent implements Authenticable {
 	}
 
 	@Override
-	protected void onDisconnect() {
+	public void disconnect() {
 		if (server != null) {
 			server.stop();
 			server = null;
@@ -631,33 +624,7 @@ public class OCPAgent extends DSPAgent implements Authenticable {
 
 	}
 
-	@Override
-	public void login() throws Exception {
-		try {
-			Authentication a = ds.getDesigner().get(Authentication.class);
-			String password = (String) a.getChallenge();
-			String login = a.getLogin();
-			Id key = hash(ucrypt(password, (login + password).getBytes()));
-			byte[] content = null;
-			try {
-				content = client.getUser(key);
-			} catch (Exception e) {
-			}
-			if (content == null) {
-				throw new Exception("user unknown");
-			}
-			User user = (User) JLG.deserialize(udecrypt(password, content));
-			if (user == null) {
-				throw new Exception("user unknown");
-			}
-			DataModel dm = new OCPFileSystem((OCPUser) user, this);
-			ds.setContext(new Context(this, dm, "/"));
-			a.setUser(user);
-		} catch (Exception e) {
-			JLG.error(e);
-			throw e;
-		}
-	}
+
 
 	public Id getNodeId(Address address) throws Exception {
 		if (nodeMap.size() == 0) {
@@ -697,7 +664,6 @@ public class OCPAgent extends DSPAgent implements Authenticable {
 			String value = cfg.getProperty(key);
 			JLG.debug(key + "=" + value);
 		}
-		client = new Client(this);
 		name = cfg.getProperty("name", "anonymous");
 
 		// each agent has its own symmetric key cipher
@@ -818,9 +784,6 @@ public class OCPAgent extends DSPAgent implements Authenticable {
 		storage.removeAll();
 	}
 
-	@Override
-	public void logout() throws Exception {
-		JLG.debug("ocp logout (nothing to do).");
-	}
+	
 
 }
