@@ -4,12 +4,13 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.ocpteam.component.IServer;
 import org.ocpteam.misc.JLG;
 import org.ocpteam.misc.JLGException;
 import org.ocpteam.misc.URL;
 
 
-public class Server {
+public class Server implements IServer {
 
 	
 	public OCPAgent agent;

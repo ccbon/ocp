@@ -27,6 +27,8 @@ import javax.crypto.spec.PBEParameterSpec;
 
 import org.ocpteam.component.Client;
 import org.ocpteam.component.ContactMap;
+import org.ocpteam.component.IClient;
+import org.ocpteam.component.IServer;
 import org.ocpteam.layer.dsp.Contact;
 import org.ocpteam.layer.dsp.DSPAgent;
 import org.ocpteam.layer.rsp.PropertiesDataSource;
@@ -780,6 +782,19 @@ public class OCPAgent extends DSPAgent {
 	@Override
 	public void removeStorage() {
 		storage.removeAll();
+	}
+
+	@Override
+	public IClient getClient() {
+		if (client == null) {
+			client = (OCPClient) ds.getDesigner().get(Client.class);
+		}
+		return client;
+	}
+
+	@Override
+	public IServer getServer() {
+		return server;
 	}
 
 	
