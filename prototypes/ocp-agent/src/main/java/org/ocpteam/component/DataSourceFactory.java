@@ -1,4 +1,4 @@
-package org.ocpteam.functionality;
+package org.ocpteam.component;
 
 import java.io.File;
 import java.net.URI;
@@ -8,14 +8,14 @@ import java.util.List;
 import java.util.Properties;
 import java.util.ResourceBundle;
 
-import org.ocpteam.core.Container;
+import org.ocpteam.core.IContainer;
 import org.ocpteam.core.Designer;
-import org.ocpteam.core.Functionality;
+import org.ocpteam.core.IComponent;
 import org.ocpteam.misc.JLG;
 
-public class DataSourceFactory implements Container, Functionality {
+public class DataSourceFactory implements IContainer, IComponent {
 
-	protected Container parent;
+	protected IContainer parent;
 	private Designer designer;
 	
 	public DataSourceFactory() {
@@ -28,15 +28,15 @@ public class DataSourceFactory implements Container, Functionality {
 	}
 
 	@Override
-	public void setParent(Container parent) {
+	public void setParent(IContainer parent) {
 		this.parent = parent;
 	}
 
 	public Iterator<DataSource> getDataSourceIterator() {
 		List<DataSource> l = new LinkedList<DataSource>();
-		Iterator<Functionality> it = designer.iterator();
+		Iterator<IComponent> it = designer.iterator();
 		while (it.hasNext()) {
-			Functionality functionality = it.next();
+			IComponent functionality = it.next();
 			if (functionality instanceof DataSource) {
 				l.add((DataSource) functionality);
 			}

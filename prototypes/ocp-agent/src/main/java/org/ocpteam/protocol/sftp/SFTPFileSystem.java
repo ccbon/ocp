@@ -4,9 +4,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.util.Vector;
 
-import org.ocpteam.core.Container;
-import org.ocpteam.functionality.DataSource;
-import org.ocpteam.functionality.FileSystem;
+import org.ocpteam.component.DataSource;
+import org.ocpteam.component.FileSystem;
+import org.ocpteam.core.IContainer;
 import org.ocpteam.layer.rsp.FileInterface;
 import org.ocpteam.layer.rsp.User;
 import org.ocpteam.misc.JLG;
@@ -128,7 +128,7 @@ public class SFTPFileSystem implements FileSystem {
 	}
 
 	@Override
-	public void setParent(Container parent) {
+	public void setParent(IContainer parent) {
 		this.ds = (DataSource) parent;
 	}
 

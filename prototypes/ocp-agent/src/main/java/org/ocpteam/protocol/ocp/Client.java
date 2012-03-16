@@ -15,7 +15,7 @@ import java.util.Set;
 
 import org.apache.xmlrpc.client.XmlRpcClient;
 import org.apache.xmlrpc.client.XmlRpcClientConfigImpl;
-import org.ocpteam.functionality.ContactMap;
+import org.ocpteam.component.ContactMap;
 import org.ocpteam.layer.dsp.Contact;
 import org.ocpteam.misc.Id;
 import org.ocpteam.misc.JLG;

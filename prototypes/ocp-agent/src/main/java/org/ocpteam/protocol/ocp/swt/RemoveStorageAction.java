@@ -3,7 +3,7 @@ package org.ocpteam.protocol.ocp.swt;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.graphics.ImageData;
-import org.ocpteam.functionality.Agent;
+import org.ocpteam.component.Agent;
 import org.ocpteam.layer.dsp.DSPAgent;
 import org.ocpteam.misc.JLG;
 import org.ocpteam.misc.swt.QuickMessage;

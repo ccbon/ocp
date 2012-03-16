@@ -37,21 +37,21 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Tray;
 import org.eclipse.swt.widgets.TrayItem;
 import org.eclipse.wb.swt.SWTResourceManager;
-import org.ocpteam.core.Container;
-import org.ocpteam.core.Functionality;
-import org.ocpteam.functionality.Agent;
-import org.ocpteam.functionality.Authentication;
-import org.ocpteam.functionality.DataSource;
-import org.ocpteam.functionality.DataSourceFactory;
-import org.ocpteam.functionality.FileSystem;
-import org.ocpteam.functionality.MapDataModel;
-import org.ocpteam.functionality.Server;
+import org.ocpteam.component.Agent;
+import org.ocpteam.component.Authentication;
+import org.ocpteam.component.DataSource;
+import org.ocpteam.component.DataSourceFactory;
+import org.ocpteam.component.FileSystem;
+import org.ocpteam.component.MapDataModel;
+import org.ocpteam.component.Server;
+import org.ocpteam.core.IContainer;
+import org.ocpteam.core.IComponent;
 import org.ocpteam.layer.rsp.Context;
 import org.ocpteam.misc.JLG;
 import org.ocpteam.misc.swt.QuickMessage;
 
 public class DataSourceWindow extends ApplicationWindow implements
-		Functionality {
+		IComponent {
 
 	public static final int ON_DS_CLOSE = 0;
 	OpenDataSourceAction openDataSourceAction;
@@ -90,7 +90,7 @@ public class DataSourceWindow extends ApplicationWindow implements
 	private DynamicMenuManager protocolMenu;
 	private TrayItem item;
 	private Map<Integer, List<Listener>> listenerMap;
-	public Container app;
+	public IContainer app;
 	public DataSourceFactory dsf;
 
 	/**
@@ -588,7 +588,7 @@ public class DataSourceWindow extends ApplicationWindow implements
 	}
 
 	@Override
-	public void setParent(Container parent) {
+	public void setParent(IContainer parent) {
 		this.app = parent;
 
 	}

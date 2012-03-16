@@ -26,9 +26,9 @@ import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.PBEParameterSpec;
 
-import org.ocpteam.functionality.Authentication;
-import org.ocpteam.functionality.ContactMap;
-import org.ocpteam.functionality.DataModel;
+import org.ocpteam.component.Authentication;
+import org.ocpteam.component.ContactMap;
+import org.ocpteam.component.DataModel;
 import org.ocpteam.layer.dsp.Contact;
 import org.ocpteam.layer.dsp.DSPAgent;
 import org.ocpteam.layer.rsp.Authenticable;
@@ -133,10 +133,6 @@ public class OCPAgent extends DSPAgent implements Authenticable {
 		return keyGen.generateKeyPair();
 	}
 
-	protected void attach() throws Exception {
-		storage.attach();
-	}
-
 	public File getNetworkConfigFile() {
 		return new File(NETWORK_PROPERTIES_FILE);
 	}
@@ -195,7 +191,7 @@ public class OCPAgent extends DSPAgent implements Authenticable {
 		if (cfg.getProperty("server", "yes").equals("yes")) {
 			server = new Server(this);
 			server.start();
-			attach();
+			storage.attach();
 			Contact myself = toContactForMyself();
 			// Contact myself = toContact();
 			addContact(myself);
@@ -802,7 +798,6 @@ public class OCPAgent extends DSPAgent implements Authenticable {
 		client.sendAll(Protocol.PING.getBytes());
 	}
 
-	@Override
 	public String getName() {
 		return name;
 	}

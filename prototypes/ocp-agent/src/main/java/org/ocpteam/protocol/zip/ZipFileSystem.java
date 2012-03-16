@@ -7,9 +7,9 @@ import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
-import org.ocpteam.core.Container;
-import org.ocpteam.functionality.DataSource;
-import org.ocpteam.functionality.FileSystem;
+import org.ocpteam.component.DataSource;
+import org.ocpteam.component.FileSystem;
+import org.ocpteam.core.IContainer;
 import org.ocpteam.layer.rsp.FileInterface;
 import org.ocpteam.misc.JLG;
 
@@ -150,7 +150,7 @@ public class ZipFileSystem implements FileSystem {
 	}
 
 	@Override
-	public void setParent(Container parent) {
+	public void setParent(IContainer parent) {
 		this.ds = (DataSource) parent;
 	}
 

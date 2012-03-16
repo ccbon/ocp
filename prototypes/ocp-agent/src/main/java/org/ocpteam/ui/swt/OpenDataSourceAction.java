@@ -6,7 +6,7 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.widgets.FileDialog;
-import org.ocpteam.functionality.DataSourceFactory;
+import org.ocpteam.component.DataSourceFactory;
 import org.ocpteam.misc.JLG;
 import org.ocpteam.misc.swt.QuickMessage;
 

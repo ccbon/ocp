@@ -1,14 +1,14 @@
-package org.ocpteam.functionality;
+package org.ocpteam.component;
 
-import org.ocpteam.core.Container;
-import org.ocpteam.core.Functionality;
+import org.ocpteam.core.IContainer;
+import org.ocpteam.core.IComponent;
 
 
 
-public abstract class Agent implements Functionality {
+public abstract class Agent implements IComponent {
 	
 	@Override
-	public void setParent(Container parent) {
+	public void setParent(IContainer parent) {
 		this.ds = (DataSource) parent;		
 	}
 

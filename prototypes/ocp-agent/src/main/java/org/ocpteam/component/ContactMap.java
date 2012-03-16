@@ -1,24 +1,24 @@
-package org.ocpteam.functionality;
+package org.ocpteam.component;
 
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.ocpteam.core.Container;
-import org.ocpteam.core.Functionality;
+import org.ocpteam.core.IContainer;
+import org.ocpteam.core.IComponent;
 import org.ocpteam.layer.dsp.Contact;
 import org.ocpteam.misc.Id;
 import org.ocpteam.protocol.ocp.OCPAgent;
 import org.ocpteam.protocol.ocp.Protocol;
 
-public class ContactMap extends HashMap<Id, Contact> implements Functionality {
+public class ContactMap extends HashMap<Id, Contact> implements IComponent {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	private Container parent;
+	private IContainer parent;
 
 	public Contact getContact(Id contactId) throws Exception {
 		Contact contact = get(contactId);
@@ -30,7 +30,7 @@ public class ContactMap extends HashMap<Id, Contact> implements Functionality {
 
 	
 	@Override
-	public void setParent(Container parent) {
+	public void setParent(IContainer parent) {
 		this.parent = parent;
 	}
 

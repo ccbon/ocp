@@ -1,14 +1,14 @@
-package org.ocpteam.functionality;
+package org.ocpteam.component;
 
 import java.net.URI;
 
-import org.ocpteam.core.Container;
-import org.ocpteam.core.Functionality;
+import org.ocpteam.core.IContainer;
+import org.ocpteam.core.IComponent;
 import org.ocpteam.layer.rsp.Authenticable;
 import org.ocpteam.layer.rsp.User;
 import org.ocpteam.misc.JLG;
 
-public class Authentication implements Functionality {
+public class Authentication implements IComponent {
 
 	private Object challenge;
 	private String login;
@@ -97,7 +97,7 @@ public class Authentication implements Functionality {
 	}
 
 	@Override
-	public void setParent(Container parent) {
+	public void setParent(IContainer parent) {
 		this.ds = (DataSource) parent;
 		initFromURI();
 	}

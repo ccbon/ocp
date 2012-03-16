@@ -1,7 +1,7 @@
 package org.thirdparty.test;
 
-import org.ocpteam.core.DefaultApplication;
-import org.ocpteam.functionality.DataSourceFactory;
+import org.ocpteam.component.DataSourceFactory;
+import org.ocpteam.example.DefaultApplication;
 import org.ocpteam.misc.JLG;
 import org.ocpteam.protocol.ftp.FTPDataSource;
 import org.ocpteam.protocol.ocp.OCPDataSource;

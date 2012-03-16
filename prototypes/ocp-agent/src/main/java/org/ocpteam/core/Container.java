@@ -1,6 +1,20 @@
 package org.ocpteam.core;
 
 
-public interface Container {
-	public Designer getDesigner();
+public class Container implements IContainer {
+	
+	private Designer designer;
+	
+	public Container() {
+		designer = new Designer(this);
+	}
+
+	@Override
+	public Designer getDesigner() {
+		return designer;
+	}
+
+	
+
+
 }

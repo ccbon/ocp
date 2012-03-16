@@ -256,7 +256,7 @@
 					</descriptors>
 					<archive>
 						<manifest>
-							<mainClass>org.ocpteam.example.Main</mainClass>
+							<mainClass>org.ocpteam.example.DefaultApplication</mainClass>
 						</manifest>
 						<manifestEntries>
 							<url>${project.url}</url>

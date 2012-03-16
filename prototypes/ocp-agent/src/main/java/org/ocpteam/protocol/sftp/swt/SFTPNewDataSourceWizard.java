@@ -8,7 +8,7 @@ import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
-import org.ocpteam.functionality.Authentication;
+import org.ocpteam.component.Authentication;
 import org.ocpteam.misc.JLG;
 import org.ocpteam.misc.swt.QuickMessage;
 import org.ocpteam.protocol.sftp.SFTPDataSource;

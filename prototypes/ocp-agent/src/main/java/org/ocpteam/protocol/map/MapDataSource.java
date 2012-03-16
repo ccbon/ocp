@@ -3,9 +3,9 @@ package org.ocpteam.protocol.map;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.ocpteam.functionality.DataModel;
-import org.ocpteam.functionality.DataSource;
-import org.ocpteam.functionality.MapDataModel;
+import org.ocpteam.component.DataModel;
+import org.ocpteam.component.DataSource;
+import org.ocpteam.component.MapDataModel;
 import org.ocpteam.layer.rsp.Context;
 
 public class MapDataSource extends DataSource {

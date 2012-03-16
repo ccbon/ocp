@@ -1,7 +1,7 @@
 package org.ocpteam.layer.rsp;
 
-import org.ocpteam.functionality.Agent;
-import org.ocpteam.functionality.DataModel;
+import org.ocpteam.component.Agent;
+import org.ocpteam.component.DataModel;
 
 public class Context {
 

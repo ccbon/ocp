@@ -2,8 +2,8 @@ package org.ocpteam.ocp_agent;
 
 import static org.junit.Assert.assertTrue;
 
-import org.ocpteam.functionality.DataSource;
-import org.ocpteam.functionality.TestScenario;
+import org.ocpteam.component.DataSource;
+import org.ocpteam.component.TestScenario;
 import org.ocpteam.protocol.ocp.OCPDataSource;
 
 public class OCPSimpleTest extends TestScenario {

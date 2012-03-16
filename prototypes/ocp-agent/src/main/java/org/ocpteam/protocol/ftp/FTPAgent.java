@@ -5,9 +5,9 @@ import java.io.FileInputStream;
 import java.io.IOException;
 
 import org.apache.commons.net.ftp.FTPClient;
-import org.ocpteam.functionality.Agent;
-import org.ocpteam.functionality.Authentication;
-import org.ocpteam.functionality.DataModel;
+import org.ocpteam.component.Agent;
+import org.ocpteam.component.Authentication;
+import org.ocpteam.component.DataModel;
 import org.ocpteam.layer.rsp.Authenticable;
 import org.ocpteam.layer.rsp.Context;
 import org.ocpteam.layer.rsp.User;

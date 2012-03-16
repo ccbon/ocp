@@ -1,4 +1,4 @@
-package org.ocpteam.functionality;
+package org.ocpteam.component;
 
 import java.io.File;
 

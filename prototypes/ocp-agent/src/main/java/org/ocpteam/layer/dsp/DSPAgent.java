@@ -2,7 +2,7 @@ package org.ocpteam.layer.dsp;
 
 import java.util.Properties;
 
-import org.ocpteam.functionality.Agent;
+import org.ocpteam.component.Agent;
 import org.ocpteam.misc.JLG;
 
 /**
@@ -17,8 +17,6 @@ public abstract class DSPAgent extends Agent {
 	public DSPAgent() {
 		super();
 	}
-	
-	public abstract String getName();
 	
 	public boolean isFirstAgent() {
 		if (cfg == null) {

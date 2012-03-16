@@ -2,10 +2,10 @@ package org.ocpteam.protocol.ftp;
 
 import java.net.URI;
 
-import org.ocpteam.functionality.Agent;
-import org.ocpteam.functionality.Authentication;
-import org.ocpteam.functionality.DataModel;
-import org.ocpteam.functionality.DataSource;
+import org.ocpteam.component.Agent;
+import org.ocpteam.component.Authentication;
+import org.ocpteam.component.DataModel;
+import org.ocpteam.component.DataSource;
 
 public class FTPDataSource extends DataSource {
 

@@ -3,8 +3,8 @@ package org.ocpteam.test;
 import java.util.Iterator;
 import java.util.Properties;
 
-import org.ocpteam.functionality.Agent;
-import org.ocpteam.functionality.Authentication;
+import org.ocpteam.component.Agent;
+import org.ocpteam.component.Authentication;
 import org.ocpteam.misc.JLG;
 import org.ocpteam.misc.JLGException;
 import org.ocpteam.protocol.ocp.Captcha;

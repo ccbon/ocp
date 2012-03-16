@@ -1,11 +1,11 @@
 package org.ocpteam.protocol.ocp;
 
-import org.ocpteam.functionality.Agent;
-import org.ocpteam.functionality.Authentication;
-import org.ocpteam.functionality.ContactMap;
-import org.ocpteam.functionality.NaivePersistentMap;
-import org.ocpteam.functionality.PersistentMap;
-import org.ocpteam.functionality.Server;
+import org.ocpteam.component.Agent;
+import org.ocpteam.component.Authentication;
+import org.ocpteam.component.ContactMap;
+import org.ocpteam.component.NaivePersistentMap;
+import org.ocpteam.component.PersistentMap;
+import org.ocpteam.component.Server;
 import org.ocpteam.layer.rsp.PropertiesDataSource;
 
 public class OCPDataSource extends PropertiesDataSource {

@@ -7,9 +7,9 @@ import java.io.FileOutputStream;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPFile;
 import org.apache.commons.net.ftp.FTPFileFilter;
-import org.ocpteam.core.Container;
-import org.ocpteam.functionality.DataSource;
-import org.ocpteam.functionality.FileSystem;
+import org.ocpteam.component.DataSource;
+import org.ocpteam.component.FileSystem;
+import org.ocpteam.core.IContainer;
 import org.ocpteam.layer.rsp.FileInterface;
 import org.ocpteam.misc.JLG;
 
@@ -204,7 +204,7 @@ public class FTPFileSystem implements FileSystem {
 	}
 
 	@Override
-	public void setParent(Container parent) {
+	public void setParent(IContainer parent) {
 		this.ds = (DataSource) parent;
 		
 	}

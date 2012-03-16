@@ -12,7 +12,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.swt.widgets.TreeItem;
-import org.ocpteam.functionality.ContactMap;
+import org.ocpteam.component.ContactMap;
 import org.ocpteam.layer.dsp.Contact;
 import org.ocpteam.layer.dsp.DSPAgent;
 import org.ocpteam.misc.URL;

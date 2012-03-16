@@ -2,7 +2,7 @@ package org.ocpteam.test;
 
 import java.util.Properties;
 
-import org.ocpteam.functionality.Agent;
+import org.ocpteam.component.Agent;
 import org.ocpteam.misc.JLG;
 import org.ocpteam.protocol.ocp.OCPAgent;
 import org.ocpteam.protocol.ocp.OCPDataSource;

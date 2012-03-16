@@ -1,22 +1,22 @@
-package org.ocpteam.functionality;
+package org.ocpteam.component;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.util.ResourceBundle;
 
-import org.ocpteam.core.Container;
+import org.ocpteam.core.IContainer;
 import org.ocpteam.core.Designer;
-import org.ocpteam.core.Functionality;
+import org.ocpteam.core.IComponent;
 import org.ocpteam.layer.rsp.Context;
 import org.ocpteam.misc.JLG;
 
-public abstract class DataSource implements Container, Functionality {
+public abstract class DataSource implements IContainer, IComponent {
 
 	public static ResourceBundle extensionResource = ResourceBundle
 			.getBundle("extensions");
 
-	public Container parent;
+	public IContainer parent;
 	private Designer designer;
 	
 	private URI uri;
@@ -30,7 +30,7 @@ public abstract class DataSource implements Container, Functionality {
 	}
 	
 	@Override
-	public void setParent(Container parent) {
+	public void setParent(IContainer parent) {
 		this.parent = parent;
 	}
 

@@ -1,6 +1,6 @@
 package org.ocpteam.protocol.ocp;
 
-import org.ocpteam.functionality.Authentication;
+import org.ocpteam.component.Authentication;
 
 public class OCPAuthentication extends Authentication {
 

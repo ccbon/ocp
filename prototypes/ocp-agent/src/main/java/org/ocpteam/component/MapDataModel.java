@@ -1,16 +1,16 @@
-package org.ocpteam.functionality;
+package org.ocpteam.component;
 
 import java.util.Map;
 
-import org.ocpteam.core.Container;
+import org.ocpteam.core.IContainer;
 
 public class MapDataModel implements DataModel {
 
-	protected Container parent;
+	protected IContainer parent;
 	protected Map<String, byte[]> map;
 	
 	@Override
-	public void setParent(Container parent) {
+	public void setParent(IContainer parent) {
 		this.parent = parent;
 	}
 	

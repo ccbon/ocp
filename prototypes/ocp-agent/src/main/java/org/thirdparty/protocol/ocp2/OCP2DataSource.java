@@ -2,7 +2,7 @@ package org.thirdparty.protocol.ocp2;
 
 import java.util.ResourceBundle;
 
-import org.ocpteam.functionality.PersistentMap;
+import org.ocpteam.component.PersistentMap;
 import org.ocpteam.misc.JLG;
 import org.ocpteam.protocol.ocp.OCPDataSource;
 

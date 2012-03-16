@@ -1,7 +1,7 @@
 package org.ocpteam.protocol.zip;
 
-import org.ocpteam.functionality.DataModel;
-import org.ocpteam.functionality.DataSource;
+import org.ocpteam.component.DataModel;
+import org.ocpteam.component.DataSource;
 import org.ocpteam.layer.rsp.Context;
 import org.ocpteam.misc.JLG;
 
