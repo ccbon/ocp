@@ -2,7 +2,7 @@ package org.ocpteam.layer.rsp;
 
 import java.io.Serializable;
 
-public abstract class User implements Serializable {
+public class User implements Serializable {
 
 	/**
 	 * 
@@ -19,7 +19,9 @@ public abstract class User implements Serializable {
 		return login;
 	}
 	
-	public abstract String getDefaultLocalDir();
+	public String getDefaultLocalDir() {
+		return System.getProperty("user.home");
+	}
 
 
 

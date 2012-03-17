@@ -12,16 +12,12 @@ import org.ocpteam.component.IFile;
 import org.ocpteam.core.IContainer;
 import org.ocpteam.misc.JLG;
 
-
 public class FTPFileSystem implements IFileSystem {
 
-	
-	private FTPUser user;
 	private org.apache.commons.net.ftp.FTPClient ftp;
 	protected DataSource ds;
 
-	public FTPFileSystem(FTPUser user, FTPClient agent) {
-		this.user = user;
+	public FTPFileSystem(FTPClient agent) {
 		this.ftp = agent.ftp;
 	}
 
@@ -45,14 +41,13 @@ public class FTPFileSystem implements IFileSystem {
 		final String filename = remoteFilename;
 		FileOutputStream fos = null;
 
-		FTPFile[] ftpFiles = ftp.listFiles(remoteDir,
-				new FTPFileFilter() {
+		FTPFile[] ftpFiles = ftp.listFiles(remoteDir, new FTPFileFilter() {
 
-					@Override
-					public boolean accept(FTPFile arg0) {
-						return arg0.getName().equals(filename);
-					}
-				});
+			@Override
+			public boolean accept(FTPFile arg0) {
+				return arg0.getName().equals(filename);
+			}
+		});
 		if (ftpFiles.length != 1) {
 			throw new Exception("ftpFiles.length != 1");
 		}
@@ -72,7 +67,7 @@ public class FTPFileSystem implements IFileSystem {
 		}
 
 	}
-	
+
 	private void checkoutDir(String remotePath, File localDir) throws Exception {
 		ftp.changeWorkingDirectory(remotePath);
 		FileOutputStream fos = null;
@@ -128,18 +123,16 @@ public class FTPFileSystem implements IFileSystem {
 	}
 
 	@Override
-	public void mkdir(String existingParentDir, String newDir)
-			throws Exception {
+	public void mkdir(String existingParentDir, String newDir) throws Exception {
 		if (!existingParentDir.endsWith("/")) {
 			existingParentDir += "/";
 		}
 		ftp.mkd(existingParentDir + "/" + newDir);
-		
+
 	}
 
 	@Override
-	public void rm(String existingParentDir, String name)
-			throws Exception {
+	public void rm(String existingParentDir, String name) throws Exception {
 		if (!existingParentDir.endsWith("/")) {
 			existingParentDir += "/";
 		}
@@ -169,12 +162,11 @@ public class FTPFileSystem implements IFileSystem {
 			ftp.removeDirectory(existingParentDir + name);
 		}
 
-		
 	}
 
 	@Override
-	public void rename(String existingParentDir, String oldName,
-			String newName) throws Exception {
+	public void rename(String existingParentDir, String oldName, String newName)
+			throws Exception {
 		if (!existingParentDir.endsWith("/")) {
 			existingParentDir += "/";
 		}
@@ -183,13 +175,13 @@ public class FTPFileSystem implements IFileSystem {
 
 	@Override
 	public String getDefaultLocalDir() {
-		return user.getDefaultLocalDir();
+		return System.getProperty("user.home");
 	}
 
 	@Override
 	public void setParent(IContainer parent) {
 		this.ds = (DataSource) parent;
-		
+
 	}
 
 }
