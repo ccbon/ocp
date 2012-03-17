@@ -43,8 +43,8 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.wb.swt.SWTResourceManager;
 import org.ocpteam.component.Agent;
-import org.ocpteam.component.FileSystem;
-import org.ocpteam.layer.rsp.FileInterface;
+import org.ocpteam.component.IFileSystem;
+import org.ocpteam.component.IFile;
 import org.ocpteam.misc.JLG;
 import org.ocpteam.misc.swt.QuickMessage;
 
@@ -65,7 +65,7 @@ public class ExplorerComposite extends Composite {
 	public String currentRemoteDirString;
 
 	public Agent agent;
-	public FileSystem fs;
+	public IFileSystem fs;
 	private Label localDirectoryLabel;
 	private Label remoteDirectoryLabel;
 	private DataSourceWindow w;
@@ -79,7 +79,7 @@ public class ExplorerComposite extends Composite {
 	public ExplorerComposite(Composite parent, int style, DataSourceWindow w) {
 		super(parent, style);
 		this.w = w;
-		this.fs = (FileSystem) w.context.dataModel;
+		this.fs = (IFileSystem) w.context.dataModel;
 
 		currentLocalDirectory = new File(fs.getDefaultLocalDir());
 		currentRemoteDirString = "/";
@@ -469,17 +469,17 @@ public class ExplorerComposite extends Composite {
 					DIRECTORY_TYPE, DIRECTORY_SIZE });
 			parentTreetableItem.setImage(DIRECTORY_ICON);
 
-			FileInterface currentDir = fs.getFile(currentRemoteDirString);
+			IFile currentDir = fs.getFile(currentRemoteDirString);
 			if (currentDir == null) {
 				return;
 			}
-			Collection<? extends FileInterface> set = currentDir.listFiles();
+			Collection<? extends IFile> set = currentDir.listFiles();
 			// Create an array containing the elements in a set
-			FileInterface[] array = (FileInterface[]) set
-					.toArray(new FileInterface[set.size()]);
+			IFile[] array = (IFile[]) set
+					.toArray(new IFile[set.size()]);
 			// Order
-			Arrays.sort(array, new Comparator<FileInterface>() {
-				public int compare(FileInterface f1, FileInterface f2) {
+			Arrays.sort(array, new Comparator<IFile>() {
+				public int compare(IFile f1, IFile f2) {
 					if (f1.isFile() && f2.isDirectory()) {
 						return 1;
 					} else if (f2.isFile() && f1.isDirectory()) {
@@ -490,7 +490,7 @@ public class ExplorerComposite extends Composite {
 				}
 			});
 
-			for (FileInterface te : array) {
+			for (IFile te : array) {
 
 				TableItem tableItem = new TableItem(remoteDirectoryTable,
 						SWT.NONE);

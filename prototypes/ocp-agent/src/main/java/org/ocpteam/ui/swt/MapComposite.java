@@ -13,7 +13,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
-import org.ocpteam.component.DataModel;
+import org.ocpteam.component.IDataModel;
 import org.ocpteam.component.MapDataModel;
 import org.ocpteam.misc.JLG;
 
@@ -30,7 +30,7 @@ public class MapComposite extends Composite {
 	public MapComposite(Composite parent, int style, final DataSourceWindow dsw) {
 		super(parent, style);
 		this.dsw = dsw;
-		mdm = (MapDataModel) dsw.ds.getDesigner().get(DataModel.class);
+		mdm = (MapDataModel) dsw.ds.getDesigner().get(IDataModel.class);
 		setLayout(new FillLayout(SWT.HORIZONTAL));
 		
 		table = new Table(this, SWT.BORDER | SWT.FULL_SELECTION);

@@ -4,15 +4,15 @@ import java.net.URI;
 
 import org.ocpteam.component.Authentication;
 import org.ocpteam.component.Client;
-import org.ocpteam.component.DataModel;
-import org.ocpteam.layer.rsp.PropertiesDataSource;
+import org.ocpteam.component.IDataModel;
+import org.ocpteam.component.PropertiesDataSource;
 
 public class FTPDataSource extends PropertiesDataSource {
 
 	public FTPDataSource() throws Exception {
 		super();
 		getDesigner().add(Client.class, new FTPClient());
-		getDesigner().add(DataModel.class, new FTPFileSystem());
+		getDesigner().add(IDataModel.class, new FTPFileSystem());
 		getDesigner().add(Authentication.class);
 	}
 

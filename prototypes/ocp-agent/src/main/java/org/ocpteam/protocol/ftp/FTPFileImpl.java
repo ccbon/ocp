@@ -4,10 +4,10 @@ import java.util.Collection;
 import java.util.HashSet;
 
 import org.apache.commons.net.ftp.FTPFile;
-import org.ocpteam.layer.rsp.FileInterface;
+import org.ocpteam.component.IFile;
 
 
-public class FTPFileImpl implements FileInterface {
+public class FTPFileImpl implements IFile {
 
 	private HashSet<FTPFileImpl> set;
 	private FTPFile ftpFile;
@@ -19,7 +19,7 @@ public class FTPFileImpl implements FileInterface {
 		this.ftpFile = ftpFile;
 	}
 	@Override
-	public Collection<? extends FileInterface> listFiles() {
+	public Collection<? extends IFile> listFiles() {
 		return set;
 	}
 

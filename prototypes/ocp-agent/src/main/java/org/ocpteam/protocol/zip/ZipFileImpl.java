@@ -4,10 +4,10 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.zip.ZipEntry;
 
-import org.ocpteam.layer.rsp.FileInterface;
+import org.ocpteam.component.IFile;
 import org.ocpteam.misc.JLG;
 
-public class ZipFileImpl implements FileInterface {
+public class ZipFileImpl implements IFile {
 
 	private String path;
 	private boolean bIsDirectory;
@@ -26,7 +26,7 @@ public class ZipFileImpl implements FileInterface {
 	}
 
 	@Override
-	public Collection<? extends FileInterface> listFiles() {
+	public Collection<? extends IFile> listFiles() {
 		return map.values();
 	}
 

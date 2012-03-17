@@ -2,7 +2,7 @@ package org.thirdparty.protocol.ocp2;
 
 import java.util.ResourceBundle;
 
-import org.ocpteam.component.PersistentMap;
+import org.ocpteam.component.IPersistentMap;
 import org.ocpteam.misc.JLG;
 import org.ocpteam.protocol.ocp.OCPDataSource;
 
@@ -10,7 +10,7 @@ public class OCP2DataSource extends OCPDataSource {
 
 	public OCP2DataSource() throws Exception {
 		super();
-		getDesigner().add(PersistentMap.class, new ThirdPartyPersistentMap());
+		getDesigner().add(IPersistentMap.class, new ThirdPartyPersistentMap());
 	}
 	
 	@Override

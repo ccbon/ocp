@@ -2,7 +2,7 @@ package org.ocpteam.protocol.sftp;
 
 import org.ocpteam.component.Authentication;
 import org.ocpteam.component.Client;
-import org.ocpteam.component.DataModel;
+import org.ocpteam.component.IDataModel;
 import org.ocpteam.layer.rsp.IAuthenticable;
 import org.ocpteam.layer.rsp.Context;
 import org.ocpteam.layer.rsp.User;
@@ -56,7 +56,7 @@ public class SFTPClient extends Client implements IAuthenticable {
 			channel = (ChannelSftp) session.openChannel("sftp");
 			channel.connect();
 			User user = new SFTPUser(login, c);
-			DataModel dm = new SFTPFileSystem(user, this);
+			IDataModel dm = new SFTPFileSystem(user, this);
 			ds.setContext(new Context(dm, "/"));
 			a.setUser(user);
 		} catch (Exception e) {

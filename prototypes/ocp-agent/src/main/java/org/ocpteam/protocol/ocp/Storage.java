@@ -5,7 +5,7 @@ import java.util.Map;
 import java.util.NavigableSet;
 import java.util.TreeSet;
 
-import org.ocpteam.component.PersistentMap;
+import org.ocpteam.component.IPersistentMap;
 import org.ocpteam.misc.Id;
 import org.ocpteam.misc.JLG;
 
@@ -22,7 +22,7 @@ public class Storage {
 				"storage.dir",
 				System.getenv("TEMP") + "/ocp_agent_storage/"
 						+ agent.getName());
-		PersistentMap persistentMap = agent.ds.getDesigner().get(PersistentMap.class);
+		IPersistentMap persistentMap = agent.ds.getDesigner().get(IPersistentMap.class);
 		persistentMap.setRoot(root);
 		contentMap = persistentMap;
 		this.agent = agent;

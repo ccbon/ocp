@@ -1,10 +1,9 @@
-package org.ocpteam.layer.rsp;
+package org.ocpteam.component;
 
 import java.io.File;
 import java.net.URI;
 import java.util.Properties;
 
-import org.ocpteam.component.DataSource;
 import org.ocpteam.misc.JLG;
 
 public abstract class PropertiesDataSource extends DataSource {

@@ -7,13 +7,13 @@ import java.io.FileOutputStream;
 import org.apache.commons.net.ftp.FTPFile;
 import org.apache.commons.net.ftp.FTPFileFilter;
 import org.ocpteam.component.DataSource;
-import org.ocpteam.component.FileSystem;
+import org.ocpteam.component.IFileSystem;
+import org.ocpteam.component.IFile;
 import org.ocpteam.core.IContainer;
-import org.ocpteam.layer.rsp.FileInterface;
 import org.ocpteam.misc.JLG;
 
 
-public class FTPFileSystem implements FileSystem {
+public class FTPFileSystem implements IFileSystem {
 
 	
 	private FTPUser user;
@@ -115,7 +115,7 @@ public class FTPFileSystem implements FileSystem {
 	}
 
 	@Override
-	public FileInterface getFile(String dir) throws Exception {
+	public IFile getFile(String dir) throws Exception {
 		if (!ftp.changeWorkingDirectory(dir)) {
 			throw new Exception(dir + " is not a remote directory");
 		}

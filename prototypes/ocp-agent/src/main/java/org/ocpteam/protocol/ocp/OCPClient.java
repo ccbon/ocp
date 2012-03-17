@@ -19,7 +19,7 @@ import org.ocpteam.component.Agent;
 import org.ocpteam.component.Authentication;
 import org.ocpteam.component.Client;
 import org.ocpteam.component.ContactMap;
-import org.ocpteam.component.DataModel;
+import org.ocpteam.component.IDataModel;
 import org.ocpteam.layer.dsp.Contact;
 import org.ocpteam.layer.rsp.IAuthenticable;
 import org.ocpteam.layer.rsp.Context;
@@ -385,7 +385,7 @@ public class OCPClient extends Client implements IAuthenticable {
 			if (user == null) {
 				throw new Exception("user unknown");
 			}
-			DataModel dm = new OCPFileSystem((OCPUser) user, agent);
+			IDataModel dm = new OCPFileSystem((OCPUser) user, agent);
 			ds.setContext(new Context(dm, "/"));
 			a.setUser(user);
 		} catch (Exception e) {

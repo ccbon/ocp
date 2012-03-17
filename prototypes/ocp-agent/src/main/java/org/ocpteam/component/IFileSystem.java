@@ -2,9 +2,8 @@ package org.ocpteam.component;
 
 import java.io.File;
 
-import org.ocpteam.layer.rsp.FileInterface;
 
-public interface FileSystem extends DataModel {
+public interface IFileSystem extends IDataModel {
 
 	public void checkoutAll(String localDir) throws Exception;
 	
@@ -15,7 +14,7 @@ public interface FileSystem extends DataModel {
 
 	public void commit(String remoteDir, File file) throws Exception;
 
-	public FileInterface getFile(String dir)
+	public IFile getFile(String dir)
 			throws Exception;
 
 	public void mkdir(String existingParentDir,

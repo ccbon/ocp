@@ -5,10 +5,10 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.ocpteam.layer.rsp.FileInterface;
+import org.ocpteam.component.IFile;
 
 
-public class Tree implements Serializable, FileInterface {
+public class Tree implements Serializable, IFile {
 
 	/**
 	 * 
@@ -48,7 +48,7 @@ public class Tree implements Serializable, FileInterface {
 	}
 
 	@Override
-	public Collection<? extends FileInterface> listFiles() {
+	public Collection<? extends IFile> listFiles() {
 		return getEntries();
 	}
 

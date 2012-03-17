@@ -41,7 +41,7 @@ import org.ocpteam.component.Agent;
 import org.ocpteam.component.Authentication;
 import org.ocpteam.component.DataSource;
 import org.ocpteam.component.DataSourceFactory;
-import org.ocpteam.component.FileSystem;
+import org.ocpteam.component.IFileSystem;
 import org.ocpteam.component.MapDataModel;
 import org.ocpteam.component.Server;
 import org.ocpteam.core.IComponent;
@@ -372,7 +372,7 @@ public class DataSourceWindow extends ApplicationWindow implements
 
 			explorerCTabItem.setShowClose(true);
 			
-			if (context.dataModel instanceof FileSystem) {
+			if (context.dataModel instanceof IFileSystem) {
 				explorerCTabItem.setText("Explorer");
 				explorerComposite = new ExplorerComposite(tabFolder, SWT.NONE, this);
 			} else if (context.dataModel instanceof MapDataModel) {

@@ -2,7 +2,7 @@ package org.ocpteam.protocol.sftp;
 
 import org.ocpteam.component.Authentication;
 import org.ocpteam.component.Client;
-import org.ocpteam.layer.rsp.PropertiesDataSource;
+import org.ocpteam.component.PropertiesDataSource;
 
 public class SFTPDataSource extends PropertiesDataSource {
 

@@ -3,9 +3,9 @@ package org.ocpteam.protocol.sftp;
 import java.util.Collection;
 import java.util.HashSet;
 
-import org.ocpteam.layer.rsp.FileInterface;
+import org.ocpteam.component.IFile;
 
-public class SFTPFileImpl implements FileInterface {
+public class SFTPFileImpl implements IFile {
 
 
 	private HashSet<SFTPFileImpl> set;
@@ -22,7 +22,7 @@ public class SFTPFileImpl implements FileInterface {
 	}
 
 	@Override
-	public Collection<? extends FileInterface> listFiles() {
+	public Collection<? extends IFile> listFiles() {
 		return set;
 	}
 

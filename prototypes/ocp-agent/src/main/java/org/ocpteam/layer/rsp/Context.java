@@ -1,12 +1,12 @@
 package org.ocpteam.layer.rsp;
 
-import org.ocpteam.component.DataModel;
+import org.ocpteam.component.IDataModel;
 
 public class Context {
 
-	public DataModel dataModel;
+	public IDataModel dataModel;
 
-	public Context(DataModel dataModel, String location) {
+	public Context(IDataModel dataModel, String location) {
 		this.dataModel = dataModel;
 	}
 

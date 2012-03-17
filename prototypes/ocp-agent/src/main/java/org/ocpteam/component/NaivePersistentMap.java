@@ -4,7 +4,7 @@ import org.ocpteam.core.IContainer;
 import org.ocpteam.misc.PersistentFileMap;
 
 
-public class NaivePersistentMap extends PersistentFileMap implements PersistentMap {
+public class NaivePersistentMap extends PersistentFileMap implements IPersistentMap {
 
 	public IContainer parent;
 

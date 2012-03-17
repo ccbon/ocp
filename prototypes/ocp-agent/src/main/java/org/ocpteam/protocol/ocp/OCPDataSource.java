@@ -5,9 +5,9 @@ import org.ocpteam.component.Authentication;
 import org.ocpteam.component.Client;
 import org.ocpteam.component.ContactMap;
 import org.ocpteam.component.NaivePersistentMap;
-import org.ocpteam.component.PersistentMap;
+import org.ocpteam.component.IPersistentMap;
+import org.ocpteam.component.PropertiesDataSource;
 import org.ocpteam.component.Server;
-import org.ocpteam.layer.rsp.PropertiesDataSource;
 
 public class OCPDataSource extends PropertiesDataSource {
 
@@ -18,7 +18,7 @@ public class OCPDataSource extends PropertiesDataSource {
 		getDesigner().add(Authentication.class, new OCPAuthentication());
 		getDesigner().add(Server.class);
 		getDesigner().add(ContactMap.class);
-		getDesigner().add(PersistentMap.class, new NaivePersistentMap());
+		getDesigner().add(IPersistentMap.class, new NaivePersistentMap());
 	}
 
 	@Override

@@ -3,10 +3,10 @@ package org.ocpteam.protocol.ocp;
 import java.io.Serializable;
 import java.util.Collection;
 
-import org.ocpteam.layer.rsp.FileInterface;
+import org.ocpteam.component.IFile;
 
 
-public class TreeEntry implements Serializable, FileInterface {
+public class TreeEntry implements Serializable, IFile {
 
 	private Pointer p;
 	private int type;
@@ -41,7 +41,7 @@ public class TreeEntry implements Serializable, FileInterface {
 	}
 	
 	@Override
-	public Collection<FileInterface> listFiles() {
+	public Collection<IFile> listFiles() {
 		return null;
 	}
 	@Override

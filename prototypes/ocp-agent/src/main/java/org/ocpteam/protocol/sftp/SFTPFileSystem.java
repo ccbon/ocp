@@ -5,16 +5,16 @@ import java.io.FileInputStream;
 import java.util.Vector;
 
 import org.ocpteam.component.DataSource;
-import org.ocpteam.component.FileSystem;
+import org.ocpteam.component.IFileSystem;
+import org.ocpteam.component.IFile;
 import org.ocpteam.core.IContainer;
-import org.ocpteam.layer.rsp.FileInterface;
 import org.ocpteam.layer.rsp.User;
 import org.ocpteam.misc.JLG;
 
 import com.jcraft.jsch.ChannelSftp.LsEntry;
 import com.jcraft.jsch.SftpATTRS;
 
-public class SFTPFileSystem implements FileSystem {
+public class SFTPFileSystem implements IFileSystem {
 
 	private SFTPClient agent;
 	protected User user;
@@ -46,8 +46,8 @@ public class SFTPFileSystem implements FileSystem {
 		if (attr.isDir()) {
 			File dir = new File(localDir, remoteFilename);
 			JLG.mkdir(dir);
-			FileInterface d = getFile(path);
-			for (FileInterface child : d.listFiles()) {
+			IFile d = getFile(path);
+			for (IFile child : d.listFiles()) {
 				JLG.debug("child: " + child.getName());
 				checkout(path, child.getName(), dir);
 			}
@@ -77,7 +77,7 @@ public class SFTPFileSystem implements FileSystem {
 	}
 
 	@Override
-	public FileInterface getFile(String dir) throws Exception {
+	public IFile getFile(String dir) throws Exception {
 		@SuppressWarnings("unchecked")
 		Vector<LsEntry> v = (Vector<LsEntry>) agent.channel.ls(dir);
 		SFTPFileImpl result = new SFTPFileImpl();

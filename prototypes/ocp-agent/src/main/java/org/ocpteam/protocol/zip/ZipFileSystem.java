@@ -8,12 +8,12 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 import org.ocpteam.component.DataSource;
-import org.ocpteam.component.FileSystem;
+import org.ocpteam.component.IFileSystem;
+import org.ocpteam.component.IFile;
 import org.ocpteam.core.IContainer;
-import org.ocpteam.layer.rsp.FileInterface;
 import org.ocpteam.misc.JLG;
 
-public class ZipFileSystem implements FileSystem {
+public class ZipFileSystem implements IFileSystem {
 
 	public ZipFileImpl root;
 	protected DataSource ds;
@@ -38,12 +38,12 @@ public class ZipFileSystem implements FileSystem {
 			remoteDir += "/";
 		}
 		String path = remoteDir + remoteFilename;
-		FileInterface file = getFile(path);
+		IFile file = getFile(path);
 		if (file.isDirectory()) {
 			File dir = new File(localDir, remoteFilename);
 			JLG.mkdir(dir);
-			FileInterface d = getFile(path);
-			for (FileInterface child : d.listFiles()) {
+			IFile d = getFile(path);
+			for (IFile child : d.listFiles()) {
 				JLG.debug("child: " + child.getName());
 				checkout(path, child.getName(), dir);
 			}
@@ -81,7 +81,7 @@ public class ZipFileSystem implements FileSystem {
 	}
 
 	@Override
-	public FileInterface getFile(String dir) throws Exception {
+	public IFile getFile(String dir) throws Exception {
 		refresh();
 		return root.get(dir);
 	}

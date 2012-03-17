@@ -4,7 +4,7 @@ import java.io.IOException;
 
 import org.ocpteam.component.Authentication;
 import org.ocpteam.component.Client;
-import org.ocpteam.component.DataModel;
+import org.ocpteam.component.IDataModel;
 import org.ocpteam.layer.rsp.IAuthenticable;
 import org.ocpteam.layer.rsp.Context;
 import org.ocpteam.misc.JLG;
@@ -53,7 +53,7 @@ public class FTPClient extends Client implements IAuthenticable {
 			JLG.debug("ftp logged in.");
 			FTPUser user = new FTPUser(login, password,
 					System.getProperty("user.home"));
-			DataModel dm = new FTPFileSystem((FTPUser) user, this);
+			IDataModel dm = new FTPFileSystem((FTPUser) user, this);
 			ds.setContext(new Context(dm, "/"));
 			a.setUser(user);
 		} else {

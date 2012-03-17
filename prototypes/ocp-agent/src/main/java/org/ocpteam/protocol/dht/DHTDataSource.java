@@ -1,6 +1,6 @@
 package org.ocpteam.protocol.dht;
 
-import org.ocpteam.layer.rsp.PropertiesDataSource;
+import org.ocpteam.component.PropertiesDataSource;
 
 public class DHTDataSource extends PropertiesDataSource {
 

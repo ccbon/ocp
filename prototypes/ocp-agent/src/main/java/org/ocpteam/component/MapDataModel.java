@@ -4,7 +4,7 @@ import java.util.Map;
 
 import org.ocpteam.core.IContainer;
 
-public class MapDataModel implements DataModel {
+public class MapDataModel implements IDataModel {
 
 	protected IContainer parent;
 	protected Map<String, byte[]> map;

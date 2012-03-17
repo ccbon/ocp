@@ -6,13 +6,13 @@ import java.io.OutputStream;
 import java.util.Iterator;
 
 import org.ocpteam.component.DataSource;
-import org.ocpteam.component.FileSystem;
+import org.ocpteam.component.IFileSystem;
+import org.ocpteam.component.IFile;
 import org.ocpteam.core.IContainer;
-import org.ocpteam.layer.rsp.FileInterface;
 import org.ocpteam.misc.JLG;
 
 
-public class OCPFileSystem implements FileSystem {
+public class OCPFileSystem implements IFileSystem {
 
 	private OCPAgent agent;
 	private OCPUser user;
@@ -260,7 +260,7 @@ public class OCPFileSystem implements FileSystem {
 	}
 
 	@Override
-	public FileInterface getFile(String dir) throws Exception {
+	public IFile getFile(String dir) throws Exception {
 		return getTree(dir);
 	}
 
