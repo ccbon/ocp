@@ -16,7 +16,7 @@ public class OCPDataSource extends DataSource {
 		getDesigner().add(Agent.class, new OCPAgent());
 		getDesigner().add(Client.class, new OCPClient());
 		getDesigner().add(Authentication.class, new OCPAuthentication());
-		getDesigner().add(Server.class);
+		getDesigner().add(Server.class, new OCPServer());
 		getDesigner().add(ContactMap.class);
 		getDesigner().add(IPersistentMap.class, new NaivePersistentMap());
 	}

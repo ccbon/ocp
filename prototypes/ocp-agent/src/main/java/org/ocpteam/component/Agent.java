@@ -6,8 +6,8 @@ import org.ocpteam.core.IContainer;
 public class Agent implements IComponent, IAgent {
 
 	public DataSource ds;
-	private IClient client;
-	private IServer server;
+	protected IClient client;
+	protected Server server;
 
 	@Override
 	public void setParent(IContainer parent) {

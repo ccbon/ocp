@@ -29,6 +29,7 @@ public class DHTSimpleTest extends TestScenario {
 			Properties p = new Properties();
 			p.setProperty("network.coucou", "23");
 			p.setProperty("network.hello", "456a");
+			p.setProperty("server", "yes");
 			ds.setConfig(p);
 			ds.connect();
 			ds.disconnect();

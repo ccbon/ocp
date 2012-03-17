@@ -28,7 +28,6 @@ import org.ocpteam.component.Agent;
 import org.ocpteam.component.Client;
 import org.ocpteam.component.ContactMap;
 import org.ocpteam.component.IClient;
-import org.ocpteam.component.IServer;
 import org.ocpteam.layer.dsp.Contact;
 import org.ocpteam.layer.rsp.User;
 import org.ocpteam.misc.ByteUtil;
@@ -41,6 +40,8 @@ public class OCPAgent extends Agent {
 
 	public static final String DEFAULT_SPONSOR_SERVER_URL = "http://guenego.com/ocp/ocp.php";
 
+	public OCPClient client;
+	
 	public Id id;
 	private String name;
 
@@ -53,10 +54,6 @@ public class OCPAgent extends Agent {
 
 	// signature
 	public String signatureAlgorithm;
-
-	// an OCP agent acts as a server and a client
-	public OCPClient client;
-	public Server server;
 
 	// storage
 	public Storage storage;
@@ -180,8 +177,7 @@ public class OCPAgent extends Agent {
 				"PBEWithMD5AndDES"));
 
 		if (ds.get("server", "yes").equals("yes")) {
-			server = new Server(this);
-			server.start();
+			getServer().start();
 			storage.attach();
 			Contact myself = toContactForMyself();
 			// Contact myself = toContact();
@@ -204,7 +200,7 @@ public class OCPAgent extends Agent {
 		return p;
 	}
 
-	public void disconnect() {
+	public void disconnect() throws Exception {
 		if (server != null) {
 			server.stop();
 			server = null;
@@ -787,11 +783,6 @@ public class OCPAgent extends Agent {
 			client = (OCPClient) ds.getDesigner().get(Client.class);
 		}
 		return client;
-	}
-
-	@Override
-	public IServer getServer() {
-		return server;
 	}
 
 	

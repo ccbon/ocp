@@ -14,19 +14,20 @@ public abstract class DSPDataSource extends DataSource {
 
 	protected Agent agent;
 	protected Client client;
-
+	protected Server server;
+	
 	protected Properties network;
+	
 	
 	public DSPDataSource() throws Exception {
 		agent = getDesigner().add(Agent.class);
 		client = getDesigner().add(Client.class);
-		getDesigner().add(Server.class, new Server());
+		server = getDesigner().add(Server.class, new Server());
 		getDesigner().add(IDataModel.class, new MapDataModel());
 	}
 	
 	@Override
 	public void connect() throws Exception {
-		// TODO: distributed datasource ?
 		if (agent.isFirstAgent()) {
 			JLG.debug("This is the first agent on the network");
 			network = this.getNetworkProperties();
@@ -34,6 +35,19 @@ public abstract class DSPDataSource extends DataSource {
 			network = client.getNetworkProperties();
 		}
 		JLG.debug("network properties: " + JLG.propertiesToString(network));
+		
+		if (get("server", "yes").equals("yes")) {
+			JLG.debug("starting the server");
+			server.start();
+		}
+	}
+	
+	@Override
+	public void disconnect() throws Exception {
+		if (server.isStarted()) {
+			JLG.debug("stopping the server");
+			server.stop();
+		}
 	}
 
 	protected abstract Properties getNetworkProperties();

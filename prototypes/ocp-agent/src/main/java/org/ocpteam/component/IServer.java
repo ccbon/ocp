@@ -1,5 +1,6 @@
 package org.ocpteam.component;
 
-public interface IServer {
+public interface IServer extends IStartable {
+	
 
 }
