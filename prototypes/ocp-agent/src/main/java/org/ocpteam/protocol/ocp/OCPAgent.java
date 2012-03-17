@@ -24,12 +24,12 @@ import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.PBEParameterSpec;
 
+import org.ocpteam.component.Agent;
 import org.ocpteam.component.Client;
 import org.ocpteam.component.ContactMap;
 import org.ocpteam.component.IClient;
 import org.ocpteam.component.IServer;
 import org.ocpteam.layer.dsp.Contact;
-import org.ocpteam.layer.dsp.DSPAgent;
 import org.ocpteam.layer.rsp.User;
 import org.ocpteam.misc.ByteUtil;
 import org.ocpteam.misc.Cache;
@@ -37,7 +37,7 @@ import org.ocpteam.misc.Id;
 import org.ocpteam.misc.JLG;
 import org.ocpteam.misc.URL;
 
-public class OCPAgent extends DSPAgent {
+public class OCPAgent extends Agent {
 
 	public static final String DEFAULT_SPONSOR_SERVER_URL = "http://guenego.com/ocp/ocp.php";
 
@@ -777,7 +777,6 @@ public class OCPAgent extends DSPAgent {
 		return cipher.doFinal(ciphertext);
 	}
 
-	@Override
 	public void removeStorage() {
 		storage.removeAll();
 	}
