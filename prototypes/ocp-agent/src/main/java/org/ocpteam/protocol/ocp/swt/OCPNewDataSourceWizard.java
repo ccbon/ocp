@@ -54,7 +54,7 @@ public class OCPNewDataSourceWizard extends Wizard implements Scenario {
 					+ firstPage.listenerPortText.getText());
 
 			if (bIsFirstAgent) {
-				p.setProperty("server.isFirstAgent", "yes");
+				p.setProperty("agent.isFirst", "yes");
 			} else {
 				p.setProperty("sponsor.1", firstPage.sponsorText.getText());
 			}

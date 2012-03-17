@@ -32,7 +32,7 @@ public class Agent implements IComponent, IAgent {
 
 	@Override
 	public boolean isFirstAgent() {
-		return ds.get("server.isFirstAgent", "yes").equalsIgnoreCase("yes");
+		return ds.get("agent.isFirst", "yes").equalsIgnoreCase("yes");
 	}
 
 }

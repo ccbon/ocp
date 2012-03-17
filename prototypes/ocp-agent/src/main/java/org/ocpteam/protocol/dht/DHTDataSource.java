@@ -1,18 +1,16 @@
 package org.ocpteam.protocol.dht;
 
-import org.ocpteam.component.Agent;
-import org.ocpteam.component.Client;
-import org.ocpteam.component.DataSource;
+import java.util.Properties;
+
 import org.ocpteam.component.IDataModel;
 import org.ocpteam.component.MapDataModel;
-import org.ocpteam.component.Server;
+import org.ocpteam.layer.dsp.DSPDataSource;
+import org.ocpteam.misc.JLG;
 
-public class DHTDataSource extends DataSource {
+public class DHTDataSource extends DSPDataSource {
 
 	public DHTDataSource() throws Exception {
-		getDesigner().add(Agent.class, new Agent());
-		getDesigner().add(Client.class, new Client());
-		getDesigner().add(Server.class, new Server());
+		super();
 		getDesigner().add(IDataModel.class, new MapDataModel());
 	}
 	
@@ -20,5 +18,12 @@ public class DHTDataSource extends DataSource {
 	public String getProtocol() {
 		return "DHT";
 	}
+
+	@Override
+	protected Properties getNetworkProperties() {
+		return JLG.extractProperties(getConfig(), "network");
+	}
+	
+	
 
 }

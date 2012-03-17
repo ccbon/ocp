@@ -30,20 +30,22 @@ public class Designer {
 	}
 
 	@SuppressWarnings("unchecked")
-	public <T extends IComponent> void add(Class<T> functionality) throws Exception {
+	public <T extends IComponent> T add(Class<T> functionality) throws Exception {
 		if (!map.containsKey(functionality)) {
 			T instance = functionality.newInstance();
 			instance.setParent(parent);
 			map.put((Class<IComponent>) functionality, instance);
 		}
+		return (T) map.get(functionality);
 	}
 
 	@SuppressWarnings("unchecked")
-	public <T extends IComponent> void add(Class<T> functionality, T instance) throws Exception {
+	public <T extends IComponent> T add(Class<T> functionality, T instance) throws Exception {
 		if (!map.containsKey(functionality)) {
 			instance.setParent(parent);
 			map.put((Class<IComponent>) functionality, instance);
 		}
+		return (T) map.get(functionality);
 	}
 	
 	@SuppressWarnings("unchecked")

@@ -1,5 +1,7 @@
 package org.ocpteam.component;
 
+import java.util.Properties;
+
 import org.ocpteam.core.IComponent;
 import org.ocpteam.core.IContainer;
 
@@ -18,6 +20,13 @@ public class Client implements IComponent, IClient {
 
 	@Override
 	public void disconnect() throws Exception {
+	}
+
+	/**
+	 * @return the network properties coming from a server (or a peer)
+	 */
+	public Properties getNetworkProperties() throws Exception {
+		return new Properties();
 	}
 
 }

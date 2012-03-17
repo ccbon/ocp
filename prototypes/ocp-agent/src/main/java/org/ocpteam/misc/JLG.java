@@ -19,6 +19,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.PublicKey;
 import java.security.spec.X509EncodedKeySpec;
+import java.util.Iterator;
 import java.util.Properties;
 
 import org.apache.commons.io.FileUtils;
@@ -35,6 +36,7 @@ public class JLG {
 
 	public static void debug_on() {
 		sDebug = true;
+		debug("debug on");
 	}
 
 	public static void debug_off() {
@@ -303,6 +305,31 @@ public class JLG {
 		File file = new File(filename);
 		p.load(new FileInputStream(file));
 		return p;
+	}
+
+	public static Properties extractProperties(Properties config, String prefix) {
+		String s = prefix + ".";
+		Properties p = new Properties();
+		Iterator<String> it = config.stringPropertyNames().iterator();
+		while (it.hasNext()) {
+			String key = it.next();
+			if (key.startsWith(s)) {
+				String networkKey = key.substring(s.length());
+				JLG.debug("network key=" + networkKey);
+				p.setProperty(networkKey, config.getProperty(key));
+			}
+		}
+		return p;
+	}
+
+	public static String propertiesToString(Properties p) {
+		String result = JLG.NL;
+		Iterator<String> it = p.stringPropertyNames().iterator();
+		while (it.hasNext()) {
+			String key = it.next();
+			result += key + "=" + p.getProperty(key) + JLG.NL;
+		}
+		return result;
 	}
 
 }

@@ -26,7 +26,6 @@ import org.ocpteam.layer.rsp.Context;
 import org.ocpteam.layer.rsp.User;
 import org.ocpteam.misc.Id;
 import org.ocpteam.misc.JLG;
-import org.ocpteam.misc.JLGException;
 import org.ocpteam.misc.URL;
 
 public class OCPClient extends Client implements IAuthenticable {
@@ -66,18 +65,15 @@ public class OCPClient extends Client implements IAuthenticable {
 		return null;
 	}
 
-	public Properties getNetworkProperties() throws JLGException {
-		try {
-			Response response = request(Protocol
-					.message(Protocol.NETWORK_PROPERTIES));
-			Properties network = new Properties();
-			// network.loadFromXML(new
-			// ByteArrayInputStream(response.getBytes()));
-			network.load(new ByteArrayInputStream(response.getBytes()));
-			return network;
-		} catch (Exception e) {
-			throw new JLGException(e);
-		}
+	@Override
+	public Properties getNetworkProperties() throws Exception {
+		Response response = request(Protocol
+				.message(Protocol.NETWORK_PROPERTIES));
+		Properties network = new Properties();
+		// network.loadFromXML(new
+		// ByteArrayInputStream(response.getBytes()));
+		network.load(new ByteArrayInputStream(response.getBytes()));
+		return network;
 	}
 
 	public Id[] requestNodeId() throws Exception {
@@ -150,8 +146,7 @@ public class OCPClient extends Client implements IAuthenticable {
 
 	private Iterator<String> getPotentialSponsorIterator() throws Exception {
 		List<String> list = new LinkedList<String>();
-		if (agent.ds.get("network.type", "private").equalsIgnoreCase(
-				"public")) {
+		if (agent.ds.get("network.type", "private").equalsIgnoreCase("public")) {
 			try {
 				XmlRpcClientConfigImpl config = new XmlRpcClientConfigImpl();
 				// TODO: need a ocp dedicated web server. I use mine for the
@@ -343,8 +338,8 @@ public class OCPClient extends Client implements IAuthenticable {
 
 	public void declareSponsor() {
 		try {
-			if (agent.ds.get("network.type", "public")
-					.equalsIgnoreCase("public")) {
+			if (agent.ds.get("network.type", "public").equalsIgnoreCase(
+					"public")) {
 				int port = agent.toContact().urlList.get(0).getPort();
 				XmlRpcClientConfigImpl config = new XmlRpcClientConfigImpl();
 				// TODO: need a ocp dedicated web server. I use mine for the
@@ -402,7 +397,7 @@ public class OCPClient extends Client implements IAuthenticable {
 	public void setAgent(OCPAgent agent) {
 		this.agent = agent;
 	}
-	
+
 	public OCPAgent getAgent() {
 		if (agent == null) {
 			agent = (OCPAgent) ds.getDesigner().get(Agent.class);
@@ -414,8 +409,6 @@ public class OCPClient extends Client implements IAuthenticable {
 	public void connect() throws Exception {
 		getAgent().connect();
 	}
-
-	
 
 	@Override
 	public void disconnect() throws Exception {
