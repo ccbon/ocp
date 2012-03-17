@@ -4,10 +4,10 @@ import java.net.URI;
 
 import org.ocpteam.component.Authentication;
 import org.ocpteam.component.Client;
+import org.ocpteam.component.DataSource;
 import org.ocpteam.component.IDataModel;
-import org.ocpteam.component.PropertiesDataSource;
 
-public class FTPDataSource extends PropertiesDataSource {
+public class FTPDataSource extends DataSource {
 
 	public FTPDataSource() throws Exception {
 		super();

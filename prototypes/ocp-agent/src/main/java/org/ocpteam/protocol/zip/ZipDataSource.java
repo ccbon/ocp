@@ -26,6 +26,12 @@ public class ZipDataSource extends DataSource {
 	}
 	
 	@Override
+	public void save() throws Exception {
+
+	}
+
+	
+	@Override
 	public void saveAs(File file) throws Exception {
 		JLG.debug("zip saveas");
 		file.delete();

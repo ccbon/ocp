@@ -2,6 +2,7 @@ package org.ocpteam.component;
 
 import java.io.File;
 import java.net.URI;
+import java.util.Properties;
 import java.util.ResourceBundle;
 
 import org.ocpteam.core.Container;
@@ -20,6 +21,16 @@ public abstract class DataSource extends Container implements IComponent,
 		this.parent = parent;
 	}
 
+	protected Properties p = new Properties();
+	
+	public void setProperties(Properties p) {
+		this.p = p;
+	}
+	
+	public Properties getProperties() {
+		return p;
+	}
+	
 	private URI uri;
 	private File file;
 
@@ -33,15 +44,23 @@ public abstract class DataSource extends Container implements IComponent,
 	public void open(File file) throws Exception {
 		bIsNew = false;
 		this.file = file;
+		try {
+			// try to load properties if the format is ok...
+			Properties p = JLG.loadConfig(this.getFile().getAbsolutePath());
+			this.p = p;
+		} catch (Exception e) {
+		}
 	}
 
 	@Override
 	public void newTemp() throws Exception {
+		p = new Properties();
+		bIsNew = true;
+		
 		file = File.createTempFile("temp" + System.currentTimeMillis(),
 				"tmp");
 		file.delete();
 		file.deleteOnExit();
-		bIsNew = true;
 	}
 	
 	@Override
@@ -55,6 +74,13 @@ public abstract class DataSource extends Container implements IComponent,
 		if (bIsNew) {
 			throw new Exception("Need a filename to save a new datasource");
 		}
+		
+		if (this.getFile() != null) {
+			JLG.storeConfig(this.p, this.getFile().getAbsolutePath());
+		} else {
+			throw new Exception("cannot save: file not set.");
+		}
+
 	}
 
 	@Override
@@ -83,6 +109,7 @@ public abstract class DataSource extends Container implements IComponent,
 
 	public void setURI(URI uri) {
 		this.uri = uri;
+		p.setProperty("uri", uri.toString());
 	}
 
 	public void setContext(Context context) {

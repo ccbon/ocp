@@ -2,9 +2,9 @@ package org.ocpteam.protocol.sftp;
 
 import org.ocpteam.component.Authentication;
 import org.ocpteam.component.Client;
-import org.ocpteam.component.PropertiesDataSource;
+import org.ocpteam.component.DataSource;
 
-public class SFTPDataSource extends PropertiesDataSource {
+public class SFTPDataSource extends DataSource {
 
 	public SFTPDataSource() throws Exception {
 		super();

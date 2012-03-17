@@ -4,8 +4,8 @@ import java.io.IOException;
 
 import org.ocpteam.component.Authentication;
 import org.ocpteam.component.Client;
+import org.ocpteam.component.IAuthenticable;
 import org.ocpteam.component.IDataModel;
-import org.ocpteam.layer.rsp.IAuthenticable;
 import org.ocpteam.layer.rsp.Context;
 import org.ocpteam.layer.rsp.User;
 import org.ocpteam.misc.JLG;

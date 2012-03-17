@@ -5,13 +5,13 @@ import java.util.Properties;
 import org.ocpteam.core.IComponent;
 import org.ocpteam.core.IContainer;
 
-public class Server implements IComponent {
+public class Server implements IComponent, IServer {
 
-	private PropertiesDataSource parent;
+	private DataSource parent;
 
 	@Override
 	public void setParent(IContainer parent) {
-		this.parent = (PropertiesDataSource) parent;
+		this.parent = (DataSource) parent;
 	}
 
 	public boolean isStarted() {

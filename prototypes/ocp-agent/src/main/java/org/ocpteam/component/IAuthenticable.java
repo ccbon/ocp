@@ -1,4 +1,4 @@
-package org.ocpteam.layer.rsp;
+package org.ocpteam.component;
 
 public interface IAuthenticable {
 

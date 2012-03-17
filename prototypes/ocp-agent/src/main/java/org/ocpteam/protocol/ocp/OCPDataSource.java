@@ -4,12 +4,12 @@ import org.ocpteam.component.Agent;
 import org.ocpteam.component.Authentication;
 import org.ocpteam.component.Client;
 import org.ocpteam.component.ContactMap;
-import org.ocpteam.component.NaivePersistentMap;
+import org.ocpteam.component.DataSource;
 import org.ocpteam.component.IPersistentMap;
-import org.ocpteam.component.PropertiesDataSource;
+import org.ocpteam.component.NaivePersistentMap;
 import org.ocpteam.component.Server;
 
-public class OCPDataSource extends PropertiesDataSource {
+public class OCPDataSource extends DataSource {
 
 	public OCPDataSource() throws Exception {
 		super();

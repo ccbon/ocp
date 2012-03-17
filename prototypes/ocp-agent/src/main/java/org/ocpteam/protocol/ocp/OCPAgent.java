@@ -27,9 +27,9 @@ import javax.crypto.spec.PBEParameterSpec;
 
 import org.ocpteam.component.Client;
 import org.ocpteam.component.ContactMap;
+import org.ocpteam.component.DataSource;
 import org.ocpteam.component.IClient;
 import org.ocpteam.component.IServer;
-import org.ocpteam.component.PropertiesDataSource;
 import org.ocpteam.layer.dsp.Contact;
 import org.ocpteam.layer.dsp.DSPAgent;
 import org.ocpteam.layer.rsp.User;
@@ -131,7 +131,7 @@ public class OCPAgent extends DSPAgent {
 	}
 
 	public void connect() throws Exception {
-		cfg = ((PropertiesDataSource) ds).getProperties();
+		cfg = ((DataSource) ds).getProperties();
 		readConfig();
 		client = (OCPClient) ds.getDesigner().get(Client.class);
 		client.setAgent(this);
