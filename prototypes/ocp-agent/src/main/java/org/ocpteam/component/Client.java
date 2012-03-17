@@ -20,9 +20,4 @@ public class Client implements IComponent, IClient {
 	public void disconnect() throws Exception {
 	}
 
-	@Override
-	public boolean testConnection() {
-		return false;
-	}
-
 }

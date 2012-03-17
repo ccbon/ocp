@@ -11,12 +11,9 @@ import org.ocpteam.layer.rsp.Context;
 import org.ocpteam.misc.JLG;
 
 public abstract class DataSource extends Container implements IComponent,
-		IDocument {
+		IDocument, IConnect {
 
-	public static ResourceBundle extensionResource = ResourceBundle
-			.getBundle("extensions");
-
-	public IContainer parent;
+	protected IContainer parent;
 
 	@Override
 	public void setParent(IContainer parent) {
@@ -109,7 +106,6 @@ public abstract class DataSource extends Container implements IComponent,
 		}
 	}
 
-	//TODO: to be deported in a swt package.
 	public ResourceBundle getResource(String subpackage) throws Exception {
 		String packageString = this.getClass().getPackage().getName() + "."
 				+ subpackage.toLowerCase();

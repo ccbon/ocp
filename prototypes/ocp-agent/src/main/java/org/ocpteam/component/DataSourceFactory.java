@@ -14,7 +14,9 @@ import org.ocpteam.core.IContainer;
 import org.ocpteam.misc.JLG;
 
 public class DataSourceFactory extends Container implements IComponent {
-
+	public static ResourceBundle extensionResource = ResourceBundle
+			.getBundle("extensions");
+	
 	protected IContainer parent;
 
 	@Override
@@ -50,7 +52,7 @@ public class DataSourceFactory extends Container implements IComponent {
 			uri = new URI(p.getProperty("uri"));
 			protocol = uri.getScheme();
 		} else {
-			protocol = DataSource.extensionResource.getString(extension
+			protocol = extensionResource.getString(extension
 					.toLowerCase());
 		}
 		DataSource ds = getInstance(protocol);

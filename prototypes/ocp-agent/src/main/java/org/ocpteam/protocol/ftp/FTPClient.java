@@ -69,14 +69,4 @@ public class FTPClient extends Client implements IAuthenticable {
 		}
 	}
 
-	@Override
-	public boolean testConnection() {
-		try {
-			ftp.features();
-		} catch (IOException e) {
-			return false;
-		}
-		return true;
-	}
-
 }
