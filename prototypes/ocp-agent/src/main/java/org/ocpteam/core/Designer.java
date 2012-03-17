@@ -5,18 +5,18 @@ import java.util.Iterator;
 import java.util.Map;
 
 
-public class Designer<P extends IContainer> {
+public class Designer {
 
 	private Map<Class<IComponent>, IComponent> map;
 
-	private P parent;
+	private IContainer parent;
 	
-	public Designer(P parent) {
+	public Designer(IContainer parent) {
 		map = new HashMap<Class<IComponent>, IComponent>();
 		this.parent = parent;
 	}
 	
-	public P getParent() {
+	public IContainer getParent() {
 		return parent;
 	}
 

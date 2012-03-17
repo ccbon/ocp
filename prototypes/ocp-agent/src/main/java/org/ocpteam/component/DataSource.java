@@ -17,7 +17,7 @@ public abstract class DataSource implements IContainer, IComponent {
 			.getBundle("extensions");
 
 	public IContainer parent;
-	private Designer<DataSource> designer;
+	private Designer designer;
 	
 	private URI uri;
 	private File file;
@@ -26,7 +26,7 @@ public abstract class DataSource implements IContainer, IComponent {
 	protected Context context;
 
 	public DataSource() {
-		designer = new Designer<DataSource>(this);
+		designer = new Designer(this);
 	}
 	
 	@Override
@@ -35,7 +35,7 @@ public abstract class DataSource implements IContainer, IComponent {
 	}
 
 	@Override
-	public Designer<DataSource> getDesigner() {
+	public Designer getDesigner() {
 		return designer;
 	};
 

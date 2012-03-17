@@ -8,24 +8,14 @@ import java.util.List;
 import java.util.Properties;
 import java.util.ResourceBundle;
 
-import org.ocpteam.core.Designer;
+import org.ocpteam.core.Container;
 import org.ocpteam.core.IComponent;
 import org.ocpteam.core.IContainer;
 import org.ocpteam.misc.JLG;
 
-public class DataSourceFactory implements IContainer, IComponent {
+public class DataSourceFactory extends Container implements IComponent {
 
 	protected IContainer parent;
-	private Designer<DataSourceFactory> designer;
-	
-	public DataSourceFactory() {
-		this.designer = new Designer<DataSourceFactory>(this);
-	}
-
-	@Override
-	public Designer<DataSourceFactory> getDesigner() {
-		return designer;
-	}
 
 	@Override
 	public void setParent(IContainer parent) {
@@ -34,7 +24,7 @@ public class DataSourceFactory implements IContainer, IComponent {
 
 	public Iterator<DataSource> getDataSourceIterator() {
 		List<DataSource> l = new LinkedList<DataSource>();
-		Iterator<IComponent> it = designer.iterator();
+		Iterator<IComponent> it = getDesigner().iterator();
 		while (it.hasNext()) {
 			IComponent functionality = it.next();
 			if (functionality instanceof DataSource) {
