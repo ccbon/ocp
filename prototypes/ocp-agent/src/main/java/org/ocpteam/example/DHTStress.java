@@ -28,7 +28,7 @@ public class DHTStress extends Container {
 			Class<? extends DHTDataSource> c = getDesigner().get(DHTDataSource.class).getClass();
 			dsa[i] = c.newInstance();
 			Properties p = new Properties();
-			dsa[i].setProperties(p);
+			dsa[i].setConfig(p);
 			dsa[i].connect();
 		}
 		

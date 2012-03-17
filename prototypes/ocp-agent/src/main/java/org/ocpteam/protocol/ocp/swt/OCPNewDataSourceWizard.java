@@ -81,7 +81,7 @@ public class OCPNewDataSourceWizard extends Wizard implements Scenario {
 				p.setProperty("network.user.cipher.algo", "PBEWithMD5AndDES");
 
 			}
-			((OCPDataSource) w.ds).setProperties(p);
+			((OCPDataSource) w.ds).setConfig(p);
 		} catch (Exception e) {
 			JLG.error(e);
 			QuickMessage.error(getShell(), e.getMessage());

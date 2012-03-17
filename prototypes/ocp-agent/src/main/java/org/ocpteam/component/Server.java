@@ -15,7 +15,7 @@ public class Server implements IComponent, IServer {
 	}
 
 	public boolean isStarted() {
-		Properties cfg = parent.getProperties();
+		Properties cfg = parent.getConfig();
 		return cfg.getProperty("server", "yes").equals("yes");
 	}
 

@@ -8,7 +8,6 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.Arrays;
-import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.NavigableMap;
@@ -27,7 +26,6 @@ import javax.crypto.spec.PBEParameterSpec;
 
 import org.ocpteam.component.Client;
 import org.ocpteam.component.ContactMap;
-import org.ocpteam.component.DataSource;
 import org.ocpteam.component.IClient;
 import org.ocpteam.component.IServer;
 import org.ocpteam.layer.dsp.Contact;
@@ -131,7 +129,6 @@ public class OCPAgent extends DSPAgent {
 	}
 
 	public void connect() throws Exception {
-		cfg = ((DataSource) ds).getProperties();
 		readConfig();
 		client = (OCPClient) ds.getDesigner().get(Client.class);
 		client.setAgent(this);
@@ -147,10 +144,10 @@ public class OCPAgent extends DSPAgent {
 			network = client.getNetworkProperties();
 		}
 
-		String sId = cfg.getProperty("id");
+		String sId = ds.get("id");
 		if (sId == null) {
 			id = generateId();
-			cfg.setProperty("id", id.toString());
+			ds.set("id", id.toString());
 		} else {
 			id = new Id(sId);
 		}
@@ -182,7 +179,7 @@ public class OCPAgent extends DSPAgent {
 		userCipher = Cipher.getInstance(network.getProperty("user.cipher.algo",
 				"PBEWithMD5AndDES"));
 
-		if (cfg.getProperty("server", "yes").equals("yes")) {
+		if (ds.get("server", "yes").equals("yes")) {
 			server = new Server(this);
 			server.start();
 			storage.attach();
@@ -195,12 +192,13 @@ public class OCPAgent extends DSPAgent {
 
 	private Properties getNetworkProperties() {
 		Properties p = new Properties();
-		for (Enumeration<?> e = cfg.propertyNames(); e.hasMoreElements();) {
-			String key = (String) e.nextElement();
+		Iterator<String> it = ds.iterator();
+		while (it.hasNext()) {
+			String key = it.next();
 			if (key.startsWith("network.")) {
 				String networkKey = key.substring("network.".length());
 				JLG.debug("network key=" + networkKey);
-				p.setProperty(networkKey, cfg.getProperty(key));
+				p.setProperty(networkKey, ds.get(key));
 			}
 		}
 		return p;
@@ -653,27 +651,27 @@ public class OCPAgent extends DSPAgent {
 	private void readConfig() throws Exception {
 
 		// debugging aspect
-		if (cfg.getProperty("debug", "true").equalsIgnoreCase("true")) {
+		if (ds.get("debug", "true").equalsIgnoreCase("true")) {
 			JLG.debug_on();
 			JLG.debug("working directory = " + System.getProperty("user.dir"));
 		}
 
-		Iterator<String> it = cfg.stringPropertyNames().iterator();
+		Iterator<String> it = ds.iterator();
 		while (it.hasNext()) {
 			String key = it.next();
-			String value = cfg.getProperty(key);
+			String value = ds.get(key);
 			JLG.debug(key + "=" + value);
 		}
-		name = cfg.getProperty("name", "anonymous");
+		name = ds.get("name", "anonymous");
 
 		// each agent has its own symmetric key cipher
 		// TODO: test with other algo than AES
-		KeyGenerator keyGen = KeyGenerator.getInstance(this.cfg.getProperty(
+		KeyGenerator keyGen = KeyGenerator.getInstance(this.ds.get(
 				"cypher.algo", "AES"));
-		keyGen.init(Integer.parseInt(this.cfg.getProperty("cipher.keysize",
+		keyGen.init(Integer.parseInt(this.ds.get("cipher.keysize",
 				"128")));
 		secretKey = keyGen.generateKey();
-		cipher = Cipher.getInstance(this.cfg.getProperty("cipher.algo", "AES"));
+		cipher = Cipher.getInstance(this.ds.get("cipher.algo", "AES"));
 
 		// user cipher
 		byte[] salt = { 1, 1, 1, 2, 2, 2, 3, 3 };

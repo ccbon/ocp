@@ -43,8 +43,8 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.wb.swt.SWTResourceManager;
 import org.ocpteam.component.Agent;
-import org.ocpteam.component.IFileSystem;
 import org.ocpteam.component.IFile;
+import org.ocpteam.component.IFileSystem;
 import org.ocpteam.misc.JLG;
 import org.ocpteam.misc.swt.QuickMessage;
 

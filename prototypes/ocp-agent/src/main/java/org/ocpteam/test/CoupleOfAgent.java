@@ -20,7 +20,7 @@ public class CoupleOfAgent {
 			
 			OCPDataSource ds = new OCPDataSource();
 			OCPAgent a1 = (OCPAgent) ds.getDesigner().get(Agent.class);
-			Properties p1 = ds.getProperties();
+			Properties p1 = ds.getConfig();
 			p1.setProperty("name", "Suzana");
 			p1.setProperty("server", "yes");
 			p1.setProperty("server.listener.1", "tcp://localhost:22220");
@@ -42,7 +42,7 @@ public class CoupleOfAgent {
 			// starting second agent
 			OCPDataSource ds2 = new OCPDataSource();
 			OCPAgent a2 = (OCPAgent) ds2.getDesigner().get(Agent.class);
-			Properties p2 = ds2.getProperties();
+			Properties p2 = ds2.getConfig();
 			p2.setProperty("name", "Jean-Louis");
 			p2.setProperty("server", "yes");
 			p2.setProperty("server.listener.1", "tcp://localhost:22221");

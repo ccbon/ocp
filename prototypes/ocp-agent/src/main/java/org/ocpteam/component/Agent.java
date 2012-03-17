@@ -30,4 +30,9 @@ public class Agent implements IComponent, IAgent {
 		return server;
 	}
 
+	@Override
+	public boolean isFirstAgent() {
+		return ds.get("server.isFirstAgent", "yes").equalsIgnoreCase("yes");
+	}
+
 }

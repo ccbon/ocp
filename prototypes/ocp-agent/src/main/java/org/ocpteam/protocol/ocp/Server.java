@@ -23,12 +23,12 @@ public class Server implements IServer {
 			
 			boolean bFound = false;
 			listenerList = new ArrayList<Listener>();
-			Iterator<String> it = agent.cfg.stringPropertyNames().iterator();
+			Iterator<String> it = agent.ds.iterator();
 			while (it.hasNext()) {
 				String key = it.next();
 				if (key.startsWith("server.listener.")) {
 					bFound = true;
-					URL url = new URL(agent.cfg.getProperty(key));
+					URL url = new URL(agent.ds.get(key));
 					String sProtocol = url.getProtocol();
 					Listener listener = null;
 					if (sProtocol.equalsIgnoreCase("tcp")) {

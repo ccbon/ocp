@@ -2,6 +2,7 @@ package org.ocpteam.component;
 
 import java.io.File;
 import java.net.URI;
+import java.util.Iterator;
 import java.util.Properties;
 import java.util.ResourceBundle;
 
@@ -12,7 +13,7 @@ import org.ocpteam.layer.rsp.Context;
 import org.ocpteam.misc.JLG;
 
 public abstract class DataSource extends Container implements IComponent,
-		IDocument, IConnect {
+		IDocument, IConnect, IConfig {
 
 	protected IContainer parent;
 
@@ -21,16 +22,6 @@ public abstract class DataSource extends Container implements IComponent,
 		this.parent = parent;
 	}
 
-	protected Properties p = new Properties();
-	
-	public void setProperties(Properties p) {
-		this.p = p;
-	}
-	
-	public Properties getProperties() {
-		return p;
-	}
-	
 	private URI uri;
 	private File file;
 
@@ -142,6 +133,39 @@ public abstract class DataSource extends Container implements IComponent,
 		JLG.debug("class=" + resourceClassString);
 		return (ResourceBundle) Class.forName(resourceClassString)
 				.newInstance();
+	}
+	
+	protected Properties p = new Properties();
+	
+	@Override
+	public void setConfig(Properties p) {
+		this.p = p;
+	}
+	
+	@Override
+	public Properties getConfig() {
+		return p;
+	}
+
+
+	@Override
+	public String get(String key) {
+		return p.getProperty(key);
+	}
+
+	@Override
+	public String get(String key, String defaultValue) {
+		return p.getProperty(key, defaultValue);
+	}
+
+	@Override
+	public void set(String key, String value) {
+		p.setProperty(key, value);
+	}
+	
+	@Override
+	public Iterator<String> iterator() {
+		return p.stringPropertyNames().iterator();
 	}
 
 }

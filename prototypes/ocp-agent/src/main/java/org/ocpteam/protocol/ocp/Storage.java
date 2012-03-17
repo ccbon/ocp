@@ -9,7 +9,6 @@ import org.ocpteam.component.IPersistentMap;
 import org.ocpteam.misc.Id;
 import org.ocpteam.misc.JLG;
 
-
 public class Storage {
 
 	public NavigableSet<Id> nodeSet; // set of node referenced by their id
@@ -18,11 +17,10 @@ public class Storage {
 
 	public Storage(OCPAgent agent) throws Exception {
 		nodeSet = new TreeSet<Id>();
-		String root = agent.cfg.getProperty(
-				"storage.dir",
-				System.getenv("TEMP") + "/ocp_agent_storage/"
-						+ agent.getName());
-		IPersistentMap persistentMap = agent.ds.getDesigner().get(IPersistentMap.class);
+		String root = agent.ds.get("storage.dir", System.getenv("TEMP")
+				+ "/ocp_agent_storage/" + agent.getName());
+		IPersistentMap persistentMap = agent.ds.getDesigner().get(
+				IPersistentMap.class);
 		persistentMap.setRoot(root);
 		contentMap = persistentMap;
 		this.agent = agent;
@@ -52,7 +50,8 @@ public class Storage {
 
 	public void put(Address address, Content content) throws Exception {
 		contentMap.put(address.getBytes(), JLG.serialize(content));
-		// Rude detachment: now tell to your agent backuper what you have stored.
+		// Rude detachment: now tell to your agent backuper what you have
+		// stored.
 		// declare(ADD, address, data.getKey(agent));
 	}
 
@@ -89,8 +88,8 @@ public class Storage {
 			} catch (Exception e) {
 				JLG.error(e);
 			}
-			result += address + "->" +  content + JLG.NL;
-		}		
+			result += address + "->" + content + JLG.NL;
+		}
 		return result;
 	}
 
@@ -98,7 +97,8 @@ public class Storage {
 		return contentMap.containsKey(address.getBytes());
 	}
 
-	public void remove(Address address, byte[] addressSignature) throws Exception {
+	public void remove(Address address, byte[] addressSignature)
+			throws Exception {
 		// TODO Auto-generated method stub
 		// retrieve the public key of the user and check the address signature
 		Content content = get(address);
@@ -107,9 +107,10 @@ public class Storage {
 		}
 		UserPublicInfo upi = agent.getUserPublicInfo(content.username);
 		if (upi.verify(agent, address.getBytes(), addressSignature) == false) {
-			throw new Exception("Cannot remove data. Verifying signature failed.");
+			throw new Exception(
+					"Cannot remove data. Verifying signature failed.");
 		}
-		//JLG.debug("signature ok");
+		// JLG.debug("signature ok");
 		contentMap.remove(address.getBytes());
 	}
 

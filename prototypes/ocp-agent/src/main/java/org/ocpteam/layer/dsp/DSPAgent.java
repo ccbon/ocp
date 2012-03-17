@@ -1,9 +1,6 @@
 package org.ocpteam.layer.dsp;
 
-import java.util.Properties;
-
 import org.ocpteam.component.Agent;
-import org.ocpteam.misc.JLG;
 
 /**
  * Provide an agent class evolving in a distributed environment.
@@ -11,22 +8,12 @@ import org.ocpteam.misc.JLG;
  *
  */
 public abstract class DSPAgent extends Agent {
-
-	public Properties cfg;
 	
 	public DSPAgent() {
 		super();
 	}
 	
-	public boolean isFirstAgent() {
-		if (cfg == null) {
-			JLG.debug("p is null");
-		}
-		String s = cfg.getProperty("server", "yes");
-		return s.equalsIgnoreCase("yes")
-				&& cfg.getProperty("server.isFirstAgent", "yes").equalsIgnoreCase(
-						"yes");
-	}
+
 
 	public abstract void removeStorage();
 
