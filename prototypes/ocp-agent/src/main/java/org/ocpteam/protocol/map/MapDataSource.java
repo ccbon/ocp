@@ -28,7 +28,7 @@ public class MapDataSource extends DataSource {
 	}
 	
 	@Override
-	public void open() throws Exception {
+	public void connect() throws Exception {
 		MapDataModel dm = (MapDataModel) getDesigner().get(DataModel.class);
 		dm.setMap(map);
 		context = new Context(getDesigner().get(DataModel.class), null);

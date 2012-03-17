@@ -22,8 +22,8 @@ public class OCPSimpleTest extends TestScenario {
 		try {
 			System.out.println("Hello Test Scenario");
 			DataSource ds = new OCPDataSource();
-			ds.open();
-			ds.close();
+			ds.connect();
+			ds.disconnect();
 		} catch (Exception e) {
 			e.printStackTrace();
 			return false;

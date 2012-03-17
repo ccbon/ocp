@@ -29,7 +29,7 @@ public class DHTStress extends Container {
 			dsa[i] = c.newInstance();
 			Properties p = new Properties();
 			dsa[i].setProperties(p);
-			dsa[i].open();
+			dsa[i].connect();
 		}
 		
 	}

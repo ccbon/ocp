@@ -1,24 +1,40 @@
 package org.ocpteam.protocol.zip;
 
+import java.io.File;
+
 import org.ocpteam.component.DataModel;
 import org.ocpteam.component.DataSource;
 import org.ocpteam.layer.rsp.Context;
 import org.ocpteam.misc.JLG;
 
 public class ZipDataSource extends DataSource {
-	private Context context;
-
+	
 	public ZipDataSource() throws Exception {
 		super();
 		getDesigner().add(DataModel.class, new ZipFileSystem());
 	}
+	
 	@Override
 	public String getProtocol() {
 		return "ZIP";
 	}
 	
 	@Override
-	public void open() throws Exception {
+	public void newTemp() throws Exception {
+		super.newTemp();
+		ZipUtils.createEmptyFile(getFile().getAbsolutePath());
+	}
+	
+	@Override
+	public void saveAs(File file) throws Exception {
+		JLG.debug("zip saveas");
+		file.delete();
+		getFile().renameTo(file);
+		bIsNew = false;
+	}
+	
+	@Override
+	public void connect() throws Exception {
 		JLG.debug("opening datasource: " + getFile());
 		ZipFileSystem fs = (ZipFileSystem) getDesigner().get(DataModel.class);
 		fs.refresh();
@@ -26,7 +42,7 @@ public class ZipDataSource extends DataSource {
 	}
 	
 	@Override
-	public void close() {
+	public void disconnect() {
 		context = null;
 	}
 	

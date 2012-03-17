@@ -52,8 +52,7 @@ public class SaveAsDataSourceAction extends Action {
 				return;
 			}
 			File file = new File(selected);
-			window.ds.setFile(file);
-			window.ds.save();
+			window.ds.saveAs(file);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

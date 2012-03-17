@@ -25,7 +25,7 @@ public class SaveDataSourceAction extends Action {
 	public void run() {
 		JLG.debug("Saving datasource");
 		try {
-			if (window.ds.getFile() == null || window.ds.isTempFile()) {
+			if (window.ds.getFile() == null || window.ds.isNew()) {
 				window.saveAsDataSourceAction.run();
 			} else {
 				window.ds.save();

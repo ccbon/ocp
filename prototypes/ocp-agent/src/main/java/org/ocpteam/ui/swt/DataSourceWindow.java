@@ -420,7 +420,7 @@ public class DataSourceWindow extends ApplicationWindow implements
 	}
 
 	private boolean isDaemon() {
-		if (ds.getDesigner().uses(Server.class)) {
+		if (ds != null && ds.getDesigner().uses(Server.class)) {
 			return ds.getDesigner().get(Server.class).isStarted();
 		} else {
 			return false;
@@ -442,7 +442,7 @@ public class DataSourceWindow extends ApplicationWindow implements
 		try {
 			JLG.debug("datasource=" + ds);
 			this.ds = ds;
-			ds.open();
+			ds.connect();
 			addProtocolMenu();
 			agent = ds.getDesigner().get(Agent.class);
 			if (isDaemon()) {
@@ -465,6 +465,7 @@ public class DataSourceWindow extends ApplicationWindow implements
 	}
 
 	public void closeDataSource() throws Exception {
+		ds.disconnect();
 		ds.close();
 		if (isDaemon()) {
 			closeTray();

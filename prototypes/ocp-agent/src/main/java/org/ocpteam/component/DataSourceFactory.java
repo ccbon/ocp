@@ -54,7 +54,7 @@ public class DataSourceFactory extends Container implements IComponent {
 					.toLowerCase());
 		}
 		DataSource ds = getInstance(protocol);
-		ds.setFile(file);
+		ds.open(file);
 		if (uri != null) {
 			ds.setURI(uri);
 		}

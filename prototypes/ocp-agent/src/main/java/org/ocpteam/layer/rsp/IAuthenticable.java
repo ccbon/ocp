@@ -1,6 +1,6 @@
 package org.ocpteam.layer.rsp;
 
-public interface Authenticable {
+public interface IAuthenticable {
 
 	public void login() throws Exception;
 

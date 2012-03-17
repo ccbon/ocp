@@ -5,9 +5,9 @@ import java.net.URI;
 import org.ocpteam.component.Authentication;
 import org.ocpteam.component.Client;
 import org.ocpteam.component.DataModel;
-import org.ocpteam.component.DataSource;
+import org.ocpteam.layer.rsp.PropertiesDataSource;
 
-public class FTPDataSource extends DataSource {
+public class FTPDataSource extends PropertiesDataSource {
 
 	public FTPDataSource() throws Exception {
 		super();
