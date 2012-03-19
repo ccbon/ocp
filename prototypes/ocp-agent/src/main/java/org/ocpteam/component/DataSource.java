@@ -118,16 +118,11 @@ public abstract class DataSource extends Container implements IComponent,
 	}
 
 	public void connect() throws Exception {
-		if (getDesigner().uses(Client.class)) {
-			getDesigner().get(Client.class).connect();
-		}
+		
 	}
 
 	public void disconnect() throws Exception {
 		context = null;
-		if (getDesigner().uses(Client.class)) {
-			getDesigner().get(Client.class).disconnect();
-		}
 	}
 
 	public ResourceBundle getResource(String subpackage) throws Exception {

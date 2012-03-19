@@ -25,5 +25,15 @@ public class OCPDataSource extends DataSource {
 	public String getProtocol() {
 		return "OCP";
 	}
+	
+	@Override
+	public void connect() throws Exception {
+		((OCPAgent) getDesigner().add(Agent.class)).connect();
+	}
+	
+	@Override
+	public void disconnect() throws Exception {
+		((OCPAgent) getDesigner().add(Agent.class)).disconnect();
+	}
 
 }

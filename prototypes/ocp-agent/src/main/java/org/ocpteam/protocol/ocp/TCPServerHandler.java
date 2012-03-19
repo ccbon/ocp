@@ -26,6 +26,7 @@ public class TCPServerHandler extends Component implements ITCPServerHandler {
 			IStreamSerializer s = new StreamSerializer();
 			byte[] input = s.readMessage(in);
 			JLG.debug("received length = " + input.length);
+			JLG.debug("parent: " + parent);
 			byte[] response = parent.getDesigner().get(IProtocol.class).process(input,
 					clientSocket);
 			s.writeMessage(out, response);
@@ -55,6 +56,7 @@ public class TCPServerHandler extends Component implements ITCPServerHandler {
 	@Override
 	public ITCPServerHandler duplicate() {
 		TCPServerHandler handler = new TCPServerHandler();
+		handler.setParent(parent);
 		return handler;
 	}
 }

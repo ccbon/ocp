@@ -32,7 +32,6 @@ public abstract class DSPDataSource extends DataSource {
 		server = getDesigner().add(Server.class, new Server());
 		
 		getDesigner().add(TCPListener.class);
-		
 		getDesigner().get(TCPListener.class).getDesigner().add(IProtocol.class, new BahBahProtocol());
 		
 		getDesigner().add(IDataModel.class, new MapDataModel());

@@ -20,14 +20,6 @@ public class Client implements IComponent, IClient {
 		return ds;
 	}
 
-	@Override
-	public void connect() throws Exception {
-	}
-
-	@Override
-	public void disconnect() throws Exception {
-	}
-
 	/**
 	 * @return the network properties coming from a server (or a peer)
 	 */

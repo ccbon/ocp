@@ -21,6 +21,7 @@ public class TCPListener extends Container implements IComponent, IListener {
 		getDesigner().add(NATTraversal.class);
 		getDesigner().add(TCPServer.class);
 		getDesigner().add(TCPServerHandler.class);
+		getDesigner().add(IProtocol.class, new BahBahProtocol());
 	}
 
 	@Override

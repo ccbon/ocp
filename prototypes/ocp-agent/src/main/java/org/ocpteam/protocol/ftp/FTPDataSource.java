@@ -24,5 +24,16 @@ public class FTPDataSource extends DataSource {
 	public String getProtocol() {
 		return "FTP";
 	}
+	
+	@Override
+	public void connect() throws Exception {
+		((FTPClient) getDesigner().get(Client.class)).connect();
+	}
+	
+	@Override
+	public void disconnect() throws Exception {
+		context = null;
+		((FTPClient) getDesigner().get(Client.class)).disconnect();
+	}
 
 }

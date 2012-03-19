@@ -405,14 +405,4 @@ public class OCPClient extends Client implements IAuthenticable {
 		return agent;
 	}
 
-	@Override
-	public void connect() throws Exception {
-		getAgent().connect();
-	}
-
-	@Override
-	public void disconnect() throws Exception {
-		getAgent().disconnect();
-	}
-
 }

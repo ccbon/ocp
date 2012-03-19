@@ -24,7 +24,5 @@ public class DHTDataSource extends DSPDataSource {
 	protected Properties getNetworkProperties() {
 		return JLG.extractProperties(getConfig(), "network");
 	}
-	
-	
 
 }
