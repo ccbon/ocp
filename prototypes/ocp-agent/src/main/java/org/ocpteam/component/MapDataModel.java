@@ -15,6 +15,11 @@ public class MapDataModel implements IDataModel {
 		this.parent = parent;
 	}
 	
+	@Override
+	public IContainer getParent() {
+		return parent;
+	}
+	
 	public void setMap(Map<String, byte[]> map) {
 		this.map = map;
 	}

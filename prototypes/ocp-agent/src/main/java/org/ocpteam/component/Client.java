@@ -14,6 +14,11 @@ public class Client implements IComponent, IClient {
 	public void setParent(IContainer parent) {
 		this.ds = (DataSource) parent;	
 	}
+	
+	@Override
+	public IContainer getParent() {
+		return ds;
+	}
 
 	@Override
 	public void connect() throws Exception {
@@ -29,5 +34,7 @@ public class Client implements IComponent, IClient {
 	public Properties getNetworkProperties() throws Exception {
 		return new Properties();
 	}
+
+
 
 }

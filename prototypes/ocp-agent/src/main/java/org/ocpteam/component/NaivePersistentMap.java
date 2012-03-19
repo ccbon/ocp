@@ -13,5 +13,10 @@ public class NaivePersistentMap extends PersistentFileMap implements IPersistent
 	public void setParent(IContainer parent) {
 		this.parent = parent;
 	}
+	
+	@Override
+	public IContainer getParent() {
+		return parent;
+	}
 
 }

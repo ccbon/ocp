@@ -1,8 +1,9 @@
 package org.ocpteam.interfaces;
 
+import org.ocpteam.core.IComponent;
 import org.ocpteam.misc.URL;
 
-public interface IListener {
+public interface IListener extends IComponent {
 
 	void start();
 

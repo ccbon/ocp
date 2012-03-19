@@ -9,4 +9,9 @@ public class Component implements IComponent {
 		this.parent = parent;
 	}
 
+	@Override
+	public IContainer getParent() {
+		return parent;
+	}
+
 }

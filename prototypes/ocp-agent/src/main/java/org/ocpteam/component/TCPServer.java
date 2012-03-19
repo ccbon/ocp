@@ -1,19 +1,25 @@
-package org.ocpteam.misc;
+package org.ocpteam.component;
 
 import java.net.ServerSocket;
 import java.net.Socket;
 
-public class TCPServer extends Thread {
+import org.ocpteam.core.Component;
+import org.ocpteam.interfaces.ITCPServerHandler;
+import org.ocpteam.misc.JLG;
+
+public class TCPServer extends Component implements Runnable {
 
 	private int port;
-	private TCPServerHandlerInterface handler;
+	private ITCPServerHandler handler;
 	private ServerSocket serverSocket;
 	private boolean stoppingNow;
-
-	public TCPServer(int _port, TCPServerHandlerInterface _handler) {
-		// TODO Auto-generated constructor stub
-		port = _port;
-		handler = _handler;
+	
+	public void setPort(int port) {
+		this.port = port;
+	}
+	
+	public void setHandler(ITCPServerHandler handler) {
+		this.handler = handler;
 	}
 
 	public void run() {
@@ -24,7 +30,7 @@ public class TCPServer extends Thread {
 			while (true) {
 				JLG.debug("waiting for a client connection");
 				Socket clientSocket = serverSocket.accept();
-				TCPServerHandlerInterface myHandler = handler.duplicate();
+				ITCPServerHandler myHandler = handler.duplicate();
 				myHandler.setSocket(clientSocket);
 				new Thread(myHandler).start();
 			}
@@ -35,7 +41,7 @@ public class TCPServer extends Thread {
 		}
 	}
 
-	public void stopnow() {
+	public void stop(Thread t) {
 		stoppingNow = true;
 		try {
 			if (serverSocket != null) {
@@ -44,7 +50,7 @@ public class TCPServer extends Thread {
 		} catch (Exception e) {
 
 		}
-		this.interrupt();
+		t.interrupt();
 	}
 
 }

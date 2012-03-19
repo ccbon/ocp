@@ -34,7 +34,8 @@ public class OCPServer extends Server {
 					listener = ds.getDesigner().add(TCPListener.class);
 					listener.setUrl(url);
 				} else if (sProtocol.equalsIgnoreCase("http")) {
-					listener = new HTTPListener(agent, url);
+					listener = ds.getDesigner().add(HTTPListener.class);
+					listener.setUrl(url);
 				} else {
 					throw new JLGException("protocol not found");
 				}

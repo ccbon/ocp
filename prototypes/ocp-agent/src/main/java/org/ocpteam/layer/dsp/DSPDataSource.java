@@ -6,6 +6,7 @@ import java.util.Properties;
 import org.ocpteam.component.Agent;
 import org.ocpteam.component.Client;
 import org.ocpteam.component.DataSource;
+import org.ocpteam.component.IProtocol;
 import org.ocpteam.component.MapDataModel;
 import org.ocpteam.component.Server;
 import org.ocpteam.component.TCPListener;
@@ -14,6 +15,7 @@ import org.ocpteam.interfaces.IDataModel;
 import org.ocpteam.interfaces.IListener;
 import org.ocpteam.misc.JLG;
 import org.ocpteam.misc.URL;
+import org.ocpteam.protocol.ocp.Protocol;
 
 public abstract class DSPDataSource extends DataSource {
 
@@ -30,10 +32,8 @@ public abstract class DSPDataSource extends DataSource {
 		server = getDesigner().add(Server.class, new Server());
 		
 		getDesigner().add(TCPListener.class);
-		// specify the nat traversal class to use
-		// specify the stream serializer (eom detection)
-		//getDesigner().get(TCPListener.class).add(NATTraversal.class);
-		//getDesigner().get(TCPListener.class).add(StreamSerializer.class);
+		
+		getDesigner().get(TCPListener.class).getDesigner().add(IProtocol.class, new Protocol());
 		
 		getDesigner().add(IDataModel.class, new MapDataModel());
 	}

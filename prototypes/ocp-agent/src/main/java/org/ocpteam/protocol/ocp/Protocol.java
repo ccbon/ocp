@@ -12,12 +12,15 @@ import java.util.Iterator;
 import java.util.LinkedList;
 
 import org.ocpteam.component.Agent;
+import org.ocpteam.component.DataSource;
+import org.ocpteam.component.IProtocol;
+import org.ocpteam.core.Component;
+import org.ocpteam.interfaces.IListener;
 import org.ocpteam.layer.dsp.Contact;
 import org.ocpteam.misc.Id;
 import org.ocpteam.misc.JLG;
 
-
-public class Protocol {
+public class Protocol extends Component implements IProtocol {
 
 	public static final int SEPARATOR = 0;
 	public static final String PING = "ping";
@@ -39,12 +42,24 @@ public class Protocol {
 
 	private OCPAgent agent;
 
-	public Protocol(Agent agent) {
-		this.agent = (OCPAgent) agent;
+	public Protocol() {
+		
+	}
+	public Protocol(OCPAgent agent) {
+		this.agent = agent;
 	}
 
-	public byte[] process(byte[] input, Socket clientSocket)
-			throws InterruptedException {
+	public OCPAgent getAgent() {
+		if (this.agent == null) {
+			IListener l = (IListener) parent;
+			DataSource ds = (DataSource) l.getParent();
+			this.agent = (OCPAgent) ds.getDesigner().get(Agent.class);
+		}
+		return this.agent;
+	}
+
+	public byte[] process(byte[] input, Socket clientSocket) throws Exception {
+		getAgent();
 		String request = new String(input);
 		Iterator<byte[]> it = iterator(input);
 		if (request.equalsIgnoreCase(PING)) {
@@ -137,8 +152,6 @@ public class Protocol {
 
 				// TODO handle when user already exists.
 
-				
-				
 				ObjectData data = (ObjectData) JLG.deserialize(it.next());
 				Link link = (Link) JLG.deserialize(it.next());
 				Captcha captcha = (Captcha) JLG.deserialize(it.next());
@@ -184,7 +197,7 @@ public class Protocol {
 			try {
 				JLG.debug("protocol->declare_contact_message hash: "
 						+ agent.hash(input));
-				
+
 				OCPContact contact = (OCPContact) JLG.deserialize(it.next());
 				InetAddress host = clientSocket.getInetAddress();
 				contact.updateHost(host.getHostAddress());
@@ -218,24 +231,24 @@ public class Protocol {
 	public static Iterator<byte[]> iterator(byte[] input) {
 		LinkedList<byte[]> list = new LinkedList<byte[]>();
 		try {
-		ByteArrayInputStream bis = new ByteArrayInputStream(input);
-		DataInputStream dis = new DataInputStream(bis);
-		int b = -2;
-		while ((b != SEPARATOR) && (b != -1)) {
-			b = dis.read();
-		}
-		while (true) {
-			try {
-				int length = dis.readInt();
-				byte[] serialized = new byte[length];
-				dis.read(serialized, 0, length);
-				list.addLast(serialized);
-			} catch (EOFException e) {
-				break;
+			ByteArrayInputStream bis = new ByteArrayInputStream(input);
+			DataInputStream dis = new DataInputStream(bis);
+			int b = -2;
+			while ((b != SEPARATOR) && (b != -1)) {
+				b = dis.read();
 			}
-		}
-		dis.close();
-		bis.close();
+			while (true) {
+				try {
+					int length = dis.readInt();
+					byte[] serialized = new byte[length];
+					dis.read(serialized, 0, length);
+					list.addLast(serialized);
+				} catch (EOFException e) {
+					break;
+				}
+			}
+			dis.close();
+			bis.close();
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
@@ -246,7 +259,8 @@ public class Protocol {
 		return ("INFORM_DETACH:" + contact.id).getBytes();
 	}
 
-	public static byte[] message(String function, Object... objects) throws Exception {
+	public static byte[] message(String function, Object... objects)
+			throws Exception {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		DataOutputStream dos = new DataOutputStream(baos);
 

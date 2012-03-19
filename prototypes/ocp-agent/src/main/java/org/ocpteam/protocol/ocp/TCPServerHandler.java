@@ -4,21 +4,17 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.net.Socket;
 
-import org.ocpteam.component.Agent;
+import org.ocpteam.component.IProtocol;
 import org.ocpteam.component.StreamSerializer;
+import org.ocpteam.core.Component;
 import org.ocpteam.interfaces.IStreamSerializer;
+import org.ocpteam.interfaces.ITCPServerHandler;
 import org.ocpteam.misc.JLG;
-import org.ocpteam.misc.TCPServerHandlerInterface;
 
 
-public class TCPServerHandler implements TCPServerHandlerInterface {
+public class TCPServerHandler extends Component implements ITCPServerHandler {
 
 	private Socket clientSocket;
-	private Agent agent;
-
-	public TCPServerHandler(Agent agent) {
-		this.agent = agent;
-	}
 
 	@Override
 	public void run() {
@@ -29,11 +25,8 @@ public class TCPServerHandler implements TCPServerHandlerInterface {
 			out = new DataOutputStream(clientSocket.getOutputStream());
 			IStreamSerializer s = new StreamSerializer();
 			byte[] input = s.readMessage(in);
-			
-
-
 			JLG.debug("received length = " + input.length);
-			byte[] response = new Protocol(agent).process(input,
+			byte[] response = parent.getDesigner().get(IProtocol.class).process(input,
 					clientSocket);
 			s.writeMessage(out, response);
 		} catch (Exception e) {
@@ -60,7 +53,8 @@ public class TCPServerHandler implements TCPServerHandlerInterface {
 	}
 
 	@Override
-	public TCPServerHandlerInterface duplicate() {
-		return new TCPServerHandler(this.agent);
+	public ITCPServerHandler duplicate() {
+		TCPServerHandler handler = new TCPServerHandler();
+		return handler;
 	}
 }

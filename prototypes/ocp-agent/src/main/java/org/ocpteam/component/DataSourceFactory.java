@@ -23,6 +23,11 @@ public class DataSourceFactory extends Container implements IComponent {
 	public void setParent(IContainer parent) {
 		this.parent = parent;
 	}
+	
+	@Override
+	public IContainer getParent() {
+		return parent;
+	}
 
 	public Iterator<DataSource> getDataSourceIterator() {
 		List<DataSource> l = new LinkedList<DataSource>();

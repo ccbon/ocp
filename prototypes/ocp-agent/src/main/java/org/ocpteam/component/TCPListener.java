@@ -4,8 +4,8 @@ import org.ocpteam.core.Container;
 import org.ocpteam.core.IComponent;
 import org.ocpteam.core.IContainer;
 import org.ocpteam.interfaces.IListener;
+import org.ocpteam.interfaces.ITCPServerHandler;
 import org.ocpteam.misc.JLG;
-import org.ocpteam.misc.TCPServer;
 import org.ocpteam.misc.URL;
 import org.ocpteam.protocol.ocp.TCPServerHandler;
 
@@ -14,23 +14,28 @@ public class TCPListener extends Container implements IComponent, IListener {
 	public TCPServer tcpServer;
 	private URL url;
 	private NATTraversal natTraversal;
-	private IContainer parent;
+	protected IContainer parent;
+	private Thread t;
 	
 	public TCPListener() throws Exception {
 		getDesigner().add(NATTraversal.class);
+		getDesigner().add(TCPServer.class);
+		getDesigner().add(TCPServerHandler.class);
 	}
 
 	@Override
 	public void start() {
 		int port = url.getPort();
-		JLG.debug("parent = " + parent);
-		Agent agent = parent.getDesigner().get(Agent.class);
 		
-		tcpServer = new TCPServer(port, new TCPServerHandler(agent));
+		tcpServer = getDesigner().get(TCPServer.class);
+		tcpServer.setPort(port);
+		ITCPServerHandler handler = getDesigner().get(TCPServerHandler.class);
+		tcpServer.setHandler(handler);
 		natTraversal = getDesigner().get(NATTraversal.class);
-		natTraversal.setPort(url.getPort());
+		natTraversal.setPort(port);
 
-		tcpServer.start();
+		t = new Thread(tcpServer);
+		t.start();
 		natTraversal.map();
 	}
 
@@ -38,7 +43,7 @@ public class TCPListener extends Container implements IComponent, IListener {
 	public void stop() {
 		JLG.debug("stopping tcp server");
 		natTraversal.unmap();
-		tcpServer.stopnow();
+		tcpServer.stop(t);
 		
 	}
 
@@ -60,7 +65,11 @@ public class TCPListener extends Container implements IComponent, IListener {
 	@Override
 	public void setParent(IContainer parent) {
 		this.parent = parent;
-		
+	}
+	
+	@Override
+	public IContainer getParent() {
+		return parent;
 	}
 
 }

@@ -131,5 +131,10 @@ public class SFTPFileSystem implements IFileSystem {
 	public void setParent(IContainer parent) {
 		this.ds = (DataSource) parent;
 	}
+	
+	@Override
+	public IContainer getParent() {
+		return ds;
+	}
 
 }

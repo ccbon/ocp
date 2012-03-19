@@ -22,6 +22,11 @@ public abstract class DataSource extends Container implements IComponent,
 	public void setParent(IContainer parent) {
 		this.parent = parent;
 	}
+	
+	@Override
+	public IContainer getParent() {
+		return parent;
+	}
 
 	private URI uri;
 	private File file;

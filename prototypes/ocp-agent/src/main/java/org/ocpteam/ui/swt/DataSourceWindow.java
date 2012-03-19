@@ -593,6 +593,11 @@ public class DataSourceWindow extends ApplicationWindow implements
 		this.app = parent;
 
 	}
+	
+	@Override
+	public IContainer getParent() {
+		return this.app;
+	}
 
 	public void start() {
 		init();
@@ -600,5 +605,7 @@ public class DataSourceWindow extends ApplicationWindow implements
 		open();
 		Display.getCurrent().dispose();
 	}
+
+
 
 }

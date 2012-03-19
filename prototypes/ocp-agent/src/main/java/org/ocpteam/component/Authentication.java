@@ -102,5 +102,10 @@ public class Authentication implements IComponent {
 		initFromURI();
 	}
 
+	@Override
+	public IContainer getParent() {
+		return ds;
+	}
+
 
 }

@@ -16,6 +16,11 @@ public class Agent implements IComponent, IAgent {
 	public void setParent(IContainer parent) {
 		ds = (DataSource) parent;
 	}
+	
+	@Override
+	public IContainer getParent() {
+		return ds;
+	}
 
 	@Override
 	public IClient getClient() {

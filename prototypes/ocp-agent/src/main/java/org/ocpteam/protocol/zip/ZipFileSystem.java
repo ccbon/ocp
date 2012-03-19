@@ -154,6 +154,9 @@ public class ZipFileSystem implements IFileSystem {
 		this.ds = (DataSource) parent;
 	}
 
-
+	@Override
+	public IContainer getParent() {
+		return ds;
+	}
 
 }

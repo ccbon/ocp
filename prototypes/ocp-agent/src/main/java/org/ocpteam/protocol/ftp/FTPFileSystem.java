@@ -181,7 +181,11 @@ public class FTPFileSystem implements IFileSystem {
 	@Override
 	public void setParent(IContainer parent) {
 		this.ds = (DataSource) parent;
-
+	}
+	
+	@Override
+	public IContainer getParent() {
+		return ds;
 	}
 
 }

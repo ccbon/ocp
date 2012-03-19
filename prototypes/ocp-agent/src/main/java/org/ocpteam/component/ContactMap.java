@@ -33,6 +33,11 @@ public class ContactMap extends HashMap<Id, Contact> implements IComponent {
 	public void setParent(IContainer parent) {
 		this.parent = parent;
 	}
+	
+	@Override
+	public IContainer getParent() {
+		return parent;
+	}
 
 
 	public void refreshContactList() throws Exception {

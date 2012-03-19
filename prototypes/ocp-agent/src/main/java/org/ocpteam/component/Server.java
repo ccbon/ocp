@@ -25,6 +25,11 @@ public class Server implements IComponent, IServer {
 	public void setParent(IContainer parent) {
 		this.ds = (DataSource) parent;
 	}
+	
+	@Override
+	public IContainer getParent() {
+		return ds;
+	}
 
 	@Override
 	public boolean isStarted() {
