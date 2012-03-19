@@ -2,6 +2,9 @@ package org.ocpteam.component;
 
 import org.ocpteam.core.IComponent;
 import org.ocpteam.core.IContainer;
+import org.ocpteam.interfaces.IAgent;
+import org.ocpteam.interfaces.IClient;
+import org.ocpteam.interfaces.IServer;
 
 public class Agent implements IComponent, IAgent {
 

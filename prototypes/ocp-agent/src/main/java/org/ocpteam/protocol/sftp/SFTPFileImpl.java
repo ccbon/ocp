@@ -3,7 +3,7 @@ package org.ocpteam.protocol.sftp;
 import java.util.Collection;
 import java.util.HashSet;
 
-import org.ocpteam.component.IFile;
+import org.ocpteam.interfaces.IFile;
 
 public class SFTPFileImpl implements IFile {
 

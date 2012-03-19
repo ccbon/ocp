@@ -1,10 +1,11 @@
 package org.ocpteam.protocol.ocp;
 
+import org.ocpteam.interfaces.IListener;
 import org.ocpteam.misc.JLG;
 import org.ocpteam.misc.TCPServer;
 import org.ocpteam.misc.URL;
 
-public class TCPListener implements Listener {
+public class TCPListener implements IListener {
 
 	public TCPServer tcpServer;
 	private URL url;
@@ -33,6 +34,11 @@ public class TCPListener implements Listener {
 	@Override
 	public URL getUrl() {
 		return url;
+	}
+	
+	@Override
+	public void setUrl(URL url) {
+		this.url = url;
 	}
 	
 	@Override

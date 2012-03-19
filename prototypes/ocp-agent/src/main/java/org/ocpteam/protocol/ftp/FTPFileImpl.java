@@ -4,7 +4,7 @@ import java.util.Collection;
 import java.util.HashSet;
 
 import org.apache.commons.net.ftp.FTPFile;
-import org.ocpteam.component.IFile;
+import org.ocpteam.interfaces.IFile;
 
 
 public class FTPFileImpl implements IFile {

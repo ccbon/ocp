@@ -4,6 +4,7 @@ import java.util.Properties;
 
 import org.ocpteam.core.IComponent;
 import org.ocpteam.core.IContainer;
+import org.ocpteam.interfaces.IClient;
 
 public class Client implements IComponent, IClient {
 

@@ -1,6 +1,6 @@
 package org.ocpteam.layer.rsp;
 
-import org.ocpteam.component.IDataModel;
+import org.ocpteam.interfaces.IDataModel;
 
 public class Context {
 

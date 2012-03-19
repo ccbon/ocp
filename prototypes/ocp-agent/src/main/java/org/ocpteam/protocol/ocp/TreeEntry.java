@@ -3,7 +3,7 @@ package org.ocpteam.protocol.ocp;
 import java.io.Serializable;
 import java.util.Collection;
 
-import org.ocpteam.component.IFile;
+import org.ocpteam.interfaces.IFile;
 
 
 public class TreeEntry implements Serializable, IFile {

@@ -2,18 +2,19 @@ package org.ocpteam.component;
 
 import java.io.File;
 import java.net.URI;
-import java.util.Iterator;
 import java.util.Properties;
 import java.util.ResourceBundle;
 
 import org.ocpteam.core.Container;
 import org.ocpteam.core.IComponent;
 import org.ocpteam.core.IContainer;
+import org.ocpteam.interfaces.IConnect;
+import org.ocpteam.interfaces.IDocument;
 import org.ocpteam.layer.rsp.Context;
 import org.ocpteam.misc.JLG;
 
 public abstract class DataSource extends Container implements IComponent,
-		IDocument, IConnect, IConfig {
+		IDocument, IConnect {
 
 	protected IContainer parent;
 
@@ -30,7 +31,7 @@ public abstract class DataSource extends Container implements IComponent,
 	protected Context context;
 
 	public abstract String getProtocol();
-
+	
 	@Override
 	public void open(File file) throws Exception {
 		bIsNew = false;
@@ -135,37 +136,7 @@ public abstract class DataSource extends Container implements IComponent,
 				.newInstance();
 	}
 	
-	protected Properties p = new Properties();
 	
-	@Override
-	public void setConfig(Properties p) {
-		this.p = p;
-	}
 	
-	@Override
-	public Properties getConfig() {
-		return p;
-	}
-
-
-	@Override
-	public String get(String key) {
-		return p.getProperty(key);
-	}
-
-	@Override
-	public String get(String key, String defaultValue) {
-		return p.getProperty(key, defaultValue);
-	}
-
-	@Override
-	public void set(String key, String value) {
-		p.setProperty(key, value);
-	}
-	
-	@Override
-	public Iterator<String> iterator() {
-		return p.stringPropertyNames().iterator();
-	}
 
 }

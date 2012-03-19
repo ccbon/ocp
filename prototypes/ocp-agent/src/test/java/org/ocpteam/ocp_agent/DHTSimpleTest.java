@@ -30,6 +30,7 @@ public class DHTSimpleTest extends TestScenario {
 			p.setProperty("network.coucou", "23");
 			p.setProperty("network.hello", "456a");
 			p.setProperty("server", "yes");
+			p.setProperty("listener.tcp.url", "tcp://localhost:12345");
 			ds.setConfig(p);
 			ds.connect();
 			ds.disconnect();

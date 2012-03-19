@@ -5,7 +5,7 @@ import java.util.Map;
 import java.util.NavigableSet;
 import java.util.TreeSet;
 
-import org.ocpteam.component.IPersistentMap;
+import org.ocpteam.interfaces.IPersistentMap;
 import org.ocpteam.misc.Id;
 import org.ocpteam.misc.JLG;
 

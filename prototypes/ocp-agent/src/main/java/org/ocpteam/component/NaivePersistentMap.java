@@ -1,6 +1,7 @@
 package org.ocpteam.component;
 
 import org.ocpteam.core.IContainer;
+import org.ocpteam.interfaces.IPersistentMap;
 import org.ocpteam.misc.PersistentFileMap;
 
 

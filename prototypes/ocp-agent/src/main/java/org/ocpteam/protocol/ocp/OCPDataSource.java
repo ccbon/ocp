@@ -5,9 +5,9 @@ import org.ocpteam.component.Authentication;
 import org.ocpteam.component.Client;
 import org.ocpteam.component.ContactMap;
 import org.ocpteam.component.DataSource;
-import org.ocpteam.component.IPersistentMap;
 import org.ocpteam.component.NaivePersistentMap;
 import org.ocpteam.component.Server;
+import org.ocpteam.interfaces.IPersistentMap;
 
 public class OCPDataSource extends DataSource {
 

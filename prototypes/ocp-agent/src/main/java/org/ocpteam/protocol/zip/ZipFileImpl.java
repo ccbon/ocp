@@ -4,7 +4,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.zip.ZipEntry;
 
-import org.ocpteam.component.IFile;
+import org.ocpteam.interfaces.IFile;
 import org.ocpteam.misc.JLG;
 
 public class ZipFileImpl implements IFile {

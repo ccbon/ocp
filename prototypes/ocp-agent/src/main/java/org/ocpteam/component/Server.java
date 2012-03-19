@@ -1,13 +1,16 @@
 package org.ocpteam.component;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.ocpteam.core.IComponent;
 import org.ocpteam.core.IContainer;
-import org.ocpteam.protocol.ocp.Listener;
+import org.ocpteam.interfaces.IListener;
+import org.ocpteam.interfaces.IServer;
 
 /**
- * A server is a set of listener. Starting the server starts automatically all its listeners.
+ * A server is a set of listeners. Starting the server starts automatically all its listeners.
  * Idem for stopping.
  *
  */
@@ -16,7 +19,7 @@ public class Server implements IComponent, IServer {
 	protected DataSource ds;
 	protected boolean bIsStarted = false;
 	
-	public List<Listener> listenerList;
+	protected List<IListener> listenerList;
 
 	@Override
 	public void setParent(IContainer parent) {
@@ -30,15 +33,26 @@ public class Server implements IComponent, IServer {
 
 	@Override
 	public void start() throws Exception {
-		//TODO : start the listeners
+		for (Iterator<IListener> it = getListeners().iterator(); it.hasNext();) {
+			it.next().start();
+		}
 		bIsStarted = true;
-		
 	}
 
 	@Override
 	public void stop() throws Exception {
-		//TODO : stop the listeners
+		for (Iterator<IListener> it = listenerList.iterator(); it.hasNext();) {
+			it.next().stop();
+		}
 		bIsStarted  = false;
+	}
+
+	@Override
+	public List<IListener> getListeners() {
+		if (listenerList == null) {
+			listenerList = new ArrayList<IListener>();
+		}
+		return listenerList;
 	}
 
 }

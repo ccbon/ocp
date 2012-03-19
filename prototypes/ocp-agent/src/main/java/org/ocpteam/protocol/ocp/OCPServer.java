@@ -5,6 +5,7 @@ import java.util.Iterator;
 
 import org.ocpteam.component.Agent;
 import org.ocpteam.component.Server;
+import org.ocpteam.interfaces.IListener;
 import org.ocpteam.misc.JLG;
 import org.ocpteam.misc.JLGException;
 import org.ocpteam.misc.URL;
@@ -20,7 +21,7 @@ public class OCPServer extends Server {
 		this.agent = (OCPAgent) ds.getDesigner().get(Agent.class);
 
 		boolean bFound = false;
-		listenerList = new ArrayList<Listener>();
+		listenerList = new ArrayList<IListener>();
 		Iterator<String> it = agent.ds.iterator();
 		while (it.hasNext()) {
 			String key = it.next();
@@ -28,7 +29,7 @@ public class OCPServer extends Server {
 				bFound = true;
 				URL url = new URL(agent.ds.get(key));
 				String sProtocol = url.getProtocol();
-				Listener listener = null;
+				IListener listener = null;
 				if (sProtocol.equalsIgnoreCase("tcp")) {
 					listener = new TCPListener(agent, url);
 				} else if (sProtocol.equalsIgnoreCase("http")) {
@@ -49,7 +50,7 @@ public class OCPServer extends Server {
 	@Override
 	public void start() throws Exception {
 		init();
-		for (Iterator<Listener> it = listenerList.iterator(); it.hasNext();) {
+		for (Iterator<IListener> it = listenerList.iterator(); it.hasNext();) {
 			it.next().start();
 		}
 		bIsStarted = true;
@@ -58,7 +59,7 @@ public class OCPServer extends Server {
 	@Override
 	public void stop() {
 		JLG.debug("stopping servers");
-		for (Iterator<Listener> it = listenerList.iterator(); it.hasNext();) {
+		for (Iterator<IListener> it = listenerList.iterator(); it.hasNext();) {
 			it.next().stop();
 		}
 		bIsStarted = false;
@@ -68,8 +69,8 @@ public class OCPServer extends Server {
 	@Override
 	public String toString() {
 		String result = "";
-		for (Iterator<Listener> it = listenerList.iterator(); it.hasNext();) {
-			Listener l = it.next();
+		for (Iterator<IListener> it = listenerList.iterator(); it.hasNext();) {
+			IListener l = it.next();
 			result += "listener=" + l + JLG.NL;
 		}
 		return result;

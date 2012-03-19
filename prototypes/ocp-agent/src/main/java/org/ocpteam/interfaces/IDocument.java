@@ -1,4 +1,4 @@
-package org.ocpteam.component;
+package org.ocpteam.interfaces;
 
 import java.io.File;
 

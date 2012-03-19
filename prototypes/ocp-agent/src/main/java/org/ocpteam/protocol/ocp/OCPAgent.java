@@ -27,7 +27,8 @@ import javax.crypto.spec.PBEParameterSpec;
 import org.ocpteam.component.Agent;
 import org.ocpteam.component.Client;
 import org.ocpteam.component.ContactMap;
-import org.ocpteam.component.IClient;
+import org.ocpteam.interfaces.IClient;
+import org.ocpteam.interfaces.IListener;
 import org.ocpteam.layer.dsp.Contact;
 import org.ocpteam.layer.rsp.User;
 import org.ocpteam.misc.ByteUtil;
@@ -187,17 +188,7 @@ public class OCPAgent extends Agent {
 	}
 
 	private Properties getNetworkProperties() {
-		Properties p = new Properties();
-		Iterator<String> it = ds.iterator();
-		while (it.hasNext()) {
-			String key = it.next();
-			if (key.startsWith("network.")) {
-				String networkKey = key.substring("network.".length());
-				JLG.debug("network key=" + networkKey);
-				p.setProperty(networkKey, ds.get(key));
-			}
-		}
-		return p;
+		return JLG.extractProperties(ds.getConfig(), "network");
 	}
 
 	public void disconnect() throws Exception {
@@ -214,9 +205,9 @@ public class OCPAgent extends Agent {
 		c.publicKey = this.keyPair.getPublic().getEncoded();
 		// add the listener url and node id information
 		if (server != null) {
-			Iterator<Listener> it = server.listenerList.iterator();
+			Iterator<IListener> it = server.getListeners().iterator();
 			while (it.hasNext()) {
-				Listener l = it.next();
+				IListener l = it.next();
 				c.addURL(l.getUrl());
 			}
 			Iterator<Id> itn = storage.nodeSet.iterator();

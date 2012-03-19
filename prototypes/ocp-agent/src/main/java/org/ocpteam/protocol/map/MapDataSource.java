@@ -4,8 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.ocpteam.component.DataSource;
-import org.ocpteam.component.IDataModel;
 import org.ocpteam.component.MapDataModel;
+import org.ocpteam.interfaces.IDataModel;
 import org.ocpteam.layer.rsp.Context;
 
 public class MapDataSource extends DataSource {

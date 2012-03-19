@@ -13,8 +13,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
-import org.ocpteam.component.IDataModel;
 import org.ocpteam.component.MapDataModel;
+import org.ocpteam.interfaces.IDataModel;
 import org.ocpteam.misc.JLG;
 
 public class MapComposite extends Composite {

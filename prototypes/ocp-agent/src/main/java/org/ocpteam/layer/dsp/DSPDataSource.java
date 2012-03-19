@@ -1,14 +1,19 @@
 package org.ocpteam.layer.dsp;
 
+import java.util.Iterator;
 import java.util.Properties;
 
 import org.ocpteam.component.Agent;
 import org.ocpteam.component.Client;
 import org.ocpteam.component.DataSource;
-import org.ocpteam.component.IDataModel;
 import org.ocpteam.component.MapDataModel;
 import org.ocpteam.component.Server;
+import org.ocpteam.component.TCPListener;
+import org.ocpteam.core.IComponent;
+import org.ocpteam.interfaces.IDataModel;
+import org.ocpteam.interfaces.IListener;
 import org.ocpteam.misc.JLG;
+import org.ocpteam.misc.URL;
 
 public abstract class DSPDataSource extends DataSource {
 
@@ -23,6 +28,7 @@ public abstract class DSPDataSource extends DataSource {
 		agent = getDesigner().add(Agent.class);
 		client = getDesigner().add(Client.class);
 		server = getDesigner().add(Server.class, new Server());
+		getDesigner().add(TCPListener.class);
 		getDesigner().add(IDataModel.class, new MapDataModel());
 	}
 	
@@ -38,10 +44,23 @@ public abstract class DSPDataSource extends DataSource {
 		
 		if (get("server", "yes").equals("yes")) {
 			JLG.debug("starting the server");
+			configureServer(server);
 			server.start();
 		}
 	}
 	
+	protected void configureServer(Server server) throws Exception {
+		Iterator<IComponent> it = getDesigner().iterator();
+		while (it.hasNext()) {
+			IComponent c = it.next();
+			if (c instanceof IListener) {
+				IListener l = (IListener) c;
+				l.setUrl(new URL(get("listener.tcp.url", "tcp://localhost:22222")));
+				server.getListeners().add(l);
+			}
+		}
+	}
+
 	@Override
 	public void disconnect() throws Exception {
 		if (server.isStarted()) {

@@ -3,6 +3,7 @@ package org.ocpteam.component;
 import java.util.Map;
 
 import org.ocpteam.core.IContainer;
+import org.ocpteam.interfaces.IDataModel;
 
 public class MapDataModel implements IDataModel {
 

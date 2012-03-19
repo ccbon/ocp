@@ -5,7 +5,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.ocpteam.component.IFile;
+import org.ocpteam.interfaces.IFile;
 
 
 public class Tree implements Serializable, IFile {

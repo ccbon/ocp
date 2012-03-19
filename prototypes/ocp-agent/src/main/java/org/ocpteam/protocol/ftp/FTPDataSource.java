@@ -5,7 +5,7 @@ import java.net.URI;
 import org.ocpteam.component.Authentication;
 import org.ocpteam.component.Client;
 import org.ocpteam.component.DataSource;
-import org.ocpteam.component.IDataModel;
+import org.ocpteam.interfaces.IDataModel;
 
 public class FTPDataSource extends DataSource {
 

@@ -7,9 +7,9 @@ import java.io.FileOutputStream;
 import org.apache.commons.net.ftp.FTPFile;
 import org.apache.commons.net.ftp.FTPFileFilter;
 import org.ocpteam.component.DataSource;
-import org.ocpteam.component.IFile;
-import org.ocpteam.component.IFileSystem;
 import org.ocpteam.core.IContainer;
+import org.ocpteam.interfaces.IFile;
+import org.ocpteam.interfaces.IFileSystem;
 import org.ocpteam.misc.JLG;
 
 public class FTPFileSystem implements IFileSystem {

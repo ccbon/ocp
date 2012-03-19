@@ -2,8 +2,8 @@ package org.ocpteam.protocol.sftp;
 
 import org.ocpteam.component.Authentication;
 import org.ocpteam.component.Client;
-import org.ocpteam.component.IAuthenticable;
-import org.ocpteam.component.IDataModel;
+import org.ocpteam.interfaces.IAuthenticable;
+import org.ocpteam.interfaces.IDataModel;
 import org.ocpteam.layer.rsp.Context;
 import org.ocpteam.layer.rsp.User;
 import org.ocpteam.misc.JLG;

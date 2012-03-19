@@ -4,6 +4,7 @@ import java.net.URI;
 
 import org.ocpteam.core.IComponent;
 import org.ocpteam.core.IContainer;
+import org.ocpteam.interfaces.IAuthenticable;
 import org.ocpteam.layer.rsp.User;
 import org.ocpteam.misc.JLG;
 

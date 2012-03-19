@@ -3,13 +3,14 @@ package org.ocpteam.protocol.ocp;
 import java.net.InetSocketAddress;
 import java.util.concurrent.Executors;
 
+import org.ocpteam.interfaces.IListener;
 import org.ocpteam.misc.JLG;
 import org.ocpteam.misc.URL;
 
 import com.sun.net.httpserver.HttpServer;
 
 @SuppressWarnings("restriction")
-public class HTTPListener implements Listener {
+public class HTTPListener implements IListener {
 
 	private URL url;
 	private OCPAgent agent;
@@ -49,6 +50,11 @@ public class HTTPListener implements Listener {
 	@Override
 	public URL getUrl() {
 		return url;
+	}
+
+	@Override
+	public void setUrl(URL url) {
+		this.url = url;
 	}
 
 }
