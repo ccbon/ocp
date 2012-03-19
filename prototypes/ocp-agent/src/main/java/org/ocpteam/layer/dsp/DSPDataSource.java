@@ -28,7 +28,13 @@ public abstract class DSPDataSource extends DataSource {
 		agent = getDesigner().add(Agent.class);
 		client = getDesigner().add(Client.class);
 		server = getDesigner().add(Server.class, new Server());
+		
 		getDesigner().add(TCPListener.class);
+		// specify the nat traversal class to use
+		// specify the stream serializer (eom detection)
+		//getDesigner().get(TCPListener.class).add(NATTraversal.class);
+		//getDesigner().get(TCPListener.class).add(StreamSerializer.class);
+		
 		getDesigner().add(IDataModel.class, new MapDataModel());
 	}
 	

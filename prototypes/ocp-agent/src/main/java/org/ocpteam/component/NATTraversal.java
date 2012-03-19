@@ -1,9 +1,11 @@
-package org.ocpteam.protocol.ocp;
+package org.ocpteam.component;
 
 import java.net.InetAddress;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.ocpteam.core.Component;
+import org.ocpteam.interfaces.INATTraversal;
 import org.ocpteam.misc.JLG;
 import org.teleal.cling.UpnpService;
 import org.teleal.cling.UpnpServiceImpl;
@@ -11,12 +13,20 @@ import org.teleal.cling.support.igd.PortMappingListener;
 import org.teleal.cling.support.model.PortMapping;
 
 
-public class NATTraversal {
+
+/**
+ * This class is doing NAT Traversal using the uPnP teleal cling library.
+ *
+ */
+public class NATTraversal extends Component implements INATTraversal {
 
 	private UpnpService upnpService;
 	private int port;
 	
-	public NATTraversal(int port) {
+	public NATTraversal() {
+	}
+	
+	public void setPort(int port) {
 		this.port = port;
 	}
 	

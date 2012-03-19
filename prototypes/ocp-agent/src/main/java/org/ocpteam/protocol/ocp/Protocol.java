@@ -11,6 +11,7 @@ import java.net.Socket;
 import java.util.Iterator;
 import java.util.LinkedList;
 
+import org.ocpteam.component.Agent;
 import org.ocpteam.layer.dsp.Contact;
 import org.ocpteam.misc.Id;
 import org.ocpteam.misc.JLG;
@@ -38,8 +39,8 @@ public class Protocol {
 
 	private OCPAgent agent;
 
-	public Protocol(OCPAgent agent) {
-		this.agent = agent;
+	public Protocol(Agent agent) {
+		this.agent = (OCPAgent) agent;
 	}
 
 	public byte[] process(byte[] input, Socket clientSocket)

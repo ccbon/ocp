@@ -5,6 +5,7 @@ import java.util.Iterator;
 
 import org.ocpteam.component.Agent;
 import org.ocpteam.component.Server;
+import org.ocpteam.component.TCPListener;
 import org.ocpteam.interfaces.IListener;
 import org.ocpteam.misc.JLG;
 import org.ocpteam.misc.JLGException;
@@ -13,7 +14,6 @@ import org.ocpteam.misc.URL;
 public class OCPServer extends Server {
 
 	public OCPAgent agent;
-	
 
 	public void init() throws Exception {
 		JLG.debug("ds = " + ds);
@@ -31,7 +31,8 @@ public class OCPServer extends Server {
 				String sProtocol = url.getProtocol();
 				IListener listener = null;
 				if (sProtocol.equalsIgnoreCase("tcp")) {
-					listener = new TCPListener(agent, url);
+					listener = ds.getDesigner().add(TCPListener.class);
+					listener.setUrl(url);
 				} else if (sProtocol.equalsIgnoreCase("http")) {
 					listener = new HTTPListener(agent, url);
 				} else {
@@ -42,8 +43,9 @@ public class OCPServer extends Server {
 
 		}
 		if (bFound == false) {
-			listenerList.add(new TCPListener(agent, new URL(
-					"tcp://localhost:22222")));
+			IListener l = ds.getDesigner().add(TCPListener.class);
+			l.setUrl(new URL("tcp://localhost:22222"));
+			listenerList.add(l);
 		}
 	}
 

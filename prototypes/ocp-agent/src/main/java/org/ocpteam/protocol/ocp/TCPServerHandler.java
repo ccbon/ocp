@@ -4,6 +4,9 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.net.Socket;
 
+import org.ocpteam.component.Agent;
+import org.ocpteam.component.StreamSerializer;
+import org.ocpteam.interfaces.IStreamSerializer;
 import org.ocpteam.misc.JLG;
 import org.ocpteam.misc.TCPServerHandlerInterface;
 
@@ -11,9 +14,9 @@ import org.ocpteam.misc.TCPServerHandlerInterface;
 public class TCPServerHandler implements TCPServerHandlerInterface {
 
 	private Socket clientSocket;
-	private OCPAgent agent;
+	private Agent agent;
 
-	public TCPServerHandler(OCPAgent agent) {
+	public TCPServerHandler(Agent agent) {
 		this.agent = agent;
 	}
 
@@ -24,20 +27,15 @@ public class TCPServerHandler implements TCPServerHandlerInterface {
 		try {
 			in = new DataInputStream(clientSocket.getInputStream());
 			out = new DataOutputStream(clientSocket.getOutputStream());
-			int length = in.readInt();
-			JLG.debug("length=" + length);
-			byte[] input = new byte[length];
-			in.read(input, 0, length);
+			IStreamSerializer s = new StreamSerializer();
+			byte[] input = s.readMessage(in);
+			
 
 
-			JLG.debug("received length = " + length);
+			JLG.debug("received length = " + input.length);
 			byte[] response = new Protocol(agent).process(input,
 					clientSocket);
-			out.writeInt(response.length);
-			out.write(response);
-			// JLG.debug("hash(response)=" + JLG.sha1(response.getBytes()));
-			out.flush();
-
+			s.writeMessage(out, response);
 		} catch (Exception e) {
 			JLG.error(e);
 		} finally {

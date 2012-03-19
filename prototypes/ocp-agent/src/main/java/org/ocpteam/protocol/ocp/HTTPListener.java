@@ -3,6 +3,7 @@ package org.ocpteam.protocol.ocp;
 import java.net.InetSocketAddress;
 import java.util.concurrent.Executors;
 
+import org.ocpteam.component.NATTraversal;
 import org.ocpteam.interfaces.IListener;
 import org.ocpteam.misc.JLG;
 import org.ocpteam.misc.URL;
@@ -20,7 +21,8 @@ public class HTTPListener implements IListener {
 	public HTTPListener(OCPAgent agent, URL url) {
 		this.url = url;
 		this.agent = agent;
-		natTraversal = new NATTraversal(url.getPort());
+		natTraversal = new NATTraversal();
+		natTraversal.setPort(url.getPort());
 	}
 
 	@Override
