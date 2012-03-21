@@ -6,7 +6,6 @@ import java.util.Properties;
 import org.ocpteam.component.Agent;
 import org.ocpteam.component.Client;
 import org.ocpteam.component.DataSource;
-import org.ocpteam.component.IProtocol;
 import org.ocpteam.component.MapDataModel;
 import org.ocpteam.component.BahBahProtocol;
 import org.ocpteam.component.Server;
@@ -14,6 +13,7 @@ import org.ocpteam.component.TCPListener;
 import org.ocpteam.core.IComponent;
 import org.ocpteam.interfaces.IDataModel;
 import org.ocpteam.interfaces.IListener;
+import org.ocpteam.interfaces.IProtocol;
 import org.ocpteam.misc.JLG;
 import org.ocpteam.misc.URL;
 

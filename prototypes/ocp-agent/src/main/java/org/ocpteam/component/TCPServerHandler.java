@@ -1,12 +1,11 @@
-package org.ocpteam.protocol.ocp;
+package org.ocpteam.component;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.net.Socket;
 
-import org.ocpteam.component.IProtocol;
-import org.ocpteam.component.StreamSerializer;
 import org.ocpteam.core.Component;
+import org.ocpteam.interfaces.IProtocol;
 import org.ocpteam.interfaces.IStreamSerializer;
 import org.ocpteam.interfaces.ITCPServerHandler;
 import org.ocpteam.misc.JLG;
@@ -23,7 +22,7 @@ public class TCPServerHandler extends Component implements ITCPServerHandler {
 		try {
 			in = new DataInputStream(clientSocket.getInputStream());
 			out = new DataOutputStream(clientSocket.getOutputStream());
-			IStreamSerializer s = new StreamSerializer();
+			IStreamSerializer s = parent.getDesigner().get(StreamSerializer.class);
 			byte[] input = s.readMessage(in);
 			JLG.debug("received length = " + input.length);
 			JLG.debug("parent: " + parent);

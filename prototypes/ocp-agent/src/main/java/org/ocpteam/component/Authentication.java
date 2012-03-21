@@ -2,18 +2,16 @@ package org.ocpteam.component;
 
 import java.net.URI;
 
-import org.ocpteam.core.IComponent;
 import org.ocpteam.core.IContainer;
 import org.ocpteam.interfaces.IAuthenticable;
 import org.ocpteam.layer.rsp.User;
 import org.ocpteam.misc.JLG;
 
-public class Authentication implements IComponent {
+public class Authentication extends DataSourceComponent {
 
 	private Object challenge;
 	private String login;
 	private User user;
-	private DataSource ds;
 
 	public Authentication() {
 	}
@@ -101,11 +99,5 @@ public class Authentication implements IComponent {
 		this.ds = (DataSource) parent;
 		initFromURI();
 	}
-
-	@Override
-	public IContainer getParent() {
-		return ds;
-	}
-
 
 }

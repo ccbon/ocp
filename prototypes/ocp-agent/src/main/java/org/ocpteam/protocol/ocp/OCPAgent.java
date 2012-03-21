@@ -192,6 +192,7 @@ public class OCPAgent extends Agent {
 	}
 
 	public void disconnect() throws Exception {
+		JLG.debug("disconnect");
 		if (server != null) {
 			server.stop();
 			server = null;

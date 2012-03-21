@@ -338,7 +338,7 @@ public class OCPClient extends Client implements IAuthenticable {
 
 	public void declareSponsor() {
 		try {
-			if (agent.ds.get("network.type", "public").equalsIgnoreCase(
+			if (agent.ds.get("network.type", "private").equalsIgnoreCase(
 					"public")) {
 				int port = agent.toContact().urlList.get(0).getPort();
 				XmlRpcClientConfigImpl config = new XmlRpcClientConfigImpl();

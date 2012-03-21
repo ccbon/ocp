@@ -12,7 +12,7 @@ public class TCPServer extends Component implements Runnable {
 	private int port;
 	private ITCPServerHandler handler;
 	private ServerSocket serverSocket;
-	private boolean stoppingNow;
+	private boolean stoppingNow = false;
 	
 	public void setPort(int port) {
 		this.port = port;
@@ -27,7 +27,7 @@ public class TCPServer extends Component implements Runnable {
 		JLG.debug("starting a TCP server");
 		try {
 			serverSocket = new ServerSocket(port);
-			while (true) {
+			while (stoppingNow == false) {
 				JLG.debug("waiting for a client connection");
 				Socket clientSocket = serverSocket.accept();
 				ITCPServerHandler myHandler = handler.duplicate();
@@ -42,13 +42,13 @@ public class TCPServer extends Component implements Runnable {
 	}
 
 	public void stop(Thread t) {
+		JLG.debug("stopping a TCP server");
 		stoppingNow = true;
 		try {
 			if (serverSocket != null) {
 				serverSocket.close();
 			}
 		} catch (Exception e) {
-
 		}
 		t.interrupt();
 	}

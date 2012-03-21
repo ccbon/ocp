@@ -3,6 +3,7 @@ package org.ocpteam.component;
 import java.net.Socket;
 
 import org.ocpteam.core.Component;
+import org.ocpteam.interfaces.IProtocol;
 
 public class BahBahProtocol extends Component implements IProtocol {
 

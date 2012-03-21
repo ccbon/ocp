@@ -4,10 +4,10 @@ import org.ocpteam.core.Container;
 import org.ocpteam.core.IComponent;
 import org.ocpteam.core.IContainer;
 import org.ocpteam.interfaces.IListener;
+import org.ocpteam.interfaces.IProtocol;
 import org.ocpteam.interfaces.ITCPServerHandler;
 import org.ocpteam.misc.JLG;
 import org.ocpteam.misc.URL;
-import org.ocpteam.protocol.ocp.TCPServerHandler;
 
 public class TCPListener extends Container implements IComponent, IListener {
 
@@ -21,6 +21,7 @@ public class TCPListener extends Container implements IComponent, IListener {
 		getDesigner().add(NATTraversal.class);
 		getDesigner().add(TCPServer.class);
 		getDesigner().add(TCPServerHandler.class);
+		getDesigner().add(StreamSerializer.class);
 		getDesigner().add(IProtocol.class, new BahBahProtocol());
 	}
 
@@ -42,7 +43,7 @@ public class TCPListener extends Container implements IComponent, IListener {
 
 	@Override
 	public void stop() {
-		JLG.debug("stopping tcp server");
+		JLG.debug("stopping tcp listener");
 		natTraversal.unmap();
 		tcpServer.stop(t);
 		

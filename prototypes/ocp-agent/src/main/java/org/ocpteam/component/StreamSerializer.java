@@ -3,9 +3,10 @@ package org.ocpteam.component;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 
+import org.ocpteam.core.Component;
 import org.ocpteam.interfaces.IStreamSerializer;
 
-public class StreamSerializer implements IStreamSerializer {
+public class StreamSerializer extends Component implements IStreamSerializer {
 
 	@Override
 	public byte[] readMessage(DataInputStream in) throws Exception {

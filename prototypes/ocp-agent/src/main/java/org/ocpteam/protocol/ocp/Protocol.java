@@ -13,9 +13,9 @@ import java.util.LinkedList;
 
 import org.ocpteam.component.Agent;
 import org.ocpteam.component.DataSource;
-import org.ocpteam.component.IProtocol;
 import org.ocpteam.core.Component;
 import org.ocpteam.interfaces.IListener;
+import org.ocpteam.interfaces.IProtocol;
 import org.ocpteam.layer.dsp.Contact;
 import org.ocpteam.misc.Id;
 import org.ocpteam.misc.JLG;

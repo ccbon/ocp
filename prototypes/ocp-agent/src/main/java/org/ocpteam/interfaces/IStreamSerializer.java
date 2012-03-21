@@ -3,7 +3,9 @@ package org.ocpteam.interfaces;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 
-public interface IStreamSerializer {
+import org.ocpteam.core.IComponent;
+
+public interface IStreamSerializer extends IComponent {
 
 	byte[] readMessage(DataInputStream in) throws Exception;
 

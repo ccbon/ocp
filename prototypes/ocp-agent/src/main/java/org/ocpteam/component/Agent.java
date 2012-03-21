@@ -1,26 +1,13 @@
 package org.ocpteam.component;
 
-import org.ocpteam.core.IComponent;
-import org.ocpteam.core.IContainer;
 import org.ocpteam.interfaces.IAgent;
 import org.ocpteam.interfaces.IClient;
 import org.ocpteam.interfaces.IServer;
 
-public class Agent implements IComponent, IAgent {
+public class Agent extends DataSourceComponent implements IAgent {
 
-	public DataSource ds;
 	protected IClient client;
 	protected Server server;
-
-	@Override
-	public void setParent(IContainer parent) {
-		ds = (DataSource) parent;
-	}
-	
-	@Override
-	public IContainer getParent() {
-		return ds;
-	}
 
 	@Override
 	public IClient getClient() {

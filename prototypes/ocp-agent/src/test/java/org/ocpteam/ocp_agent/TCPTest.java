@@ -3,9 +3,9 @@ package org.ocpteam.ocp_agent;
 import static org.junit.Assert.assertTrue;
 
 import org.ocpteam.component.BahBahProtocol;
-import org.ocpteam.component.IProtocol;
 import org.ocpteam.component.TCPListener;
 import org.ocpteam.component.TestScenario;
+import org.ocpteam.interfaces.IProtocol;
 import org.ocpteam.misc.JLG;
 import org.ocpteam.misc.TCPClient;
 import org.ocpteam.misc.URL;
