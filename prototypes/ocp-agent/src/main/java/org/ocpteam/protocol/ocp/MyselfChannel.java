@@ -22,8 +22,8 @@ public class MyselfChannel extends Channel {
 	@Override
 	public byte[] request(byte[] input) throws Exception {
 		JLG.debug("agent=" + agent);
-		JLG.debug("agent.ds=" + agent.ds);
-		return agent.ds.getDesigner().get(IProtocol.class).process(input, null);
+		JLG.debug("agent.ds=" + agent.ds());
+		return agent.ds().getDesigner().get(IProtocol.class).process(input, null);
 	}
 
 	@Override

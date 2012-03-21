@@ -5,15 +5,15 @@ import java.net.URI;
 import java.util.Properties;
 import java.util.ResourceBundle;
 
-import org.ocpteam.core.Container;
 import org.ocpteam.core.IComponent;
 import org.ocpteam.core.IContainer;
+import org.ocpteam.core.TopContainer;
 import org.ocpteam.interfaces.IConnect;
 import org.ocpteam.interfaces.IDocument;
 import org.ocpteam.layer.rsp.Context;
 import org.ocpteam.misc.JLG;
 
-public abstract class DataSource extends Container implements IComponent,
+public abstract class DataSource extends TopContainer implements IComponent,
 		IDocument, IConnect {
 
 	protected IContainer parent;

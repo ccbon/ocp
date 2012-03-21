@@ -69,7 +69,7 @@ public class OCPClient extends Client implements IAuthenticable {
 	}
 
 	public Response request(byte[] string) throws Exception {
-		ContactMap contactMap = agent.ds.getDesigner().get(ContactMap.class);
+		ContactMap contactMap = agent.ds().getDesigner().get(ContactMap.class);
 		if (contactMap.isEmpty()) {
 			findSponsor();
 		}
@@ -84,7 +84,7 @@ public class OCPClient extends Client implements IAuthenticable {
 	private Response request(Queue<Contact> contactQueue, byte[] input)
 			throws Exception {
 		byte[] output = null;
-		ContactMap contactMap = agent.ds.getDesigner().get(ContactMap.class);
+		ContactMap contactMap = agent.ds().getDesigner().get(ContactMap.class);
 		if (contactMap.isEmpty()) {
 			findSponsor();
 		}
@@ -120,7 +120,7 @@ public class OCPClient extends Client implements IAuthenticable {
 				JLG.warn("channel not pingable: " + channel);
 			}
 		}
-		ContactMap contactMap = agent.ds.getDesigner().get(ContactMap.class);
+		ContactMap contactMap = agent.ds().getDesigner().get(ContactMap.class);
 		if (contactMap.isEmpty()) {
 			throw new Exception("no pingable sponsor found.");
 		}
@@ -128,12 +128,12 @@ public class OCPClient extends Client implements IAuthenticable {
 
 	private Iterator<String> getPotentialSponsorIterator() throws Exception {
 		List<String> list = new LinkedList<String>();
-		if (agent.ds.get("network.type", "private").equalsIgnoreCase("public")) {
+		if (agent.ds().get("network.type", "private").equalsIgnoreCase("public")) {
 			try {
 				XmlRpcClientConfigImpl config = new XmlRpcClientConfigImpl();
 				// TODO: need a ocp dedicated web server. I use mine for the
 				// time being.
-				config.setServerURL(new java.net.URL(agent.ds.get(
+				config.setServerURL(new java.net.URL(agent.ds().get(
 						"network.sponsor.url",
 						OCPAgent.DEFAULT_SPONSOR_SERVER_URL)));
 				XmlRpcClient client = new XmlRpcClient();
@@ -155,11 +155,11 @@ public class OCPClient extends Client implements IAuthenticable {
 
 		} else { // private network... agent properties must have at least one
 					// sponsor specified.
-			Iterator<String> it = agent.ds.iterator();
+			Iterator<String> it = agent.ds().iterator();
 			while (it.hasNext()) {
 				String key = it.next();
 				if (key.startsWith("sponsor.")) {
-					list.add(agent.ds.get(key));
+					list.add(agent.ds().get(key));
 				}
 			}
 			if (list.isEmpty()) {
@@ -182,7 +182,7 @@ public class OCPClient extends Client implements IAuthenticable {
 	private void detach(Contact contact) throws Exception {
 		// tell to your contacts this contact has disappeared.
 		synchronized (agent) {
-			ContactMap contactMap = agent.ds.getDesigner()
+			ContactMap contactMap = agent.ds().getDesigner()
 					.get(ContactMap.class);
 			if (!contactMap.containsValue(contact)) {
 				return;
@@ -196,7 +196,7 @@ public class OCPClient extends Client implements IAuthenticable {
 		// tell all your contact of what happened
 
 		Set<Contact> contactToBeDetached = new HashSet<Contact>();
-		ContactMap contactMap = agent.ds.getDesigner().get(ContactMap.class);
+		ContactMap contactMap = agent.ds().getDesigner().get(ContactMap.class);
 		Iterator<Contact> itc = contactMap.getContactSnapshotList().iterator();
 		while (itc.hasNext()) {
 			Contact c = itc.next();
@@ -288,13 +288,13 @@ public class OCPClient extends Client implements IAuthenticable {
 
 	public void declareSponsor() {
 		try {
-			if (agent.ds.get("network.type", "private").equalsIgnoreCase(
+			if (agent.ds().get("network.type", "private").equalsIgnoreCase(
 					"public")) {
 				int port = agent.toContact().urlList.get(0).getPort();
 				XmlRpcClientConfigImpl config = new XmlRpcClientConfigImpl();
 				// TODO: need a ocp dedicated web server. I use mine for the
 				// time being.
-				config.setServerURL(new java.net.URL(agent.ds.get(
+				config.setServerURL(new java.net.URL(agent.ds().get(
 						"network.sponsor.url",
 						OCPAgent.DEFAULT_SPONSOR_SERVER_URL)));
 				XmlRpcClient client = new XmlRpcClient();
@@ -312,7 +312,7 @@ public class OCPClient extends Client implements IAuthenticable {
 	@Override
 	public void login() throws Exception {
 		try {
-			Authentication a = ds.getDesigner().get(Authentication.class);
+			Authentication a = ds().getDesigner().get(Authentication.class);
 			String password = (String) a.getChallenge();
 			String login = a.getLogin();
 			Id key = agent.hash(agent.ucrypt(password,
@@ -331,7 +331,7 @@ public class OCPClient extends Client implements IAuthenticable {
 				throw new Exception("user unknown");
 			}
 			IDataModel dm = new OCPFileSystem((OCPUser) user, agent);
-			ds.setContext(new Context(dm, "/"));
+			ds().setContext(new Context(dm, "/"));
 			a.setUser(user);
 		} catch (Exception e) {
 			JLG.error(e);

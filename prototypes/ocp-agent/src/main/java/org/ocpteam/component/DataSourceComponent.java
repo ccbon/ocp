@@ -1,23 +1,21 @@
 package org.ocpteam.component;
 
-import org.ocpteam.core.IComponent;
+import org.ocpteam.core.Container;
 import org.ocpteam.core.IContainer;
 
-public class DataSourceComponent implements IComponent {
+/**
+ * A DataSourceComponent is a Component that needs a DataSource to run.
+ *
+ */
+public class DataSourceComponent extends Container {
 
-	public DataSource ds;
+	public DataSource ds() {
+		return (DataSource) getRoot();
+	}
+
 	@Override
 	public void setParent(IContainer parent) {
-		ds = (DataSource) parent;
-	}
-
-	@Override
-	public IContainer getParent() {
-		return ds;
+		super.setParent(parent);
 	}
 	
-	public DataSource getDataSource() {
-		return ds;
-	}
-
 }

@@ -6,16 +6,14 @@ import java.io.FileOutputStream;
 
 import org.apache.commons.net.ftp.FTPFile;
 import org.apache.commons.net.ftp.FTPFileFilter;
-import org.ocpteam.component.DataSource;
-import org.ocpteam.core.IContainer;
+import org.ocpteam.component.DataSourceComponent;
 import org.ocpteam.interfaces.IFile;
 import org.ocpteam.interfaces.IFileSystem;
 import org.ocpteam.misc.JLG;
 
-public class FTPFileSystem implements IFileSystem {
+public class FTPFileSystem extends DataSourceComponent implements IFileSystem {
 
 	private org.apache.commons.net.ftp.FTPClient ftp;
-	protected DataSource ds;
 
 	public FTPFileSystem(FTPClient agent) {
 		this.ftp = agent.ftp;
@@ -176,16 +174,6 @@ public class FTPFileSystem implements IFileSystem {
 	@Override
 	public String getDefaultLocalDir() {
 		return System.getProperty("user.home");
-	}
-
-	@Override
-	public void setParent(IContainer parent) {
-		this.ds = (DataSource) parent;
-	}
-	
-	@Override
-	public IContainer getParent() {
-		return ds;
 	}
 
 }

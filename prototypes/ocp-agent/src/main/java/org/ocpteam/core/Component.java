@@ -14,4 +14,9 @@ public class Component implements IComponent {
 		return parent;
 	}
 
+	@Override
+	public IContainer getRoot() {
+		return parent.getRoot();
+	}
+
 }

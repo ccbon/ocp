@@ -452,6 +452,7 @@ public class DataSourceWindow extends ApplicationWindow implements
 			if (context != null) {
 				viewExplorerAction.run();
 			} else if (ds.getDesigner().uses(Authentication.class)) {
+				ds.getDesigner().get(Authentication.class).initFromURI();
 				if (ds.getDesigner().get(Authentication.class).canLogin()) {
 					signIn();
 				} else {
@@ -604,6 +605,11 @@ public class DataSourceWindow extends ApplicationWindow implements
 		setBlockOnOpen(true);
 		open();
 		Display.getCurrent().dispose();
+	}
+
+	@Override
+	public IContainer getRoot() {
+		return this.app.getRoot();
 	}
 
 

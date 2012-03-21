@@ -67,7 +67,7 @@ public class ContactComposite extends Composite {
 			@Override
 			public void run() {
 				try {
-					ContactMap contactMap = agent.ds.getDesigner().get(ContactMap.class);
+					ContactMap contactMap = agent.ds().getDesigner().get(ContactMap.class);
 					contactMap.refreshContactList();
 				} catch (Exception e) {
 					// TODO: handle exception
@@ -76,7 +76,7 @@ public class ContactComposite extends Composite {
 		}).start();
 		tree.removeAll();
 
-		ContactMap contactMap = agent.ds.getDesigner().get(ContactMap.class);
+		ContactMap contactMap = agent.ds().getDesigner().get(ContactMap.class);
 		Iterator<Contact> it = contactMap.getContactSnapshotList().iterator();
 		while (it.hasNext()) {
 			Contact contact = it.next();

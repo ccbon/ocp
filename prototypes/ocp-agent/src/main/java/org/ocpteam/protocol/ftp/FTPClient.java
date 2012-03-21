@@ -22,7 +22,7 @@ public class FTPClient extends Client implements IAuthenticable, IConnect {
 
 	@Override
 	public void connect() throws Exception {
-		hostname = ds.getURI().getHost();
+		hostname = ds().getURI().getHost();
 		JLG.debug("hostname=" + hostname);
 		try {
 			ftp.connect(hostname);
@@ -48,13 +48,13 @@ public class FTPClient extends Client implements IAuthenticable, IConnect {
 			ftp.connect(hostname);
 		} catch (Exception e) {
 		}
-		Authentication a = ds.getDesigner().get(Authentication.class);
+		Authentication a = ds().getDesigner().get(Authentication.class);
 		String login = a.getLogin();
 		String password = (String) a.getChallenge();
 		if (ftp.login(login, password)) {
 			JLG.debug("ftp logged in.");
 			IDataModel dm = new FTPFileSystem(this);
-			ds.setContext(new Context(dm, "/"));
+			ds().setContext(new Context(dm, "/"));
 			User user = new User(login);
 			a.setUser(user);
 		} else {

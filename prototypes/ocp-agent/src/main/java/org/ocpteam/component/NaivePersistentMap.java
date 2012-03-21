@@ -19,4 +19,9 @@ public class NaivePersistentMap extends PersistentFileMap implements IPersistent
 		return parent;
 	}
 
+	@Override
+	public IContainer getRoot() {
+		return parent.getRoot();
+	}
+
 }

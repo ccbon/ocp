@@ -1,7 +1,7 @@
 package org.ocpteam.example;
 
 import org.ocpteam.component.DataSourceFactory;
-import org.ocpteam.core.Container;
+import org.ocpteam.core.TopContainer;
 import org.ocpteam.misc.JLG;
 import org.ocpteam.protocol.ftp.FTPDataSource;
 import org.ocpteam.protocol.map.MapDataSource;
@@ -10,7 +10,7 @@ import org.ocpteam.protocol.sftp.SFTPDataSource;
 import org.ocpteam.protocol.zip.ZipDataSource;
 import org.ocpteam.ui.swt.DataSourceWindow;
 
-public class DefaultApplication extends Container {
+public class DefaultApplication extends TopContainer {
 	
 	public static void main(String args[]) {
 		try {

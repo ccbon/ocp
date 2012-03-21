@@ -4,8 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.util.Vector;
 
-import org.ocpteam.component.DataSource;
-import org.ocpteam.core.IContainer;
+import org.ocpteam.component.DataSourceComponent;
 import org.ocpteam.interfaces.IFile;
 import org.ocpteam.interfaces.IFileSystem;
 import org.ocpteam.layer.rsp.User;
@@ -14,11 +13,10 @@ import org.ocpteam.misc.JLG;
 import com.jcraft.jsch.ChannelSftp.LsEntry;
 import com.jcraft.jsch.SftpATTRS;
 
-public class SFTPFileSystem implements IFileSystem {
+public class SFTPFileSystem extends DataSourceComponent implements IFileSystem {
 
 	private SFTPClient agent;
 	protected User user;
-	protected DataSource ds;
 
 	public SFTPFileSystem(User user, SFTPClient agent) {
 		this.user = user;
@@ -125,16 +123,6 @@ public class SFTPFileSystem implements IFileSystem {
 	@Override
 	public String getDefaultLocalDir() {
 		return user.getDefaultLocalDir();
-	}
-
-	@Override
-	public void setParent(IContainer parent) {
-		this.ds = (DataSource) parent;
-	}
-	
-	@Override
-	public IContainer getParent() {
-		return ds;
 	}
 
 }

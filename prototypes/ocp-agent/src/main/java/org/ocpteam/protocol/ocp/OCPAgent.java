@@ -128,7 +128,7 @@ public class OCPAgent extends Agent {
 
 	public void connect() throws Exception {
 		readConfig();
-		client = (OCPClient) ds.getDesigner().get(Client.class);
+		client = (OCPClient) ds().getDesigner().get(Client.class);
 		client.setAgent(this);
 		JLG.debug("starting agent " + name);
 
@@ -142,10 +142,10 @@ public class OCPAgent extends Agent {
 			network = client.getNetworkProperties();
 		}
 
-		String sId = ds.get("id");
+		String sId = ds().get("id");
 		if (sId == null) {
 			id = generateId();
-			ds.set("id", id.toString());
+			ds().set("id", id.toString());
 		} else {
 			id = new Id(sId);
 		}
@@ -177,7 +177,7 @@ public class OCPAgent extends Agent {
 		userCipher = Cipher.getInstance(network.getProperty("user.cipher.algo",
 				"PBEWithMD5AndDES"));
 
-		if (ds.get("server", "yes").equals("yes")) {
+		if (ds().get("server", "yes").equals("yes")) {
 			getServer().start();
 			storage.attach();
 			Contact myself = toContactForMyself();
@@ -188,7 +188,7 @@ public class OCPAgent extends Agent {
 	}
 
 	private Properties getNetworkProperties() {
-		return JLG.extractProperties(ds.getConfig(), "network");
+		return JLG.extractProperties(ds().getConfig(), "network");
 	}
 
 	public void disconnect() throws Exception {
@@ -252,7 +252,7 @@ public class OCPAgent extends Agent {
 		}
 		result += "Contacts:" + JLG.NL;
 		synchronized (this) {
-			ContactMap contactMap = ds.getDesigner().get(ContactMap.class);
+			ContactMap contactMap = ds().getDesigner().get(ContactMap.class);
 			Iterator<Id> it = contactMap.keySet().iterator();
 			while (it.hasNext()) {
 				Id id = (Id) it.next();
@@ -585,7 +585,7 @@ public class OCPAgent extends Agent {
 		OCPUser user = new OCPUser(this, login, backupNbr);
 		UserPublicInfo upi = user.getPublicInfo(this);
 
-		ContactMap contactMap = ds.getDesigner().get(ContactMap.class);
+		ContactMap contactMap = ds().getDesigner().get(ContactMap.class);
 		Contact contact = contactMap.getContact(captcha.contactId);
 
 		// 1) create the public part of the user.
@@ -639,27 +639,27 @@ public class OCPAgent extends Agent {
 	private void readConfig() throws Exception {
 
 		// debugging aspect
-		if (ds.get("debug", "true").equalsIgnoreCase("true")) {
+		if (ds().get("debug", "true").equalsIgnoreCase("true")) {
 			JLG.debug_on();
 			JLG.debug("working directory = " + System.getProperty("user.dir"));
 		}
 
-		Iterator<String> it = ds.iterator();
+		Iterator<String> it = ds().iterator();
 		while (it.hasNext()) {
 			String key = it.next();
-			String value = ds.get(key);
+			String value = ds().get(key);
 			JLG.debug(key + "=" + value);
 		}
-		name = ds.get("name", "anonymous");
+		name = ds().get("name", "anonymous");
 
 		// each agent has its own symmetric key cipher
 		// TODO: test with other algo than AES
-		KeyGenerator keyGen = KeyGenerator.getInstance(this.ds.get(
+		KeyGenerator keyGen = KeyGenerator.getInstance(this.ds().get(
 				"cypher.algo", "AES"));
-		keyGen.init(Integer.parseInt(this.ds.get("cipher.keysize",
+		keyGen.init(Integer.parseInt(this.ds().get("cipher.keysize",
 				"128")));
 		secretKey = keyGen.generateKey();
-		cipher = Cipher.getInstance(this.ds.get("cipher.algo", "AES"));
+		cipher = Cipher.getInstance(this.ds().get("cipher.algo", "AES"));
 
 		// user cipher
 		byte[] salt = { 1, 1, 1, 2, 2, 2, 3, 3 };
@@ -705,7 +705,7 @@ public class OCPAgent extends Agent {
 	}
 
 	public void addContact(Contact contact) throws Exception {
-		ContactMap contactMap = ds.getDesigner().get(ContactMap.class);
+		ContactMap contactMap = ds().getDesigner().get(ContactMap.class);
 		contactMap.put(contact.id, contact);
 		OCPContact c = (OCPContact) contact;
 		if (c.nodeIdSet.size() == 0) {
@@ -720,7 +720,7 @@ public class OCPAgent extends Agent {
 	}
 
 	public Contact removeContact(Contact contact) {
-		ContactMap contactMap = ds.getDesigner().get(ContactMap.class);
+		ContactMap contactMap = ds().getDesigner().get(ContactMap.class);
 		OCPContact c = (OCPContact) contactMap.remove(contact.id);
 		try {
 			Iterator<Id> it = c.nodeIdSet.iterator();
@@ -772,7 +772,7 @@ public class OCPAgent extends Agent {
 	@Override
 	public IClient getClient() {
 		if (client == null) {
-			client = (OCPClient) ds.getDesigner().get(Client.class);
+			client = (OCPClient) ds().getDesigner().get(Client.class);
 		}
 		return client;
 	}

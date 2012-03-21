@@ -16,25 +16,25 @@ public class OCPServer extends Server {
 	public OCPAgent agent;
 
 	public void init() throws Exception {
-		JLG.debug("ds = " + ds);
-		JLG.debug("ds.getDesigner() = " + ds.getDesigner());
-		this.agent = (OCPAgent) ds.getDesigner().get(Agent.class);
+		JLG.debug("ds = " + ds());
+		JLG.debug("ds.getDesigner() = " + ds().getDesigner());
+		this.agent = (OCPAgent) ds().getDesigner().get(Agent.class);
 
 		boolean bFound = false;
 		listenerList = new ArrayList<IListener>();
-		Iterator<String> it = agent.ds.iterator();
+		Iterator<String> it = agent.ds().iterator();
 		while (it.hasNext()) {
 			String key = it.next();
 			if (key.startsWith("server.listener.")) {
 				bFound = true;
-				URL url = new URL(agent.ds.get(key));
+				URL url = new URL(agent.ds().get(key));
 				String sProtocol = url.getProtocol();
 				IListener listener = null;
 				if (sProtocol.equalsIgnoreCase("tcp")) {
-					listener = ds.getDesigner().add(TCPListener.class);
+					listener = ds().getDesigner().add(TCPListener.class);
 					listener.setUrl(url);
 				} else if (sProtocol.equalsIgnoreCase("http")) {
-					listener = ds.getDesigner().add(HTTPListener.class);
+					listener = ds().getDesigner().add(HTTPListener.class);
 					listener.setUrl(url);
 				} else {
 					throw new JLGException("protocol not found");
@@ -44,7 +44,7 @@ public class OCPServer extends Server {
 
 		}
 		if (bFound == false) {
-			IListener l = ds.getDesigner().add(TCPListener.class);
+			IListener l = ds().getDesigner().add(TCPListener.class);
 			l.setUrl(new URL("tcp://localhost:22222"));
 			listenerList.add(l);
 		}

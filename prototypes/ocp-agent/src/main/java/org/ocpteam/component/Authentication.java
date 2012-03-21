@@ -2,7 +2,6 @@ package org.ocpteam.component;
 
 import java.net.URI;
 
-import org.ocpteam.core.IContainer;
 import org.ocpteam.interfaces.IAuthenticable;
 import org.ocpteam.layer.rsp.User;
 import org.ocpteam.misc.JLG;
@@ -13,13 +12,10 @@ public class Authentication extends DataSourceComponent {
 	private String login;
 	private User user;
 
-	public Authentication() {
-	}
-
-	private void initFromURI() {
+	public void initFromURI() {
 		URI uri = null;
 		try {
-			uri = ds.getURI();
+			uri = ds().getURI();
 			
 		} catch (Exception e) {
 		}
@@ -37,6 +33,9 @@ public class Authentication extends DataSourceComponent {
 	public Authentication(DataSource ds, String username, Object challenge) {
 		this.login = username;
 		this.challenge = challenge;
+	}
+
+	public Authentication() {
 	}
 
 	public Object getChallenge() {
@@ -80,24 +79,18 @@ public class Authentication extends DataSourceComponent {
 	}
 
 	public void login() throws Exception {
-		IAuthenticable client = (IAuthenticable) ds.getDesigner().get(Client.class);
+		IAuthenticable client = (IAuthenticable) ds().getDesigner().get(Client.class);
 		client.login();
 	}
 
 	public void logout() throws Exception {
-		IAuthenticable client = (IAuthenticable) ds.getDesigner().get(Client.class);
+		IAuthenticable client = (IAuthenticable) ds().getDesigner().get(Client.class);
 		client.logout();
 		reset();
 	}
 
 	public boolean canLogin() {
 		return !JLG.isNullOrEmpty(this.login) && this.challenge != null;
-	}
-
-	@Override
-	public void setParent(IContainer parent) {
-		this.ds = (DataSource) parent;
-		initFromURI();
 	}
 
 }

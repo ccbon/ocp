@@ -2,13 +2,13 @@ package org.ocpteam.test;
 
 import org.ocpteam.component.DataSourceFactory;
 import org.ocpteam.component.TestScenario;
-import org.ocpteam.core.Container;
+import org.ocpteam.core.TopContainer;
 import org.ocpteam.protocol.ocp.OCPDataSource;
 
 public class OCPSimpleTest extends TestScenario {
 	public static void main(String[] args) {
 		try {
-			Container app = new Container();
+			TopContainer app = new TopContainer();
 			app.getDesigner().add(DataSourceFactory.class);
 			DataSourceFactory dsf = app.getDesigner().get(DataSourceFactory.class);
 			dsf.getDesigner().add(OCPDataSource.class);

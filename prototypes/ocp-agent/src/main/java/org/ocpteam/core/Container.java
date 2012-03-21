@@ -1,54 +1,25 @@
 package org.ocpteam.core;
 
-import java.util.Iterator;
-import java.util.Properties;
+import org.ocpteam.misc.JLG;
 
+public class Container extends TopContainer implements IComponent {
 
-public class Container implements IContainer {
-	
-	protected Properties p = new Properties();
-	
-	private Designer designer;
-	
-	public Container() {
-		designer = new Designer(this);
+	private IContainer parent;
+
+	@Override
+	public void setParent(IContainer parent) {
+		this.parent = parent;
 	}
 
 	@Override
-	public Designer getDesigner() {
-		return designer;
+	public IContainer getParent() {
+		return parent;
 	}
 	
 	@Override
-	public void setConfig(Properties p) {
-		this.p = p;
+	public IContainer getRoot() {
+		JLG.debug("class=" + getClass());
+		return parent.getRoot();
 	}
 	
-	@Override
-	public Properties getConfig() {
-		return p;
-	}
-
-
-	@Override
-	public String get(String key) {
-		return p.getProperty(key);
-	}
-
-	@Override
-	public String get(String key, String defaultValue) {
-		return p.getProperty(key, defaultValue);
-	}
-
-	@Override
-	public void set(String key, String value) {
-		p.setProperty(key, value);
-	}
-	
-	@Override
-	public Iterator<String> iterator() {
-		return p.stringPropertyNames().iterator();
-	}
-
-
 }

@@ -32,7 +32,7 @@ public class Client extends DataSourceComponent implements IClient {
 	
 	public Agent getAgent() {
 		if (agent == null) {
-			agent = ds.getDesigner().get(Agent.class);
+			agent = ds().getDesigner().get(Agent.class);
 		}
 		return agent;
 	}

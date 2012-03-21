@@ -1,7 +1,5 @@
 package org.ocpteam.component;
 
-import org.ocpteam.core.Container;
-import org.ocpteam.core.IComponent;
 import org.ocpteam.core.IContainer;
 import org.ocpteam.interfaces.IListener;
 import org.ocpteam.interfaces.IProtocol;
@@ -9,7 +7,7 @@ import org.ocpteam.interfaces.ITCPServerHandler;
 import org.ocpteam.misc.JLG;
 import org.ocpteam.misc.URL;
 
-public class TCPListener extends Container implements IComponent, IListener {
+public class TCPListener extends DataSourceComponent implements IListener {
 
 	public TCPServer tcpServer;
 	private URL url;

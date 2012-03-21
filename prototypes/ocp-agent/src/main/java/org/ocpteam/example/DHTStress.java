@@ -2,10 +2,10 @@ package org.ocpteam.example;
 
 import java.util.Properties;
 
-import org.ocpteam.core.Container;
+import org.ocpteam.core.TopContainer;
 import org.ocpteam.protocol.dht.DHTDataSource;
 
-public class DHTStress extends Container {
+public class DHTStress extends TopContainer {
 	
 	public static void main(String args[]) {
 		try {

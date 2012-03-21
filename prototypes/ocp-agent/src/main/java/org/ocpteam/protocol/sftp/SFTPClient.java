@@ -22,12 +22,12 @@ public class SFTPClient extends Client implements IAuthenticable {
 	public void login() throws Exception {
 		try {
 			jsch = new JSch();
-			Authentication a = ds.getDesigner().get(Authentication.class);
+			Authentication a = ds().getDesigner().get(Authentication.class);
 			String login = a.getLogin();
 			Object challenge = a.getChallenge();
 			String[] array = login.split("@");
 			String username = array[0];
-			String hostname = ds.getURI().getHost();
+			String hostname = ds().getURI().getHost();
 			int port = 22;
 			int index = hostname.indexOf(':');
 			if (index != -1) {
@@ -57,7 +57,7 @@ public class SFTPClient extends Client implements IAuthenticable {
 			channel.connect();
 			User user = new SFTPUser(login, c);
 			IDataModel dm = new SFTPFileSystem(user, this);
-			ds.setContext(new Context(dm, "/"));
+			ds().setContext(new Context(dm, "/"));
 			a.setUser(user);
 		} catch (Exception e) {
 			e.printStackTrace();

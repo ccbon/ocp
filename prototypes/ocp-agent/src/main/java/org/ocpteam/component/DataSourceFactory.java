@@ -10,25 +10,12 @@ import java.util.ResourceBundle;
 
 import org.ocpteam.core.Container;
 import org.ocpteam.core.IComponent;
-import org.ocpteam.core.IContainer;
 import org.ocpteam.misc.JLG;
 
-public class DataSourceFactory extends Container implements IComponent {
+public class DataSourceFactory extends Container {
 	public static ResourceBundle extensionResource = ResourceBundle
 			.getBundle("extensions");
 	
-	protected IContainer parent;
-
-	@Override
-	public void setParent(IContainer parent) {
-		this.parent = parent;
-	}
-	
-	@Override
-	public IContainer getParent() {
-		return parent;
-	}
-
 	public Iterator<DataSource> getDataSourceIterator() {
 		List<DataSource> l = new LinkedList<DataSource>();
 		Iterator<IComponent> it = getDesigner().iterator();

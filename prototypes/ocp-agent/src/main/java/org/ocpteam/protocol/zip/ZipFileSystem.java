@@ -7,16 +7,14 @@ import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
-import org.ocpteam.component.DataSource;
-import org.ocpteam.core.IContainer;
+import org.ocpteam.component.DataSourceComponent;
 import org.ocpteam.interfaces.IFile;
 import org.ocpteam.interfaces.IFileSystem;
 import org.ocpteam.misc.JLG;
 
-public class ZipFileSystem implements IFileSystem {
+public class ZipFileSystem extends DataSourceComponent implements IFileSystem {
 
 	public ZipFileImpl root;
-	protected DataSource ds;
 
 	public ZipFileSystem() {
 	}
@@ -48,7 +46,7 @@ public class ZipFileSystem implements IFileSystem {
 				checkout(path, child.getName(), dir);
 			}
 		} else { // file
-			ZipUtils.extract(ds.getFile(), path.substring(1), new File(localDir, remoteFilename));
+			ZipUtils.extract(ds().getFile(), path.substring(1), new File(localDir, remoteFilename));
 		}
 
 
@@ -67,7 +65,7 @@ public class ZipFileSystem implements IFileSystem {
 		makeList(list, file);
 		File[] files = (File[]) list.toArray(new File[list.size()]);
 		File parent = file.getParentFile();
-		ZipUtils.add(ds.getFile(), remoteDir, parent, files);
+		ZipUtils.add(ds().getFile(), remoteDir, parent, files);
 		refresh();
 	}
 
@@ -94,7 +92,7 @@ public class ZipFileSystem implements IFileSystem {
 		if (!existingParentDir.endsWith("/")) {
 			existingParentDir += "/";
 		}
-		ZipUtils.mkdir(ds.getFile(), existingParentDir + newDir);
+		ZipUtils.mkdir(ds().getFile(), existingParentDir + newDir);
 		refresh();
 
 	}
@@ -107,7 +105,7 @@ public class ZipFileSystem implements IFileSystem {
 		if (!existingParentDir.endsWith("/")) {
 			existingParentDir += "/";
 		}
-		ZipUtils.rm(ds.getFile(), existingParentDir + name);
+		ZipUtils.rm(ds().getFile(), existingParentDir + name);
 		refresh();
 	}
 
@@ -120,7 +118,7 @@ public class ZipFileSystem implements IFileSystem {
 		if (!existingParentDir.endsWith("/")) {
 			existingParentDir += "/";
 		}
-		ZipUtils.rename(ds.getFile(), existingParentDir + oldName, existingParentDir + newName);
+		ZipUtils.rename(ds().getFile(), existingParentDir + oldName, existingParentDir + newName);
 		refresh();
 
 	}
@@ -134,7 +132,7 @@ public class ZipFileSystem implements IFileSystem {
 		this.root = new ZipFileImpl();
 		ZipInputStream zipInputStream = null;
 		try {
-			zipInputStream = new ZipInputStream(new FileInputStream(ds.getFile()));
+			zipInputStream = new ZipInputStream(new FileInputStream(ds().getFile()));
 			ZipEntry zipEntry = null;
 
 			while ((zipEntry = zipInputStream.getNextEntry()) != null) {
@@ -147,16 +145,6 @@ public class ZipFileSystem implements IFileSystem {
 				zipInputStream.close();
 			}
 		}
-	}
-
-	@Override
-	public void setParent(IContainer parent) {
-		this.ds = (DataSource) parent;
-	}
-
-	@Override
-	public IContainer getParent() {
-		return ds;
 	}
 
 }

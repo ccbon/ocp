@@ -23,9 +23,6 @@ public class NATTraversal extends Component implements INATTraversal {
 	private UpnpService upnpService;
 	private int port;
 	
-	public NATTraversal() {
-	}
-	
 	public void setPort(int port) {
 		this.port = port;
 	}

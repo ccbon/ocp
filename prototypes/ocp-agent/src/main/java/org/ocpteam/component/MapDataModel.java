@@ -2,10 +2,9 @@ package org.ocpteam.component;
 
 import java.util.Map;
 
-import org.ocpteam.core.Component;
 import org.ocpteam.interfaces.IDataModel;
 
-public class MapDataModel extends Component implements IDataModel {
+public class MapDataModel extends DataSourceComponent implements IDataModel {
 
 	protected Map<String, byte[]> map;
 	

@@ -5,4 +5,6 @@ import org.ocpteam.interfaces.IConfig;
 
 public interface IContainer extends IConfig {
 	public Designer getDesigner();
+
+	public IContainer getRoot();
 }
