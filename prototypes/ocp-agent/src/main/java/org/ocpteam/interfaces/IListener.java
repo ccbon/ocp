@@ -12,5 +12,7 @@ public interface IListener extends IComponent {
 	URL getUrl();
 	
 	void setUrl(URL url);
+	
+	void setProtocol(IProtocol p);
 
 }

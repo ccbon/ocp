@@ -5,7 +5,6 @@ import static org.junit.Assert.assertTrue;
 import org.ocpteam.component.BahBahProtocol;
 import org.ocpteam.component.TCPListener;
 import org.ocpteam.component.TestScenario;
-import org.ocpteam.interfaces.IProtocol;
 import org.ocpteam.misc.JLG;
 import org.ocpteam.misc.TCPClient;
 import org.ocpteam.misc.URL;
@@ -28,7 +27,7 @@ public class TCPTest extends TestScenario {
 			
 			TCPListener tcplistener = new TCPListener();
 			tcplistener.setUrl(new URL("tcp://localhost:23456"));
-			tcplistener.getDesigner().add(IProtocol.class, new BahBahProtocol());
+			tcplistener.setProtocol(new BahBahProtocol());
 			tcplistener.start();
 			
 			TCPClient tcpclient = new TCPClient();

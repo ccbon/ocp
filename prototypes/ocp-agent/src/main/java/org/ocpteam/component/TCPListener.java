@@ -16,13 +16,13 @@ public class TCPListener extends Container implements IComponent, IListener {
 	private NATTraversal natTraversal;
 	protected IContainer parent;
 	private Thread t;
+	private IProtocol protocol;
 	
 	public TCPListener() throws Exception {
 		getDesigner().add(NATTraversal.class);
 		getDesigner().add(TCPServer.class);
 		getDesigner().add(TCPServerHandler.class);
 		getDesigner().add(StreamSerializer.class);
-		getDesigner().add(IProtocol.class, new BahBahProtocol());
 	}
 
 	@Override
@@ -32,6 +32,7 @@ public class TCPListener extends Container implements IComponent, IListener {
 		tcpServer = getDesigner().get(TCPServer.class);
 		tcpServer.setPort(port);
 		ITCPServerHandler handler = getDesigner().get(TCPServerHandler.class);
+		handler.setProtocol(protocol);
 		tcpServer.setHandler(handler);
 		natTraversal = getDesigner().get(NATTraversal.class);
 		natTraversal.setPort(port);
@@ -72,6 +73,12 @@ public class TCPListener extends Container implements IComponent, IListener {
 	@Override
 	public IContainer getParent() {
 		return parent;
+	}
+
+	@Override
+	public void setProtocol(IProtocol p) {
+		this.protocol = p;
+		
 	}
 
 }

@@ -8,6 +8,7 @@ import org.ocpteam.component.DataSource;
 import org.ocpteam.component.NaivePersistentMap;
 import org.ocpteam.component.Server;
 import org.ocpteam.interfaces.IPersistentMap;
+import org.ocpteam.interfaces.IProtocol;
 
 public class OCPDataSource extends DataSource {
 
@@ -19,6 +20,7 @@ public class OCPDataSource extends DataSource {
 		getDesigner().add(Server.class, new OCPServer());
 		getDesigner().add(ContactMap.class);
 		getDesigner().add(IPersistentMap.class, new NaivePersistentMap());
+		getDesigner().add(IProtocol.class, new Protocol());
 	}
 
 	@Override

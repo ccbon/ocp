@@ -14,6 +14,7 @@ import org.ocpteam.misc.JLG;
 public class TCPServerHandler extends Component implements ITCPServerHandler {
 
 	private Socket clientSocket;
+	private IProtocol protocol;
 
 	@Override
 	public void run() {
@@ -26,7 +27,7 @@ public class TCPServerHandler extends Component implements ITCPServerHandler {
 			byte[] input = s.readMessage(in);
 			JLG.debug("received length = " + input.length);
 			JLG.debug("parent: " + parent);
-			byte[] response = parent.getDesigner().get(IProtocol.class).process(input,
+			byte[] response = protocol.process(input,
 					clientSocket);
 			s.writeMessage(out, response);
 		} catch (Exception e) {
@@ -56,6 +57,12 @@ public class TCPServerHandler extends Component implements ITCPServerHandler {
 	public ITCPServerHandler duplicate() {
 		TCPServerHandler handler = new TCPServerHandler();
 		handler.setParent(parent);
+		handler.setProtocol(protocol);
 		return handler;
+	}
+
+	@Override
+	public void setProtocol(IProtocol protocol) {
+		this.protocol = protocol;
 	}
 }

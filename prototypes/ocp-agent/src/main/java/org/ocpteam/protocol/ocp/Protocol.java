@@ -14,7 +14,6 @@ import java.util.LinkedList;
 import org.ocpteam.component.Agent;
 import org.ocpteam.component.DataSource;
 import org.ocpteam.core.Component;
-import org.ocpteam.interfaces.IListener;
 import org.ocpteam.interfaces.IProtocol;
 import org.ocpteam.layer.dsp.Contact;
 import org.ocpteam.misc.Id;
@@ -51,8 +50,7 @@ public class Protocol extends Component implements IProtocol {
 
 	public OCPAgent getAgent() {
 		if (this.agent == null) {
-			IListener l = (IListener) parent;
-			DataSource ds = (DataSource) l.getParent();
+			DataSource ds = (DataSource) parent;
 			this.agent = (OCPAgent) ds.getDesigner().get(Agent.class);
 		}
 		return this.agent;

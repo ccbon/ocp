@@ -1,9 +1,6 @@
 package org.ocpteam.protocol.ocp;
 
 import java.io.ByteArrayInputStream;
-import java.net.ConnectException;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -15,7 +12,6 @@ import java.util.Set;
 
 import org.apache.xmlrpc.client.XmlRpcClient;
 import org.apache.xmlrpc.client.XmlRpcClientConfigImpl;
-import org.ocpteam.component.Agent;
 import org.ocpteam.component.Authentication;
 import org.ocpteam.component.Client;
 import org.ocpteam.component.ContactMap;
@@ -31,26 +27,12 @@ import org.ocpteam.misc.URL;
 public class OCPClient extends Client implements IAuthenticable {
 
 	private OCPAgent agent;
-	private List<Channel> understandableChannelList;
-	private Map<URL, Channel> channelMap;
+	
+	
 
-	public OCPClient() {
-		understandableChannelList = new ArrayList<Channel>();
-		understandableChannelList.add(new TCPChannel());
-		understandableChannelList.add(new MyselfChannel());
-		channelMap = new HashMap<URL, Channel>();
-	}
 
-	private boolean understand(Channel c) {
-		Iterator<Channel> it = understandableChannelList.iterator();
-		while (it.hasNext()) {
-			Channel uc = it.next();
-			if (uc.getClass().equals(c.getClass())) {
-				return true;
-			}
-		}
-		return false;
-	}
+
+
 
 	public OCPContact getContact(Channel channel) throws Exception {
 		// I have to request to an agent (sending to it a string and then
@@ -249,38 +231,6 @@ public class OCPClient extends Client implements IAuthenticable {
 		}
 	}
 
-	private byte[] request(Contact contact, byte[] string) throws Exception {
-		OCPContact ocpContact = (OCPContact) contact;
-		byte[] output = null;
-		// I have to request to an agent (sending to it a string and then
-		// receiving a response
-		// For that, I need to know the channel to use.
-		// for the time being I know only the TCP channel.
-		Iterator<URL> it = ocpContact.urlList.iterator();
-		while (it.hasNext()) {
-			URL url = it.next();
-
-			Channel channel = null;
-			if (channelMap.containsKey(url)) {
-				channel = channelMap.get(url);
-			} else {
-				channel = Channel.getInstance(url, agent);
-				channelMap.put(url, channel);
-			}
-			if (understand(channel)) {
-				try {
-					output = channel.request(string);
-
-				} catch (ConnectException e) {
-					continue;
-				} catch (Exception e) {
-					JLG.warn(e);
-				}
-				return output;
-			}
-		}
-		throw new DetachedAgentException();
-	}
 
 	public Captcha askCaptcha(Queue<Contact> contactQueue) throws Exception {
 		Response r = request(contactQueue, Protocol.GENERATE_CAPTCHA.getBytes());
@@ -398,11 +348,5 @@ public class OCPClient extends Client implements IAuthenticable {
 		this.agent = agent;
 	}
 
-	public OCPAgent getAgent() {
-		if (agent == null) {
-			agent = (OCPAgent) ds.getDesigner().get(Agent.class);
-		}
-		return agent;
-	}
-
+	
 }

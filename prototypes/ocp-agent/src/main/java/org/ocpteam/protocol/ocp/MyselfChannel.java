@@ -1,14 +1,17 @@
 package org.ocpteam.protocol.ocp;
 
+import org.ocpteam.component.Agent;
+import org.ocpteam.interfaces.IProtocol;
+import org.ocpteam.misc.JLG;
 import org.ocpteam.misc.JLGException;
 import org.ocpteam.misc.URL;
 
 public class MyselfChannel extends Channel {
 
-	private OCPAgent agent;
+	private Agent agent;
 	
 
-	public MyselfChannel(URL url, OCPAgent agent) {
+	public MyselfChannel(URL url, Agent agent) {
 		this.agent = agent;
 		this.url = url;
 	}
@@ -18,7 +21,9 @@ public class MyselfChannel extends Channel {
 
 	@Override
 	public byte[] request(byte[] input) throws Exception {
-		return new Protocol(agent).process(input, null);
+		JLG.debug("agent=" + agent);
+		JLG.debug("agent.ds=" + agent.ds);
+		return agent.ds.getDesigner().get(IProtocol.class).process(input, null);
 	}
 
 	@Override

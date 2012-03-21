@@ -1,5 +1,6 @@
 package org.ocpteam.protocol.ocp;
 
+import org.ocpteam.component.Agent;
 import org.ocpteam.misc.URL;
 
 public abstract class Channel {
@@ -14,7 +15,7 @@ public abstract class Channel {
 		this.url = url;
 	}
 
-	public static Channel getInstance(URL url, OCPAgent agent) {
+	public static Channel getInstance(URL url, Agent agent) {
 		if (url.getProtocol().equalsIgnoreCase("tcp")) {
 			return new TCPChannel(url);
 		} else if (url.getProtocol().equalsIgnoreCase("myself")) {

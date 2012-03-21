@@ -4,10 +4,10 @@ import java.util.Iterator;
 import java.util.Properties;
 
 import org.ocpteam.component.Agent;
+import org.ocpteam.component.BahBahProtocol;
 import org.ocpteam.component.Client;
 import org.ocpteam.component.DataSource;
 import org.ocpteam.component.MapDataModel;
-import org.ocpteam.component.BahBahProtocol;
 import org.ocpteam.component.Server;
 import org.ocpteam.component.TCPListener;
 import org.ocpteam.core.IComponent;
@@ -24,6 +24,7 @@ public abstract class DSPDataSource extends DataSource {
 	protected Server server;
 	
 	protected Properties network;
+	public IProtocol protocol;
 	
 	
 	public DSPDataSource() throws Exception {
@@ -31,8 +32,10 @@ public abstract class DSPDataSource extends DataSource {
 		client = getDesigner().add(Client.class);
 		server = getDesigner().add(Server.class, new Server());
 		
-		getDesigner().add(TCPListener.class);
-		getDesigner().get(TCPListener.class).getDesigner().add(IProtocol.class, new BahBahProtocol());
+		protocol = getDesigner().add(IProtocol.class, new BahBahProtocol());
+		
+		getDesigner().add(TCPListener.class).setProtocol(protocol);
+		
 		
 		getDesigner().add(IDataModel.class, new MapDataModel());
 	}

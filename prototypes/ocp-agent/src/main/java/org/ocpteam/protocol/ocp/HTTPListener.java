@@ -6,6 +6,7 @@ import java.util.concurrent.Executors;
 import org.ocpteam.component.NATTraversal;
 import org.ocpteam.core.Component;
 import org.ocpteam.interfaces.IListener;
+import org.ocpteam.interfaces.IProtocol;
 import org.ocpteam.misc.JLG;
 import org.ocpteam.misc.URL;
 
@@ -18,6 +19,7 @@ public class HTTPListener extends Component implements IListener {
 	private OCPAgent agent;
 	HttpServer server;
 	private NATTraversal natTraversal;
+	protected IProtocol protocol;
 
 	@Override
 	public void start() {
@@ -56,6 +58,11 @@ public class HTTPListener extends Component implements IListener {
 	@Override
 	public void setUrl(URL url) {
 		this.url = url;
+	}
+
+	@Override
+	public void setProtocol(IProtocol p) {
+		this.protocol = p;
 	}
 
 }
