@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.ocpteam.core.IComponent;
-import org.ocpteam.core.IContainer;
 import org.ocpteam.interfaces.IListener;
 import org.ocpteam.interfaces.IServer;
 
@@ -14,22 +12,11 @@ import org.ocpteam.interfaces.IServer;
  * Idem for stopping.
  *
  */
-public class Server implements IComponent, IServer {
+public class Server extends DataSourceComponent implements IServer {
 
-	protected DataSource ds;
 	protected boolean bIsStarted = false;
 	
 	protected List<IListener> listenerList;
-
-	@Override
-	public void setParent(IContainer parent) {
-		this.ds = (DataSource) parent;
-	}
-	
-	@Override
-	public IContainer getParent() {
-		return ds;
-	}
 
 	@Override
 	public boolean isStarted() {
