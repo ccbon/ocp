@@ -1,4 +1,4 @@
-package org.ocpteam.layer.dsp;
+package org.ocpteam.entity;
 
 import java.io.Serializable;
 import java.util.ArrayList;

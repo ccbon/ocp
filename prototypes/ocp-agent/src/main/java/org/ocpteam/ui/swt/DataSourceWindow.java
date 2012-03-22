@@ -45,8 +45,8 @@ import org.ocpteam.component.MapDataModel;
 import org.ocpteam.component.Server;
 import org.ocpteam.core.IComponent;
 import org.ocpteam.core.IContainer;
+import org.ocpteam.entity.Context;
 import org.ocpteam.interfaces.IFileSystem;
-import org.ocpteam.layer.rsp.Context;
 import org.ocpteam.misc.JLG;
 import org.ocpteam.misc.swt.QuickMessage;
 
@@ -101,7 +101,7 @@ public class DataSourceWindow extends ApplicationWindow implements
 	}
 
 	public void init() {
-		this.dsf = app.getDesigner().get(DataSourceFactory.class);
+		this.dsf = app.getComponent(DataSourceFactory.class);
 		createActions();
 		addToolBar(SWT.FLAT | SWT.WRAP);
 		addMenuBar();
@@ -116,15 +116,15 @@ public class DataSourceWindow extends ApplicationWindow implements
 		saveDataSourceAction.setEnabled(ds != null);
 		saveAsDataSourceAction.setEnabled(ds != null);
 		signInAction.setEnabled(ds != null
-				&& ds.getDesigner().uses(Authentication.class)
+				&& ds.usesComponent(Authentication.class)
 				&& context == null);
 		signOutAction.setEnabled(ds != null
-				&& ds.getDesigner().uses(Authentication.class)
+				&& ds.usesComponent(Authentication.class)
 				&& context != null);
 		newUserAction.setEnabled(ds != null
-				&& ds.getDesigner().uses(Authentication.class)
+				&& ds.usesComponent(Authentication.class)
 				&& context == null
-				&& ds.getDesigner().get(Authentication.class)
+				&& ds.getComponent(Authentication.class)
 						.allowsUserCreation());
 
 		viewExplorerAction.setEnabled(context != null);
@@ -420,8 +420,8 @@ public class DataSourceWindow extends ApplicationWindow implements
 	}
 
 	private boolean isDaemon() {
-		if (ds != null && ds.getDesigner().uses(Server.class)) {
-			return ds.getDesigner().get(Server.class).isStarted();
+		if (ds != null && ds.usesComponent(Server.class)) {
+			return ds.getComponent(Server.class).isStarted();
 		} else {
 			return false;
 		}
@@ -444,16 +444,16 @@ public class DataSourceWindow extends ApplicationWindow implements
 			this.ds = ds;
 			ds.connect();
 			addProtocolMenu();
-			agent = ds.getDesigner().get(Agent.class);
+			agent = ds.getComponent(Agent.class);
 			if (isDaemon()) {
 				openTray();
 			}
 			context = ds.getContext();
 			if (context != null) {
 				viewExplorerAction.run();
-			} else if (ds.getDesigner().uses(Authentication.class)) {
-				ds.getDesigner().get(Authentication.class).initFromURI();
-				if (ds.getDesigner().get(Authentication.class).canLogin()) {
+			} else if (ds.usesComponent(Authentication.class)) {
+				ds.getComponent(Authentication.class).initFromURI();
+				if (ds.getComponent(Authentication.class).canLogin()) {
 					signIn();
 				} else {
 					signInAction.run();
@@ -563,7 +563,7 @@ public class DataSourceWindow extends ApplicationWindow implements
 	}
 
 	public void signIn() throws Exception {
-		ds.getDesigner().get(Authentication.class).login();
+		ds.getComponent(Authentication.class).login();
 		context = ds.getContext();
 		if (context != null) {
 			viewExplorerAction.run();
@@ -572,7 +572,7 @@ public class DataSourceWindow extends ApplicationWindow implements
 
 	public void signOut() throws Exception {
 		context = null;
-		ds.getDesigner().get(Authentication.class).logout();
+		ds.getComponent(Authentication.class).logout();
 	}
 
 	public String getHelpURL() {

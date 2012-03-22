@@ -7,12 +7,12 @@ import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
-import org.ocpteam.component.DataSourceComponent;
+import org.ocpteam.component.DataSourceContainer;
 import org.ocpteam.interfaces.IFile;
 import org.ocpteam.interfaces.IFileSystem;
 import org.ocpteam.misc.JLG;
 
-public class ZipFileSystem extends DataSourceComponent implements IFileSystem {
+public class ZipFileSystem extends DataSourceContainer implements IFileSystem {
 
 	public ZipFileImpl root;
 

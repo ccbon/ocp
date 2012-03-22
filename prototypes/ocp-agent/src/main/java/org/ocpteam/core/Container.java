@@ -1,6 +1,5 @@
 package org.ocpteam.core;
 
-import org.ocpteam.misc.JLG;
 
 public class Container extends TopContainer implements IComponent {
 
@@ -18,7 +17,6 @@ public class Container extends TopContainer implements IComponent {
 	
 	@Override
 	public IContainer getRoot() {
-		JLG.debug("class=" + getClass());
 		return parent.getRoot();
 	}
 	

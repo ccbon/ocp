@@ -46,7 +46,7 @@ public class OpenDataSourceAction extends Action {
 //			fileDialog.setFilterExtensions(filterExt);
 			String filename = fileDialog.open();
 			if (filename != null) {
-				w.openDataSource(w.app.getDesigner().get(DataSourceFactory.class).getInstance(new File(filename)));
+				w.openDataSource(w.app.getComponent(DataSourceFactory.class).getInstance(new File(filename)));
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -10,6 +10,36 @@ public class TopContainer implements IContainer {
 	
 	private Designer designer;
 	
+	public <T extends IComponent> boolean usesComponent(Class<T> c) {
+		return designer.uses(c);
+	}
+
+	public <T extends IComponent> T getComponent(Class<T> c) {
+		return designer.get(c);
+	}
+
+	public <T extends IComponent> T addComponent(Class<T> c) throws Exception {
+		return designer.add(c);
+	}
+
+	public <T extends IComponent> T addComponent(Class<T> c, T instance)
+			throws Exception {
+		return designer.add(c, instance);
+	}
+
+	public <T extends IComponent> void replaceComponent(Class<T> c, T instance)
+			throws Exception {
+		designer.replace(c, instance);
+	}
+
+	public <T extends IComponent> T removeComponent(Class<T> c) {
+		return designer.remove(c);
+	}
+	
+	public Iterator<IComponent> iteratorComponent() {
+		return designer.iterator();
+	}
+
 	public TopContainer() {
 		designer = new Designer(this);
 	}

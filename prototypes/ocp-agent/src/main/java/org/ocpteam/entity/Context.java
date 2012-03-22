@@ -1,4 +1,4 @@
-package org.ocpteam.layer.rsp;
+package org.ocpteam.entity;
 
 import org.ocpteam.interfaces.IDataModel;
 

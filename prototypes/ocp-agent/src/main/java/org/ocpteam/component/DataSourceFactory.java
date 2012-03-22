@@ -18,7 +18,7 @@ public class DataSourceFactory extends Container {
 	
 	public Iterator<DataSource> getDataSourceIterator() {
 		List<DataSource> l = new LinkedList<DataSource>();
-		Iterator<IComponent> it = getDesigner().iterator();
+		Iterator<IComponent> it = iteratorComponent();
 		while (it.hasNext()) {
 			IComponent functionality = it.next();
 			if (functionality instanceof DataSource) {

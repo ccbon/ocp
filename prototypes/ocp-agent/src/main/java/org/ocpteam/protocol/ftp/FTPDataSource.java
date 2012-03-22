@@ -11,9 +11,9 @@ public class FTPDataSource extends DataSource {
 
 	public FTPDataSource() throws Exception {
 		super();
-		getDesigner().add(Client.class, new FTPClient());
-		getDesigner().add(IDataModel.class, new FTPFileSystem());
-		getDesigner().add(Authentication.class);
+		addComponent(Client.class, new FTPClient());
+		addComponent(IDataModel.class, new FTPFileSystem());
+		addComponent(Authentication.class);
 	}
 
 	public FTPDataSource(URI uri) {
@@ -27,13 +27,13 @@ public class FTPDataSource extends DataSource {
 	
 	@Override
 	public void connect() throws Exception {
-		((FTPClient) getDesigner().get(Client.class)).connect();
+		((FTPClient) getComponent(Client.class)).connect();
 	}
 	
 	@Override
 	public void disconnect() throws Exception {
 		context = null;
-		((FTPClient) getDesigner().get(Client.class)).disconnect();
+		((FTPClient) getComponent(Client.class)).disconnect();
 	}
 
 }

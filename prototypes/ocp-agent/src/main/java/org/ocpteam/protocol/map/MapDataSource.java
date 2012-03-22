@@ -5,8 +5,8 @@ import java.util.Map;
 
 import org.ocpteam.component.DataSource;
 import org.ocpteam.component.MapDataModel;
+import org.ocpteam.entity.Context;
 import org.ocpteam.interfaces.IDataModel;
-import org.ocpteam.layer.rsp.Context;
 
 public class MapDataSource extends DataSource {
 
@@ -14,7 +14,7 @@ public class MapDataSource extends DataSource {
 	
 	public MapDataSource() throws Exception {
 		super();
-		getDesigner().add(IDataModel.class, new MapDataModel());
+		addComponent(IDataModel.class, new MapDataModel());
 		// for example
 		map = new HashMap<String, byte[]>();
 		map.put("Hello", "World".getBytes());
@@ -29,9 +29,9 @@ public class MapDataSource extends DataSource {
 	
 	@Override
 	public void connect() throws Exception {
-		MapDataModel dm = (MapDataModel) getDesigner().get(IDataModel.class);
+		MapDataModel dm = (MapDataModel) getComponent(IDataModel.class);
 		dm.setMap(map);
-		context = new Context(getDesigner().get(IDataModel.class), null);
+		context = new Context(getComponent(IDataModel.class), null);
 	}
 
 }

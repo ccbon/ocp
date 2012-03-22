@@ -4,7 +4,7 @@ import java.util.Map;
 
 import org.ocpteam.interfaces.IDataModel;
 
-public class MapDataModel extends DataSourceComponent implements IDataModel {
+public class MapDataModel extends DataSourceContainer implements IDataModel {
 
 	protected Map<String, byte[]> map;
 	

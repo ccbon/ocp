@@ -5,7 +5,7 @@ import java.io.DataOutputStream;
 
 import org.ocpteam.interfaces.IStreamSerializer;
 
-public class StreamSerializer extends DataSourceComponent implements IStreamSerializer {
+public class StreamSerializer extends DataSourceContainer implements IStreamSerializer {
 
 	@Override
 	public byte[] readMessage(DataInputStream in) throws Exception {

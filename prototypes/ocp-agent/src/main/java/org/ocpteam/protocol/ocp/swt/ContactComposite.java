@@ -14,7 +14,7 @@ import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.swt.widgets.TreeItem;
 import org.ocpteam.component.Agent;
 import org.ocpteam.component.ContactMap;
-import org.ocpteam.layer.dsp.Contact;
+import org.ocpteam.entity.Contact;
 import org.ocpteam.misc.URL;
 
 
@@ -67,7 +67,7 @@ public class ContactComposite extends Composite {
 			@Override
 			public void run() {
 				try {
-					ContactMap contactMap = agent.ds().getDesigner().get(ContactMap.class);
+					ContactMap contactMap = agent.ds().getComponent(ContactMap.class);
 					contactMap.refreshContactList();
 				} catch (Exception e) {
 					// TODO: handle exception
@@ -76,7 +76,7 @@ public class ContactComposite extends Composite {
 		}).start();
 		tree.removeAll();
 
-		ContactMap contactMap = agent.ds().getDesigner().get(ContactMap.class);
+		ContactMap contactMap = agent.ds().getComponent(ContactMap.class);
 		Iterator<Contact> it = contactMap.getContactSnapshotList().iterator();
 		while (it.hasNext()) {
 			Contact contact = it.next();

@@ -5,7 +5,7 @@ import java.util.Iterator;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import org.ocpteam.layer.dsp.Contact;
+import org.ocpteam.entity.Contact;
 import org.ocpteam.misc.Id;
 import org.ocpteam.misc.URL;
 

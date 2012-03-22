@@ -9,12 +9,12 @@ public class OCPSimpleTest extends TestScenario {
 	public static void main(String[] args) {
 		try {
 			TopContainer app = new TopContainer();
-			app.getDesigner().add(DataSourceFactory.class);
-			DataSourceFactory dsf = app.getDesigner().get(DataSourceFactory.class);
-			dsf.getDesigner().add(OCPDataSource.class);
-			app.getDesigner().add(TestScenario.class, new OCPSimpleTest());
+			app.addComponent(DataSourceFactory.class);
+			DataSourceFactory dsf = app.getComponent(DataSourceFactory.class);
+			dsf.addComponent(OCPDataSource.class);
+			app.addComponent(TestScenario.class, new OCPSimpleTest());
 
-			app.getDesigner().get(TestScenario.class).test();
+			app.getComponent(TestScenario.class).test();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -24,7 +24,7 @@ public class OCPSimpleTest extends TestScenario {
 	public boolean test() {
 		try {
 			System.out.println("Hello Test Scenario");
-			DataSourceFactory dsf = parent.getDesigner().get(DataSourceFactory.class);
+			DataSourceFactory dsf = getParent().getComponent(DataSourceFactory.class);
 			OCPDataSource ds = (OCPDataSource) dsf.getInstance("OCP");
 			ds.connect();
 			ds.disconnect();

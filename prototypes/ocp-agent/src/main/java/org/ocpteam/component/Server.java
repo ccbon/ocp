@@ -12,7 +12,7 @@ import org.ocpteam.interfaces.IServer;
  * Idem for stopping.
  *
  */
-public class Server extends DataSourceComponent implements IServer {
+public class Server extends DataSourceContainer implements IServer {
 
 	protected boolean bIsStarted = false;
 	

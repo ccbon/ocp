@@ -23,7 +23,7 @@ public class TCPServerHandler extends Component implements ITCPServerHandler {
 		try {
 			in = new DataInputStream(clientSocket.getInputStream());
 			out = new DataOutputStream(clientSocket.getOutputStream());
-			IStreamSerializer s = parent.getDesigner().get(StreamSerializer.class);
+			IStreamSerializer s = parent.getComponent(StreamSerializer.class);
 			byte[] input = s.readMessage(in);
 			JLG.debug("received length = " + input.length);
 			JLG.debug("parent: " + parent);

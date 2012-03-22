@@ -8,8 +8,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import org.ocpteam.entity.Contact;
 import org.ocpteam.interfaces.IClient;
-import org.ocpteam.layer.dsp.Contact;
 import org.ocpteam.misc.JLG;
 import org.ocpteam.misc.URL;
 import org.ocpteam.protocol.ocp.Channel;
@@ -17,7 +17,7 @@ import org.ocpteam.protocol.ocp.DetachedAgentException;
 import org.ocpteam.protocol.ocp.MyselfChannel;
 import org.ocpteam.protocol.ocp.TCPChannel;
 
-public class Client extends DataSourceComponent implements IClient {
+public class Client extends DataSourceContainer implements IClient {
 
 	private List<Channel> understandableChannelList;
 	private Map<URL, Channel> channelMap;
@@ -32,7 +32,7 @@ public class Client extends DataSourceComponent implements IClient {
 	
 	public Agent getAgent() {
 		if (agent == null) {
-			agent = ds().getDesigner().get(Agent.class);
+			agent = ds().getComponent(Agent.class);
 		}
 		return agent;
 	}

@@ -3,15 +3,15 @@ package org.ocpteam.protocol.zip;
 import java.io.File;
 
 import org.ocpteam.component.DataSource;
+import org.ocpteam.entity.Context;
 import org.ocpteam.interfaces.IDataModel;
-import org.ocpteam.layer.rsp.Context;
 import org.ocpteam.misc.JLG;
 
 public class ZipDataSource extends DataSource {
 	
 	public ZipDataSource() throws Exception {
 		super();
-		getDesigner().add(IDataModel.class, new ZipFileSystem());
+		addComponent(IDataModel.class, new ZipFileSystem());
 	}
 	
 	@Override
@@ -42,7 +42,7 @@ public class ZipDataSource extends DataSource {
 	@Override
 	public void connect() throws Exception {
 		JLG.debug("opening datasource: " + getFile());
-		ZipFileSystem fs = (ZipFileSystem) getDesigner().get(IDataModel.class);
+		ZipFileSystem fs = (ZipFileSystem) getComponent(IDataModel.class);
 		fs.refresh();
 		context = new Context(fs, "/");
 	}

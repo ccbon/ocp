@@ -5,13 +5,13 @@ import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.util.Iterator;
 
-import org.ocpteam.component.DataSourceComponent;
+import org.ocpteam.component.DataSourceContainer;
 import org.ocpteam.interfaces.IFile;
 import org.ocpteam.interfaces.IFileSystem;
 import org.ocpteam.misc.JLG;
 
 
-public class OCPFileSystem extends DataSourceComponent implements IFileSystem {
+public class OCPFileSystem extends DataSourceContainer implements IFileSystem {
 
 	private OCPAgent agent;
 	private OCPUser user;

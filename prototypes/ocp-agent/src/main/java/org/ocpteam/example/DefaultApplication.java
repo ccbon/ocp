@@ -23,21 +23,21 @@ public class DefaultApplication extends TopContainer {
 
 	public DefaultApplication() throws Exception {
 		super();
-		getDesigner().add(DataSourceFactory.class);
-		DataSourceFactory dsf = getDesigner().get(DataSourceFactory.class);
-		dsf.getDesigner().add(OCPDataSource.class);
-		dsf.getDesigner().add(FTPDataSource.class);
-		dsf.getDesigner().add(SFTPDataSource.class);
-		dsf.getDesigner().add(ZipDataSource.class);
-		dsf.getDesigner().add(MapDataSource.class);
+		addComponent(DataSourceFactory.class);
+		DataSourceFactory dsf = getComponent(DataSourceFactory.class);
+		dsf.addComponent(OCPDataSource.class);
+		dsf.addComponent(FTPDataSource.class);
+		dsf.addComponent(SFTPDataSource.class);
+		dsf.addComponent(ZipDataSource.class);
+		dsf.addComponent(MapDataSource.class);
 
-		getDesigner().add(DataSourceWindow.class);
+		addComponent(DataSourceWindow.class);
 	}
 
 	public void start() {
 		JLG.debug_on();
 		try {
-			getDesigner().get(DataSourceWindow.class).start();
+			getComponent(DataSourceWindow.class).start();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

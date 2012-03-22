@@ -8,8 +8,8 @@ public class SFTPDataSource extends DataSource {
 
 	public SFTPDataSource() throws Exception {
 		super();
-		getDesigner().add(Client.class, new SFTPClient());
-		getDesigner().add(Authentication.class);
+		addComponent(Client.class, new SFTPClient());
+		addComponent(Authentication.class);
 	}
 
 	@Override

@@ -27,10 +27,10 @@ import javax.crypto.spec.PBEParameterSpec;
 import org.ocpteam.component.Agent;
 import org.ocpteam.component.Client;
 import org.ocpteam.component.ContactMap;
+import org.ocpteam.entity.Contact;
+import org.ocpteam.entity.User;
 import org.ocpteam.interfaces.IClient;
 import org.ocpteam.interfaces.IListener;
-import org.ocpteam.layer.dsp.Contact;
-import org.ocpteam.layer.rsp.User;
 import org.ocpteam.misc.ByteUtil;
 import org.ocpteam.misc.Cache;
 import org.ocpteam.misc.Id;
@@ -128,7 +128,7 @@ public class OCPAgent extends Agent {
 
 	public void connect() throws Exception {
 		readConfig();
-		client = (OCPClient) ds().getDesigner().get(Client.class);
+		client = (OCPClient) ds().getComponent(Client.class);
 		client.setAgent(this);
 		JLG.debug("starting agent " + name);
 
@@ -252,7 +252,7 @@ public class OCPAgent extends Agent {
 		}
 		result += "Contacts:" + JLG.NL;
 		synchronized (this) {
-			ContactMap contactMap = ds().getDesigner().get(ContactMap.class);
+			ContactMap contactMap = ds().getComponent(ContactMap.class);
 			Iterator<Id> it = contactMap.keySet().iterator();
 			while (it.hasNext()) {
 				Id id = (Id) it.next();
@@ -585,7 +585,7 @@ public class OCPAgent extends Agent {
 		OCPUser user = new OCPUser(this, login, backupNbr);
 		UserPublicInfo upi = user.getPublicInfo(this);
 
-		ContactMap contactMap = ds().getDesigner().get(ContactMap.class);
+		ContactMap contactMap = ds().getComponent(ContactMap.class);
 		Contact contact = contactMap.getContact(captcha.contactId);
 
 		// 1) create the public part of the user.
@@ -705,7 +705,7 @@ public class OCPAgent extends Agent {
 	}
 
 	public void addContact(Contact contact) throws Exception {
-		ContactMap contactMap = ds().getDesigner().get(ContactMap.class);
+		ContactMap contactMap = ds().getComponent(ContactMap.class);
 		contactMap.put(contact.id, contact);
 		OCPContact c = (OCPContact) contact;
 		if (c.nodeIdSet.size() == 0) {
@@ -720,7 +720,7 @@ public class OCPAgent extends Agent {
 	}
 
 	public Contact removeContact(Contact contact) {
-		ContactMap contactMap = ds().getDesigner().get(ContactMap.class);
+		ContactMap contactMap = ds().getComponent(ContactMap.class);
 		OCPContact c = (OCPContact) contactMap.remove(contact.id);
 		try {
 			Iterator<Id> it = c.nodeIdSet.iterator();
@@ -772,7 +772,7 @@ public class OCPAgent extends Agent {
 	@Override
 	public IClient getClient() {
 		if (client == null) {
-			client = (OCPClient) ds().getDesigner().get(Client.class);
+			client = (OCPClient) ds().getComponent(Client.class);
 		}
 		return client;
 	}

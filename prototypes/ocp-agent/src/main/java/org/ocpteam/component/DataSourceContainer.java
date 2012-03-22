@@ -7,7 +7,7 @@ import org.ocpteam.core.IContainer;
  * A DataSourceComponent is a Component that needs a DataSource to run.
  *
  */
-public class DataSourceComponent extends Container {
+public class DataSourceContainer extends Container {
 
 	public DataSource ds() {
 		return (DataSource) getRoot();

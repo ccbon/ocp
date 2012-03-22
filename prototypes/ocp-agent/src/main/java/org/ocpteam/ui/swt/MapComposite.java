@@ -30,7 +30,7 @@ public class MapComposite extends Composite {
 	public MapComposite(Composite parent, int style, final DataSourceWindow dsw) {
 		super(parent, style);
 		this.dsw = dsw;
-		mdm = (MapDataModel) dsw.ds.getDesigner().get(IDataModel.class);
+		mdm = (MapDataModel) dsw.ds.getComponent(IDataModel.class);
 		setLayout(new FillLayout(SWT.HORIZONTAL));
 		
 		table = new Table(this, SWT.BORDER | SWT.FULL_SELECTION);

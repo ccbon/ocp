@@ -52,7 +52,7 @@ public class SFTPNewDataSourceWizard extends Wizard implements Scenario {
 			}
 			URI uri = new URI("sftp://" + p1.sessionText.getText());
 			w.ds.setURI(uri);
-			Authentication auth = w.ds.getDesigner().get(Authentication.class);
+			Authentication auth = w.ds.getComponent(Authentication.class);
 			auth.setLogin(p1.sessionText.getText());
 			auth.setChallenge(c);
 		} catch (Exception e) {

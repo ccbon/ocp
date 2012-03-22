@@ -1,15 +1,8 @@
-package org.ocpteam.layer.dsp;
+package org.ocpteam.component;
 
 import java.util.Iterator;
 import java.util.Properties;
 
-import org.ocpteam.component.Agent;
-import org.ocpteam.component.BahBahProtocol;
-import org.ocpteam.component.Client;
-import org.ocpteam.component.DataSource;
-import org.ocpteam.component.MapDataModel;
-import org.ocpteam.component.Server;
-import org.ocpteam.component.TCPListener;
 import org.ocpteam.core.IComponent;
 import org.ocpteam.interfaces.IDataModel;
 import org.ocpteam.interfaces.IListener;
@@ -28,16 +21,16 @@ public abstract class DSPDataSource extends DataSource {
 	
 	
 	public DSPDataSource() throws Exception {
-		agent = getDesigner().add(Agent.class);
-		client = getDesigner().add(Client.class);
-		server = getDesigner().add(Server.class, new Server());
+		agent = addComponent(Agent.class);
+		client = addComponent(Client.class);
+		server = addComponent(Server.class);
 		
-		protocol = getDesigner().add(IProtocol.class, new BahBahProtocol());
+		protocol = addComponent(IProtocol.class, new BahBahProtocol());
 		
-		getDesigner().add(TCPListener.class).setProtocol(protocol);
+		addComponent(TCPListener.class).setProtocol(protocol);
 		
 		
-		getDesigner().add(IDataModel.class, new MapDataModel());
+		addComponent(IDataModel.class, new MapDataModel());
 	}
 	
 	@Override
@@ -58,7 +51,7 @@ public abstract class DSPDataSource extends DataSource {
 	}
 	
 	protected void configureServer(Server server) throws Exception {
-		Iterator<IComponent> it = getDesigner().iterator();
+		Iterator<IComponent> it = iteratorComponent();
 		while (it.hasNext()) {
 			IComponent c = it.next();
 			if (c instanceof IListener) {

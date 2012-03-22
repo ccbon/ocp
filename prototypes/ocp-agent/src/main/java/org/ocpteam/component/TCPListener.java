@@ -7,7 +7,7 @@ import org.ocpteam.interfaces.ITCPServerHandler;
 import org.ocpteam.misc.JLG;
 import org.ocpteam.misc.URL;
 
-public class TCPListener extends DataSourceComponent implements IListener {
+public class TCPListener extends DataSourceContainer implements IListener {
 
 	public TCPServer tcpServer;
 	private URL url;
@@ -17,22 +17,22 @@ public class TCPListener extends DataSourceComponent implements IListener {
 	private IProtocol protocol;
 	
 	public TCPListener() throws Exception {
-		getDesigner().add(NATTraversal.class);
-		getDesigner().add(TCPServer.class);
-		getDesigner().add(TCPServerHandler.class);
-		getDesigner().add(StreamSerializer.class);
+		addComponent(NATTraversal.class);
+		addComponent(TCPServer.class);
+		addComponent(TCPServerHandler.class);
+		addComponent(StreamSerializer.class);
 	}
 
 	@Override
 	public void start() {
 		int port = url.getPort();
 		
-		tcpServer = getDesigner().get(TCPServer.class);
+		tcpServer = getComponent(TCPServer.class);
 		tcpServer.setPort(port);
-		ITCPServerHandler handler = getDesigner().get(TCPServerHandler.class);
+		ITCPServerHandler handler = getComponent(TCPServerHandler.class);
 		handler.setProtocol(protocol);
 		tcpServer.setHandler(handler);
-		natTraversal = getDesigner().get(NATTraversal.class);
+		natTraversal = getComponent(NATTraversal.class);
 		natTraversal.setPort(port);
 
 		t = new Thread(tcpServer);

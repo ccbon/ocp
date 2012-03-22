@@ -15,11 +15,11 @@ import org.apache.xmlrpc.client.XmlRpcClientConfigImpl;
 import org.ocpteam.component.Authentication;
 import org.ocpteam.component.Client;
 import org.ocpteam.component.ContactMap;
+import org.ocpteam.entity.Contact;
+import org.ocpteam.entity.Context;
+import org.ocpteam.entity.User;
 import org.ocpteam.interfaces.IAuthenticable;
 import org.ocpteam.interfaces.IDataModel;
-import org.ocpteam.layer.dsp.Contact;
-import org.ocpteam.layer.rsp.Context;
-import org.ocpteam.layer.rsp.User;
 import org.ocpteam.misc.Id;
 import org.ocpteam.misc.JLG;
 import org.ocpteam.misc.URL;
@@ -69,7 +69,7 @@ public class OCPClient extends Client implements IAuthenticable {
 	}
 
 	public Response request(byte[] string) throws Exception {
-		ContactMap contactMap = agent.ds().getDesigner().get(ContactMap.class);
+		ContactMap contactMap = agent.ds().getComponent(ContactMap.class);
 		if (contactMap.isEmpty()) {
 			findSponsor();
 		}
@@ -84,7 +84,7 @@ public class OCPClient extends Client implements IAuthenticable {
 	private Response request(Queue<Contact> contactQueue, byte[] input)
 			throws Exception {
 		byte[] output = null;
-		ContactMap contactMap = agent.ds().getDesigner().get(ContactMap.class);
+		ContactMap contactMap = agent.ds().getComponent(ContactMap.class);
 		if (contactMap.isEmpty()) {
 			findSponsor();
 		}
@@ -120,7 +120,7 @@ public class OCPClient extends Client implements IAuthenticable {
 				JLG.warn("channel not pingable: " + channel);
 			}
 		}
-		ContactMap contactMap = agent.ds().getDesigner().get(ContactMap.class);
+		ContactMap contactMap = agent.ds().getComponent(ContactMap.class);
 		if (contactMap.isEmpty()) {
 			throw new Exception("no pingable sponsor found.");
 		}
@@ -182,8 +182,7 @@ public class OCPClient extends Client implements IAuthenticable {
 	private void detach(Contact contact) throws Exception {
 		// tell to your contacts this contact has disappeared.
 		synchronized (agent) {
-			ContactMap contactMap = agent.ds().getDesigner()
-					.get(ContactMap.class);
+			ContactMap contactMap = agent.ds().getComponent(ContactMap.class);
 			if (!contactMap.containsValue(contact)) {
 				return;
 			}
@@ -196,7 +195,7 @@ public class OCPClient extends Client implements IAuthenticable {
 		// tell all your contact of what happened
 
 		Set<Contact> contactToBeDetached = new HashSet<Contact>();
-		ContactMap contactMap = agent.ds().getDesigner().get(ContactMap.class);
+		ContactMap contactMap = agent.ds().getComponent(ContactMap.class);
 		Iterator<Contact> itc = contactMap.getContactSnapshotList().iterator();
 		while (itc.hasNext()) {
 			Contact c = itc.next();
@@ -312,7 +311,7 @@ public class OCPClient extends Client implements IAuthenticable {
 	@Override
 	public void login() throws Exception {
 		try {
-			Authentication a = ds().getDesigner().get(Authentication.class);
+			Authentication a = ds().getComponent(Authentication.class);
 			String password = (String) a.getChallenge();
 			String login = a.getLogin();
 			Id key = agent.hash(agent.ucrypt(password,

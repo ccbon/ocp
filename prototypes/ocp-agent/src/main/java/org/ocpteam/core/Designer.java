@@ -20,39 +20,39 @@ public class Designer {
 		return parent;
 	}
 
-	public boolean uses(Object functionality) {
-		return map.containsKey(functionality);
+	public <T extends IComponent> boolean uses(Class<T> c) {
+		return map.containsKey(c);
 	}
 
 	@SuppressWarnings("unchecked")
-	public <T extends IComponent> T get(Class<T> functionality) {
-		return (T) map.get(functionality);
+	public <T extends IComponent> T get(Class<T> c) {
+		return (T) map.get(c);
 	}
 
 	@SuppressWarnings("unchecked")
-	public <T extends IComponent> T add(Class<T> functionality) throws Exception {
-		if (!map.containsKey(functionality)) {
-			T instance = functionality.newInstance();
+	public <T extends IComponent> T add(Class<T> c) throws Exception {
+		if (!map.containsKey(c)) {
+			T instance = c.newInstance();
 			instance.setParent(parent);
-			map.put((Class<IComponent>) functionality, instance);
+			map.put((Class<IComponent>) c, instance);
 		}
-		return (T) map.get(functionality);
+		return (T) map.get(c);
 	}
 
 	@SuppressWarnings("unchecked")
-	public <T extends IComponent> T add(Class<T> functionality, T instance) throws Exception {
-		if (!map.containsKey(functionality)) {
+	public <T extends IComponent> T add(Class<T> c, T instance) throws Exception {
+		if (!map.containsKey(c)) {
 			instance.setParent(parent);
-			map.put((Class<IComponent>) functionality, instance);
+			map.put((Class<IComponent>) c, instance);
 		}
-		return (T) map.get(functionality);
+		return (T) map.get(c);
 	}
 	
 	@SuppressWarnings("unchecked")
-	public <T extends IComponent> void replace(Class<T> functionality, T instance) throws Exception {
-		if (map.containsKey(functionality)) {
+	public <T extends IComponent> void replace(Class<T> c, T instance) throws Exception {
+		if (map.containsKey(c)) {
 			instance.setParent(parent);
-			map.put((Class<IComponent>) functionality, instance);
+			map.put((Class<IComponent>) c, instance);
 		}  else {
 			throw new Exception("functionality not existing");
 		}
@@ -63,8 +63,8 @@ public class Designer {
 	}
 
 	@SuppressWarnings("unchecked")
-	public <T extends IComponent> T remove(Class<T> functionality) {
-		return (T) map.remove(functionality);
+	public <T extends IComponent> T remove(Class<T> c) {
+		return (T) map.remove(c);
 	}
 
 

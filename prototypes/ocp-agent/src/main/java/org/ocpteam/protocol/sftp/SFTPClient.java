@@ -2,10 +2,10 @@ package org.ocpteam.protocol.sftp;
 
 import org.ocpteam.component.Authentication;
 import org.ocpteam.component.Client;
+import org.ocpteam.entity.Context;
+import org.ocpteam.entity.User;
 import org.ocpteam.interfaces.IAuthenticable;
 import org.ocpteam.interfaces.IDataModel;
-import org.ocpteam.layer.rsp.Context;
-import org.ocpteam.layer.rsp.User;
 import org.ocpteam.misc.JLG;
 
 import com.jcraft.jsch.ChannelSftp;
@@ -22,7 +22,7 @@ public class SFTPClient extends Client implements IAuthenticable {
 	public void login() throws Exception {
 		try {
 			jsch = new JSch();
-			Authentication a = ds().getDesigner().get(Authentication.class);
+			Authentication a = ds().getComponent(Authentication.class);
 			String login = a.getLogin();
 			Object challenge = a.getChallenge();
 			String[] array = login.split("@");

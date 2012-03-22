@@ -2,11 +2,11 @@ package org.ocpteam.component;
 
 import java.net.URI;
 
+import org.ocpteam.entity.User;
 import org.ocpteam.interfaces.IAuthenticable;
-import org.ocpteam.layer.rsp.User;
 import org.ocpteam.misc.JLG;
 
-public class Authentication extends DataSourceComponent {
+public class Authentication extends DataSourceContainer {
 
 	private Object challenge;
 	private String login;
@@ -79,12 +79,12 @@ public class Authentication extends DataSourceComponent {
 	}
 
 	public void login() throws Exception {
-		IAuthenticable client = (IAuthenticable) ds().getDesigner().get(Client.class);
+		IAuthenticable client = (IAuthenticable) ds().getComponent(Client.class);
 		client.login();
 	}
 
 	public void logout() throws Exception {
-		IAuthenticable client = (IAuthenticable) ds().getDesigner().get(Client.class);
+		IAuthenticable client = (IAuthenticable) ds().getComponent(Client.class);
 		client.logout();
 		reset();
 	}
