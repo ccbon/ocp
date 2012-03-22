@@ -14,6 +14,10 @@ import com.jcraft.jsch.Session;
 
 public class SFTPClient extends Client implements IAuthenticable {
 
+	public SFTPClient() throws Exception {
+		super();
+	}
+
 	private JSch jsch;
 	Session session;
 	public ChannelSftp channel;

@@ -1,50 +1,53 @@
 package org.ocpteam.component;
 
 import java.net.ConnectException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import org.ocpteam.core.IComponent;
 import org.ocpteam.entity.Contact;
 import org.ocpteam.interfaces.IClient;
 import org.ocpteam.misc.JLG;
 import org.ocpteam.misc.URL;
-import org.ocpteam.protocol.ocp.Channel;
 import org.ocpteam.protocol.ocp.DetachedAgentException;
 import org.ocpteam.protocol.ocp.MyselfChannel;
 import org.ocpteam.protocol.ocp.TCPChannel;
 
 public class Client extends DataSourceContainer implements IClient {
 
-	private List<Channel> understandableChannelList;
 	private Map<URL, Channel> channelMap;
-	private Agent agent;
+	protected HashMap<String, Class<? extends Channel>> channelFactoryMap;
 	
-	public Client() {
-		understandableChannelList = new ArrayList<Channel>();
-		understandableChannelList.add(new TCPChannel());
-		understandableChannelList.add(new MyselfChannel());
-		channelMap = new HashMap<URL, Channel>();
+	public Client() throws Exception {
+		addComponent(TCPChannel.class);
+		addComponent(MyselfChannel.class);
+		
 	}
 	
-	public Agent getAgent() {
-		if (agent == null) {
-			agent = ds().getComponent(Agent.class);
+	@Override
+	public void init() {
+		super.init();
+		channelMap = new HashMap<URL, Channel>();
+		channelFactoryMap = new HashMap<String, Class<? extends Channel>>();
+		Iterator<IComponent> it = iteratorComponent();
+		while (it.hasNext()) {
+			IComponent c = it.next();
+			if (c instanceof Channel) {
+				String protocol = ((Channel) c).getProtocolName().toLowerCase();
+				channelFactoryMap.put(protocol, ((Channel) c).getClass());
+			}
 		}
-		return agent;
 	}
 
-	
 	/**
 	 * @return the network properties coming from a server (or a peer)
 	 */
 	public Properties getNetworkProperties() throws Exception {
 		return new Properties();
 	}
-	
+
 	public byte[] request(Contact contact, byte[] string) throws Exception {
 		byte[] output = null;
 		// I have to request to an agent (sending to it a string and then
@@ -59,7 +62,9 @@ public class Client extends DataSourceContainer implements IClient {
 			if (channelMap.containsKey(url)) {
 				channel = channelMap.get(url);
 			} else {
-				channel = Channel.getInstance(url, getAgent());
+				channel = channelFactoryMap.get(url.getProtocol().toLowerCase()).newInstance();
+				channel.setUrl(url);
+				channel.setParent(this.getParent());
 				channelMap.put(url, channel);
 			}
 			if (understand(channel)) {
@@ -76,17 +81,9 @@ public class Client extends DataSourceContainer implements IClient {
 		}
 		throw new DetachedAgentException();
 	}
-	
-	public boolean understand(Channel c) {
-		Iterator<Channel> it = understandableChannelList.iterator();
-		while (it.hasNext()) {
-			Channel uc = it.next();
-			if (uc.getClass().equals(c.getClass())) {
-				return true;
-			}
-		}
-		return false;
-	}
 
+	public boolean understand(Channel c) {
+		return usesComponent(c.getClass());
+	}
 
 }

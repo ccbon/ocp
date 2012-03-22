@@ -16,7 +16,7 @@ public class FTPClient extends Client implements IAuthenticable, IConnect {
 	private String hostname;
 	org.apache.commons.net.ftp.FTPClient ftp;
 
-	public FTPClient() {
+	public FTPClient() throws Exception {
 		ftp = new org.apache.commons.net.ftp.FTPClient();
 	}
 

@@ -1,5 +1,6 @@
 package org.ocpteam.protocol.ocp;
 
+import org.ocpteam.component.Channel;
 import org.ocpteam.misc.URL;
 
 public class UnknownChannel extends Channel {
@@ -26,6 +27,11 @@ public class UnknownChannel extends Channel {
 			return "<url_not_specified>";
 		}
 		return url.toString();
+	}
+
+	@Override
+	public String getProtocolName() {
+		return "unknown";
 	}
 
 

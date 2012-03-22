@@ -2,6 +2,7 @@ package org.ocpteam.protocol.ocp;
 
 import java.net.ConnectException;
 
+import org.ocpteam.component.Channel;
 import org.ocpteam.misc.JLG;
 import org.ocpteam.misc.JLGException;
 import org.ocpteam.misc.TCPClient;
@@ -53,6 +54,11 @@ public class TCPChannel extends Channel {
 			return "<url_not_specified>";
 		}
 		return url.toString();
+	}
+
+	@Override
+	public String getProtocolName() {
+		return "tcp";
 	}
 
 }

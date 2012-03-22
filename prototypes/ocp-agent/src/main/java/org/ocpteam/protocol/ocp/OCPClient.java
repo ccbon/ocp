@@ -13,6 +13,7 @@ import java.util.Set;
 import org.apache.xmlrpc.client.XmlRpcClient;
 import org.apache.xmlrpc.client.XmlRpcClientConfigImpl;
 import org.ocpteam.component.Authentication;
+import org.ocpteam.component.Channel;
 import org.ocpteam.component.Client;
 import org.ocpteam.component.ContactMap;
 import org.ocpteam.entity.Contact;
@@ -26,13 +27,11 @@ import org.ocpteam.misc.URL;
 
 public class OCPClient extends Client implements IAuthenticable {
 
+	public OCPClient() throws Exception {
+		super();
+	}
+
 	private OCPAgent agent;
-	
-	
-
-
-
-
 
 	public OCPContact getContact(Channel channel) throws Exception {
 		// I have to request to an agent (sending to it a string and then
@@ -111,7 +110,10 @@ public class OCPClient extends Client implements IAuthenticable {
 		while (it.hasNext()) {
 			String sUrl = it.next();
 			URL url = new URL(sUrl);
-			Channel channel = Channel.getInstance(url, agent);
+			Channel channel = channelFactoryMap.get(url.getProtocol().toLowerCase()).newInstance();
+			channel.setUrl(url);
+			channel.setParent(this.getParent());
+			
 			OCPContact sponsor = getContact(channel);
 			if (sponsor != null) {
 				JLG.debug("we found a pingable sponsor channel");
