@@ -49,8 +49,8 @@ public class OCPClient extends Client implements IAuthenticable {
 
 	@Override
 	public Properties getNetworkProperties() throws Exception {
-		Response response = request(Protocol
-				.message(Protocol.NETWORK_PROPERTIES));
+		Response response = request(OCPProtocol
+				.message(OCPProtocol.NETWORK_PROPERTIES));
 		Properties network = new Properties();
 		// network.loadFromXML(new
 		// ByteArrayInputStream(response.getBytes()));
@@ -62,7 +62,7 @@ public class OCPClient extends Client implements IAuthenticable {
 		Id[] nodeIds = null;
 		// at this time we ask to the network to give us one node_id.
 
-		Response response = request(Protocol.message(Protocol.NODE_ID));
+		Response response = request(OCPProtocol.message(OCPProtocol.NODE_ID));
 		nodeIds = new Id[1];
 		nodeIds[0] = new Id(response.getBytes());
 		return nodeIds;
@@ -172,7 +172,7 @@ public class OCPClient extends Client implements IAuthenticable {
 	}
 
 	public void enrichContact(OCPContact contact) throws Exception {
-		byte[] response = request(contact, Protocol.GET_CONTACT.getBytes());
+		byte[] response = request(contact, OCPProtocol.GET_CONTACT.getBytes());
 		OCPContact c = (OCPContact) JLG.deserialize(response);
 		String host = contact.urlList.iterator().next().getHost();
 		c.updateHost(host);
@@ -187,7 +187,7 @@ public class OCPClient extends Client implements IAuthenticable {
 				return;
 			}
 			agent.removeContact(contact);
-			sendAll(Protocol.hasBeenDetached((OCPContact) contact));
+			sendAll(OCPProtocol.hasBeenDetached((OCPContact) contact));
 		}
 	}
 
@@ -232,7 +232,7 @@ public class OCPClient extends Client implements IAuthenticable {
 
 
 	public Captcha askCaptcha(Queue<Contact> contactQueue) throws Exception {
-		Response r = request(contactQueue, Protocol.GENERATE_CAPTCHA.getBytes());
+		Response r = request(contactQueue, OCPProtocol.GENERATE_CAPTCHA.getBytes());
 		Captcha captcha = (Captcha) JLG.deserialize(r.getBytes());
 		JLG.debug("captcha content = " + captcha);
 		// if (!captcha.checkSignature(r.getContact())) {
@@ -244,7 +244,7 @@ public class OCPClient extends Client implements IAuthenticable {
 
 	public void createUser(Contact contact, ObjectData data, Link link,
 			Captcha captcha, String answer) throws Exception {
-		byte[] request = Protocol.message(Protocol.CREATE_USER, data, link,
+		byte[] request = OCPProtocol.message(OCPProtocol.CREATE_USER, data, link,
 				captcha, answer);
 		send(contact, request);
 	}
@@ -252,7 +252,7 @@ public class OCPClient extends Client implements IAuthenticable {
 	public void store(Queue<Contact> contactQueue, Address address,
 			Content content) throws Exception {
 		// store an object at given address and put the content.
-		byte[] request = Protocol.message(Protocol.CREATE_OBJECT,
+		byte[] request = OCPProtocol.message(OCPProtocol.CREATE_OBJECT,
 				address.getBytes(), content);
 		Response response = request(contactQueue, request);
 		if (!response.isSuccess()) {
@@ -262,17 +262,17 @@ public class OCPClient extends Client implements IAuthenticable {
 
 	public byte[] getUser(Id key) throws Exception {
 		Response r = request(agent.makeContactQueue(key),
-				Protocol.message(Protocol.GET_USER, key.getBytes()));
+				OCPProtocol.message(OCPProtocol.GET_USER, key.getBytes()));
 		r.checkForError();
 		return r.getBytes();
 	}
 
 	public Content getFromAddress(Address address) throws Exception {
 		Response r = request(agent.makeContactQueue(address),
-				Protocol.message(Protocol.GET_ADDRESS, address.getBytes()));
+				OCPProtocol.message(OCPProtocol.GET_ADDRESS, address.getBytes()));
 		r.checkForError();
 		if (new String(r.getBytes()).equals(new String(
-				Protocol.ADDRESS_NOT_FOUND))) {
+				OCPProtocol.ADDRESS_NOT_FOUND))) {
 			return null;
 		}
 		return (Content) JLG.deserialize(r.getBytes());
@@ -280,8 +280,8 @@ public class OCPClient extends Client implements IAuthenticable {
 
 	public void remove(Address address, byte[] addressSignature)
 			throws Exception {
-		Response r = request(agent.makeContactQueue(address), Protocol.message(
-				Protocol.REMOVE_ADDRESS, address, addressSignature));
+		Response r = request(agent.makeContactQueue(address), OCPProtocol.message(
+				OCPProtocol.REMOVE_ADDRESS, address, addressSignature));
 		r.checkForError();
 	}
 

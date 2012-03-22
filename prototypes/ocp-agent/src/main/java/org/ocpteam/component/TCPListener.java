@@ -3,51 +3,25 @@ package org.ocpteam.component;
 import org.ocpteam.core.IContainer;
 import org.ocpteam.interfaces.IListener;
 import org.ocpteam.interfaces.IProtocol;
-import org.ocpteam.interfaces.ITCPServerHandler;
 import org.ocpteam.misc.JLG;
 import org.ocpteam.misc.URL;
 
 public class TCPListener extends DataSourceContainer implements IListener {
 
-	public TCPServer tcpServer;
 	private URL url;
-	private NATTraversal natTraversal;
+	
+	private IProtocol protocol;
+		
 	protected IContainer parent;
 	private Thread t;
-	private IProtocol protocol;
+	
 	
 	public TCPListener() throws Exception {
 		addComponent(NATTraversal.class);
 		addComponent(TCPServer.class);
 		addComponent(TCPServerHandler.class);
-		addComponent(StreamSerializer.class);
 	}
-
-	@Override
-	public void start() {
-		int port = url.getPort();
-		
-		tcpServer = getComponent(TCPServer.class);
-		tcpServer.setPort(port);
-		ITCPServerHandler handler = getComponent(TCPServerHandler.class);
-		handler.setProtocol(protocol);
-		tcpServer.setHandler(handler);
-		natTraversal = getComponent(NATTraversal.class);
-		natTraversal.setPort(port);
-
-		t = new Thread(tcpServer);
-		t.start();
-		natTraversal.map();
-	}
-
-	@Override
-	public void stop() {
-		JLG.debug("stopping tcp listener");
-		natTraversal.unmap();
-		tcpServer.stop(t);
-		
-	}
-
+	
 	@Override
 	public URL getUrl() {
 		return url;
@@ -56,6 +30,31 @@ public class TCPListener extends DataSourceContainer implements IListener {
 	@Override
 	public void setUrl(URL url) {
 		this.url = url;
+	}
+
+	@Override
+	public void start() {
+		int port = url.getPort();
+		if (usesComponent(NATTraversal.class)) {
+			getComponent(NATTraversal.class).setPort(port);
+			getComponent(NATTraversal.class).map();
+		}
+		
+		getComponent(TCPServer.class).setPort(port);
+		getComponent(TCPServer.class).setHandler(getComponent(TCPServerHandler.class));
+		getComponent(TCPServer.class).setProtocol(protocol);
+
+		t = new Thread(getComponent(TCPServer.class));
+		t.start();
+	}
+
+	@Override
+	public void stop() {
+		JLG.debug("stopping tcp listener");
+		if (usesComponent(NATTraversal.class)) {
+			getComponent(NATTraversal.class).unmap();
+		}
+		getComponent(TCPServer.class).stop(t);
 	}
 	
 	@Override

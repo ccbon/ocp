@@ -4,7 +4,7 @@ import java.net.Socket;
 
 import org.ocpteam.interfaces.IProtocol;
 
-public class BahBahProtocol extends DataSourceContainer implements IProtocol {
+public class BahBahProtocol extends Protocol implements IProtocol {
 
 	@Override
 	public byte[] process(byte[] input, Socket clientSocket) throws Exception {

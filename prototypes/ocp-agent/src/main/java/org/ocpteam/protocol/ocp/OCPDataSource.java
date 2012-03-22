@@ -20,7 +20,7 @@ public class OCPDataSource extends DataSource {
 		addComponent(Server.class, new OCPServer());
 		addComponent(ContactMap.class);
 		addComponent(IPersistentMap.class, new NaivePersistentMap());
-		addComponent(IProtocol.class, new Protocol());
+		addComponent(IProtocol.class, new OCPProtocol());
 	}
 
 	@Override

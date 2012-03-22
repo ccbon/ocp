@@ -12,14 +12,12 @@ import java.util.Iterator;
 import java.util.LinkedList;
 
 import org.ocpteam.component.Agent;
-import org.ocpteam.component.DataSource;
-import org.ocpteam.core.Component;
+import org.ocpteam.component.Protocol;
 import org.ocpteam.entity.Contact;
-import org.ocpteam.interfaces.IProtocol;
 import org.ocpteam.misc.Id;
 import org.ocpteam.misc.JLG;
 
-public class Protocol extends Component implements IProtocol {
+public class OCPProtocol extends Protocol {
 
 	public static final int SEPARATOR = 0;
 	public static final String PING = "ping";
@@ -41,17 +39,16 @@ public class Protocol extends Component implements IProtocol {
 
 	private OCPAgent agent;
 
-	public Protocol() {
+	public OCPProtocol() {
 		
 	}
-	public Protocol(OCPAgent agent) {
+	public OCPProtocol(OCPAgent agent) {
 		this.agent = agent;
 	}
 
 	public OCPAgent getAgent() {
 		if (this.agent == null) {
-			DataSource ds = (DataSource) parent;
-			this.agent = (OCPAgent) ds.getComponent(Agent.class);
+			this.agent = (OCPAgent) ds().getComponent(Agent.class);
 		}
 		return this.agent;
 	}

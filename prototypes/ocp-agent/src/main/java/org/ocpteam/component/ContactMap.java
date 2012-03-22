@@ -8,7 +8,7 @@ import java.util.Set;
 import org.ocpteam.entity.Contact;
 import org.ocpteam.misc.Id;
 import org.ocpteam.protocol.ocp.OCPAgent;
-import org.ocpteam.protocol.ocp.Protocol;
+import org.ocpteam.protocol.ocp.OCPProtocol;
 
 public class ContactMap extends DataSourceContainer {
 
@@ -29,7 +29,7 @@ public class ContactMap extends DataSourceContainer {
 	public void refreshContactList() throws Exception {
 		// TODO: make independant of ocp by adding the P2P client functionality.
 		OCPAgent agent = (OCPAgent) ds().getComponent(Agent.class);
-		agent.client.sendAll(Protocol.PING.getBytes());
+		agent.client.sendAll(OCPProtocol.PING.getBytes());
 	}
 	
 	public List<Contact> getContactSnapshotList() {

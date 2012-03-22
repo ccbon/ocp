@@ -631,7 +631,7 @@ public class OCPAgent extends Agent {
 	}
 
 	public void declareContact() throws Exception {
-		byte[] input = Protocol.message(Protocol.DECLARE_CONTACT, toContact());
+		byte[] input = OCPProtocol.message(OCPProtocol.DECLARE_CONTACT, toContact());
 		client.sendAll(input);
 		client.declareSponsor();
 	}
@@ -747,7 +747,7 @@ public class OCPAgent extends Agent {
 	}
 
 	public void refreshContactList() throws Exception {
-		client.sendAll(Protocol.PING.getBytes());
+		client.sendAll(OCPProtocol.PING.getBytes());
 	}
 
 	public String getName() {

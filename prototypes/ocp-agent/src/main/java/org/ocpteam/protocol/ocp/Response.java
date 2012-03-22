@@ -19,7 +19,7 @@ public class Response {
 	}
 
 	public void checkForError() throws Exception {
-		if (new String(response).startsWith(new String(Protocol.ERROR))) {
+		if (new String(response).startsWith(new String(OCPProtocol.ERROR))) {
 			String[] al = new String(response).split(":");
 			if (al.length > 2) {
 				throw new Exception("Error from server: " + al[1]);
@@ -30,7 +30,7 @@ public class Response {
 	}
 
 	public boolean isSuccess() {
-		return new String(response).equals(new String(Protocol.SUCCESS));
+		return new String(response).equals(new String(OCPProtocol.SUCCESS));
 	}
 
 

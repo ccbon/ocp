@@ -35,7 +35,7 @@ public class TCPChannel extends Channel {
 	public OCPContact getContact() throws JLGException {
 		try {
 			JLG.debug("tcp ping");
-			byte[] response = request(Protocol.GET_CONTACT.getBytes());
+			byte[] response = request(OCPProtocol.GET_CONTACT.getBytes());
 			OCPContact c = (OCPContact) JLG.deserialize(response);
 			// we update a host because an agent does not see its public address.
 			c.updateHost(url.getHost());
