@@ -1,7 +1,7 @@
 package org.ocpteam.protocol.ocp;
 
 import org.ocpteam.component.Agent;
-import org.ocpteam.interfaces.IProtocol;
+import org.ocpteam.component.Protocol;
 import org.ocpteam.misc.JLGException;
 import org.ocpteam.misc.URL;
 
@@ -20,7 +20,7 @@ public class MyselfChannel extends Channel {
 
 	@Override
 	public byte[] request(byte[] input) throws Exception {
-		return agent.ds().getComponent(IProtocol.class).process(input, null);
+		return agent.ds().getComponent(Protocol.class).process(input, null);
 	}
 
 	@Override

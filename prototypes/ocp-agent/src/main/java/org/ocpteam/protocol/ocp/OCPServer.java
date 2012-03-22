@@ -15,7 +15,7 @@ public class OCPServer extends Server {
 
 	public OCPAgent agent;
 
-	public void init() throws Exception {
+	public void configure() throws Exception {
 		JLG.debug("ds = " + ds());
 		this.agent = (OCPAgent) ds().getComponent(Agent.class);
 
@@ -51,7 +51,7 @@ public class OCPServer extends Server {
 
 	@Override
 	public void start() throws Exception {
-		init();
+		configure();
 		for (Iterator<IListener> it = listenerList.iterator(); it.hasNext();) {
 			it.next().start();
 		}

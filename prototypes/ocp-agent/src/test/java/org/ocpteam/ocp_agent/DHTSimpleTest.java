@@ -26,6 +26,7 @@ public class DHTSimpleTest extends TestScenario {
 			JLG.debug_on();
 			System.out.println("Hello Test Scenario");
 			DataSource ds = new DHTDataSource();
+			ds.init();
 			Properties p = new Properties();
 			p.setProperty("network.coucou", "23");
 			p.setProperty("network.hello", "456a");

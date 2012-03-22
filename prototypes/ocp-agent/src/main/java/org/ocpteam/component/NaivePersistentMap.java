@@ -24,4 +24,8 @@ public class NaivePersistentMap extends PersistentFileMap implements IPersistent
 		return parent.getRoot();
 	}
 
+	@Override
+	public void init() {
+	}
+
 }
