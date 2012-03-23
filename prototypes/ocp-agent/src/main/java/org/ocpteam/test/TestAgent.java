@@ -33,12 +33,10 @@ public class TestAgent {
 			p1.setProperty("server.listener.2", "http://localhost:11110");
 			p1.setProperty("server.isFirstAgent", "yes");
 			
-			Properties network = new Properties();
-			network.setProperty("hello", "didounette");
-			network.setProperty("coucou", "jlg");
-			network.setProperty("hash", "SHA-1");
-			network.setProperty("backupNbr", "2");
-			a1.setNetworkProperties(network);
+			p1.setProperty("network.hello", "didounette");
+			p1.setProperty("network.coucou", "jlg");
+			p1.setProperty("network.hash", "SHA-1");
+			p1.setProperty("network.backupNbr", "2");
 			a1.connect();
 
 			// UserInterface ui = new CommandLine(agent);

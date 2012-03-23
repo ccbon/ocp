@@ -1,5 +1,7 @@
 package org.ocpteam.interfaces;
 
+import org.ocpteam.entity.Contact;
+
 
 /**
  * An Agent is just an entity that can be client and server.
@@ -25,4 +27,10 @@ public interface IAgent {
 	 * 
 	 */
 	boolean isFirstAgent();
+	
+	
+	/**
+	 * @return a contact containing all the agent public information.
+	 */
+	public Contact toContact();
 }

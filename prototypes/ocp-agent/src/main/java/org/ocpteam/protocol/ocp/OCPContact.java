@@ -29,7 +29,7 @@ public class OCPContact extends Contact {
 
 	@Override
 	public String toString() {
-		String result = getId().toString();
+		String result = getId() + " - " + getName();
 		Iterator<URL> itp = getUrlList().iterator();
 		while (itp.hasNext()) {
 			URL url = itp.next();

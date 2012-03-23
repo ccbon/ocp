@@ -3,7 +3,6 @@ package org.ocpteam.component;
 import java.net.ConnectException;
 
 import org.ocpteam.misc.JLG;
-import org.ocpteam.misc.JLGException;
 import org.ocpteam.misc.TCPClient;
 import org.ocpteam.misc.URL;
 import org.ocpteam.protocol.ocp.OCPContact;
@@ -31,9 +30,9 @@ public class TCPChannel extends Channel {
 	}
 
 	@Override
-	public OCPContact getContact() throws JLGException {
+	public OCPContact getContact() throws Exception {
 		try {
-			JLG.debug("tcp ping");
+			JLG.debug("getContact");
 			byte[] response = request(OCPProtocol.GET_CONTACT.getBytes());
 			OCPContact c = (OCPContact) JLG.deserialize(response);
 			// we update a host because an agent does not see its public address.
@@ -41,8 +40,6 @@ public class TCPChannel extends Channel {
 			return c;
 		} catch (ConnectException e) {
 			return null;
-		} catch (Exception e) {
-			throw new JLGException(e);
 		}
 	}
 

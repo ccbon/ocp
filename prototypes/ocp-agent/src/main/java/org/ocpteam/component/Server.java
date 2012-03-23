@@ -16,7 +16,7 @@ public class Server extends DataSourceContainer implements IServer {
 
 	protected boolean bIsStarted = false;
 	
-	protected List<IListener> listenerList;
+	protected List<IListener> listenerList = new ArrayList<IListener>();
 
 	@Override
 	public boolean isStarted() {
@@ -33,7 +33,7 @@ public class Server extends DataSourceContainer implements IServer {
 
 	@Override
 	public void stop() throws Exception {
-		for (Iterator<IListener> it = listenerList.iterator(); it.hasNext();) {
+		for (Iterator<IListener> it = getListeners().iterator(); it.hasNext();) {
 			it.next().stop();
 		}
 		bIsStarted  = false;
@@ -41,9 +41,6 @@ public class Server extends DataSourceContainer implements IServer {
 
 	@Override
 	public List<IListener> getListeners() {
-		if (listenerList == null) {
-			listenerList = new ArrayList<IListener>();
-		}
 		return listenerList;
 	}
 

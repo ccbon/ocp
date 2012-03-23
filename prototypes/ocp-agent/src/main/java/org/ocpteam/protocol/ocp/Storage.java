@@ -36,7 +36,7 @@ public class Storage {
 				nodeIds = new Id[1];
 				nodeIds[0] = agent.generateId();
 			} else {
-				nodeIds = agent.client.requestNodeId();
+				nodeIds = agent.getClient().requestNodeId();
 			}
 			if (nodeIds != null) {
 				for (int i = 0; i < nodeIds.length; i++) {
@@ -45,9 +45,6 @@ public class Storage {
 			}
 
 		}
-		// declare to all my contact that I am attached.
-		agent.declareContact();
-
 	}
 
 	public void put(Address address, Content content) throws Exception {

@@ -61,10 +61,10 @@ public class OCPProtocol extends Protocol {
 			return SUCCESS;
 		}
 
-		if (request.equalsIgnoreCase(NETWORK_PROPERTIES)) {
+		if (request.startsWith(NETWORK_PROPERTIES)) {
 			try {
 				ByteArrayOutputStream out = new ByteArrayOutputStream();
-				agent.network.store(out, "");
+				agent.ds().network.store(out, "");
 				byte[] result = out.toByteArray();
 				out.close();
 				return result;

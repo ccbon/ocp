@@ -1,33 +1,46 @@
 package org.ocpteam.component;
 
+import java.util.Iterator;
+
+import org.ocpteam.entity.Contact;
 import org.ocpteam.interfaces.IAgent;
 import org.ocpteam.interfaces.IClient;
+import org.ocpteam.interfaces.IListener;
 import org.ocpteam.interfaces.IServer;
+import org.ocpteam.misc.Id;
 
 public class Agent extends DataSourceContainer implements IAgent {
 
-	protected IClient client;
-	protected Server server;
-
 	@Override
 	public IClient getClient() {
-		if (client == null && ds().usesComponent(Client.class)) {
-			client = ds().getComponent(Client.class);
-		}
-		return client;
+		return ds().getComponent(Client.class);
 	}
 
 	@Override
 	public IServer getServer() {
-		if (server == null && ds().usesComponent(Server.class)) {
-			server = ds().getComponent(Server.class);
-		}
-		return server;
+		return ds().getComponent(Server.class);
 	}
 
 	@Override
 	public boolean isFirstAgent() {
 		return ds().get("agent.isFirst", "yes").equalsIgnoreCase("yes");
+	}
+
+	@Override
+	public Contact toContact() {
+		// convert the agent public information into a contact
+		Contact c = new Contact();
+		c.setId(new Id("0".getBytes()));
+		c.setName("contact");
+		// add the listener url and node id information
+		if (getServer() != null) {
+			Iterator<IListener> it = getServer().getListeners().iterator();
+			while (it.hasNext()) {
+				IListener l = it.next();
+				c.getUrlList().add(l.getUrl());
+			}
+		}
+		return c;
 	}
 
 }

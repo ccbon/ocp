@@ -61,6 +61,7 @@ public class Client extends DataSourceContainer implements IClient {
 	}
 
 	public byte[] request(Contact contact, byte[] string) throws Exception {
+		JLG.debug("sending request on contact: " + contact);
 		byte[] output = null;
 		// I have to request to an agent (sending to it a string and then
 		// receiving a response
@@ -79,6 +80,7 @@ public class Client extends DataSourceContainer implements IClient {
 			}
 			if (understand(channel)) {
 				try {
+					JLG.debug("sending request with channel: " + channel);
 					output = channel.request(string);
 				} catch (ConnectException e) {
 					continue;
@@ -93,6 +95,9 @@ public class Client extends DataSourceContainer implements IClient {
 
 	public boolean understand(Channel c) {
 		return usesComponent(c.getClass());
+	}
+
+	public void declareContact() throws Exception {
 	}
 
 }

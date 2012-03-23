@@ -7,6 +7,7 @@ import java.util.Set;
 
 import org.ocpteam.entity.Contact;
 import org.ocpteam.misc.Id;
+import org.ocpteam.misc.URL;
 import org.ocpteam.protocol.ocp.OCPAgent;
 import org.ocpteam.protocol.ocp.OCPProtocol;
 
@@ -29,7 +30,7 @@ public class ContactMap extends DataSourceContainer {
 	public void refreshContactList() throws Exception {
 		// TODO: make independant of ocp by adding the P2P client functionality.
 		OCPAgent agent = (OCPAgent) ds().getComponent(Agent.class);
-		agent.client.sendAll(OCPProtocol.PING.getBytes());
+		agent.getClient().sendAll(OCPProtocol.PING.getBytes());
 	}
 	
 	public List<Contact> getContactSnapshotList() {
@@ -59,6 +60,21 @@ public class ContactMap extends DataSourceContainer {
 
 	public boolean containsValue(Contact contact) {
 		return map.containsValue(contact);
+	}
+
+	public void add(Contact c) {
+		this.put(c.getId(), c);
+	}
+
+	public void addMyself() {
+		Contact myself = ds().getComponent(Agent.class).toContact();
+		myself.getUrlList().clear();
+		try {
+			myself.getUrlList().add(new URL("myself://localhost:0"));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		this.add(myself);
 	}
 	
 	

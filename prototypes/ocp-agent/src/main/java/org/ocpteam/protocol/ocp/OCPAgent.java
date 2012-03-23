@@ -11,7 +11,6 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.NavigableMap;
-import java.util.Properties;
 import java.util.Queue;
 import java.util.Set;
 import java.util.TreeMap;
@@ -27,26 +26,21 @@ import javax.crypto.spec.PBEParameterSpec;
 import org.ocpteam.component.Agent;
 import org.ocpteam.component.Client;
 import org.ocpteam.component.ContactMap;
+import org.ocpteam.component.DSPDataSource;
 import org.ocpteam.entity.Contact;
 import org.ocpteam.entity.User;
-import org.ocpteam.interfaces.IClient;
 import org.ocpteam.interfaces.IListener;
 import org.ocpteam.misc.ByteUtil;
 import org.ocpteam.misc.Cache;
 import org.ocpteam.misc.Id;
 import org.ocpteam.misc.JLG;
-import org.ocpteam.misc.URL;
 
 public class OCPAgent extends Agent {
 
 	public static final String DEFAULT_SPONSOR_SERVER_URL = "http://guenego.com/ocp/ocp.php";
-
-	public OCPClient client;
 	
 	public Id id;
 	private String name;
-
-	public Properties network;
 
 	// symmetric encryption
 	public KeyPair keyPair;
@@ -67,6 +61,11 @@ public class OCPAgent extends Agent {
 	protected Cipher userCipher;
 	protected PBEParameterSpec userParamSpec;
 
+	@Override
+	public DSPDataSource ds() {
+		return (DSPDataSource) super.ds();
+	}
+	
 	public byte[] ucrypt(String password, byte[] input) throws Exception,
 			BadPaddingException {
 		SecretKey secretKey = generateSecretKey(password);
@@ -101,16 +100,12 @@ public class OCPAgent extends Agent {
 		cache = new Cache();
 	}
 
-	public void setNetworkProperties(Properties network) {
-		this.network = network;
-	}
-
 	public Id hash(byte[] input) throws Exception {
 		return new Id(md.digest(input));
 	}
 
 	public Id generateId() throws Exception {
-		MessageDigest md = MessageDigest.getInstance(network.getProperty(
+		MessageDigest md = MessageDigest.getInstance(ds().network.getProperty(
 				"hash", "SHA-1"));
 		SecureRandom random = SecureRandom.getInstance("SHA1PRNG");
 		byte[] input = new byte[200];
@@ -119,7 +114,7 @@ public class OCPAgent extends Agent {
 	}
 
 	public KeyPair generateKeyPair() throws NoSuchAlgorithmException {
-		KeyPairGenerator keyGen = KeyPairGenerator.getInstance(network
+		KeyPairGenerator keyGen = KeyPairGenerator.getInstance(ds().network
 				.getProperty("PKAlgo", "DSA"));
 		SecureRandom random = SecureRandom.getInstance("SHA1PRNG");
 		keyGen.initialize(1024, random);
@@ -127,20 +122,6 @@ public class OCPAgent extends Agent {
 	}
 
 	public void connect() throws Exception {
-		readConfig();
-		client = (OCPClient) ds().getComponent(Client.class);
-		client.setAgent(this);
-		JLG.debug("starting agent " + name);
-
-		if (isFirstAgent()) {
-			JLG.debug("This is the first agent on the network");
-			if (network == null) {
-				network = getNetworkProperties();
-			}
-		} else {
-			// even if network is not null...
-			network = client.getNetworkProperties();
-		}
 
 		String sId = ds().get("id");
 		if (sId == null) {
@@ -152,7 +133,7 @@ public class OCPAgent extends Agent {
 		JLG.debug("agent id = " + id);
 
 		try {
-			backupNbr = (byte) Integer.parseInt(network.getProperty(
+			backupNbr = (byte) Integer.parseInt(ds().network.getProperty(
 					"backupNbr", "5"));
 		} catch (NumberFormatException e) {
 			throw new Exception(
@@ -164,38 +145,28 @@ public class OCPAgent extends Agent {
 		}
 
 		// message digest for hash
-		md = MessageDigest.getInstance(network.getProperty("hash", "SHA-1"));
+		md = MessageDigest.getInstance(ds().network.getProperty("hash", "SHA-1"));
 
 		// all agent must have a PKI
 		keyPair = generateKeyPair();
-		signatureAlgorithm = network
+		signatureAlgorithm = ds().network
 				.getProperty("SignatureAlgo", "SHA1withDSA");
 
 		// all users use the same algo for symmetric encryption
-		userSecretKeyFactory = SecretKeyFactory.getInstance(network
+		userSecretKeyFactory = SecretKeyFactory.getInstance(ds().network
 				.getProperty("user.cipher.algo", "PBEWithMD5AndDES"));
-		userCipher = Cipher.getInstance(network.getProperty("user.cipher.algo",
+		userCipher = Cipher.getInstance(ds().network.getProperty("user.cipher.algo",
 				"PBEWithMD5AndDES"));
 
 		if (ds().get("server", "yes").equals("yes")) {
-			getServer().start();
 			storage.attach();
-			Contact myself = toContactForMyself();
-			// Contact myself = toContact();
-			addContact(myself);
-
 		}
-	}
-
-	private Properties getNetworkProperties() {
-		return JLG.extractProperties(ds().getConfig(), "network");
 	}
 
 	public void disconnect() throws Exception {
 		JLG.debug("disconnect");
-		if (server != null) {
-			server.stop();
-			server = null;
+		if (getServer() != null) {
+			getServer().stop();
 		}
 	}
 
@@ -205,8 +176,9 @@ public class OCPAgent extends Agent {
 		c.setName(this.name);
 		c.publicKey = this.keyPair.getPublic().getEncoded();
 		// add the listener url and node id information
-		if (server != null) {
-			Iterator<IListener> it = server.getListeners().iterator();
+		if (getServer() != null) {
+			JLG.debug("server:" + getServer());
+			Iterator<IListener> it = getServer().getListeners().iterator();
 			while (it.hasNext()) {
 				IListener l = it.next();
 				c.getUrlList().add(l.getUrl());
@@ -216,39 +188,23 @@ public class OCPAgent extends Agent {
 				Id nodeId = (Id) itn.next();
 				c.nodeIdSet.add(nodeId);
 			}
+		} else {
+			JLG.debug("no server");
 		}
-		return c;
-	}
-
-	public OCPContact toContactForMyself() {
-		// convert the agent public information into a contact
-		OCPContact c = new OCPContact(this.id);
-		c.setName(this.name);
-		c.publicKey = this.keyPair.getPublic().getEncoded();
-		// add the listener url and node id information
-		if (server != null) {
-			// for myself use the myself protocol (do not serialize...)
-			URL url = new URL("myself", "localhost", 0);
-			c.getUrlList().add(url);
-			Iterator<Id> itn = storage.nodeSet.iterator();
-			while (itn.hasNext()) {
-				Id nodeId = (Id) itn.next();
-				c.nodeIdSet.add(nodeId);
-			}
-		}
+		JLG.debug("toContact: " + c);
 		return c;
 	}
 
 	@Override
 	public String toString() {
 		String hasServer = "no";
-		if (server != null) {
+		if (getServer() != null) {
 			hasServer = "yes";
 		}
 		String result = "Agent " + this.name + ":" + JLG.NL + "agentId=" + id
 				+ JLG.NL + "hasServer=" + hasServer + JLG.NL;
-		if (server != null) {
-			result += server.toString() + JLG.NL;
+		if (getServer() != null) {
+			result += getServer().toString() + JLG.NL;
 		}
 		result += "Contacts:" + JLG.NL;
 		synchronized (this) {
@@ -290,7 +246,7 @@ public class OCPAgent extends Agent {
 		storage.remove(address, addressSignature);
 		// }
 		if (!isResponsible(address)) {
-			client.remove(address, addressSignature);
+			getClient().remove(address, addressSignature);
 		}
 
 	}
@@ -306,7 +262,7 @@ public class OCPAgent extends Agent {
 			JLG.debug("transfert the order");
 			Id nodeId = getNodeId(address);
 			Queue<Contact> contactQueue = makeContactQueue(nodeId);
-			client.store(contactQueue, address, content);
+			getClient().store(contactQueue, address, content);
 		}
 	}
 
@@ -318,7 +274,7 @@ public class OCPAgent extends Agent {
 				// JLG.debug("address not found on " + id + " : " + address);
 				return null;
 			} else {
-				result = client.getFromAddress(address);
+				result = getClient().getFromAddress(address);
 			}
 		}
 		return result;
@@ -594,7 +550,7 @@ public class OCPAgent extends Agent {
 		Link publicUserDataLink = new Link(user, this, UserPublicInfo.getKey(
 				this, login), publicUserData.getKey(this));
 
-		client.createUser(contact, publicUserData, publicUserDataLink, captcha,
+		getClient().createUser(contact, publicUserData, publicUserDataLink, captcha,
 				answer);
 
 		// 2) create the private part of the user.
@@ -630,13 +586,7 @@ public class OCPAgent extends Agent {
 		return nodeMap.get(nodeId);
 	}
 
-	public void declareContact() throws Exception {
-		byte[] input = OCPProtocol.message(OCPProtocol.DECLARE_CONTACT, toContact());
-		client.sendAll(input);
-		client.declareSponsor();
-	}
-
-	private void readConfig() throws Exception {
+	public void readConfig() throws Exception {
 
 		// debugging aspect
 		if (ds().get("debug", "true").equalsIgnoreCase("true")) {
@@ -705,8 +655,8 @@ public class OCPAgent extends Agent {
 	}
 
 	public void addContact(Contact contact) throws Exception {
-		ContactMap contactMap = ds().getComponent(ContactMap.class);
-		contactMap.put(contact.getId(), contact);
+		JLG.debug("adding contact: " + contact);
+		ds().contactMap.add(contact);
 		OCPContact c = (OCPContact) contact;
 		if (c.nodeIdSet.size() == 0) {
 			throw new Exception("contact without node.");
@@ -743,11 +693,11 @@ public class OCPAgent extends Agent {
 		JLG.debug("key = " + key);
 		Queue<Contact> contactQueue = makeContactQueue(key);
 		JLG.debug("contact queue established.");
-		return client.askCaptcha(contactQueue);
+		return getClient().askCaptcha(contactQueue);
 	}
 
 	public void refreshContactList() throws Exception {
-		client.sendAll(OCPProtocol.PING.getBytes());
+		getClient().sendAll(OCPProtocol.PING.getBytes());
 	}
 
 	public String getName() {
@@ -770,11 +720,8 @@ public class OCPAgent extends Agent {
 	}
 
 	@Override
-	public IClient getClient() {
-		if (client == null) {
-			client = (OCPClient) ds().getComponent(Client.class);
-		}
-		return client;
+	public OCPClient getClient() {
+		return (OCPClient) ds().getComponent(Client.class);
 	}
 
 	

@@ -2,7 +2,6 @@ package org.ocpteam.component;
 
 import java.util.Properties;
 
-import org.ocpteam.interfaces.IDataModel;
 import org.ocpteam.interfaces.IProtocol;
 import org.ocpteam.misc.JLG;
 import org.ocpteam.misc.URL;
@@ -13,20 +12,18 @@ public abstract class DSPDataSource extends DataSource {
 	protected Client client;
 	protected Server server;
 
-	protected Properties network;
+	public Properties network;
 	public IProtocol protocol;
 	private TCPListener listener;
+	public ContactMap contactMap;
 
 	public DSPDataSource() throws Exception {
 		addComponent(Agent.class);
 		addComponent(Client.class);
 		addComponent(Server.class);
-
 		addComponent(Protocol.class, new BahBahProtocol());
-
 		addComponent(TCPListener.class);
-
-		addComponent(IDataModel.class, new MapDataModel());
+		addComponent(ContactMap.class);
 	}
 
 	@Override
@@ -38,6 +35,7 @@ public abstract class DSPDataSource extends DataSource {
 		protocol = getComponent(Protocol.class);
 		listener = getComponent(TCPListener.class);
 		listener.setProtocol(protocol);
+		contactMap = getComponent(ContactMap.class);
 	}
 
 	@Override
@@ -49,12 +47,19 @@ public abstract class DSPDataSource extends DataSource {
 			network = client.getNetworkProperties();
 		}
 		JLG.debug("network properties: " + JLG.propertiesToString(network));
-
+		readNetworkConfig();
+		
 		if (get("server", "yes").equals("yes")) {
 			JLG.debug("starting the server");
 			configureServer(server);
 			server.start();
+			contactMap.addMyself();
+			client.declareContact();
 		}
+	}
+
+	protected void readNetworkConfig() throws Exception {
+		
 	}
 
 	protected void configureServer(Server server) throws Exception {
@@ -71,6 +76,8 @@ public abstract class DSPDataSource extends DataSource {
 		}
 	}
 
-	protected abstract Properties getNetworkProperties();
+	protected Properties getNetworkProperties() {
+		return JLG.extractProperties(getConfig(), "network");
+	}
 
 }

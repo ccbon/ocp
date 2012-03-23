@@ -12,6 +12,7 @@ import java.util.Set;
 
 import org.apache.xmlrpc.client.XmlRpcClient;
 import org.apache.xmlrpc.client.XmlRpcClientConfigImpl;
+import org.ocpteam.component.Agent;
 import org.ocpteam.component.Authentication;
 import org.ocpteam.component.Channel;
 import org.ocpteam.component.Client;
@@ -35,6 +36,7 @@ public class OCPClient extends Client implements IAuthenticable {
 	@Override
 	public void init() {
 		super.init();
+		agent = (OCPAgent) ds().getComponent(Agent.class);
 	}
 
 	private OCPAgent agent;
@@ -61,6 +63,16 @@ public class OCPClient extends Client implements IAuthenticable {
 		// ByteArrayInputStream(response.getBytes()));
 		network.load(new ByteArrayInputStream(response.getBytes()));
 		return network;
+	}
+	
+	@Override
+	public void declareContact() throws Exception {
+		
+		Contact contact = agent.toContact();
+		JLG.debug("declare contact: " + contact);
+		byte[] input = OCPProtocol.message(OCPProtocol.DECLARE_CONTACT, contact);
+		sendAll(input);
+		declareSponsor();
 	}
 
 	public Id[] requestNodeId() throws Exception {
@@ -99,6 +111,7 @@ public class OCPClient extends Client implements IAuthenticable {
 			try {
 				output = request(contact, input);
 			} catch (NotAvailableContactException e) {
+				e.printStackTrace();
 				detach(contact);
 			}
 		}
@@ -186,6 +199,7 @@ public class OCPClient extends Client implements IAuthenticable {
 	}
 
 	private void detach(Contact contact) throws Exception {
+		JLG.debug("detaching contact: " + contact);
 		// tell to your contacts this contact has disappeared.
 		synchronized (agent) {
 			ContactMap contactMap = agent.ds().getComponent(ContactMap.class);
