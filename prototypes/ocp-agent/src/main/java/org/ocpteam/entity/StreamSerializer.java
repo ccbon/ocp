@@ -1,4 +1,4 @@
-package org.ocpteam.component;
+package org.ocpteam.entity;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;

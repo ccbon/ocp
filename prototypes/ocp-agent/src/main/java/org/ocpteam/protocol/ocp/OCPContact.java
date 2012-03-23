@@ -61,14 +61,7 @@ public class OCPContact extends Contact {
 
 
 
-	public void updateHost(String host) {
-		// foreach url, update the hostname
-		Iterator<URL> itp = getUrlList().iterator();
-		while (itp.hasNext()) {
-			URL url = itp.next();
-			url.setHost(host);
-		}
-	}
+
 
 
 

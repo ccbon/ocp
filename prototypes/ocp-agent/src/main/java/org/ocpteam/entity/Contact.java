@@ -2,6 +2,7 @@ package org.ocpteam.entity;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.ocpteam.misc.Id;
@@ -20,6 +21,8 @@ public class Contact implements Serializable, Comparable<Contact> {
 	private Id id;
 	private String name;
 	private List<URL> urlList;
+
+	private boolean bIsMyself = false;
 	
 	public Contact() {
 		this.urlList = new ArrayList<URL>();
@@ -63,6 +66,23 @@ public class Contact implements Serializable, Comparable<Contact> {
 	
 	public void addURL(URL url) {
 		urlList.add(url);
+	}
+
+	public boolean isMyself() {
+		return bIsMyself;
+	}
+	
+	public void setMyself(boolean b) {
+		this.bIsMyself = b;
+	}
+	
+	public void updateHost(String host) {
+		// foreach url, update the hostname
+		Iterator<URL> itp = getUrlList().iterator();
+		while (itp.hasNext()) {
+			URL url = itp.next();
+			url.setHost(host);
+		}
 	}
 
 }

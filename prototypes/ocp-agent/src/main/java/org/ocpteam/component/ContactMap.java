@@ -74,6 +74,7 @@ public class ContactMap extends DataSourceContainer {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		myself.setMyself(true);
 		this.add(myself);
 	}
 	

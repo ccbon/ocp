@@ -1,14 +1,12 @@
 package org.ocpteam.protocol.ocp;
 
 import java.io.ByteArrayInputStream;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Queue;
-import java.util.Set;
 
 import org.apache.xmlrpc.client.XmlRpcClient;
 import org.apache.xmlrpc.client.XmlRpcClientConfigImpl;
@@ -198,57 +196,9 @@ public class OCPClient extends Client implements IAuthenticable {
 		contact.copy(c);
 	}
 
-	private void detach(Contact contact) throws Exception {
-		JLG.debug("detaching contact: " + contact);
-		// tell to your contacts this contact has disappeared.
-		synchronized (agent) {
-			ContactMap contactMap = agent.ds().getComponent(ContactMap.class);
-			if (!contactMap.containsValue(contact)) {
-				return;
-			}
-			agent.removeContact(contact);
-			sendAll(OCPProtocol.hasBeenDetached((OCPContact) contact));
-		}
-	}
 
-	public void sendAll(byte[] message) throws Exception {
-		// tell all your contact of what happened
 
-		Set<Contact> contactToBeDetached = new HashSet<Contact>();
-		ContactMap contactMap = agent.ds().getComponent(ContactMap.class);
-		Iterator<Contact> itc = contactMap.getContactSnapshotList().iterator();
-		while (itc.hasNext()) {
-			Contact c = itc.next();
-			if (c.getId().equals(agent.id)) {
-				// do not send the message to myself
-				continue;
-			}
-			try {
-				// we do not care about the response
-				send(c, message);
-			} catch (NotAvailableContactException e) {
-				contactToBeDetached.add(c);
-			} catch (Exception e) {
-				// we don't care for agent that don't understand the sent
-				// message.
-				JLG.debug("Contact answered with error: " + e.getMessage());
-			}
-		}
-		Iterator<Contact> it = contactToBeDetached.iterator();
-		while (it.hasNext()) {
-			Contact c = it.next();
-			detach(c);
-		}
 
-	}
-
-	public void send(Contact c, byte[] message) throws Exception {
-		byte[] response = request(c, message);
-		Response r = new Response(response, (OCPContact) c);
-		if (!r.isSuccess()) {
-			throw new Exception("error while informing: " + response);
-		}
-	}
 
 
 	public Captcha askCaptcha(Queue<Contact> contactQueue) throws Exception {
