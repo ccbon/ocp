@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import org.ocpteam.component.Agent;
+import org.ocpteam.component.HTTPListener;
+import org.ocpteam.component.Protocol;
 import org.ocpteam.component.Server;
 import org.ocpteam.component.TCPListener;
 import org.ocpteam.interfaces.IListener;
@@ -38,6 +40,7 @@ public class OCPServer extends Server {
 				} else {
 					throw new JLGException("protocol not found");
 				}
+				listener.setProtocol(ds().getComponent(Protocol.class));
 				listenerList.add(listener);
 			}
 
@@ -45,6 +48,7 @@ public class OCPServer extends Server {
 		if (bFound == false) {
 			IListener l = ds().addComponent(TCPListener.class);
 			l.setUrl(new URL("tcp://localhost:22222"));
+			l.setProtocol(ds().getComponent(Protocol.class));
 			listenerList.add(l);
 		}
 	}

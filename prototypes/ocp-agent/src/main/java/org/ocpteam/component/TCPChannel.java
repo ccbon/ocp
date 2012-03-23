@@ -1,20 +1,21 @@
-package org.ocpteam.protocol.ocp;
+package org.ocpteam.component;
 
 import java.net.ConnectException;
 
-import org.ocpteam.component.Channel;
 import org.ocpteam.misc.JLG;
 import org.ocpteam.misc.JLGException;
 import org.ocpteam.misc.TCPClient;
 import org.ocpteam.misc.URL;
+import org.ocpteam.protocol.ocp.OCPContact;
+import org.ocpteam.protocol.ocp.OCPProtocol;
 
 
 public class TCPChannel extends Channel {
 
 	private TCPClient tcpClient;
-	
 
-	public TCPChannel(URL url) {
+	@Override
+	public void setUrl(URL url) {
 		this.url = url;
 		int port = url.getPort();
 		if (port == -1) {
@@ -23,10 +24,7 @@ public class TCPChannel extends Channel {
 		String hostname = url.getHost();
 		tcpClient = new TCPClient(hostname, port);
 	}
-
-	public TCPChannel() {
-	}
-
+	
 	@Override
 	public byte[] request(byte[] input) throws Exception {
 		return tcpClient.request(input);

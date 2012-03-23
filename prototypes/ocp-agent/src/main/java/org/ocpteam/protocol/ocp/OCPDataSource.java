@@ -12,6 +12,9 @@ import org.ocpteam.interfaces.IPersistentMap;
 
 public class OCPDataSource extends DataSource {
 
+	public ContactMap contactMap;
+	public Protocol protocol;
+
 	public OCPDataSource() throws Exception {
 		super();
 		addComponent(Agent.class, new OCPAgent());
@@ -21,6 +24,13 @@ public class OCPDataSource extends DataSource {
 		addComponent(ContactMap.class);
 		addComponent(IPersistentMap.class, new NaivePersistentMap());
 		addComponent(Protocol.class, new OCPProtocol());
+	}
+	
+	@Override
+	public void init() {
+		super.init();
+		contactMap = getComponent(ContactMap.class);
+		protocol = getComponent(Protocol.class);
 	}
 
 	@Override

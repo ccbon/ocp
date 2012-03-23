@@ -7,6 +7,7 @@ import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.ocpteam.component.Agent;
 import org.ocpteam.misc.JLG;
 
 import com.sun.net.httpserver.Headers;
@@ -16,11 +17,11 @@ import com.sun.net.httpserver.HttpHandler;
 @SuppressWarnings("restriction")
 public class HTTPServerHandler implements HttpHandler {
 
-	private OCPAgent agent;
+	protected Agent agent;
 	private String root;
 	private Map<String, String> extMap;
 
-	public HTTPServerHandler(OCPAgent agent) {
+	public HTTPServerHandler(Agent agent) {
 		this.agent = agent;
 		this.root = agent.ds().get("http.htdocs", ".");
 		extMap = new HashMap<String, String>();
@@ -49,7 +50,7 @@ public class HTTPServerHandler implements HttpHandler {
 				JLG.debug("asking file: " + file.getAbsolutePath());
 				responseBody.write(JLG.getBinaryFile(file));
 			} catch (Exception e) {
-				responseBody.write(("Error...\n" + agent.id).getBytes());
+				responseBody.write(("Error...\n").getBytes());
 			}
 			responseBody.close();
 		}

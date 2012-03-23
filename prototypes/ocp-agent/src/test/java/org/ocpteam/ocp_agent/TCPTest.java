@@ -4,12 +4,11 @@ import static org.junit.Assert.assertTrue;
 
 import org.ocpteam.component.BahBahProtocol;
 import org.ocpteam.component.TCPListener;
-import org.ocpteam.component.TestScenario;
 import org.ocpteam.misc.JLG;
 import org.ocpteam.misc.TCPClient;
 import org.ocpteam.misc.URL;
 
-public class TCPTest extends TestScenario {
+public class TCPTest {
 
 	@org.junit.Test
 	public void simple() {
@@ -20,12 +19,12 @@ public class TCPTest extends TestScenario {
 		}
 	}
 
-	@Override
 	public boolean test() {
 		try {
 			JLG.debug_on();
 			
 			TCPListener tcplistener = new TCPListener();
+			tcplistener.init();
 			tcplistener.setUrl(new URL("tcp://localhost:23456"));
 			tcplistener.setProtocol(new BahBahProtocol());
 			tcplistener.start();

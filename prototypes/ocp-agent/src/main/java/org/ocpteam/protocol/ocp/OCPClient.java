@@ -19,6 +19,7 @@ import org.ocpteam.component.ContactMap;
 import org.ocpteam.entity.Contact;
 import org.ocpteam.entity.Context;
 import org.ocpteam.entity.User;
+import org.ocpteam.exception.NotAvailableContactException;
 import org.ocpteam.interfaces.IAuthenticable;
 import org.ocpteam.interfaces.IDataModel;
 import org.ocpteam.misc.Id;
@@ -30,16 +31,21 @@ public class OCPClient extends Client implements IAuthenticable {
 	public OCPClient() throws Exception {
 		super();
 	}
+	
+	@Override
+	public void init() {
+		super.init();
+	}
 
 	private OCPAgent agent;
 
-	public OCPContact getContact(Channel channel) throws Exception {
+	public Contact getContact(Channel channel) throws Exception {
 		// I have to request to an agent (sending to it a string and then
 		// receiving a response
 		// For that, I need to know the channel to use.
 		JLG.debug("get contact from channel " + channel);
 		if (understand(channel)) {
-			OCPContact c = channel.getContact();
+			Contact c = channel.getContact();
 			return c;
 		}
 		JLG.warn("channel not reachable. get contact returns null.");
@@ -92,7 +98,7 @@ public class OCPClient extends Client implements IAuthenticable {
 			contact = (OCPContact) contactQueue.poll();
 			try {
 				output = request(contact, input);
-			} catch (DetachedAgentException e) {
+			} catch (NotAvailableContactException e) {
 				detach(contact);
 			}
 		}
@@ -110,11 +116,9 @@ public class OCPClient extends Client implements IAuthenticable {
 		while (it.hasNext()) {
 			String sUrl = it.next();
 			URL url = new URL(sUrl);
-			Channel channel = channelFactoryMap.get(url.getProtocol().toLowerCase()).newInstance();
-			channel.setUrl(url);
-			channel.setParent(this.getParent());
+			Channel channel = newChannel(url);
 			
-			OCPContact sponsor = getContact(channel);
+			Contact sponsor = getContact(channel);
 			if (sponsor != null) {
 				JLG.debug("we found a pingable sponsor channel");
 				agent.addContact(sponsor);
@@ -176,7 +180,7 @@ public class OCPClient extends Client implements IAuthenticable {
 	public void enrichContact(OCPContact contact) throws Exception {
 		byte[] response = request(contact, OCPProtocol.GET_CONTACT.getBytes());
 		OCPContact c = (OCPContact) JLG.deserialize(response);
-		String host = contact.urlList.iterator().next().getHost();
+		String host = contact.getUrlList().iterator().next().getHost();
 		c.updateHost(host);
 		contact.copy(c);
 	}
@@ -201,14 +205,14 @@ public class OCPClient extends Client implements IAuthenticable {
 		Iterator<Contact> itc = contactMap.getContactSnapshotList().iterator();
 		while (itc.hasNext()) {
 			Contact c = itc.next();
-			if (c.id.equals(agent.id)) {
+			if (c.getId().equals(agent.id)) {
 				// do not send the message to myself
 				continue;
 			}
 			try {
 				// we do not care about the response
 				send(c, message);
-			} catch (DetachedAgentException e) {
+			} catch (NotAvailableContactException e) {
 				contactToBeDetached.add(c);
 			} catch (Exception e) {
 				// we don't care for agent that don't understand the sent
@@ -291,7 +295,7 @@ public class OCPClient extends Client implements IAuthenticable {
 		try {
 			if (agent.ds().get("network.type", "private").equalsIgnoreCase(
 					"public")) {
-				int port = agent.toContact().urlList.get(0).getPort();
+				int port = agent.toContact().getUrlList().get(0).getPort();
 				XmlRpcClientConfigImpl config = new XmlRpcClientConfigImpl();
 				// TODO: need a ocp dedicated web server. I use mine for the
 				// time being.

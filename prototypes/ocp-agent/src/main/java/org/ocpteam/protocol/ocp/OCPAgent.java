@@ -209,7 +209,7 @@ public class OCPAgent extends Agent {
 			Iterator<IListener> it = server.getListeners().iterator();
 			while (it.hasNext()) {
 				IListener l = it.next();
-				c.addURL(l.getUrl());
+				c.getUrlList().add(l.getUrl());
 			}
 			Iterator<Id> itn = storage.nodeSet.iterator();
 			while (itn.hasNext()) {
@@ -229,7 +229,7 @@ public class OCPAgent extends Agent {
 		if (server != null) {
 			// for myself use the myself protocol (do not serialize...)
 			URL url = new URL("myself", "localhost", 0);
-			c.addURL(url);
+			c.getUrlList().add(url);
 			Iterator<Id> itn = storage.nodeSet.iterator();
 			while (itn.hasNext()) {
 				Id nodeId = (Id) itn.next();
@@ -279,7 +279,7 @@ public class OCPAgent extends Agent {
 	public boolean isResponsible(Address address) throws Exception {
 		Id nodeId = getNodeId(address);
 		OCPContact contact = getContactFromNodeId(nodeId);
-		return contact.id.equals(id);
+		return contact.getId().equals(id);
 	}
 
 	public void remove(Address address, byte[] addressSignature)
@@ -706,7 +706,7 @@ public class OCPAgent extends Agent {
 
 	public void addContact(Contact contact) throws Exception {
 		ContactMap contactMap = ds().getComponent(ContactMap.class);
-		contactMap.put(contact.id, contact);
+		contactMap.put(contact.getId(), contact);
 		OCPContact c = (OCPContact) contact;
 		if (c.nodeIdSet.size() == 0) {
 			throw new Exception("contact without node.");
@@ -721,7 +721,7 @@ public class OCPAgent extends Agent {
 
 	public Contact removeContact(Contact contact) {
 		ContactMap contactMap = ds().getComponent(ContactMap.class);
-		OCPContact c = (OCPContact) contactMap.remove(contact.id);
+		OCPContact c = (OCPContact) contactMap.remove(contact.getId());
 		try {
 			Iterator<Id> it = c.nodeIdSet.iterator();
 			while (it.hasNext()) {

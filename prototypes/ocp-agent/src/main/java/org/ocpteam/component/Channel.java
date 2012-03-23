@@ -1,8 +1,14 @@
 package org.ocpteam.component;
 
+import org.ocpteam.entity.Contact;
 import org.ocpteam.misc.URL;
-import org.ocpteam.protocol.ocp.OCPContact;
 
+/**
+ * A Channel object represent the connection created by the client to talk
+ * to a contact on the distributed network. It is a wrapper on the contact url.
+ * 
+ *
+ */
 public abstract class Channel extends DataSourceContainer {
 
 	protected URL url;
@@ -17,7 +23,7 @@ public abstract class Channel extends DataSourceContainer {
 	
 	public abstract byte[] request(byte[] input) throws Exception;
 
-	public abstract OCPContact getContact() throws Exception;
+	public abstract Contact getContact() throws Exception;
 
 	public abstract String getProtocolName();
 

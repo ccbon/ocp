@@ -1,26 +1,32 @@
-package org.ocpteam.protocol.ocp;
+package org.ocpteam.component;
 
 import java.net.InetSocketAddress;
 import java.util.concurrent.Executors;
 
-import org.ocpteam.component.NATTraversal;
-import org.ocpteam.core.Component;
 import org.ocpteam.interfaces.IListener;
 import org.ocpteam.interfaces.IProtocol;
 import org.ocpteam.misc.JLG;
 import org.ocpteam.misc.URL;
+import org.ocpteam.protocol.ocp.HTTPServerHandler;
 
 import com.sun.net.httpserver.HttpServer;
 
 @SuppressWarnings("restriction")
-public class HTTPListener extends Component implements IListener {
+public class HTTPListener extends DataSourceContainer implements IListener {
 
 	private URL url;
-	private OCPAgent agent;
+	private Agent agent;
 	HttpServer server;
 	private NATTraversal natTraversal;
 	protected IProtocol protocol;
 
+	@Override
+	public void init() {
+		// TODO Auto-generated method stub
+		super.init();
+		agent = ds().getComponent(Agent.class);
+	}
+	
 	@Override
 	public void start() {
 		try {

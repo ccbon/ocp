@@ -8,12 +8,10 @@ import java.util.Properties;
 
 import org.ocpteam.core.IComponent;
 import org.ocpteam.entity.Contact;
+import org.ocpteam.exception.NotAvailableContactException;
 import org.ocpteam.interfaces.IClient;
 import org.ocpteam.misc.JLG;
 import org.ocpteam.misc.URL;
-import org.ocpteam.protocol.ocp.DetachedAgentException;
-import org.ocpteam.protocol.ocp.MyselfChannel;
-import org.ocpteam.protocol.ocp.TCPChannel;
 
 public class Client extends DataSourceContainer implements IClient {
 
@@ -23,13 +21,27 @@ public class Client extends DataSourceContainer implements IClient {
 	public Client() throws Exception {
 		addComponent(TCPChannel.class);
 		addComponent(MyselfChannel.class);
-		
 	}
 	
 	@Override
 	public void init() {
 		super.init();
 		channelMap = new HashMap<URL, Channel>();
+		initFactory();
+	}
+	
+	public Channel newChannel(URL url) throws Exception {
+		Class<? extends Channel> c = channelFactoryMap.get(url.getProtocol().toLowerCase());
+		if (c == null) {
+			c = UnknownChannel.class;
+		}
+		Channel channel = c.newInstance();
+		channel.setUrl(url);
+		channel.setParent(this.getParent());
+		return channel;
+	}
+
+	private void initFactory() {
 		channelFactoryMap = new HashMap<String, Class<? extends Channel>>();
 		Iterator<IComponent> it = iteratorComponent();
 		while (it.hasNext()) {
@@ -54,7 +66,7 @@ public class Client extends DataSourceContainer implements IClient {
 		// receiving a response
 		// For that, I need to know the channel to use.
 		// for the time being I know only the TCP channel.
-		Iterator<URL> it = contact.urlList.iterator();
+		Iterator<URL> it = contact.getUrlList().iterator();
 		while (it.hasNext()) {
 			URL url = it.next();
 
@@ -62,15 +74,12 @@ public class Client extends DataSourceContainer implements IClient {
 			if (channelMap.containsKey(url)) {
 				channel = channelMap.get(url);
 			} else {
-				channel = channelFactoryMap.get(url.getProtocol().toLowerCase()).newInstance();
-				channel.setUrl(url);
-				channel.setParent(this.getParent());
+				channel = newChannel(url);
 				channelMap.put(url, channel);
 			}
 			if (understand(channel)) {
 				try {
 					output = channel.request(string);
-
 				} catch (ConnectException e) {
 					continue;
 				} catch (Exception e) {
@@ -79,7 +88,7 @@ public class Client extends DataSourceContainer implements IClient {
 				return output;
 			}
 		}
-		throw new DetachedAgentException();
+		throw new NotAvailableContactException();
 	}
 
 	public boolean understand(Channel c) {

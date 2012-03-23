@@ -5,11 +5,10 @@ import static org.junit.Assert.assertTrue;
 import java.util.Properties;
 
 import org.ocpteam.component.DataSource;
-import org.ocpteam.component.TestScenario;
 import org.ocpteam.misc.JLG;
 import org.ocpteam.protocol.dht.DHTDataSource;
 
-public class DHTSimpleTest extends TestScenario {
+public class DHTSimpleTest {
 
 	@org.junit.Test
 	public void simple() {
@@ -20,7 +19,6 @@ public class DHTSimpleTest extends TestScenario {
 		}
 	}
 
-	@Override
 	public boolean test() {
 		try {
 			JLG.debug_on();

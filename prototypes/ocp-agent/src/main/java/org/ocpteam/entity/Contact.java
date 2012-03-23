@@ -8,28 +8,48 @@ import org.ocpteam.misc.Id;
 import org.ocpteam.misc.URL;
 
 
+/**
+ * A Contact reflects the public information that an agent can gives to the
+ * others members of the distributed network.
+ *
+ */
 public class Contact implements Serializable, Comparable<Contact> {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
-	public Id id;
-	protected String name;
-	public List<URL> urlList;
+	
+	private Id id;
+	private String name;
+	private List<URL> urlList;
 	
 	public Contact() {
 		this.urlList = new ArrayList<URL>();
+	}
+	
+	public Id getId() {
+		return id;
+	}
+
+	public void setId(Id id) {
+		this.id = id;
 	}
 
 	public String getName() {
 		return name;
 	}
 
-
 	public void setName(String name) {
 		this.name = name;	
 	}
+	
+	public List<URL> getUrlList() {
+		return urlList;
+	}
+	
+	public void setUrlList(List<URL> urlList) {
+		this.urlList = urlList;
+	}
+	
+	
 	@Override
 	public int compareTo(Contact o) {
 		if (id == null) {
@@ -43,10 +63,6 @@ public class Contact implements Serializable, Comparable<Contact> {
 	
 	public void addURL(URL url) {
 		urlList.add(url);
-	}
-
-	public String getId() {
-		return id.toString();
 	}
 
 }

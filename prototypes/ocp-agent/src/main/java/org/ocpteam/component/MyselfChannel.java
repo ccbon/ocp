@@ -1,7 +1,6 @@
-package org.ocpteam.protocol.ocp;
+package org.ocpteam.component;
 
-import org.ocpteam.component.Channel;
-import org.ocpteam.component.Protocol;
+import org.ocpteam.protocol.ocp.OCPContact;
 
 public class MyselfChannel extends Channel {
 	

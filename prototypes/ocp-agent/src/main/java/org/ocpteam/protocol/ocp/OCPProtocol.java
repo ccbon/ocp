@@ -251,7 +251,7 @@ public class OCPProtocol extends Protocol {
 	}
 
 	public static byte[] hasBeenDetached(OCPContact contact) {
-		return ("INFORM_DETACH:" + contact.id).getBytes();
+		return ("INFORM_DETACH:" + contact.getId()).getBytes();
 	}
 
 	public static byte[] message(String function, Object... objects)

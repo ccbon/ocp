@@ -83,7 +83,7 @@ public class ContactComposite extends Composite {
 			TreeItem contactTreeItem = new TreeItem(tree, SWT.NONE);
 			String text = contact.getId() + " - " + contact.getName();
 			contactTreeItem.setText(text);
-			Iterator<URL> itu = contact.urlList.iterator();
+			Iterator<URL> itu = contact.getUrlList().iterator();
 			while (itu.hasNext()) {
 				URL url = (URL) itu.next();
 				TreeItem urlTreeItem = new TreeItem(contactTreeItem, SWT.NONE);

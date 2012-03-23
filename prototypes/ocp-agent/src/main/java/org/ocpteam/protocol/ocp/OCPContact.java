@@ -22,15 +22,15 @@ public class OCPContact extends Contact {
 
 	public OCPContact(Id id) {
 		super();
-		this.id = id;
+		setId(id);
 		nodeIdSet = Collections.synchronizedSortedSet(new TreeSet<Id>());
 	}
 
 
 	@Override
 	public String toString() {
-		String result = id.toString();
-		Iterator<URL> itp = urlList.iterator();
+		String result = getId().toString();
+		Iterator<URL> itp = getUrlList().iterator();
 		while (itp.hasNext()) {
 			URL url = itp.next();
 			result += "[" + url.toString() + "]";
@@ -41,7 +41,7 @@ public class OCPContact extends Contact {
 	@Override
 	public boolean equals(Object obj) {
 		if (obj != null && obj.getClass().equals(this.getClass())) {
-			return ((OCPContact) obj).id.equals(id);
+			return ((OCPContact) obj).getId().equals(getId());
 		}
 		return false;
 	}
@@ -52,18 +52,18 @@ public class OCPContact extends Contact {
 
 	public void copy(OCPContact c) {
 		// for all member, replace
-		this.urlList = c.urlList;
-		this.id = c.id;
+		this.setUrlList(c.getUrlList());
+		setId(c.getId());
 		this.publicKey = c.publicKey;
 		this.nodeIdSet = c.nodeIdSet;
-		this.name = c.name;
+		setName(c.getName());
 	}
 
 
 
 	public void updateHost(String host) {
 		// foreach url, update the hostname
-		Iterator<URL> itp = urlList.iterator();
+		Iterator<URL> itp = getUrlList().iterator();
 		while (itp.hasNext()) {
 			URL url = itp.next();
 			url.setHost(host);

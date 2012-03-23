@@ -1,15 +1,8 @@
-package org.ocpteam.protocol.ocp;
+package org.ocpteam.component;
 
-import org.ocpteam.component.Channel;
-import org.ocpteam.misc.URL;
+import org.ocpteam.protocol.ocp.OCPContact;
 
 public class UnknownChannel extends Channel {
-
-	private URL url;
-
-	public UnknownChannel(URL url) {
-		this.url = url;
-	}
 
 	@Override
 	public byte[] request(byte[] input) throws Exception {
@@ -33,6 +26,4 @@ public class UnknownChannel extends Channel {
 	public String getProtocolName() {
 		return "unknown";
 	}
-
-
 }
