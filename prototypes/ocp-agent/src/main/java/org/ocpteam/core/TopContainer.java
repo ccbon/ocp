@@ -3,6 +3,8 @@ package org.ocpteam.core;
 import java.util.Iterator;
 import java.util.Properties;
 
+import org.ocpteam.misc.JLG;
+
 
 public class TopContainer implements IContainer {
 	
@@ -83,6 +85,16 @@ public class TopContainer implements IContainer {
 	@Override
 	public IContainer getRoot() {
 		return this;
+	}
+
+	@Override
+	public void init() throws Exception {
+		JLG.debug("init class " + getClass());
+		Iterator<IComponent> it = designer.iterator();
+		while (it.hasNext()) {
+			it.next().init();
+		}
+		
 	}
 
 

@@ -17,56 +17,63 @@ public class DSPModule extends Module {
 	protected static final int DECLARE_CONTACT = 1000;
 	protected static final int GET_NETWORK_PROPERTIES = 1001;
 	protected static final int GET_CONTACT = 1002;
-	
-	
-	public ITransaction declareContact = new ITransaction() {
 
-		@Override
-		public Serializable run(Session session, Serializable[] objects) throws Exception {
-			JLG.debug("declareContact: ");
+	public ITransaction declareContact() {
+		return new ITransaction() {
 
-			Contact contact = (Contact) objects[0];
-			InetAddress host = session.getSocket().getInetAddress();
-			contact.updateHost(host.getHostAddress());
-			session.ds().getComponent(ContactMap.class).add(contact);
-			return null;
-		}
+			@Override
+			public Serializable run(Session session, Serializable[] objects)
+					throws Exception {
+				JLG.debug("declareContact: ");
 
-		@Override
-		public int getId() {
-			return DECLARE_CONTACT;
-		}
-	};
+				Contact contact = (Contact) objects[0];
+				InetAddress host = session.getSocket().getInetAddress();
+				contact.updateHost(host.getHostAddress());
+				session.ds().getComponent(ContactMap.class).add(contact);
+				return null;
+			}
 
+			@Override
+			public int getId() {
+				return DECLARE_CONTACT;
+			}
+		};
+	}
 
-	public ITransaction getNetworkProperties = new ITransaction() {
-		
-		@Override
-		public Serializable run(Session session, Serializable[] objects)
-				throws Exception {
-			Properties p = new Properties();
-			p.setProperty("hello", "world");
-			return p;
-		}
-		
-		@Override
-		public int getId() {
-			return GET_NETWORK_PROPERTIES;
-		}
-	};
-	public ITransaction getContact = new ITransaction() {
-		
-		@Override
-		public Serializable run(Session session, Serializable[] objects)
-				throws Exception {
-			Agent agent = session.ds().getComponent(Agent.class);
-			return agent.toContact();
-		}
-		
-		@Override
-		public int getId() {
-			return GET_CONTACT;
-		}
-	};
+	public ITransaction getNetworkProperties() {
+		return new ITransaction() {
 
+			@Override
+			public Serializable run(Session session, Serializable[] objects)
+					throws Exception {
+				JLG.debug("get network properties: ");
+				Properties p = new Properties();
+				p.setProperty("hello", "world");
+				return p;
+			}
+
+			@Override
+			public int getId() {
+				return GET_NETWORK_PROPERTIES;
+			}
+		};
+	}
+
+	public ITransaction getContact() {
+		return new ITransaction() {
+
+			@Override
+			public Serializable run(Session session, Serializable[] objects)
+					throws Exception {
+				JLG.debug("get contact: ");
+				Agent agent = session.ds().getComponent(Agent.class);
+				return agent.toContact();
+			}
+
+			@Override
+			public int getId() {
+				return GET_CONTACT;
+			}
+		};
+	}
 }

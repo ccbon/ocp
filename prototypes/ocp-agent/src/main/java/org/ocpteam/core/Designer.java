@@ -34,7 +34,6 @@ public class Designer {
 		if (!map.containsKey(c)) {
 			T instance = c.newInstance();
 			instance.setParent(parent);
-			instance.init();
 			map.put((Class<IComponent>) c, instance);
 		}
 		return (T) map.get(c);
@@ -44,7 +43,6 @@ public class Designer {
 	public <T extends IComponent> T add(Class<T> c, T instance) throws Exception {
 		if (!map.containsKey(c)) {
 			instance.setParent(parent);
-			instance.init();
 			map.put((Class<IComponent>) c, instance);
 		}
 		return (T) map.get(c);
@@ -54,7 +52,6 @@ public class Designer {
 	public <T extends IComponent> void replace(Class<T> c, T instance) throws Exception {
 		if (map.containsKey(c)) {
 			instance.setParent(parent);
-			instance.init();
 			map.put((Class<IComponent>) c, instance);
 		}  else {
 			throw new Exception("functionality not existing");
@@ -68,6 +65,10 @@ public class Designer {
 	@SuppressWarnings("unchecked")
 	public <T extends IComponent> T remove(Class<T> c) {
 		return (T) map.remove(c);
+	}
+	
+	public Map<Class<IComponent>, IComponent> getMap() {
+		return map;
 	}
 
 

@@ -35,7 +35,7 @@ public class TCPChannel extends Channel {
 		try {
 			JLG.debug("getContact");
 			DSPModule m = getProtocol().getComponent(DSPModule.class);
-			byte[] input = getProtocol().getMessageSerializer().serializeInput(new InputMessage(m.getContact));
+			byte[] input = getProtocol().getMessageSerializer().serializeInput(new InputMessage(m.getContact()));
 			byte[] response = request(input);
 			Contact c = (Contact) getProtocol().getMessageSerializer().deserializeOutput(response);
 			// we update a host because an agent does not see its public address.

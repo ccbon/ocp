@@ -9,12 +9,14 @@ import org.ocpteam.component.Authentication;
 import org.ocpteam.component.Client;
 import org.ocpteam.entity.Contact;
 import org.ocpteam.entity.Context;
+import org.ocpteam.entity.InputMessage;
 import org.ocpteam.entity.Response;
 import org.ocpteam.entity.User;
 import org.ocpteam.interfaces.IAuthenticable;
 import org.ocpteam.interfaces.IDataModel;
 import org.ocpteam.misc.Id;
 import org.ocpteam.misc.JLG;
+import org.ocpteam.module.DSPModule;
 
 public class OCPClient extends Client implements IAuthenticable {
 
@@ -30,27 +32,17 @@ public class OCPClient extends Client implements IAuthenticable {
 
 	private OCPAgent agent;
 
-
-
-
-	
-	@Override
-	public void declareContact() throws Exception {
-		
-		Contact contact = agent.toContact();
-		JLG.debug("declare contact: " + contact);
-		byte[] input = OCPProtocol.message(OCPProtocol.DECLARE_CONTACT, contact);
-		sendAll(input);
-		declareSponsor();
-	}
-
 	public Id[] requestNodeId() throws Exception {
 		Id[] nodeIds = null;
 		// at this time we ask to the network to give us one node_id.
-
-		Response response = request(OCPProtocol.message(OCPProtocol.NODE_ID));
+		JLG.debug("request node id");
+		OCPModule m = (OCPModule) getProtocol().getComponent(DSPModule.class);
+		JLG.debug("module class: " + m.getClass());
+		byte[] input = getProtocol().getMessageSerializer().serializeInput(
+				new InputMessage(m.requestNodeId()));
+		Response response = request(input);
 		nodeIds = new Id[1];
-		nodeIds[0] = new Id(response.getBytes());
+		nodeIds[0] = (Id) getProtocol().getMessageSerializer().deserializeOutput(response.getBytes());
 		return nodeIds;
 	}
 

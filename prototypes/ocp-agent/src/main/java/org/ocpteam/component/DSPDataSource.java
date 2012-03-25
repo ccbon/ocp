@@ -27,7 +27,7 @@ public abstract class DSPDataSource extends DataSource {
 	}
 
 	@Override
-	public void init() {
+	public void init() throws Exception {
 		super.init();
 		agent = getComponent(Agent.class);
 		client = getComponent(Client.class);

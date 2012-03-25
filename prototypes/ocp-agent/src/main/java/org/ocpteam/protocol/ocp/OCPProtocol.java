@@ -16,8 +16,14 @@ import org.ocpteam.component.Protocol;
 import org.ocpteam.entity.Contact;
 import org.ocpteam.misc.Id;
 import org.ocpteam.misc.JLG;
+import org.ocpteam.module.DSPModule;
 
 public class OCPProtocol extends Protocol {
+
+	public OCPProtocol() throws Exception {
+		super();
+		addComponent(DSPModule.class, new OCPModule());
+	}
 
 	public static final int SEPARATOR = 0;
 	public static final String PING = "ping";
@@ -39,12 +45,6 @@ public class OCPProtocol extends Protocol {
 
 	private OCPAgent agent;
 
-	public OCPProtocol() {
-		
-	}
-	public OCPProtocol(OCPAgent agent) {
-		this.agent = agent;
-	}
 
 	public OCPAgent getAgent() {
 		if (this.agent == null) {
@@ -54,6 +54,12 @@ public class OCPProtocol extends Protocol {
 	}
 
 	public byte[] process(byte[] input, Socket clientSocket) throws Exception {
+		try {
+			byte[] output = super.process(input, clientSocket);
+			return output;
+		} catch (Exception e) {
+			JLG.debug("normal protocol does not work.");
+		}
 		getAgent();
 		String request = new String(input);
 		Iterator<byte[]> it = iterator(input);

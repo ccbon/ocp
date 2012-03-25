@@ -28,7 +28,7 @@ public class OCPDataSource extends DSPDataSource {
 	}
 	
 	@Override
-	public void init() {
+	public void init() throws Exception {
 		super.init();
 		agent = (OCPAgent) getComponent(Agent.class);
 		contactMap = getComponent(ContactMap.class);

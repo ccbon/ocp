@@ -74,8 +74,9 @@ public class Client extends DataSourceContainer implements IClient {
 	 */
 	public Properties getNetworkProperties() throws Exception {
 		DSPModule m = getProtocol().getComponent(DSPModule.class);
+		JLG.debug("module class: " + m.getClass());
 		byte[] input = getProtocol().getMessageSerializer().serializeInput(
-				new InputMessage(m.getNetworkProperties));
+				new InputMessage(m.getNetworkProperties()));
 		Response response = request(input);
 		Properties network = (Properties) getProtocol().getMessageSerializer()
 				.deserializeOutput(response.getBytes());
@@ -245,7 +246,7 @@ public class Client extends DataSourceContainer implements IClient {
 				+ getProtocol().getMessageSerializer());
 		JLG.debug("DSPModule=" + m);
 		byte[] input = getProtocol().getMessageSerializer().serializeInput(
-				new InputMessage(m.declareContact, contact));
+				new InputMessage(m.declareContact(), contact));
 		sendAll(input);
 	}
 
@@ -300,7 +301,7 @@ public class Client extends DataSourceContainer implements IClient {
 		}
 	}
 
-	private IProtocol getProtocol() {
+	protected IProtocol getProtocol() {
 		return ds().getComponent(Protocol.class);
 	}
 

@@ -24,10 +24,6 @@ public abstract class DataSource extends TopContainer implements IComponent,
 	}
 	
 	@Override
-	public void init() {
-	}
-	
-	@Override
 	public IContainer getParent() {
 		return parent;
 	}

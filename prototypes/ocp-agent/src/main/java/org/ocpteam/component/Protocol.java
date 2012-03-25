@@ -1,7 +1,7 @@
 package org.ocpteam.component;
 
 import java.io.Serializable;
-import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.net.Socket;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -28,6 +28,7 @@ public abstract class Protocol extends DataSourceContainer implements IProtocol 
 	public void init() throws Exception {
 		super.init();
 		// load all module
+		JLG.debug("components: " + this.getDesigner().getMap());
 		Iterator<IComponent> it = this.iteratorComponent();
 		while (it.hasNext()) {
 			IComponent c = it.next();
@@ -38,10 +39,11 @@ public abstract class Protocol extends DataSourceContainer implements IProtocol 
 	}
 
 	public void load(Module m) throws Exception {
-		for (Field f : m.getClass().getFields()) {
-			Object o = f.get(m);
-			if (o instanceof ITransaction) {
-				ITransaction t = (ITransaction) o;
+		JLG.debug("loading module: " + m.getClass());
+		for (Method f : m.getClass().getMethods()) {
+			Object o = f.getReturnType();
+			if (o == ITransaction.class) {
+				ITransaction t = (ITransaction) f.invoke(m);
 				map.put(t.getId(), t);
 			}
 		}

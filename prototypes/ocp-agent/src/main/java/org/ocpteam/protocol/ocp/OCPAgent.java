@@ -161,6 +161,7 @@ public class OCPAgent extends Agent {
 		if (ds().get("server", "yes").equals("yes")) {
 			storage.attach();
 		}
+		JLG.debug("end");
 	}
 
 	public void disconnect() throws Exception {

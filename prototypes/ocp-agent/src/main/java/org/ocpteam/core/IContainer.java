@@ -25,5 +25,7 @@ public interface IContainer extends IConfig {
 	public <T extends IComponent> T removeComponent(Class<T> c);
 	
 	public Iterator<IComponent> iteratorComponent();
+	
+	public void init() throws Exception;
 
 }

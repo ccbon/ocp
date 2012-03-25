@@ -19,9 +19,5 @@ public class Container extends TopContainer implements IComponent {
 	public IContainer getRoot() {
 		return parent.getRoot();
 	}
-
-	@Override
-	public void init() throws Exception {
-	}
 	
 }
