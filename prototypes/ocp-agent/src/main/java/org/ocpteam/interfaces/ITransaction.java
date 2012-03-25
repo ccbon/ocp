@@ -1,16 +1,11 @@
 package org.ocpteam.interfaces;
 
 import java.io.Serializable;
-import java.net.Socket;
 
-/**
- * A transaction is a atomic request/response between 2 agents in a distributed network.
- *
- */
+import org.ocpteam.entity.Session;
+
 public interface ITransaction {
+	Serializable run(Session session, Serializable[] objects) throws Exception;
+
 	int getId();
-	
-	Serializable run(Serializable[] objects);
-	
-	void setSocket(Socket socket);
 }

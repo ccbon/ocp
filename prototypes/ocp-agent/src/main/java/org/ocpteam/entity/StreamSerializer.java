@@ -16,10 +16,16 @@ public class StreamSerializer implements IStreamSerializer {
 	}
 
 	@Override
-	public void writeMessage(DataOutputStream out, byte[] response) throws Exception {
-		out.writeInt(response.length);
-		out.write(response);
-		out.flush();
+	public void writeMessage(DataOutputStream out, byte[] response)
+			throws Exception {
+		if (response == null) {
+			out.writeInt(0);
+			out.flush();
+		} else {
+			out.writeInt(response.length);
+			out.write(response);
+			out.flush();
+		}
 	}
 
 }

@@ -3,6 +3,7 @@ package org.ocpteam.component;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 import java.util.Set;
 
 import org.ocpteam.entity.Contact;
@@ -76,6 +77,19 @@ public class ContactMap extends DataSourceContainer {
 		}
 		myself.setMyself(true);
 		this.add(myself);
+	}
+	
+	public int size() {
+		return map.size();
+	}
+	
+	public Queue<Contact> makeContactQueue() throws Exception {
+		return new LinkedList<Contact>(map.values());
+	}
+	
+	@Override
+	public String toString() {
+		return map.toString();
 	}
 	
 	

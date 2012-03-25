@@ -21,7 +21,7 @@ public class HTTPListener extends DataSourceContainer implements IListener {
 	protected IProtocol protocol;
 
 	@Override
-	public void init() {
+	public void init() throws Exception {
 		// TODO Auto-generated method stub
 		super.init();
 		agent = ds().getComponent(Agent.class);

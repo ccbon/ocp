@@ -84,5 +84,16 @@ public class Contact implements Serializable, Comparable<Contact> {
 			url.setHost(host);
 		}
 	}
+	
+	@Override
+	public String toString() {
+		String result = getId() + " - " + getName();
+		Iterator<URL> itp = getUrlList().iterator();
+		while (itp.hasNext()) {
+			URL url = itp.next();
+			result += "[" + url.toString() + "]";
+		}
+		return result;
+	}
 
 }

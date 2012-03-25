@@ -1,16 +1,18 @@
-package org.ocpteam.protocol.ocp;
+package org.ocpteam.entity;
+
+import org.ocpteam.protocol.ocp.OCPProtocol;
 
 public class Response {
 
-	private OCPContact contact;
+	private Contact contact;
 	private byte[] response;
 
-	public Response(byte[] response, OCPContact contact) {
+	public Response(byte[] response, Contact contact) {
 		this.response = response;
 		this.contact = contact;
 	}
 
-	public OCPContact getContact() {
+	public Contact getContact() {
 		return contact;
 	}
 

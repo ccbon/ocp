@@ -1,15 +1,51 @@
 package org.ocpteam.component;
 
+import java.io.Serializable;
+import java.lang.reflect.Field;
+import java.net.Socket;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+
+import org.ocpteam.core.IComponent;
+import org.ocpteam.entity.InputMessage;
+import org.ocpteam.entity.MessageSerializer;
+import org.ocpteam.entity.Session;
 import org.ocpteam.entity.StreamSerializer;
-import org.ocpteam.entity.TransactionSerializer;
+import org.ocpteam.interfaces.IMessageSerializer;
 import org.ocpteam.interfaces.IProtocol;
 import org.ocpteam.interfaces.IStreamSerializer;
-import org.ocpteam.interfaces.ITransactionSerializer;
+import org.ocpteam.interfaces.ITransaction;
+import org.ocpteam.misc.JLG;
 
 public abstract class Protocol extends DataSourceContainer implements IProtocol {
 
 	private IStreamSerializer streamSerializer;
-	private ITransactionSerializer transactionSerializer;
+	private IMessageSerializer messageSerializer;
+	private Map<Integer, ITransaction> map = new HashMap<Integer, ITransaction>();
+
+	@Override
+	public void init() throws Exception {
+		super.init();
+		// load all module
+		Iterator<IComponent> it = this.iteratorComponent();
+		while (it.hasNext()) {
+			IComponent c = it.next();
+			if (c instanceof Module) {
+				load((Module) c);
+			}
+		}
+	}
+
+	public void load(Module m) throws Exception {
+		for (Field f : m.getClass().getFields()) {
+			Object o = f.get(m);
+			if (o instanceof ITransaction) {
+				ITransaction t = (ITransaction) o;
+				map.put(t.getId(), t);
+			}
+		}
+	}
 
 	@Override
 	public IStreamSerializer getStreamSerializer() {
@@ -18,13 +54,31 @@ public abstract class Protocol extends DataSourceContainer implements IProtocol 
 		}
 		return streamSerializer;
 	}
-	
+
 	@Override
-	public ITransactionSerializer getTransactionSerializer() {
-		if (transactionSerializer == null) {
-			transactionSerializer = new TransactionSerializer();
+	public IMessageSerializer getMessageSerializer() {
+		if (messageSerializer == null) {
+			messageSerializer = new MessageSerializer(this);
 		}
-		return transactionSerializer;
+		return messageSerializer;
+	}
+
+	@Override
+	public byte[] process(byte[] input, Socket clientSocket) throws Exception {
+		InputMessage inputMessage = getMessageSerializer()
+				.deserializeInput(input);
+		Session session = new Session(ds(), clientSocket);
+		JLG.debug("running transaction: " + inputMessage.transaction.getId());
+		Serializable s = inputMessage.transaction.run(session, inputMessage.objects);
+		if (s == null) {
+			return null;
+		}
+		JLG.debug("s.getClass=" + s.getClass());
+		return getMessageSerializer().serializeOutput(s);
+	}
+
+	public Map<Integer, ITransaction> getMap() {
+		return this.map;
 	}
 
 }

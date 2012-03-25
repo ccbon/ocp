@@ -1,15 +1,12 @@
 package org.ocpteam.component;
 
-import java.net.Socket;
+import org.ocpteam.module.DSPModule;
+
 
 public class DSPProtocol extends Protocol {
 
-	public DSPProtocol() {
-	}
-	
-	@Override
-	public byte[] process(byte[] input, Socket clientSocket) throws Exception {
-		return null;
+	public DSPProtocol() throws Exception {
+		addComponent(DSPModule.class);
 	}
 
 

@@ -21,7 +21,7 @@ public class Container extends TopContainer implements IComponent {
 	}
 
 	@Override
-	public void init() {
+	public void init() throws Exception {
 	}
 	
 }

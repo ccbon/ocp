@@ -23,7 +23,7 @@ public class TCPServer extends Container implements Runnable {
 
 	public void run() {
 		// create a listener
-		JLG.debug("starting a TCP server");
+		JLG.debug("starting a TCP server on port:" + port);
 		try {
 			serverSocket = new ServerSocket(port);
 			while (stoppingNow == false) {

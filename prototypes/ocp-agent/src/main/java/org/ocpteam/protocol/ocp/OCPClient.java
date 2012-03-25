@@ -1,29 +1,20 @@
 package org.ocpteam.protocol.ocp;
 
-import java.io.ByteArrayInputStream;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
 import java.util.Queue;
 
 import org.apache.xmlrpc.client.XmlRpcClient;
 import org.apache.xmlrpc.client.XmlRpcClientConfigImpl;
 import org.ocpteam.component.Agent;
 import org.ocpteam.component.Authentication;
-import org.ocpteam.component.Channel;
 import org.ocpteam.component.Client;
-import org.ocpteam.component.ContactMap;
 import org.ocpteam.entity.Contact;
 import org.ocpteam.entity.Context;
+import org.ocpteam.entity.Response;
 import org.ocpteam.entity.User;
-import org.ocpteam.exception.NotAvailableContactException;
 import org.ocpteam.interfaces.IAuthenticable;
 import org.ocpteam.interfaces.IDataModel;
 import org.ocpteam.misc.Id;
 import org.ocpteam.misc.JLG;
-import org.ocpteam.misc.URL;
 
 public class OCPClient extends Client implements IAuthenticable {
 
@@ -32,36 +23,16 @@ public class OCPClient extends Client implements IAuthenticable {
 	}
 	
 	@Override
-	public void init() {
+	public void init() throws Exception {
 		super.init();
 		agent = (OCPAgent) ds().getComponent(Agent.class);
 	}
 
 	private OCPAgent agent;
 
-	public Contact getContact(Channel channel) throws Exception {
-		// I have to request to an agent (sending to it a string and then
-		// receiving a response
-		// For that, I need to know the channel to use.
-		JLG.debug("get contact from channel " + channel);
-		if (understand(channel)) {
-			Contact c = channel.getContact();
-			return c;
-		}
-		JLG.warn("channel not reachable. get contact returns null.");
-		return null;
-	}
 
-	@Override
-	public Properties getNetworkProperties() throws Exception {
-		Response response = request(OCPProtocol
-				.message(OCPProtocol.NETWORK_PROPERTIES));
-		Properties network = new Properties();
-		// network.loadFromXML(new
-		// ByteArrayInputStream(response.getBytes()));
-		network.load(new ByteArrayInputStream(response.getBytes()));
-		return network;
-	}
+
+
 	
 	@Override
 	public void declareContact() throws Exception {
@@ -83,110 +54,11 @@ public class OCPClient extends Client implements IAuthenticable {
 		return nodeIds;
 	}
 
-	public Response request(byte[] string) throws Exception {
-		ContactMap contactMap = agent.ds().getComponent(ContactMap.class);
-		if (contactMap.isEmpty()) {
-			findSponsor();
-		}
-		Response response = request(agent.makeContactQueue(), string);
-		if (response == null) {
-			throw new NoNetworkException();
-		}
 
-		return response;
-	}
 
-	private Response request(Queue<Contact> contactQueue, byte[] input)
-			throws Exception {
-		byte[] output = null;
-		ContactMap contactMap = agent.ds().getComponent(ContactMap.class);
-		if (contactMap.isEmpty()) {
-			findSponsor();
-		}
-		OCPContact contact = null;
-		while ((!contactQueue.isEmpty()) && (output == null)) {
-			contact = (OCPContact) contactQueue.poll();
-			try {
-				output = request(contact, input);
-			} catch (NotAvailableContactException e) {
-				e.printStackTrace();
-				detach(contact);
-			}
-		}
-		if (output == null) {
-			throw new NoNetworkException();
-		}
 
-		return new Response(output, contact);
-	}
 
-	private void findSponsor() throws Exception {
 
-		// find some contact from your sponsor or die alone...
-		Iterator<String> it = getPotentialSponsorIterator();
-		while (it.hasNext()) {
-			String sUrl = it.next();
-			URL url = new URL(sUrl);
-			Channel channel = newChannel(url);
-			
-			Contact sponsor = getContact(channel);
-			if (sponsor != null) {
-				JLG.debug("we found a pingable sponsor channel");
-				agent.addContact(sponsor);
-			} else {
-				JLG.warn("channel not pingable: " + channel);
-			}
-		}
-		ContactMap contactMap = agent.ds().getComponent(ContactMap.class);
-		if (contactMap.isEmpty()) {
-			throw new Exception("no pingable sponsor found.");
-		}
-	}
-
-	private Iterator<String> getPotentialSponsorIterator() throws Exception {
-		List<String> list = new LinkedList<String>();
-		if (agent.ds().get("network.type", "private").equalsIgnoreCase("public")) {
-			try {
-				XmlRpcClientConfigImpl config = new XmlRpcClientConfigImpl();
-				// TODO: need a ocp dedicated web server. I use mine for the
-				// time being.
-				config.setServerURL(new java.net.URL(agent.ds().get(
-						"network.sponsor.url",
-						OCPAgent.DEFAULT_SPONSOR_SERVER_URL)));
-				XmlRpcClient client = new XmlRpcClient();
-				client.setConfig(config);
-				Object[] result = (Object[]) client.execute("list",
-						new Object[] {});
-				for (int i = 0; i < result.length; i++) {
-					@SuppressWarnings("unchecked")
-					Map<String, String> map = (Map<String, String>) result[i];
-					JLG.debug("url = " + map.get("url"));
-					list.add(map.get("url"));
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			if (list.isEmpty()) {
-				JLG.warn("first agent on the public network");
-			}
-
-		} else { // private network... agent properties must have at least one
-					// sponsor specified.
-			Iterator<String> it = agent.ds().iterator();
-			while (it.hasNext()) {
-				String key = it.next();
-				if (key.startsWith("sponsor.")) {
-					list.add(agent.ds().get(key));
-				}
-			}
-			if (list.isEmpty()) {
-				throw new Exception(
-						"no sponsor provided in agent property file.");
-			}
-		}
-
-		return list.iterator();
-	}
 
 	public void enrichContact(OCPContact contact) throws Exception {
 		byte[] response = request(contact, OCPProtocol.GET_CONTACT.getBytes());

@@ -21,7 +21,7 @@ public abstract class DSPDataSource extends DataSource {
 		addComponent(Agent.class);
 		addComponent(Client.class);
 		addComponent(Server.class);
-		addComponent(Protocol.class, new BahBahProtocol());
+		addComponent(Protocol.class, new DSPProtocol());
 		addComponent(TCPListener.class);
 		addComponent(ContactMap.class);
 	}

@@ -26,5 +26,9 @@ public abstract class Channel extends DataSourceContainer {
 	public abstract Contact getContact() throws Exception;
 
 	public abstract String getProtocolName();
+	
+	public Protocol getProtocol() {
+		return ds().getComponent(Protocol.class);
+	}
 
 }

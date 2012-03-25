@@ -1,13 +1,11 @@
 package org.ocpteam.protocol.ocp;
 
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
 import org.ocpteam.entity.Contact;
 import org.ocpteam.misc.Id;
-import org.ocpteam.misc.URL;
 
 
 public class OCPContact extends Contact {
@@ -26,18 +24,6 @@ public class OCPContact extends Contact {
 		nodeIdSet = Collections.synchronizedSortedSet(new TreeSet<Id>());
 	}
 
-
-	@Override
-	public String toString() {
-		String result = getId() + " - " + getName();
-		Iterator<URL> itp = getUrlList().iterator();
-		while (itp.hasNext()) {
-			URL url = itp.next();
-			result += "[" + url.toString() + "]";
-		}
-		return result;
-	}
-
 	@Override
 	public boolean equals(Object obj) {
 		if (obj != null && obj.getClass().equals(this.getClass())) {
@@ -45,9 +31,6 @@ public class OCPContact extends Contact {
 		}
 		return false;
 	}
-
-
-
 
 
 	public void copy(OCPContact c) {

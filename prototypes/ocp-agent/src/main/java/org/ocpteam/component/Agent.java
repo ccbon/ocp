@@ -30,8 +30,8 @@ public class Agent extends DataSourceContainer implements IAgent {
 	public Contact toContact() {
 		// convert the agent public information into a contact
 		Contact c = new Contact();
-		c.setId(new Id("0".getBytes()));
-		c.setName("contact");
+		c.setId(new Id(getServer().getListeners().get(0).getUrl().toString().getBytes()));
+		c.setName(getServer().getListeners().get(0).getUrl().toString());
 		// add the listener url and node id information
 		if (getServer() != null) {
 			Iterator<IListener> it = getServer().getListeners().iterator();
