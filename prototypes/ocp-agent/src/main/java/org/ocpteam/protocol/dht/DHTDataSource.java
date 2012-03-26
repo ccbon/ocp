@@ -33,6 +33,14 @@ public class DHTDataSource extends DSPDataSource {
 		map.put(key, value);
 	}
 
+	public String retrieve(String key) {
+		return map.get(key);
+	}
+
+	public void remove(String key) {
+		map.remove(key);
+	}
+
 
 	
 

@@ -27,7 +27,11 @@ public class TCPChannel extends Channel {
 	
 	@Override
 	public byte[] request(byte[] input) throws Exception {
-		return tcpClient.request(input);
+		byte[] result = tcpClient.request(input);
+		if (result == null || result.length == 0) {
+			return null;
+		}
+		return result;
 	}
 
 	@Override

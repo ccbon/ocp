@@ -15,7 +15,7 @@ import org.ocpteam.protocol.ocp.OCPProtocol;
 public class ContactMap extends DataSourceContainer {
 
 	private HashMap<Id, Contact> map;
-	
+
 	public ContactMap() {
 		map = new HashMap<Id, Contact>();
 	}
@@ -27,13 +27,13 @@ public class ContactMap extends DataSourceContainer {
 		}
 		return contact;
 	}
-	
+
 	public void refreshContactList() throws Exception {
 		// TODO: make independant of ocp by adding the P2P client functionality.
 		OCPAgent agent = (OCPAgent) ds().getComponent(Agent.class);
 		agent.getClient().sendAll(OCPProtocol.PING.getBytes());
 	}
-	
+
 	public List<Contact> getContactSnapshotList() {
 		// we return a snapshot and not the modifiable contact list
 		return new LinkedList<Contact>(map.values());
@@ -78,20 +78,22 @@ public class ContactMap extends DataSourceContainer {
 		myself.setMyself(true);
 		this.add(myself);
 	}
-	
+
 	public int size() {
 		return map.size();
 	}
-	
+
 	public Queue<Contact> makeContactQueue() throws Exception {
 		return new LinkedList<Contact>(map.values());
 	}
-	
+
 	@Override
 	public String toString() {
 		return map.toString();
 	}
-	
-	
+
+	public Contact[] getArray() {
+		return (Contact[]) map.values().toArray(new Contact[map.size()]);
+	}
 
 }

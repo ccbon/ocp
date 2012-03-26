@@ -47,7 +47,7 @@ public class DHTSimpleTest {
 	public boolean twoinstances() {
 		try {
 			JLG.debug_on();
-			DataSource ds = new DHTDataSource();
+			DHTDataSource ds = new DHTDataSource();
 			ds.init();
 			Properties p = new Properties();
 			p.setProperty("network.coucou", "23");
@@ -75,6 +75,9 @@ public class DHTSimpleTest {
 			Context ctx = ds.getContext();
 			IMapDataModel dm = (IMapDataModel) ctx.getDataModel();
 			dm.set("hello", "world");
+			ds.remove("hello");
+			String value = dm.get("hello");
+			JLG.debug("hello=" + value);
 			
 			
 			ds.disconnect();
