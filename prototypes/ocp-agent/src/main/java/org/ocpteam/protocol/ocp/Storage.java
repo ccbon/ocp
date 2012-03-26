@@ -18,7 +18,7 @@ public class Storage {
 	public Storage(OCPAgent agent) throws Exception {
 		nodeSet = new TreeSet<Id>();
 		String root = agent.ds()
-				.get("storage.dir",
+				.getProperty("storage.dir",
 						System.getenv("TEMP") + "/ocp_agent_storage/"
 								+ agent.getName());
 		IPersistentMap persistentMap = agent.ds().getComponent(

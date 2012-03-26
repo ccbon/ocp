@@ -10,16 +10,16 @@ import org.ocpteam.interfaces.IDataModel;
 
 public class MapDataSource extends DataSource {
 
-	private Map<String, byte[]> map;
+	private Map<String, String> map;
 	
 	public MapDataSource() throws Exception {
 		super();
 		addComponent(IDataModel.class, new MapDataModel());
 		// for example
-		map = new HashMap<String, byte[]>();
-		map.put("Hello", "World".getBytes());
-		map.put("Foo", "Bar".getBytes());
-		map.put("Foo", "WWW".getBytes());
+		map = new HashMap<String, String>();
+		map.put("Hello", "World");
+		map.put("Foo", "Bar");
+		map.put("Foo", "WWW");
 	}
 	
 	@Override

@@ -79,7 +79,7 @@ public class ExplorerComposite extends Composite {
 	public ExplorerComposite(Composite parent, int style, DataSourceWindow w) {
 		super(parent, style);
 		this.w = w;
-		this.fs = (IFileSystem) w.context.dataModel;
+		this.fs = (IFileSystem) w.context.getDataModel();
 
 		currentLocalDirectory = new File(fs.getDefaultLocalDir());
 		currentRemoteDirString = "/";

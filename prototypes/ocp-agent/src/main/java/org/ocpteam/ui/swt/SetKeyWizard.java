@@ -5,6 +5,7 @@ import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
+import org.ocpteam.misc.swt.QuickMessage;
 
 public class SetKeyWizard extends Wizard {
 
@@ -25,7 +26,12 @@ public class SetKeyWizard extends Wizard {
 	@Override
 	public boolean performFinish() {
 		MapComposite mapComposite = (MapComposite) w.explorerComposite;
-		mapComposite.set(p1.keyText.getText(), p1.valueText.getText());		
+		try {
+		mapComposite.set(p1.keyText.getText(), p1.valueText.getText());
+		} catch (Exception e) {
+			e.printStackTrace();
+			QuickMessage.error(w.getShell(), "Cannot set");
+		}
 		return true;
 	}
 

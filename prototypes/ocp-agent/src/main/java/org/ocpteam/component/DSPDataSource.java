@@ -9,7 +9,7 @@ import org.ocpteam.misc.URL;
 public abstract class DSPDataSource extends DataSource {
 
 	protected Agent agent;
-	protected Client client;
+	public Client client;
 	protected Server server;
 
 	public Properties network;
@@ -49,7 +49,7 @@ public abstract class DSPDataSource extends DataSource {
 		JLG.debug("network properties: " + JLG.propertiesToString(network));
 		readNetworkConfig();
 		
-		if (get("server", "yes").equals("yes")) {
+		if (getProperty("server", "yes").equals("yes")) {
 			JLG.debug("starting the server");
 			configureServer(server);
 			server.start();
@@ -64,7 +64,7 @@ public abstract class DSPDataSource extends DataSource {
 
 	protected void configureServer(Server server) throws Exception {
 		listener.setUrl(new URL(
-				get("listener.tcp.url", "tcp://localhost:22222")));
+				getProperty("listener.tcp.url", "tcp://localhost:22222")));
 		server.getListeners().add(listener);
 	}
 

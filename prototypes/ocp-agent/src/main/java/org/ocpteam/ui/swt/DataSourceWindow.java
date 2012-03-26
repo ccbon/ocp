@@ -46,6 +46,7 @@ import org.ocpteam.component.Server;
 import org.ocpteam.core.IComponent;
 import org.ocpteam.core.IContainer;
 import org.ocpteam.entity.Context;
+import org.ocpteam.interfaces.IDataModel;
 import org.ocpteam.interfaces.IFileSystem;
 import org.ocpteam.misc.JLG;
 import org.ocpteam.misc.swt.QuickMessage;
@@ -359,7 +360,7 @@ public class DataSourceWindow extends ApplicationWindow implements
 		if (context == null) {
 			throw new Exception("missing context");
 		}
-		
+		IDataModel dm = context.getDataModel();
 
 		if (explorerCTabItem == null) {
 			explorerCTabItem = new CTabItem(tabFolder, SWT.NONE);
@@ -372,10 +373,10 @@ public class DataSourceWindow extends ApplicationWindow implements
 
 			explorerCTabItem.setShowClose(true);
 			
-			if (context.dataModel instanceof IFileSystem) {
+			if (dm instanceof IFileSystem) {
 				explorerCTabItem.setText("Explorer");
 				explorerComposite = new ExplorerComposite(tabFolder, SWT.NONE, this);
-			} else if (context.dataModel instanceof MapDataModel) {
+			} else if (dm instanceof MapDataModel) {
 				explorerCTabItem.setText("Map");
 				explorerComposite = new MapComposite(tabFolder, SWT.NONE, this);
 			} else {

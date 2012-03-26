@@ -36,6 +36,13 @@ public abstract class Protocol extends DataSourceContainer implements IProtocol 
 				load((Module) c);
 			}
 		}
+		it = ds().iteratorComponent();
+		while (it.hasNext()) {
+			IComponent c = it.next();
+			if (c instanceof Module) {
+				load((Module) c);
+			}
+		}
 	}
 
 	public void load(Module m) throws Exception {
@@ -47,6 +54,7 @@ public abstract class Protocol extends DataSourceContainer implements IProtocol 
 				map.put(t.getId(), t);
 			}
 		}
+		JLG.debug("map: " + map);
 	}
 
 	@Override

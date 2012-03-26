@@ -23,7 +23,7 @@ public class Agent extends DataSourceContainer implements IAgent {
 
 	@Override
 	public boolean isFirstAgent() {
-		return ds().get("agent.isFirst", "yes").equalsIgnoreCase("yes");
+		return ds().getProperty("agent.isFirst", "yes").equalsIgnoreCase("yes");
 	}
 
 	@Override

@@ -41,6 +41,9 @@ public class MessageSerializer implements IMessageSerializer {
 		DataInputStream dis = new DataInputStream(bais);
 		int transid = dis.readInt();
 		ITransaction trans = protocol.getMap().get(transid);
+		if (trans == null) {
+			throw new Exception("cannot find function for code = " + transid);
+		}
 		int length = dis.readInt();
 		byte[] serialized = new byte[length];
 		dis.read(serialized, 0, length);

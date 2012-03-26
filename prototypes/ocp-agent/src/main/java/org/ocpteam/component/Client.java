@@ -108,12 +108,12 @@ public class Client extends DataSourceContainer implements IClient {
 
 	private Iterator<String> getPotentialSponsorIterator() throws Exception {
 		List<String> list = new LinkedList<String>();
-		if (ds().get("network.type", "private").equalsIgnoreCase("public")) {
+		if (ds().getProperty("network.type", "private").equalsIgnoreCase("public")) {
 			try {
 				XmlRpcClientConfigImpl config = new XmlRpcClientConfigImpl();
 				// TODO: need a ocp dedicated web server. I use mine for the
 				// time being.
-				config.setServerURL(new java.net.URL(ds().get(
+				config.setServerURL(new java.net.URL(ds().getProperty(
 						"network.sponsor.url",
 						OCPAgent.DEFAULT_SPONSOR_SERVER_URL)));
 				XmlRpcClient client = new XmlRpcClient();
@@ -139,7 +139,7 @@ public class Client extends DataSourceContainer implements IClient {
 			while (it.hasNext()) {
 				String key = it.next();
 				if (key.startsWith("sponsor.")) {
-					list.add(ds().get(key));
+					list.add(ds().getProperty(key));
 				}
 			}
 			if (list.isEmpty()) {
@@ -299,7 +299,7 @@ public class Client extends DataSourceContainer implements IClient {
 		request(c, message);
 	}
 
-	protected IProtocol getProtocol() {
+	public IProtocol getProtocol() {
 		return ds().getComponent(Protocol.class);
 	}
 

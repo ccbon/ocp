@@ -63,17 +63,17 @@ public class TopContainer implements IContainer {
 
 
 	@Override
-	public String get(String key) {
+	public String getProperty(String key) {
 		return p.getProperty(key);
 	}
 
 	@Override
-	public String get(String key, String defaultValue) {
+	public String getProperty(String key, String defaultValue) {
 		return p.getProperty(key, defaultValue);
 	}
 
 	@Override
-	public void set(String key, String value) {
+	public void setProperty(String key, String value) {
 		p.setProperty(key, value);
 	}
 	

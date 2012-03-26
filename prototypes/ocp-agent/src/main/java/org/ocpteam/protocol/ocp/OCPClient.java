@@ -122,13 +122,13 @@ public class OCPClient extends Client implements IAuthenticable {
 
 	public void declareSponsor() {
 		try {
-			if (agent.ds().get("network.type", "private").equalsIgnoreCase(
+			if (agent.ds().getProperty("network.type", "private").equalsIgnoreCase(
 					"public")) {
 				int port = agent.toContact().getUrlList().get(0).getPort();
 				XmlRpcClientConfigImpl config = new XmlRpcClientConfigImpl();
 				// TODO: need a ocp dedicated web server. I use mine for the
 				// time being.
-				config.setServerURL(new java.net.URL(agent.ds().get(
+				config.setServerURL(new java.net.URL(agent.ds().getProperty(
 						"network.sponsor.url",
 						OCPAgent.DEFAULT_SPONSOR_SERVER_URL)));
 				XmlRpcClient client = new XmlRpcClient();

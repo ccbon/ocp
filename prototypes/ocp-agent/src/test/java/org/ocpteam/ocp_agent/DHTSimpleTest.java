@@ -6,6 +6,8 @@ import java.util.Properties;
 
 import org.ocpteam.component.ContactMap;
 import org.ocpteam.component.DataSource;
+import org.ocpteam.entity.Context;
+import org.ocpteam.interfaces.IMapDataModel;
 import org.ocpteam.misc.JLG;
 import org.ocpteam.protocol.dht.DHTDataSource;
 
@@ -48,6 +50,7 @@ public class DHTSimpleTest {
 			DataSource ds = new DHTDataSource();
 			ds.init();
 			Properties p = new Properties();
+			p.setProperty("network.coucou", "23");
 			p.setProperty("server", "yes");
 			p.setProperty("listener.tcp.url", "tcp://localhost:12347");
 			ds.setConfig(p);
@@ -68,6 +71,11 @@ public class DHTSimpleTest {
 			
 			ContactMap cm2 = ds2.getComponent(ContactMap.class);
 			JLG.debug("contactMap 2 size:" + cm2.size());
+			
+			Context ctx = ds.getContext();
+			IMapDataModel dm = (IMapDataModel) ctx.getDataModel();
+			dm.set("hello", "world");
+			
 			
 			ds.disconnect();
 			ds2.disconnect();

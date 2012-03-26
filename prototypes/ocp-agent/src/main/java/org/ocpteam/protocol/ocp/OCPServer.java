@@ -28,7 +28,7 @@ public class OCPServer extends Server {
 			String key = it.next();
 			if (key.startsWith("server.listener.")) {
 				bFound = true;
-				URL url = new URL(agent.ds().get(key));
+				URL url = new URL(agent.ds().getProperty(key));
 				String sProtocol = url.getProtocol();
 				IListener listener = null;
 				if (sProtocol.equalsIgnoreCase("tcp")) {

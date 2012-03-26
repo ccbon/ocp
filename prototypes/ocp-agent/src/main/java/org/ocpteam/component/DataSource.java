@@ -135,8 +135,5 @@ public abstract class DataSource extends TopContainer implements IComponent,
 		return (ResourceBundle) Class.forName(resourceClassString)
 				.newInstance();
 	}
-	
-	
-	
 
 }

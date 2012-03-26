@@ -123,10 +123,10 @@ public class OCPAgent extends Agent {
 
 	public void connect() throws Exception {
 
-		String sId = ds().get("id");
+		String sId = ds().getProperty("id");
 		if (sId == null) {
 			id = generateId();
-			ds().set("id", id.toString());
+			ds().setProperty("id", id.toString());
 		} else {
 			id = new Id(sId);
 		}
@@ -158,7 +158,7 @@ public class OCPAgent extends Agent {
 		userCipher = Cipher.getInstance(ds().network.getProperty("user.cipher.algo",
 				"PBEWithMD5AndDES"));
 
-		if (ds().get("server", "yes").equals("yes")) {
+		if (ds().getProperty("server", "yes").equals("yes")) {
 			storage.attach();
 		}
 		JLG.debug("end");
@@ -590,7 +590,7 @@ public class OCPAgent extends Agent {
 	public void readConfig() throws Exception {
 
 		// debugging aspect
-		if (ds().get("debug", "true").equalsIgnoreCase("true")) {
+		if (ds().getProperty("debug", "true").equalsIgnoreCase("true")) {
 			JLG.debug_on();
 			JLG.debug("working directory = " + System.getProperty("user.dir"));
 		}
@@ -598,19 +598,19 @@ public class OCPAgent extends Agent {
 		Iterator<String> it = ds().iterator();
 		while (it.hasNext()) {
 			String key = it.next();
-			String value = ds().get(key);
+			String value = ds().getProperty(key);
 			JLG.debug(key + "=" + value);
 		}
-		name = ds().get("name", "anonymous");
+		name = ds().getProperty("name", "anonymous");
 
 		// each agent has its own symmetric key cipher
 		// TODO: test with other algo than AES
-		KeyGenerator keyGen = KeyGenerator.getInstance(this.ds().get(
+		KeyGenerator keyGen = KeyGenerator.getInstance(this.ds().getProperty(
 				"cypher.algo", "AES"));
-		keyGen.init(Integer.parseInt(this.ds().get("cipher.keysize",
+		keyGen.init(Integer.parseInt(this.ds().getProperty("cipher.keysize",
 				"128")));
 		secretKey = keyGen.generateKey();
-		cipher = Cipher.getInstance(this.ds().get("cipher.algo", "AES"));
+		cipher = Cipher.getInstance(this.ds().getProperty("cipher.algo", "AES"));
 
 		// user cipher
 		byte[] salt = { 1, 1, 1, 2, 2, 2, 3, 3 };

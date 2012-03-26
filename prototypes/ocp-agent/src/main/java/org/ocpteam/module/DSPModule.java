@@ -2,10 +2,10 @@ package org.ocpteam.module;
 
 import java.io.Serializable;
 import java.net.InetAddress;
-import java.util.Properties;
 
 import org.ocpteam.component.Agent;
 import org.ocpteam.component.ContactMap;
+import org.ocpteam.component.DSPDataSource;
 import org.ocpteam.component.Module;
 import org.ocpteam.entity.Contact;
 import org.ocpteam.entity.Session;
@@ -47,9 +47,8 @@ public class DSPModule extends Module {
 			public Serializable run(Session session, Serializable[] objects)
 					throws Exception {
 				JLG.debug("get network properties: ");
-				Properties p = new Properties();
-				p.setProperty("hello", "world");
-				return p;
+				DSPDataSource ds = (DSPDataSource) session.ds();
+				return ds.network;
 			}
 
 			@Override

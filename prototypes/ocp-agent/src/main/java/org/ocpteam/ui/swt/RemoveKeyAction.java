@@ -2,6 +2,7 @@ package org.ocpteam.ui.swt;
 
 import org.eclipse.jface.action.Action;
 import org.ocpteam.misc.JLG;
+import org.ocpteam.misc.swt.QuickMessage;
 
 
 public class RemoveKeyAction extends Action {
@@ -18,7 +19,12 @@ public class RemoveKeyAction extends Action {
 
 	public void run() {
 		JLG.debug("Set Key");
+		try {
 		MapComposite mapComposite = (MapComposite) w.explorerComposite;
 		mapComposite.remove();
+		} catch (Exception e) {
+			e.printStackTrace();
+			QuickMessage.error(w.getShell(), "cannot remove");
+		}
 	}
 }
