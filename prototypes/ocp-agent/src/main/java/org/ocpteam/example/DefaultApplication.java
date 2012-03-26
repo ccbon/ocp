@@ -3,6 +3,7 @@ package org.ocpteam.example;
 import org.ocpteam.component.DataSourceFactory;
 import org.ocpteam.core.TopContainer;
 import org.ocpteam.misc.JLG;
+import org.ocpteam.protocol.dht.DHTDataSource;
 import org.ocpteam.protocol.ftp.FTPDataSource;
 import org.ocpteam.protocol.map.MapDataSource;
 import org.ocpteam.protocol.ocp.OCPDataSource;
@@ -30,6 +31,7 @@ public class DefaultApplication extends TopContainer {
 		dsf.addComponent(SFTPDataSource.class);
 		dsf.addComponent(ZipDataSource.class);
 		dsf.addComponent(MapDataSource.class);
+		dsf.addComponent(DHTDataSource.class);
 
 		addComponent(DataSourceWindow.class);
 	}

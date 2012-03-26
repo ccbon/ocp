@@ -48,6 +48,7 @@ import org.ocpteam.core.IContainer;
 import org.ocpteam.entity.Context;
 import org.ocpteam.interfaces.IDataModel;
 import org.ocpteam.interfaces.IFileSystem;
+import org.ocpteam.interfaces.IMapDataModel;
 import org.ocpteam.misc.JLG;
 import org.ocpteam.misc.swt.QuickMessage;
 
@@ -376,7 +377,7 @@ public class DataSourceWindow extends ApplicationWindow implements
 			if (dm instanceof IFileSystem) {
 				explorerCTabItem.setText("Explorer");
 				explorerComposite = new ExplorerComposite(tabFolder, SWT.NONE, this);
-			} else if (dm instanceof MapDataModel) {
+			} else if (dm instanceof IMapDataModel) {
 				explorerCTabItem.setText("Map");
 				explorerComposite = new MapComposite(tabFolder, SWT.NONE, this);
 			} else {

@@ -1,8 +1,9 @@
 package org.ocpteam.ocp_agent;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import java.util.Properties;
+import java.util.Set;
 
 import org.ocpteam.component.ContactMap;
 import org.ocpteam.component.DataSource;
@@ -78,7 +79,18 @@ public class DHTSimpleTest {
 			ds.remove("hello");
 			String value = dm.get("hello");
 			JLG.debug("hello=" + value);
+			assertEquals("world", value);
+			dm.remove("hello");
+			value = dm.get("hello");
+			JLG.debug("hello=" + value);
+			assertNull(value);
 			
+			dm.set("hello", "world");
+			dm.set("ejder", "bastug");
+			dm.set("jean-louis", "guenego");
+			Set<String> set = dm.keySet();
+			JLG.debug("set: " + set);
+			assertEquals(3, set.size());
 			
 			ds.disconnect();
 			ds2.disconnect();

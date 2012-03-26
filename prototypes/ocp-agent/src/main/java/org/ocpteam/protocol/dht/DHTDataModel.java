@@ -1,11 +1,13 @@
 package org.ocpteam.protocol.dht;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import org.ocpteam.component.DataSourceContainer;
 import org.ocpteam.entity.Contact;
 import org.ocpteam.entity.InputMessage;
 import org.ocpteam.interfaces.IMapDataModel;
+import org.ocpteam.misc.JLG;
 
 public class DHTDataModel extends DataSourceContainer implements IMapDataModel {
 
@@ -26,6 +28,7 @@ public class DHTDataModel extends DataSourceContainer implements IMapDataModel {
 
 	@Override
 	public String get(String key) throws Exception {
+		// strategy: retrieve the first one available (locally first)
 		String value = ds().retrieve(key);
 		if (value == null) {
 			// try to find a node with contains the key.
@@ -35,7 +38,8 @@ public class DHTDataModel extends DataSourceContainer implements IMapDataModel {
 			for (Contact c : ds().contactMap.getArray()) {
 				byte[] response = ds().client.request(c, message);
 				if (response != null) {
-					value = (String) ds().client.getProtocol().getMessageSerializer().deserializeOutput(response);
+					value = (String) ds().client.getProtocol()
+							.getMessageSerializer().deserializeOutput(response);
 				}
 			}
 		}
@@ -44,14 +48,33 @@ public class DHTDataModel extends DataSourceContainer implements IMapDataModel {
 
 	@Override
 	public void remove(String key) throws Exception {
-		// TODO Auto-generated method stub
+		// strategy: send to all node the remove request.
+		ds().remove(key);
+		DHTModule m = ds().getComponent(DHTModule.class);
+		byte[] message = ds().client.getProtocol().getMessageSerializer()
+				.serializeInput(new InputMessage(m.remove(), key));
+
+		ds().client.sendAll(message);
 
 	}
 
 	@Override
 	public Set<String> keySet() throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+		// strategy: merge each keyset for each node.
+		Set<String> set = new HashSet<String>(ds().keySet());
+		DHTModule m = ds().getComponent(DHTModule.class);
+		byte[] message = ds().client.getProtocol().getMessageSerializer()
+				.serializeInput(new InputMessage(m.keySet()));
+		for (Contact c : ds().contactMap.getArray()) {
+			byte[] response = ds().client.request(c, message);
+			String[] array = (String[]) ds().client.getProtocol()
+					.getMessageSerializer().deserializeOutput(response);
+			for (String s : array) {
+				JLG.debug("s=" + s);
+				set.add(s);
+			}
+		}
+		return set;
 	}
 
 }

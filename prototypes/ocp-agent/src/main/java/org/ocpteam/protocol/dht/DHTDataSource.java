@@ -1,7 +1,9 @@
 package org.ocpteam.protocol.dht;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import org.ocpteam.component.DSPDataSource;
 import org.ocpteam.entity.Context;
@@ -39,6 +41,10 @@ public class DHTDataSource extends DSPDataSource {
 
 	public void remove(String key) {
 		map.remove(key);
+	}
+
+	public Set<String> keySet() {
+		return map.keySet();
 	}
 
 
