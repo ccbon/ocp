@@ -41,7 +41,6 @@ import org.ocpteam.component.Agent;
 import org.ocpteam.component.Authentication;
 import org.ocpteam.component.DataSource;
 import org.ocpteam.component.DataSourceFactory;
-import org.ocpteam.component.MapDataModel;
 import org.ocpteam.component.Server;
 import org.ocpteam.core.IComponent;
 import org.ocpteam.core.IContainer;
