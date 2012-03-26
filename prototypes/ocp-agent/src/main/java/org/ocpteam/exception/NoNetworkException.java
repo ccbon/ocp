@@ -1,4 +1,4 @@
-package org.ocpteam.protocol.ocp;
+package org.ocpteam.exception;
 
 public class NoNetworkException extends Exception {
 
