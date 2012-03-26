@@ -31,9 +31,4 @@ public class Response {
 		}
 	}
 
-	public boolean isSuccess() {
-		return new String(response).equals(new String(OCPProtocol.SUCCESS));
-	}
-
-
 }

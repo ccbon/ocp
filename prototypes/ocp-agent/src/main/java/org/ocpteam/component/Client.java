@@ -184,9 +184,11 @@ public class Client extends DataSourceContainer implements IClient {
 		if (contactMap.isEmpty()) {
 			findSponsor();
 		}
+		JLG.debug("contact queue size: " + contactQueue.size());
 		Contact contact = null;
 		while ((!contactQueue.isEmpty()) && (output == null)) {
 			contact = (Contact) contactQueue.poll();
+			JLG.debug("contact: " + contact);
 			try {
 				output = request(contact, input);
 			} catch (NotAvailableContactException e) {
@@ -294,11 +296,7 @@ public class Client extends DataSourceContainer implements IClient {
 	}
 
 	public void send(Contact c, byte[] message) throws Exception {
-		byte[] response = request(c, message);
-		Response r = new Response(response, (OCPContact) c);
-		if (!r.isSuccess()) {
-			throw new Exception("error while informing: " + response);
-		}
+		request(c, message);
 	}
 
 	protected IProtocol getProtocol() {

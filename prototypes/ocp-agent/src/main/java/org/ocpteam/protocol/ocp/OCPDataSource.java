@@ -22,6 +22,7 @@ public class OCPDataSource extends DSPDataSource {
 		replaceComponent(Client.class, new OCPClient());
 		replaceComponent(Server.class, new OCPServer());
 		replaceComponent(Protocol.class, new OCPProtocol());
+		replaceComponent(ContactMap.class, new OCPContactMap());
 		
 		addComponent(Authentication.class, new OCPAuthentication());
 		addComponent(IPersistentMap.class, new NaivePersistentMap());

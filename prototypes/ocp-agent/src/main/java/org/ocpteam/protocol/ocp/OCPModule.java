@@ -11,7 +11,7 @@ import org.ocpteam.module.DSPModule;
 public class OCPModule extends DSPModule {
 	
 	protected static final int REQUEST_NODE_ID = 2001;
-
+	
 	@Override
 	public ITransaction getNetworkProperties() {
 		return new ITransaction() {

@@ -61,7 +61,9 @@ public class DataSourceFactory extends Container {
 			DataSource ds = it.next();
 			String p = ds.getProtocol();
 			if (p.equalsIgnoreCase(protocol)) {
-				return ds.getClass().newInstance();
+				DataSource result = ds.getClass().newInstance();
+				result.init();
+				return result;
 			}
 		}
 		throw new Exception("protocol not understood: " + protocol);

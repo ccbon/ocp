@@ -6,7 +6,6 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.EOFException;
 import java.io.Serializable;
-import java.net.InetAddress;
 import java.net.Socket;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -52,14 +51,18 @@ public class OCPProtocol extends Protocol {
 		}
 		return this.agent;
 	}
-
+	
 	public byte[] process(byte[] input, Socket clientSocket) throws Exception {
 		try {
-			byte[] output = super.process(input, clientSocket);
-			return output;
+			return oldprocess(input, clientSocket);
 		} catch (Exception e) {
-			JLG.debug("normal protocol does not work.");
+			JLG.debug("old protocol does not work.");
 		}
+		byte[] output = super.process(input, clientSocket);
+		return output;
+	}
+
+	public byte[] oldprocess(byte[] input, Socket clientSocket) throws Exception {
 		getAgent();
 		String request = new String(input);
 		Iterator<byte[]> it = iterator(input);
@@ -194,24 +197,6 @@ public class OCPProtocol extends Protocol {
 
 		}
 
-		if (request.startsWith(DECLARE_CONTACT)) {
-			try {
-				JLG.debug("protocol->declare_contact_message hash: "
-						+ agent.hash(input));
-
-				OCPContact contact = (OCPContact) JLG.deserialize(it.next());
-				InetAddress host = clientSocket.getInetAddress();
-				contact.updateHost(host.getHostAddress());
-				agent.addContact(contact);
-				// serialize it.
-				return SUCCESS;
-			} catch (Exception e) {
-				JLG.error(e);
-				return ERROR;
-			}
-
-		}
-
 		if (request.startsWith(REMOVE_ADDRESS)) {
 			try {
 				Address address = (Address) JLG.deserialize(it.next());
@@ -225,8 +210,8 @@ public class OCPProtocol extends Protocol {
 			}
 
 		}
-
-		return "ERROR:OCP message not understood".getBytes();
+		throw new Exception();
+		//return "ERROR:OCP message not understood".getBytes();
 	}
 
 	public static Iterator<byte[]> iterator(byte[] input) {

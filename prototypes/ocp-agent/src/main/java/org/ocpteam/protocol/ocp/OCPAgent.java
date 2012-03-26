@@ -88,7 +88,7 @@ public class OCPAgent extends Agent {
 
 	// these two attributes are corelated
 	// all access to them must be synchronized
-	protected NavigableMap<Id, OCPContact> nodeMap; // nodeid->contact
+	public NavigableMap<Id, OCPContact> nodeMap; // nodeid->contact
 
 	// it is a very basic way to improve perf...
 	private Cache cache;

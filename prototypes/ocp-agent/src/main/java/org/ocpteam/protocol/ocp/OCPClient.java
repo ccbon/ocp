@@ -89,7 +89,8 @@ public class OCPClient extends Client implements IAuthenticable {
 		byte[] request = OCPProtocol.message(OCPProtocol.CREATE_OBJECT,
 				address.getBytes(), content);
 		Response response = request(contactQueue, request);
-		if (!response.isSuccess()) {
+		String r = new String(response.getBytes());
+		if (!r.equals(new String(OCPProtocol.SUCCESS))) {
 			throw new Exception("cannot store");
 		}
 	}

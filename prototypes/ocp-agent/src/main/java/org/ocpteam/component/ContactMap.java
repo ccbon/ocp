@@ -63,11 +63,11 @@ public class ContactMap extends DataSourceContainer {
 		return map.containsValue(contact);
 	}
 
-	public void add(Contact c) {
+	public void add(Contact c) throws Exception {
 		this.put(c.getId(), c);
 	}
 
-	public void addMyself() {
+	public void addMyself() throws Exception {
 		Contact myself = ds().getComponent(Agent.class).toContact();
 		myself.getUrlList().clear();
 		try {
