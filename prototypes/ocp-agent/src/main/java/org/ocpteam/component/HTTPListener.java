@@ -1,13 +1,9 @@
 package org.ocpteam.component;
 
-import java.net.InetSocketAddress;
-import java.util.concurrent.Executors;
-
 import org.ocpteam.interfaces.IListener;
 import org.ocpteam.interfaces.IProtocol;
 import org.ocpteam.misc.JLG;
 import org.ocpteam.misc.URL;
-import org.ocpteam.protocol.ocp.HTTPServerHandler;
 
 import com.sun.net.httpserver.HttpServer;
 
@@ -15,34 +11,42 @@ import com.sun.net.httpserver.HttpServer;
 public class HTTPListener extends DataSourceContainer implements IListener {
 
 	private URL url;
-	private Agent agent;
-	HttpServer server;
-	private NATTraversal natTraversal;
+	HttpServer oldserver;
+	private HTTPServer httpServer;
+	private HTTPServerHandler handler;
 	protected IProtocol protocol;
-
+	private Thread t;
+	
+	public HTTPListener() throws Exception {
+		addComponent(NATTraversal.class);
+		addComponent(HTTPServer.class);
+		addComponent(HTTPServerHandler.class);
+	}
+	
 	@Override
 	public void init() throws Exception {
-		// TODO Auto-generated method stub
 		super.init();
-		agent = ds().getComponent(Agent.class);
+		httpServer = getComponent(HTTPServer.class);
+		handler = getComponent(HTTPServerHandler.class);
 	}
 	
 	@Override
 	public void start() {
 		try {
 			
-			natTraversal = new NATTraversal();
-			natTraversal.setPort(url.getPort());
+			int port = url.getPort();
+			if (usesComponent(NATTraversal.class)) {
+				getComponent(NATTraversal.class).setPort(port);
+				getComponent(NATTraversal.class).map();
+			}
 			
-			
-			InetSocketAddress addr = new InetSocketAddress(url.getPort());
-			server = HttpServer.create(addr, 0);
+			httpServer.setPort(port);
+			httpServer.setHandler(handler);
 
-			server.createContext("/", new HTTPServerHandler(agent));
-			server.setExecutor(Executors.newCachedThreadPool());
-			server.start();
-			JLG.debug("Server is listening on port " + url.getPort());
-			natTraversal.map();
+			t = new Thread(httpServer);
+			t.start();
+
+			
 		} catch (Exception e) {
 			JLG.error(e);
 		}
@@ -51,8 +55,11 @@ public class HTTPListener extends DataSourceContainer implements IListener {
 	@Override
 	public void stop() {
 		JLG.debug("stopping http server");
-		natTraversal.unmap();
-		server.stop(0);
+		if (usesComponent(NATTraversal.class)) {
+			getComponent(NATTraversal.class).unmap();
+		}
+		httpServer.stop(t);
+		
 
 	}
 

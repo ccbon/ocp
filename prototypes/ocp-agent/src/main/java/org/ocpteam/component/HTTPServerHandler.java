@@ -1,4 +1,4 @@
-package org.ocpteam.protocol.ocp;
+package org.ocpteam.component;
 
 import java.io.File;
 import java.io.IOException;
@@ -7,7 +7,6 @@ import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.ocpteam.component.Agent;
 import org.ocpteam.misc.JLG;
 
 import com.sun.net.httpserver.Headers;
@@ -15,15 +14,13 @@ import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 
 @SuppressWarnings("restriction")
-public class HTTPServerHandler implements HttpHandler {
+public class HTTPServerHandler extends DataSourceContainer implements HttpHandler {
 
-	protected Agent agent;
 	private String root;
 	private Map<String, String> extMap;
 
-	public HTTPServerHandler(Agent agent) {
-		this.agent = agent;
-		this.root = agent.ds().getProperty("http.htdocs", ".");
+	public void init() {
+		this.root = ds().getProperty("http.htdocs", ".");
 		extMap = new HashMap<String, String>();
 		extMap.put("txt", "text/plain");
 		extMap.put("html", "text/html");

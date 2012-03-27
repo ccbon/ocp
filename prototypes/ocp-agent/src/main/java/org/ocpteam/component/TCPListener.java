@@ -54,7 +54,7 @@ public class TCPListener extends DataSourceContainer implements IListener {
 		tcpServer.setPort(port);
 		tcpServer.setHandler(handler);
 
-		t = new Thread(getComponent(TCPServer.class));
+		t = new Thread(tcpServer);
 		t.start();
 	}
 

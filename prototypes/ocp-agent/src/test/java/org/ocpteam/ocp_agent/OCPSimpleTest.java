@@ -43,6 +43,7 @@ public class OCPSimpleTest {
 			p1.setProperty("network.backupNbr", "2");
 			ds.connect();
 
+			
 			// UserInterface ui = new CommandLine(agent);
 			// (new Thread(ui)).start();
 			Thread.sleep(2000);
@@ -64,6 +65,8 @@ public class OCPSimpleTest {
 			JLG.debug("contact map size:" + ds.contactMap.getContactSnapshotList().size());
 			JLG.debug("contact map: " + ds.contactMap.getContactSnapshotList().toString());
 
+			ds2.disconnect();
+			ds.disconnect();
 		} catch (Exception e) {
 			JLG.error(e);
 			return false;
