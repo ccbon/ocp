@@ -6,6 +6,7 @@ import org.ocpteam.component.NATTraversal;
 import org.ocpteam.component.TCPServer;
 import org.ocpteam.core.TopContainer;
 import org.ocpteam.misc.JLG;
+import org.ocpteam.protocol.dht.DHTDataModel;
 import org.ocpteam.protocol.dht.DHTDataSource;
 
 public class DHTStress extends TopContainer {
@@ -66,7 +67,18 @@ public class DHTStress extends TopContainer {
 			p.setProperty("sponsor.1", "tcp://localhost:" + port);
 			ds[i].setConfig(p);
 			ds[i].connect();
-
+		}
+		
+		for (int i = 0; i < n; i++) {
+			DHTDataModel dht = (DHTDataModel) ds[i].getContext().getDataModel();
+			dht.set("key" + i, "value" + i);
+		}
+		
+		for (int i = 0; i < n; i++) {
+			DHTDataModel dht = (DHTDataModel) ds[i].getContext().getDataModel();
+			JLG.debug(dht.keySet().toString());
+			int j = 9 - i;
+			JLG.debug("key" + j + " = " + dht.get("key" + j));
 		}
 		
 		for (int i = 0; i < n; i++) {
