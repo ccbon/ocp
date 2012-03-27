@@ -6,6 +6,7 @@ import java.util.Set;
 import org.ocpteam.component.DataSourceContainer;
 import org.ocpteam.entity.Contact;
 import org.ocpteam.entity.InputMessage;
+import org.ocpteam.exception.NotAvailableContactException;
 import org.ocpteam.interfaces.IMapDataModel;
 import org.ocpteam.misc.JLG;
 
@@ -36,10 +37,15 @@ public class DHTDataModel extends DataSourceContainer implements IMapDataModel {
 			byte[] message = ds().client.getProtocol().getMessageSerializer()
 					.serializeInput(new InputMessage(m.retrieve(), key, value));
 			for (Contact c : ds().contactMap.getArray()) {
-				byte[] response = ds().client.request(c, message);
-				if (response != null) {
-					value = (String) ds().client.getProtocol()
-							.getMessageSerializer().deserializeOutput(response);
+				try {
+					byte[] response = ds().client.request(c, message);
+					if (response != null) {
+						value = (String) ds().client.getProtocol()
+								.getMessageSerializer()
+								.deserializeOutput(response);
+					}
+				} catch (NotAvailableContactException e) {
+					ds().client.detach(c);
 				}
 			}
 		}
@@ -66,12 +72,16 @@ public class DHTDataModel extends DataSourceContainer implements IMapDataModel {
 		byte[] message = ds().client.getProtocol().getMessageSerializer()
 				.serializeInput(new InputMessage(m.keySet()));
 		for (Contact c : ds().contactMap.getArray()) {
-			byte[] response = ds().client.request(c, message);
-			String[] array = (String[]) ds().client.getProtocol()
-					.getMessageSerializer().deserializeOutput(response);
-			for (String s : array) {
-				JLG.debug("s=" + s);
-				set.add(s);
+			try {
+				byte[] response = ds().client.request(c, message);
+				String[] array = (String[]) ds().client.getProtocol()
+						.getMessageSerializer().deserializeOutput(response);
+				for (String s : array) {
+					JLG.debug("s=" + s);
+					set.add(s);
+				}
+			} catch (NotAvailableContactException e) {
+				ds().client.detach(c);
 			}
 		}
 		return set;

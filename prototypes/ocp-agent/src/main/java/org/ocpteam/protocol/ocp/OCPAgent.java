@@ -697,10 +697,6 @@ public class OCPAgent extends Agent {
 		return getClient().askCaptcha(contactQueue);
 	}
 
-	public void refreshContactList() throws Exception {
-		getClient().sendAll(OCPProtocol.PING.getBytes());
-	}
-
 	public String getName() {
 		return name;
 	}

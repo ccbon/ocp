@@ -12,7 +12,6 @@ import java.util.LinkedList;
 
 import org.ocpteam.component.Agent;
 import org.ocpteam.component.Protocol;
-import org.ocpteam.entity.Contact;
 import org.ocpteam.misc.Id;
 import org.ocpteam.misc.JLG;
 import org.ocpteam.module.DSPModule;
@@ -25,14 +24,10 @@ public class OCPProtocol extends Protocol {
 	}
 
 	public static final int SEPARATOR = 0;
-	public static final String PING = "ping";
-	public static final String NETWORK_PROPERTIES = "network_properties";
 
 	public static final String NODE_ID = "node_id";
-	public static final String GET_CONTACT = "get_contact";
 	public static final String GENERATE_CAPTCHA = "generate_captcha";
 	public static final String CREATE_USER = "create_user";
-	public static final String DECLARE_CONTACT = "declare_contact";
 	public static final String CREATE_OBJECT = "create_object";
 	public static final String GET_USER = "get_user";
 	public static final String GET_ADDRESS = "get_address";
@@ -66,40 +61,11 @@ public class OCPProtocol extends Protocol {
 		getAgent();
 		String request = new String(input);
 		Iterator<byte[]> it = iterator(input);
-		if (request.equalsIgnoreCase(PING)) {
-			return SUCCESS;
-		}
-
-		if (request.startsWith(NETWORK_PROPERTIES)) {
-			try {
-				ByteArrayOutputStream out = new ByteArrayOutputStream();
-				agent.ds().network.store(out, "");
-				byte[] result = out.toByteArray();
-				out.close();
-				return result;
-			} catch (Exception e) {
-				return ERROR;
-			}
-
-		}
 
 		if (request.equalsIgnoreCase(NODE_ID)) {
 			try {
 				return agent.generateId().getBytes();
 			} catch (Exception e) {
-				return ERROR;
-			}
-
-		}
-
-		if (request.equalsIgnoreCase(GET_CONTACT)) {
-			try {
-				Contact c = agent.toContact();
-
-				JLG.debug("I start to serialize");
-				return JLG.serialize(c);
-			} catch (Exception e) {
-				JLG.error(e);
 				return ERROR;
 			}
 

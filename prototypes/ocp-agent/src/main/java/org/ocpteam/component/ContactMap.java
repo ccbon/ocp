@@ -7,10 +7,10 @@ import java.util.Queue;
 import java.util.Set;
 
 import org.ocpteam.entity.Contact;
+import org.ocpteam.entity.InputMessage;
 import org.ocpteam.misc.Id;
 import org.ocpteam.misc.URL;
-import org.ocpteam.protocol.ocp.OCPAgent;
-import org.ocpteam.protocol.ocp.OCPProtocol;
+import org.ocpteam.module.DSPModule;
 
 public class ContactMap extends DataSourceContainer {
 
@@ -18,6 +18,12 @@ public class ContactMap extends DataSourceContainer {
 
 	public ContactMap() {
 		map = new HashMap<Id, Contact>();
+	}
+
+	@Override
+	public DSPDataSource ds() {
+		// TODO Auto-generated method stub
+		return (DSPDataSource) super.ds();
 	}
 
 	public Contact getContact(Id contactId) throws Exception {
@@ -30,8 +36,10 @@ public class ContactMap extends DataSourceContainer {
 
 	public void refreshContactList() throws Exception {
 		// TODO: make independant of ocp by adding the P2P client functionality.
-		OCPAgent agent = (OCPAgent) ds().getComponent(Agent.class);
-		agent.getClient().sendAll(OCPProtocol.PING.getBytes());
+		DSPModule m = ds().getComponent(DSPModule.class);
+		byte[] message = ds().client.getProtocol().getMessageSerializer()
+				.serializeInput(new InputMessage(m.ping()));
+		ds().client.sendAll(message);
 	}
 
 	public List<Contact> getContactSnapshotList() {

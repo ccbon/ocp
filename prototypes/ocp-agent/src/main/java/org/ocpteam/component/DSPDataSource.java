@@ -40,6 +40,7 @@ public abstract class DSPDataSource extends DataSource {
 
 	@Override
 	public void connect() throws Exception {
+		super.connect();
 		if (agent.isFirstAgent()) {
 			JLG.debug("This is the first agent on the network");
 			network = this.getNetworkProperties();
@@ -70,6 +71,7 @@ public abstract class DSPDataSource extends DataSource {
 
 	@Override
 	public void disconnect() throws Exception {
+		super.disconnect();
 		if (server.isStarted()) {
 			JLG.debug("stopping the server");
 			server.stop();
@@ -79,5 +81,6 @@ public abstract class DSPDataSource extends DataSource {
 	protected Properties getNetworkProperties() {
 		return JLG.extractProperties(getConfig(), "network");
 	}
+	
 
 }

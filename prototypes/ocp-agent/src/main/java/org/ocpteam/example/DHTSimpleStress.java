@@ -9,15 +9,14 @@ import org.ocpteam.misc.JLG;
 import org.ocpteam.protocol.dht.DHTDataModel;
 import org.ocpteam.protocol.dht.DHTDataSource;
 
-public class DHTStress extends TopContainer {
+public class DHTSimpleStress extends TopContainer {
 
 	public static void main(String[] args) {
 		try {
-			DHTStress app = new DHTStress();
+			DHTSimpleStress app = new DHTSimpleStress();
 			app.init();
 			app.start();
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -25,7 +24,7 @@ public class DHTStress extends TopContainer {
 	private int n;
 	private int port;
 
-	public DHTStress() throws Exception {
+	public DHTSimpleStress() throws Exception {
 		addComponent(DHTDataSource.class);
 	}
 
@@ -37,7 +36,7 @@ public class DHTStress extends TopContainer {
 		JLG.debug_on();
 		JLG.bUseSet = true;
 		JLG.set.add(TCPServer.class.getName());
-		JLG.set.add(DHTStress.class.getName());
+		JLG.set.add(DHTSimpleStress.class.getName());
 		JLG.set.add(NATTraversal.class.getName());
 	}
 

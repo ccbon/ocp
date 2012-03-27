@@ -17,6 +17,8 @@ public class DSPModule extends Module {
 	protected static final int DECLARE_CONTACT = 1000;
 	protected static final int GET_NETWORK_PROPERTIES = 1001;
 	protected static final int GET_CONTACT = 1002;
+	protected static final int PING = 1003;
+	protected static final int DETACH = 1004;
 
 	public ITransaction declareContact() {
 		return new ITransaction() {
@@ -72,6 +74,41 @@ public class DSPModule extends Module {
 			@Override
 			public int getId() {
 				return GET_CONTACT;
+			}
+		};
+	}
+
+	public ITransaction ping() {
+		return new ITransaction() {
+			
+			@Override
+			public Serializable run(Session session, Serializable[] objects)
+					throws Exception {
+				return null;
+			}
+			
+			@Override
+			public int getId() {
+				return PING;
+			}
+		};
+	}
+
+	public ITransaction detach() {
+		return new ITransaction() {
+			
+			@Override
+			public Serializable run(Session session, Serializable[] objects)
+					throws Exception {
+				Contact c = (Contact) objects[0];
+				ContactMap contactMap = session.ds().getComponent(ContactMap.class);
+				contactMap.remove(c.getId());
+				return null;
+			}
+			
+			@Override
+			public int getId() {
+				return DETACH;
 			}
 		};
 	}

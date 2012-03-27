@@ -85,7 +85,7 @@ public class JLG {
 	}
 
 	public static int random(int size) {
-		return (int) Math.round((Math.random() * size));
+		return (int) Math.floor((Math.random() * size));
 	}
 
 	public static void error(String string) {

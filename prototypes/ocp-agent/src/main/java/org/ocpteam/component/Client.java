@@ -25,8 +25,6 @@ import org.ocpteam.misc.JLG;
 import org.ocpteam.misc.URL;
 import org.ocpteam.module.DSPModule;
 import org.ocpteam.protocol.ocp.OCPAgent;
-import org.ocpteam.protocol.ocp.OCPContact;
-import org.ocpteam.protocol.ocp.OCPProtocol;
 
 public class Client extends DataSourceContainer implements IClient {
 
@@ -108,7 +106,8 @@ public class Client extends DataSourceContainer implements IClient {
 
 	private Iterator<String> getPotentialSponsorIterator() throws Exception {
 		List<String> list = new LinkedList<String>();
-		if (ds().getProperty("network.type", "private").equalsIgnoreCase("public")) {
+		if (ds().getProperty("network.type", "private").equalsIgnoreCase(
+				"public")) {
 			try {
 				XmlRpcClientConfigImpl config = new XmlRpcClientConfigImpl();
 				// TODO: need a ocp dedicated web server. I use mine for the
@@ -192,7 +191,6 @@ public class Client extends DataSourceContainer implements IClient {
 			try {
 				output = request(contact, input);
 			} catch (NotAvailableContactException e) {
-				e.printStackTrace();
 				detach(contact);
 			}
 		}
@@ -292,7 +290,10 @@ public class Client extends DataSourceContainer implements IClient {
 			return;
 		}
 		contactMap.remove(contact.getId());
-		sendAll(OCPProtocol.hasBeenDetached((OCPContact) contact));
+		DSPModule m = getProtocol().getComponent(DSPModule.class);
+		byte[] message = getProtocol().getMessageSerializer().serializeInput(
+				new InputMessage(m.detach(), contact));
+		sendAll(message);
 	}
 
 	public void send(Contact c, byte[] message) throws Exception {

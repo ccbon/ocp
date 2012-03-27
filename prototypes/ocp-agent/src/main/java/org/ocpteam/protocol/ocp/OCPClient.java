@@ -46,25 +46,6 @@ public class OCPClient extends Client implements IAuthenticable {
 		return nodeIds;
 	}
 
-
-
-
-
-
-
-	public void enrichContact(OCPContact contact) throws Exception {
-		byte[] response = request(contact, OCPProtocol.GET_CONTACT.getBytes());
-		OCPContact c = (OCPContact) JLG.deserialize(response);
-		String host = contact.getUrlList().iterator().next().getHost();
-		c.updateHost(host);
-		contact.copy(c);
-	}
-
-
-
-
-
-
 	public Captcha askCaptcha(Queue<Contact> contactQueue) throws Exception {
 		Response r = request(contactQueue, OCPProtocol.GENERATE_CAPTCHA.getBytes());
 		Captcha captcha = (Captcha) JLG.deserialize(r.getBytes());

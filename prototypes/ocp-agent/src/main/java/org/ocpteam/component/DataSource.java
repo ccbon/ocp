@@ -34,6 +34,7 @@ public abstract class DataSource extends TopContainer implements IComponent,
 	protected boolean bIsNew = true;
 
 	protected Context context;
+	private boolean bIsConnected;
 
 	public abstract String getProtocol();
 	
@@ -118,10 +119,11 @@ public abstract class DataSource extends TopContainer implements IComponent,
 	}
 
 	public void connect() throws Exception {
-		
+		bIsConnected = true;
 	}
 
 	public void disconnect() throws Exception {
+		bIsConnected = false;
 		context = null;
 	}
 
@@ -134,6 +136,10 @@ public abstract class DataSource extends TopContainer implements IComponent,
 		JLG.debug("class=" + resourceClassString);
 		return (ResourceBundle) Class.forName(resourceClassString)
 				.newInstance();
+	}
+
+	public boolean isConnected() {
+		return bIsConnected;
 	}
 
 }
