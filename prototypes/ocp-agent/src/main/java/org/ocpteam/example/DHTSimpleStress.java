@@ -40,49 +40,77 @@ public class DHTSimpleStress extends TopContainer {
 		JLG.set.add(NATTraversal.class.getName());
 	}
 
-	public void start() throws Exception {
-		DHTDataSource[] ds = new DHTDataSource[n];
-		for (int i = 0; i < n; i++) {
-			Class<? extends DHTDataSource> c = getComponent(DHTDataSource.class)
-					.getClass();
-			ds[i] = c.newInstance();
-			ds[i].init();
-			//unfortunately, the teleal library does not work well with many threads...
-			ds[i].listener.removeComponent(NATTraversal.class);
-		}
-		// first agent
-		Properties p = new Properties();
-		p.setProperty("agent.isFirst", "yes");
-		p.setProperty("listener.tcp.url", "tcp://localhost:" + port);
-		ds[0].setConfig(p);
-		ds[0].connect();
+	public void start() throws Exception {	
+		final DHTDataSource[] ds = new DHTDataSource[n];
+		
+		Runnable run1 = new Runnable() {
+			int counter = 1;
+			
+			@Override
+			public void run() {
+				try {
+					bootstrap();
+					while(true){
+						doMassiveSetOperations();
+						Thread.sleep(10);
+						JLG.println("Stress test is running...");
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+			
+			public void bootstrap() throws Exception{
+				for (int i = 0; i < n; i++) {
+					Class<? extends DHTDataSource> c = getComponent(DHTDataSource.class)
+							.getClass();
+					ds[i] = c.newInstance();
+					ds[i].init();
+					//unfortunately, the teleal library does not work well with many threads...
+					ds[i].listener.removeComponent(NATTraversal.class);
+				}
+				// first agent
+				Properties p = new Properties();
+				p.setProperty("agent.isFirst", "yes");
+				p.setProperty("listener.tcp.url", "tcp://localhost:" + port);
+				ds[0].setConfig(p);
+				ds[0].connect();
 
-		// other agents
-		for (int i = 1; i < n; i++) {
-			p = new Properties();
-			p.setProperty("agent.isFirst", "no");
-			int port_i = port + i;
-			p.setProperty("listener.tcp.url", "tcp://localhost:" + port_i);
-			p.setProperty("sponsor.1", "tcp://localhost:" + port);
-			ds[i].setConfig(p);
-			ds[i].connect();
-		}
-		
-		for (int i = 0; i < n; i++) {
-			DHTDataModel dht = (DHTDataModel) ds[i].getContext().getDataModel();
-			dht.set("key" + i, "value" + i);
-		}
-		
-		for (int i = 0; i < n; i++) {
-			DHTDataModel dht = (DHTDataModel) ds[i].getContext().getDataModel();
-			JLG.debug(dht.keySet().toString());
-			int j = 9 - i;
-			JLG.debug("key" + j + " = " + dht.get("key" + j));
-		}
-		
+				// other agents
+				for (int i = 1; i < n; i++) {
+					p = new Properties();
+					p.setProperty("agent.isFirst", "no");
+					int port_i = port + i;
+					p.setProperty("listener.tcp.url", "tcp://localhost:" + port_i);
+					p.setProperty("sponsor.1", "tcp://localhost:" + port);
+					ds[i].setConfig(p);
+					ds[i].connect();
+				}			
+			}
+			
+			public void doMassiveSetOperations() throws Exception{
+				int cyclicCounter = (counter % 100);
+				for (int i = 0; i < n; i++) {
+					DHTDataModel dht = (DHTDataModel) ds[i].getContext().getDataModel();
+					dht.set("key" + i + counter, "value" + i + counter);
+				}
+				
+				for (int i = 0; i < n; i++) {
+					DHTDataModel dht = (DHTDataModel) ds[i].getContext().getDataModel();
+					JLG.debug(dht.keySet().toString());
+					int j = 9 - i;
+					JLG.debug("key" + j + " = " + dht.get("key" + j));
+				}	
+				counter++;
+				counter=counter % 100;
+			}
+		};
+
+		run1.run();
 		for (int i = 0; i < n; i++) {
 			ds[i].disconnect();
 		}
+		
 		JLG.debug("app finished");
 	}
 
