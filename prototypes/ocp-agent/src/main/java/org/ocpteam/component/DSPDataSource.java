@@ -14,7 +14,7 @@ public abstract class DSPDataSource extends DataSource {
 
 	public Properties network;
 	public IProtocol protocol;
-	private TCPListener listener;
+	public TCPListener listener;
 	public ContactMap contactMap;
 
 	public DSPDataSource() throws Exception {

@@ -38,18 +38,23 @@ public class TCPServer extends Container implements Runnable {
 				JLG.error(e);
 			}
 		}
+		JLG.debug("thread finished");
 	}
 
 	public void stop(Thread t) {
-		JLG.debug("stopping a TCP server");
+		JLG.debug("stopping a TCP server with port: " + port);
 		stoppingNow = true;
 		try {
 			if (serverSocket != null) {
 				serverSocket.close();
 			}
 		} catch (Exception e) {
+			e.printStackTrace();
 		}
+		JLG.debug("Thread.activeCount(): " + Thread.activeCount());
 		t.interrupt();
+		JLG.debug("Thread.activeCount(): " + Thread.activeCount());
+		JLG.debug("end stopping a TCP server with port: " + port);
 	}
 
 	public void setHandler(ITCPServerHandler handler) {

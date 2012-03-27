@@ -64,7 +64,7 @@ public class TCPListener extends DataSourceContainer implements IListener {
 		if (usesComponent(NATTraversal.class)) {
 			getComponent(NATTraversal.class).unmap();
 		}
-		getComponent(TCPServer.class).stop(t);
+		tcpServer.stop(t);
 	}
 	
 	@Override

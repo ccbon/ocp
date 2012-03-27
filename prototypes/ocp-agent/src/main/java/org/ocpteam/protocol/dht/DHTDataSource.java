@@ -10,12 +10,18 @@ import org.ocpteam.interfaces.IDataModel;
 
 public class DHTDataSource extends DSPDataSource {
 
-	private Map<String, String> map = new HashMap<String, String>();
+	private Map<String, String> map;
 
 	public DHTDataSource() throws Exception {
 		super();
 		addComponent(IDataModel.class, new DHTDataModel());
 		addComponent(DHTModule.class);
+	}
+	
+	@Override
+	public void init() throws Exception {
+		super.init();
+		map = new HashMap<String, String>();
 	}
 	
 	@Override

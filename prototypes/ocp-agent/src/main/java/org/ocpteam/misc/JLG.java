@@ -19,8 +19,10 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.PublicKey;
 import java.security.spec.X509EncodedKeySpec;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Properties;
+import java.util.Set;
 
 import org.apache.commons.io.FileUtils;
 
@@ -33,7 +35,10 @@ public class JLG {
 		NL = System.getProperty("line.separator");
 	}
 	private static boolean sDebug = false;
-
+	
+	public static Set<String> set = new HashSet<String>();
+	public static boolean bUseSet = false;
+	
 	public static void debug_on() {
 		sDebug = true;
 		debug("debug on");
@@ -52,6 +57,14 @@ public class JLG {
 
 			Throwable t = new Throwable();
 			StackTraceElement ste = t.getStackTrace()[1];
+			String s = ste.getClassName();
+			int i = s.indexOf("$");
+			if (i != -1) {
+				s = s.substring(0, s.indexOf("$"));
+			}
+			if (bUseSet && !set.contains(s)) {
+				return;
+			}
 
 			String sPrefix = "DEBUG [T=" + Thread.currentThread().getName()
 					+ "] (" + ste.getClassName() + ".java:"
