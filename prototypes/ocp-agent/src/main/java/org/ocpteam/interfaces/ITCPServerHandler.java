@@ -4,10 +4,12 @@ import java.net.Socket;
 
 public interface ITCPServerHandler extends Runnable {
 
-	void setSocket(Socket clientSocket);
+	void setSocket(Socket socket);
 	
 	void setProtocol(IProtocol protocol);
 
 	ITCPServerHandler duplicate();
+
+	Socket getSocket();
 
 }

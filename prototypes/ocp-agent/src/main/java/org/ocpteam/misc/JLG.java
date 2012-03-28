@@ -345,4 +345,20 @@ public class JLG {
 		return result;
 	}
 
+	public static void showActiveThreads() {
+		JLG.debug("active threads:");
+		ThreadGroup tg = Thread.currentThread().getThreadGroup();
+		Thread[] list = new Thread[tg.activeCount()];
+		tg.enumerate(list);
+		for (Thread t : list) {
+			JLG.debug("running thread: " + t.getName());
+		}
+		
+		ThreadGroup[] glist = new ThreadGroup[tg.activeGroupCount()];
+		tg.enumerate(glist);
+		for (ThreadGroup t : glist) {
+			JLG.debug("running threadgroup: " + t.getName());
+		}
+	}
+
 }

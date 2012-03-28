@@ -23,7 +23,7 @@ public class TCPTest {
 	public boolean test() {
 		try {
 			int i = 0;
-			int n = 100;
+			int n = 23;
 			JLG.debug_on();
 
 			TCPListener tcplistener = new TCPListener();

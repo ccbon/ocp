@@ -1,11 +1,13 @@
 package org.ocpteam.component;
 
+import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
 import org.ocpteam.core.Container;
 import org.ocpteam.interfaces.ITCPServerHandler;
 import org.ocpteam.misc.JLG;
+import org.ocpteam.misc.JLGThread;
 
 public class TCPServer extends Container implements Runnable {
 
@@ -13,6 +15,7 @@ public class TCPServer extends Container implements Runnable {
 	private ServerSocket serverSocket;
 	private boolean stoppingNow = false;
 	private ITCPServerHandler handler;
+	private ThreadGroup tg;
 	
 	public TCPServer() throws Exception {
 	}
@@ -26,12 +29,14 @@ public class TCPServer extends Container implements Runnable {
 		JLG.debug("starting a TCP server on port:" + port);
 		try {
 			serverSocket = new ServerSocket(port);
+			tg = new ThreadGroup("tcpserver_" + port);
 			while (stoppingNow == false) {
 				JLG.debug("waiting for a client connection");
 				Socket clientSocket = serverSocket.accept();
 				ITCPServerHandler myHandler = handler.duplicate();
 				myHandler.setSocket(clientSocket);
-				new Thread(myHandler).start();
+				JLGThread t = new JLGThread(tg, myHandler, "handler_" + clientSocket);
+				t.start();
 			}
 		} catch (Exception e) {
 			if (!stoppingNow) {
@@ -51,9 +56,21 @@ public class TCPServer extends Container implements Runnable {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		JLG.debug("Thread.activeCount(): " + Thread.activeCount());
+		// interrupt thread of tg.
+		JLG.debug("tg.activeCount(): " + tg.activeCount());
+		Thread[] list = new Thread[tg.activeCount()];
+		tg.enumerate(list);
+		for (Thread th : list) {
+			ITCPServerHandler myHandler = (ITCPServerHandler) ((JLGThread) th).getRunnable();
+			Socket socket = myHandler.getSocket();
+			try {
+				socket.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		JLG.debug("new tg.activeCount(): " + tg.activeCount());
 		t.interrupt();
-		JLG.debug("Thread.activeCount(): " + Thread.activeCount());
 		JLG.debug("end stopping a TCP server with port: " + port);
 	}
 

@@ -3,6 +3,7 @@ package org.ocpteam.component;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.net.Socket;
+import java.net.SocketException;
 
 import org.ocpteam.core.Component;
 import org.ocpteam.interfaces.IProtocol;
@@ -25,14 +26,16 @@ public class TCPServerHandler extends Component implements ITCPServerHandler {
 			IStreamSerializer s = protocol.getStreamSerializer();
 			int i = 0;
 			while (i < 1000) {
+				JLG.debug("wait for message");
 				byte[] input = s.readMessage(in);
 				JLG.debug("received length = " + input.length);
 				byte[] response = protocol.process(input, clientSocket);
 				s.writeMessage(out, response);
 				i++;
 			}
+		} catch (SocketException e) {
 		} catch (Exception e) {
-			JLG.error(e);
+			e.printStackTrace();
 		} finally {
 			try {
 				if (in != null) {
@@ -65,5 +68,10 @@ public class TCPServerHandler extends Component implements ITCPServerHandler {
 	@Override
 	public void setProtocol(IProtocol protocol) {
 		this.protocol = protocol;
+	}
+
+	@Override
+	public Socket getSocket() {
+		return clientSocket;
 	}
 }

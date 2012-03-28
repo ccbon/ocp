@@ -3,6 +3,8 @@ package org.ocpteam.example;
 import java.util.Properties;
 
 import org.ocpteam.component.NATTraversal;
+import org.ocpteam.component.TCPServer;
+import org.ocpteam.component.TCPServerHandler;
 import org.ocpteam.core.TopContainer;
 import org.ocpteam.misc.JLG;
 import org.ocpteam.protocol.dht.DHTDataModel;
@@ -34,8 +36,10 @@ public class DHTSimpleStress extends TopContainer {
 		port = 35000;
 		JLG.debug_on();
 		JLG.bUseSet = true;
-		//JLG.set.add(TCPServer.class.getName());
+		JLG.set.add(TCPServer.class.getName());
 		JLG.set.add(DHTSimpleStress.class.getName());
+		JLG.set.add(JLG.class.getName());
+		JLG.set.add(TCPServerHandler.class.getName());
 		//JLG.set.add(NATTraversal.class.getName());
 	}
 
@@ -60,6 +64,7 @@ public class DHTSimpleStress extends TopContainer {
 				} finally {
 					for (int i = 0; i < n; i++) {
 						try {
+							JLG.debug("disconnecting " + i);
 							ds[i].disconnect();
 						} catch (Exception e) {
 							e.printStackTrace();
