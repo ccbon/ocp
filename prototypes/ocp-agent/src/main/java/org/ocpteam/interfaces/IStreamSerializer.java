@@ -15,6 +15,6 @@ public interface IStreamSerializer {
 
 	byte[] readMessage(DataInputStream in) throws Exception;
 
-	void writeMessage(DataOutputStream out, byte[] response) throws Exception;
+	void writeMessage(DataOutputStream out, byte[] message) throws Exception;
 
 }

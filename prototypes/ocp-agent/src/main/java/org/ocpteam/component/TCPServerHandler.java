@@ -2,6 +2,7 @@ package org.ocpteam.component;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.EOFException;
 import java.net.Socket;
 import java.net.SocketException;
 
@@ -34,6 +35,7 @@ public class TCPServerHandler extends Component implements ITCPServerHandler {
 				i++;
 			}
 		} catch (SocketException e) {
+		} catch (EOFException e) {
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {

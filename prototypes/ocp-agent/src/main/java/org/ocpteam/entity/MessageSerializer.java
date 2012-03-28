@@ -55,11 +55,14 @@ public class MessageSerializer implements IMessageSerializer {
 	
 	@Override
 	public byte[] serializeOutput(Serializable s) throws Exception {
-		return JLG.serialize(s);
+		byte[] result = JLG.serialize(s);
+		JLG.debug("result.length=" + result.length);
+		return result;
 	}
 
 	@Override
 	public Serializable deserializeOutput(byte[] output) throws Exception {
+		JLG.debug("output.length=" + output.length);
 		return JLG.deserialize(output);
 	}
 

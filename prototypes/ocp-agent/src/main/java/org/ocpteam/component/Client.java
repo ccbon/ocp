@@ -50,8 +50,9 @@ public class Client extends DataSourceContainer implements IClient {
 			c = UnknownChannel.class;
 		}
 		Channel channel = c.newInstance();
-		channel.setUrl(url);
 		channel.setParent(this.getParent());
+		channel.init();
+		channel.setUrl(url);
 		return channel;
 	}
 

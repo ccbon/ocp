@@ -5,7 +5,6 @@ import java.net.ConnectException;
 import org.ocpteam.entity.Contact;
 import org.ocpteam.entity.InputMessage;
 import org.ocpteam.misc.JLG;
-import org.ocpteam.misc.TCPClient;
 import org.ocpteam.misc.URL;
 import org.ocpteam.module.DSPModule;
 
@@ -13,16 +12,27 @@ import org.ocpteam.module.DSPModule;
 public class TCPChannel extends Channel {
 
 	private TCPClient tcpClient;
+	
+	public TCPChannel() throws Exception {
+		addComponent(TCPClient.class);
+	}
+	
+	@Override
+	public void init() throws Exception {
+		tcpClient = getComponent(TCPClient.class);
+	}
 
 	@Override
 	public void setUrl(URL url) {
-		this.url = url;
+		super.setUrl(url);
 		int port = url.getPort();
 		if (port == -1) {
 			port = url.getDefaultPort();
 		}
 		String hostname = url.getHost();
-		tcpClient = new TCPClient(hostname, port);
+		tcpClient.setPort(port);
+		tcpClient.setHostname(hostname);
+		tcpClient.setProtocol(getProtocol());
 	}
 	
 	@Override

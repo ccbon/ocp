@@ -1,4 +1,4 @@
-package org.ocpteam.misc;
+package org.ocpteam.component;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -6,20 +6,20 @@ import java.io.EOFException;
 import java.net.Socket;
 import java.net.SocketException;
 
-public class TCPClient {
+import org.ocpteam.interfaces.IProtocol;
+import org.ocpteam.interfaces.IStreamSerializer;
+import org.ocpteam.misc.JLG;
+
+public class TCPClient extends DataSourceContainer {
 
 	private String hostname;
 	private int port;
 	private Socket clientSocket;
 	private DataInputStream in;
 	private DataOutputStream out;
+	private IProtocol protocol;
 
 	public TCPClient() {
-	}
-
-	public TCPClient(String hostname, int port) {
-		this.hostname = hostname;
-		this.port = port;
 	}
 
 	public String getHostname() {
@@ -55,15 +55,11 @@ public class TCPClient {
 
 	private byte[] request0(byte[] input) throws Exception {
 		byte[] output = null;
-		out.writeInt(input.length);
-		out.write(input);
-		out.flush();
+		IStreamSerializer s = protocol.getStreamSerializer();
+		s.writeMessage(out, input);
 		JLG.debug("input flush");
-
-		int responseLength = in.readInt();
-		JLG.debug("response length=" + responseLength);
-		output = new byte[responseLength];
-		in.read(output, 0, responseLength);
+		
+		output = s.readMessage(in);
 		return output;
 	}
 
@@ -89,6 +85,14 @@ public class TCPClient {
 		in = new DataInputStream(clientSocket.getInputStream());
 		out = new DataOutputStream(clientSocket.getOutputStream());
 
+	}
+
+	public IProtocol getProtocol() {
+		return protocol;
+	}
+
+	public void setProtocol(IProtocol protocol) {
+		this.protocol = protocol;
 	}
 
 }

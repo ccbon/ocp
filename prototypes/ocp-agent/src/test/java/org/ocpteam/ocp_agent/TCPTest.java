@@ -3,10 +3,10 @@ package org.ocpteam.ocp_agent;
 import static org.junit.Assert.assertTrue;
 
 import org.ocpteam.component.NATTraversal;
+import org.ocpteam.component.TCPClient;
 import org.ocpteam.component.TCPListener;
 import org.ocpteam.example.MinimalistProtocol;
 import org.ocpteam.misc.JLG;
-import org.ocpteam.misc.TCPClient;
 import org.ocpteam.misc.URL;
 
 public class TCPTest {

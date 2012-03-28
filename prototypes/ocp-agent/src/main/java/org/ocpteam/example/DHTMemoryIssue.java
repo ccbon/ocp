@@ -11,11 +11,11 @@ import org.ocpteam.misc.JLG;
 import org.ocpteam.protocol.dht.DHTDataModel;
 import org.ocpteam.protocol.dht.DHTDataSource;
 
-public class DHTSimpleStress extends TopContainer {
+public class DHTMemoryIssue extends TopContainer {
 
 	public static void main(String[] args) {
 		try {
-			DHTSimpleStress app = new DHTSimpleStress();
+			DHTMemoryIssue app = new DHTMemoryIssue();
 			app.init();
 			app.start();
 		} catch (Exception e) {
@@ -25,8 +25,9 @@ public class DHTSimpleStress extends TopContainer {
 
 	private int n;
 	private int port;
+	private int key;
 
-	public DHTSimpleStress() throws Exception {
+	public DHTMemoryIssue() throws Exception {
 		addComponent(DHTDataSource.class);
 	}
 
@@ -34,11 +35,12 @@ public class DHTSimpleStress extends TopContainer {
 	public void init() throws Exception {
 		super.init();
 		n = 10;
+		key = 1000;
 		port = 35000;
 		JLG.debug_on();
 		JLG.bUseSet = true;
 		//JLG.set.add(TCPServer.class.getName());
-		JLG.set.add(DHTSimpleStress.class.getName());
+		JLG.set.add(DHTMemoryIssue.class.getName());
 		//JLG.set.add(JLG.class.getName());
 		JLG.set.add(MessageSerializer.class.getName());
 		//JLG.set.add(NATTraversal.class.getName());
@@ -106,20 +108,15 @@ public class DHTSimpleStress extends TopContainer {
 			}
 			
 			public void doMassiveSetOperations() throws Exception{
-				//int cyclicCounter = (counter % 100);
-				for (int i = 0; i < n; i++) {
-					DHTDataModel dht = (DHTDataModel) ds[i].getContext().getDataModel();
-					dht.set("key" + i + counter, "value" + i + counter);
+				for (int i = 0; i < key; i++) {
+					DHTDataModel dht = (DHTDataModel) ds[i % 10].getContext().getDataModel();
+					dht.set("key" + i, "value" + i);
 				}
 				
 				for (int i = 0; i < n; i++) {
 					DHTDataModel dht = (DHTDataModel) ds[i].getContext().getDataModel();
 					JLG.debug("size=" + dht.keySet().size());
-					//int j = 9 - i;
-					//JLG.debug("key" + j + " = " + dht.get("key" + j));
 				}	
-				counter++;
-				counter=counter % 100;
 			}
 		};
 

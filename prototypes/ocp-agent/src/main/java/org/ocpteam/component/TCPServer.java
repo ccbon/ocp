@@ -35,7 +35,7 @@ public class TCPServer extends Container implements Runnable {
 				Socket clientSocket = serverSocket.accept();
 				ITCPServerHandler myHandler = handler.duplicate();
 				myHandler.setSocket(clientSocket);
-				JLGThread t = new JLGThread(tg, myHandler, "handler_" + clientSocket);
+				JLGThread t = new JLGThread(tg, myHandler);
 				t.start();
 			}
 		} catch (Exception e) {
@@ -57,7 +57,6 @@ public class TCPServer extends Container implements Runnable {
 			e.printStackTrace();
 		}
 		// interrupt thread of tg.
-		JLG.debug("tg.activeCount(): " + tg.activeCount());
 		Thread[] list = new Thread[tg.activeCount()];
 		tg.enumerate(list);
 		for (Thread th : list) {
@@ -69,7 +68,6 @@ public class TCPServer extends Container implements Runnable {
 				e.printStackTrace();
 			}
 		}
-		JLG.debug("new tg.activeCount(): " + tg.activeCount());
 		t.interrupt();
 		JLG.debug("end stopping a TCP server with port: " + port);
 	}
