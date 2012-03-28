@@ -16,12 +16,10 @@ public class URL implements Serializable {
 	private int port;
 	
 
-	public URL(String sUrl) throws JLGException {
-		JLG.debug("start creating url");
+	public URL(String sUrl) throws Exception {
 		Pattern pattern = Pattern.compile("^(\\w+)://([\\w\\.]+):(\\d+).*$");
 		Matcher matcher = pattern.matcher(sUrl);
 		boolean found = false;
-		JLG.debug("groupCount = " + matcher.groupCount());
 		if (matcher.find()) {
 			found = true;
 			protocol = matcher.group(1);
@@ -32,7 +30,7 @@ public class URL implements Serializable {
 			//JLG.debug("iPort: " + iPort);
 		}
 		if (!found) {
-			throw new JLGException("not a good url: " + sUrl);
+			throw new Exception("not a good url: " + sUrl);
 		}
 	}
 

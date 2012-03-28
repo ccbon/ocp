@@ -223,12 +223,10 @@ public class Client extends DataSourceContainer implements IClient {
 				try {
 					JLG.debug("sending request with channel: " + channel);
 					output = channel.request(string);
+					return output;
 				} catch (ConnectException e) {
 					continue;
-				} catch (Exception e) {
-					JLG.warn(e);
 				}
-				return output;
 			}
 		}
 		throw new NotAvailableContactException();

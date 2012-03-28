@@ -3,7 +3,6 @@ package org.ocpteam.example;
 import java.util.Properties;
 
 import org.ocpteam.component.NATTraversal;
-import org.ocpteam.component.TCPServer;
 import org.ocpteam.core.TopContainer;
 import org.ocpteam.misc.JLG;
 import org.ocpteam.protocol.dht.DHTDataModel;
@@ -32,12 +31,12 @@ public class DHTSimpleStress extends TopContainer {
 	public void init() throws Exception {
 		super.init();
 		n = 10;
-		port = 40000;
+		port = 35000;
 		JLG.debug_on();
 		JLG.bUseSet = true;
-		JLG.set.add(TCPServer.class.getName());
+		//JLG.set.add(TCPServer.class.getName());
 		JLG.set.add(DHTSimpleStress.class.getName());
-		JLG.set.add(NATTraversal.class.getName());
+		//JLG.set.add(NATTraversal.class.getName());
 	}
 
 	public void start() throws Exception {	
@@ -56,7 +55,16 @@ public class DHTSimpleStress extends TopContainer {
 						JLG.println("Stress test is running...");
 					}
 				} catch (Exception e) {
+					JLG.debug("Threads: " + Thread.activeCount());
 					e.printStackTrace();
+				} finally {
+					for (int i = 0; i < n; i++) {
+						try {
+							ds[i].disconnect();
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}
 				}
 			}
 			
@@ -89,7 +97,7 @@ public class DHTSimpleStress extends TopContainer {
 			}
 			
 			public void doMassiveSetOperations() throws Exception{
-				int cyclicCounter = (counter % 100);
+				//int cyclicCounter = (counter % 100);
 				for (int i = 0; i < n; i++) {
 					DHTDataModel dht = (DHTDataModel) ds[i].getContext().getDataModel();
 					dht.set("key" + i + counter, "value" + i + counter);
@@ -107,9 +115,7 @@ public class DHTSimpleStress extends TopContainer {
 		};
 
 		run1.run();
-		for (int i = 0; i < n; i++) {
-			ds[i].disconnect();
-		}
+		
 		
 		JLG.debug("app finished");
 	}

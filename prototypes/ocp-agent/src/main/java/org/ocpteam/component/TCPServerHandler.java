@@ -10,7 +10,6 @@ import org.ocpteam.interfaces.IStreamSerializer;
 import org.ocpteam.interfaces.ITCPServerHandler;
 import org.ocpteam.misc.JLG;
 
-
 public class TCPServerHandler extends Component implements ITCPServerHandler {
 
 	private Socket clientSocket;
@@ -24,12 +23,14 @@ public class TCPServerHandler extends Component implements ITCPServerHandler {
 			in = new DataInputStream(clientSocket.getInputStream());
 			out = new DataOutputStream(clientSocket.getOutputStream());
 			IStreamSerializer s = protocol.getStreamSerializer();
-			byte[] input = s.readMessage(in);
-			JLG.debug("received length = " + input.length);
-			JLG.debug("parent: " + parent);
-			byte[] response = protocol.process(input,
-					clientSocket);
-			s.writeMessage(out, response);
+			int i = 0;
+			while (i < 1000) {
+				byte[] input = s.readMessage(in);
+				JLG.debug("received length = " + input.length);
+				byte[] response = protocol.process(input, clientSocket);
+				s.writeMessage(out, response);
+				i++;
+			}
 		} catch (Exception e) {
 			JLG.error(e);
 		} finally {
