@@ -87,7 +87,7 @@ public class DHTDataModel extends DataSourceContainer implements IMapDataModel {
 						break;
 					} catch (Exception e) {
 						retry++;
-						if (retry > 1) {
+						if (retry > 3) {
 							throw e;
 						}
 					}
