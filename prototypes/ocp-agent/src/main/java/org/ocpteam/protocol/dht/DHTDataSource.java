@@ -1,5 +1,6 @@
 package org.ocpteam.protocol.dht;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -21,7 +22,7 @@ public class DHTDataSource extends DSPDataSource {
 	@Override
 	public void init() throws Exception {
 		super.init();
-		map = new HashMap<String, String>();
+		map = Collections.synchronizedMap(new HashMap<String, String>());
 	}
 	
 	@Override

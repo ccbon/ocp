@@ -225,9 +225,11 @@ public class Client extends DataSourceContainer implements IClient {
 			} else {
 				channel = newChannel(url);
 				channelMap.put(url, channel);
+				JLG.debug("channel map: size=" + channelMap.size());
 			}
 			if (understand(channel)) {
 				try {
+					JLG.debug("channel map: size=" + channelMap.size());
 					JLG.debug("sending request with channel: " + channel);
 					output = channel.request(string);
 					return output;

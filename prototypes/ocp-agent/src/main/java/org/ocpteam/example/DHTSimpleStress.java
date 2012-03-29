@@ -4,7 +4,6 @@ import java.util.Properties;
 
 import org.ocpteam.component.NATTraversal;
 import org.ocpteam.core.TopContainer;
-import org.ocpteam.entity.MessageSerializer;
 import org.ocpteam.misc.JLG;
 import org.ocpteam.protocol.dht.DHTDataModel;
 import org.ocpteam.protocol.dht.DHTDataSource;
@@ -31,15 +30,17 @@ public class DHTSimpleStress extends TopContainer {
 	@Override
 	public void init() throws Exception {
 		super.init();
-		n = 2;
+		n = 10;
 		port = 35000;
 		JLG.debug_on();
 		JLG.bUseSet = true;
 		//JLG.set.add(TCPServer.class.getName());
 		JLG.set.add(DHTSimpleStress.class.getName());
+		//JLG.set.add(StreamSerializer.class.getName());
 		//JLG.set.add(JLG.class.getName());
-		JLG.set.add(MessageSerializer.class.getName());
+		//JLG.set.add(MessageSerializer.class.getName());
 		//JLG.set.add(NATTraversal.class.getName());
+		//JLG.set.add(Client.class.getName());
 	}
 
 	public void start() throws Exception {	
@@ -117,7 +118,7 @@ public class DHTSimpleStress extends TopContainer {
 					//JLG.debug("key" + j + " = " + dht.get("key" + j));
 				}	
 				counter++;
-				counter=counter % 10000;
+				counter=counter % 100;
 			}
 		};
 

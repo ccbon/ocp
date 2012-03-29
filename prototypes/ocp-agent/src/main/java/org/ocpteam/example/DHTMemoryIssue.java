@@ -36,7 +36,7 @@ public class DHTMemoryIssue extends TopContainer {
 		key = 1000;
 		port = 35000;
 		JLG.debug_on();
-		JLG.bUseSet = true;
+		//JLG.bUseSet = true;
 		//JLG.set.add(TCPServer.class.getName());
 		JLG.set.add(DHTMemoryIssue.class.getName());
 		//JLG.set.add(JLG.class.getName());
