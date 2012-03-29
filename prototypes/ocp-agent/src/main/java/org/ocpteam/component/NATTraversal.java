@@ -57,7 +57,7 @@ public class NATTraversal extends Component implements INATTraversal {
 					JLG.debug("stop synchronized on " + NATTraversal.this);
 				}
 			}
-		}).start();
+		}, "NATTraversal").start();
 
 		Runtime.getRuntime().addShutdownHook(new Thread() {
 			@Override
@@ -85,7 +85,7 @@ public class NATTraversal extends Component implements INATTraversal {
 					JLG.debug("stop sync on " + NATTraversal.this);
 				}
 			}
-		}).start();
+		}, "NATTraversal-unmap").start();
 	}
 
 }

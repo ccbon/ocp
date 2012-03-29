@@ -2,6 +2,7 @@ package org.ocpteam.example;
 
 import java.util.Properties;
 
+import org.ocpteam.component.ContactMap;
 import org.ocpteam.component.DataSource;
 import org.ocpteam.component.NATTraversal;
 import org.ocpteam.core.TopContainer;
@@ -26,7 +27,7 @@ public class DHTInterestingStress extends TopContainer {
 	private int port;
 	private double availabilityRate;
 	private DHTDataSource[] ds;
-	private boolean stopNow = false;
+	public boolean stopNow = false;
 	private int duration;
 	private long activity_sleep;
 
@@ -38,33 +39,60 @@ public class DHTInterestingStress extends TopContainer {
 	public void init() throws Exception {
 		super.init();
 		n = 10;
-		duration = 15;
+		duration = 1500;
 		port = 40000;
-		availabilityRate = 0.7;
+		availabilityRate = 0.9;
 		activity_sleep = 100;
 		JLG.debug_on();
 		JLG.bUseSet = true;
 		//JLG.set.add(TCPServer.class.getName());
-		JLG.set.add(DHTInterestingStress.class.getName());
+		//JLG.set.add(DHTInterestingStress.class.getName());
+		//JLG.set.add(DHTDataModel.class.getName());
+		//JLG.set.add(TCPClient.class.getName());
+		//JLG.set.add(JLG.class.getName());
+		//JLG.set.add(Client.class.getName());
 		//JLG.set.add(NATTraversal.class.getName());
 	}
 
 	protected void activity() throws Exception {
 		Thread.sleep(activity_sleep);
-		Context c = null;
-		while (c == null) {
-			DataSource d = ds[JLG.random(n)];
-			c = d.getContext();
+		for (int i = 0; i < n; i++) {
+			if (ds[i].isConnected()) {
+				System.out.print("" + i);
+			} else {
+				System.out.print(" ");
+			}
+			
 		}
+		System.out.println();
+		Context c = null;
+		int r = 0;
+		while (c == null) {
+			JLG.debug("try to pick up a connected datasource");
+			r = JLG.random(n);
+			DataSource d = ds[r];
+			c = d.getContext();
+			if (stopNow == true) {
+				return;
+			}
+		}
+		JLG.debug("found datasource=" + r);
 		DHTDataModel dht = (DHTDataModel) c.getDataModel();
 		dht.set("key" + JLG.random(100), "value" + JLG.random(100));
 		
 		c = null;
 		while (c == null) {
-			DataSource d = ds[JLG.random(n)];
+			JLG.debug("try to pick up a connected datasource 2");
+			r = JLG.random(n);
+			DataSource d = ds[r];
 			c = d.getContext();
+			if (stopNow == true) {
+				return;
+			}
+
 		}
-		JLG.debug(dht.keySet().toString());
+		JLG.debug("found datasource=" + r);
+		JLG.debug("keyset size: " + dht.keySet().size());
 		String key = "key" + JLG.random(100);
 		JLG.debug("getting " + key + " : " + dht.get(key));
 	}
@@ -100,7 +128,11 @@ public class DHTInterestingStress extends TopContainer {
 		// start all
 		for (int i = 0; i < n; i++) {
 			ds[i].connect();
+			ContactMap cm = ds[i].getComponent(ContactMap.class);
+			JLG.debug("ds[" + i + "] contact map size: " + cm.size());
 		}
+		
+		
 
 		// run availability thread.
 		Thread t = new Thread(new Runnable() {
@@ -110,7 +142,7 @@ public class DHTInterestingStress extends TopContainer {
 					DHTInterestingStress.this.insureAvailability();
 				}
 			}
-		});
+		}, "insureAvailability");
 
 		t.start();
 
@@ -126,23 +158,29 @@ public class DHTInterestingStress extends TopContainer {
 					}
 				}
 			}
-		});
+		}, "activity");
 		t2.start();
 
 		Thread.sleep(duration * 1000);
 		stopNow = true;
 
 		for (int i = 0; i < n; i++) {
+			JLG.debug("disconnecting " + i);
 			ds[i].disconnect();
 		}
 		JLG.debug("app finished");
+		JLG.debug("stopNow=" + stopNow);
+		//JLG.showActiveThreads();
+		
 	}
 
 	protected void insureAvailability() {
 		// every second, make a decision to switch the status of an agent.
 		try {
 			Thread.sleep(1000);
-			for (DataSource d : ds) {
+			JLG.debug("wake up");
+			for (int i = 1; i < ds.length; i++) {
+				DataSource d = ds[i];
 				if (d.isConnected()) {
 					// take a chance to disconnect
 					double r = Math.random();
@@ -151,7 +189,7 @@ public class DHTInterestingStress extends TopContainer {
 					}
 				} else {
 					double r = Math.random();
-					if (r <= availabilityRate) {
+					if (r <= availabilityRate && stopNow == false) {
 						d.connect();
 					}
 				}

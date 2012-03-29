@@ -56,6 +56,7 @@ public abstract class DSPDataSource extends DataSource {
 			server.start();
 			contactMap.addMyself();
 			client.declareContact();
+			client.askForContact();
 		}
 	}
 

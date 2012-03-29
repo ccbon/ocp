@@ -43,7 +43,7 @@ public class HTTPListener extends DataSourceContainer implements IListener {
 			httpServer.setPort(port);
 			httpServer.setHandler(handler);
 
-			t = new Thread(httpServer);
+			t = new Thread(httpServer, "HTTPServer");
 			t.start();
 
 			

@@ -38,7 +38,7 @@ public class TCPClient extends DataSourceContainer {
 		this.port = port;
 	}
 
-	public byte[] request(byte[] input) throws Exception {
+	public synchronized byte[] request(byte[] input) throws Exception {
 		byte[] output = null;
 
 		retrieveSocket();
@@ -63,6 +63,7 @@ public class TCPClient extends DataSourceContainer {
 		JLG.debug("input flush");
 
 		output = s.readMessage(in);
+		JLG.debug("output received");
 		return output;
 	}
 
@@ -74,7 +75,9 @@ public class TCPClient extends DataSourceContainer {
 	}
 
 	private void createNewSocket() throws Exception {
+		JLG.debug("start new socket");
 		clientSocket = new Socket(hostname, port);
+		clientSocket.setSoTimeout(100);
 		try {
 			if (in != null) {
 				in.close();
@@ -87,7 +90,7 @@ public class TCPClient extends DataSourceContainer {
 
 		in = new DataInputStream(clientSocket.getInputStream());
 		out = new DataOutputStream(clientSocket.getOutputStream());
-
+		JLG.debug("end new socket");
 	}
 
 	public IProtocol getProtocol() {

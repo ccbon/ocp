@@ -1,5 +1,6 @@
 package org.ocpteam.protocol.dht;
 
+import java.io.StreamCorruptedException;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -38,13 +39,17 @@ public class DHTDataModel extends DataSourceContainer implements IMapDataModel {
 					.serializeInput(new InputMessage(m.retrieve(), key, value));
 			for (Contact c : ds().contactMap.getArray()) {
 				try {
+					JLG.debug("request");
 					byte[] response = ds().client.request(c, message);
+					JLG.debug("request end");
 					if (response != null) {
 						value = (String) ds().client.getProtocol()
 								.getMessageSerializer()
 								.deserializeOutput(response);
+						return value;
 					}
 				} catch (NotAvailableContactException e) {
+					JLG.debug("detach");
 					ds().client.detach(c);
 				}
 			}
@@ -77,6 +82,7 @@ public class DHTDataModel extends DataSourceContainer implements IMapDataModel {
 				while (true) {
 					try {
 						byte[] response = ds().client.request(c, message);
+						
 						String[] array = (String[]) ds().client.getProtocol()
 								.getMessageSerializer()
 								.deserializeOutput(response);
@@ -85,7 +91,7 @@ public class DHTDataModel extends DataSourceContainer implements IMapDataModel {
 							set.add(s);
 						}
 						break;
-					} catch (Exception e) {
+					} catch (StreamCorruptedException e) {
 						retry++;
 						if (retry > 3) {
 							throw e;

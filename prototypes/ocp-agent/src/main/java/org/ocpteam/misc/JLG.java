@@ -35,10 +35,10 @@ public class JLG {
 		NL = System.getProperty("line.separator");
 	}
 	private static boolean sDebug = false;
-	
+
 	public static Set<String> set = new HashSet<String>();
 	public static boolean bUseSet = false;
-	
+
 	public static void debug_on() {
 		sDebug = true;
 		debug("debug on");
@@ -346,18 +346,26 @@ public class JLG {
 	}
 
 	public static void showActiveThreads() {
-		JLG.debug("active threads:");
-		ThreadGroup tg = Thread.currentThread().getThreadGroup();
-		Thread[] list = new Thread[tg.activeCount()];
-		tg.enumerate(list);
-		for (Thread t : list) {
-			JLG.debug("running thread: " + t.getName());
-		}
-		
-		ThreadGroup[] glist = new ThreadGroup[tg.activeGroupCount()];
-		tg.enumerate(glist);
-		for (ThreadGroup t : glist) {
-			JLG.debug("running threadgroup: " + t.getName());
+		while (true) {
+			JLG.debug("active threads:");
+			ThreadGroup tg = Thread.currentThread().getThreadGroup();
+			Thread[] list = new Thread[tg.activeCount()];
+			tg.enumerate(list);
+			for (Thread t : list) {
+				JLG.debug("running thread: " + t.getName());
+			}
+
+			ThreadGroup[] glist = new ThreadGroup[tg.activeGroupCount()];
+			tg.enumerate(glist);
+			for (ThreadGroup t : glist) {
+				JLG.debug("running threadgroup: " + t.getName());
+			}
+			try {
+				Thread.sleep(10000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 

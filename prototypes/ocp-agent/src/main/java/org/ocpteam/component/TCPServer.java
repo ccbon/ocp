@@ -35,7 +35,7 @@ public class TCPServer extends Container implements Runnable {
 				Socket clientSocket = serverSocket.accept();
 				ITCPServerHandler myHandler = handler.duplicate();
 				myHandler.setSocket(clientSocket);
-				JLGThread t = new JLGThread(tg, myHandler);
+				JLGThread t = new JLGThread(tg, myHandler, "TCPHandler");
 				t.start();
 			}
 		} catch (Exception e) {

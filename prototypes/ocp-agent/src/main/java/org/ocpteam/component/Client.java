@@ -1,15 +1,13 @@
 package org.ocpteam.component;
 
-import java.net.ConnectException;
+import java.net.SocketException;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Queue;
-import java.util.Set;
 
 import org.apache.xmlrpc.client.XmlRpcClient;
 import org.apache.xmlrpc.client.XmlRpcClientConfigImpl;
@@ -30,6 +28,7 @@ public class Client extends DataSourceContainer implements IClient {
 
 	private Map<URL, Channel> channelMap;
 	protected HashMap<String, Class<? extends Channel>> channelFactoryMap;
+	private ContactMap contactMap;
 
 	public Client() throws Exception {
 		addComponent(TCPChannel.class);
@@ -41,6 +40,7 @@ public class Client extends DataSourceContainer implements IClient {
 		super.init();
 		channelMap = new HashMap<URL, Channel>();
 		initFactory();
+		contactMap = ds().getComponent(ContactMap.class);
 	}
 
 	public Channel newChannel(URL url) throws Exception {
@@ -159,10 +159,13 @@ public class Client extends DataSourceContainer implements IClient {
 		if (understand(channel)) {
 			JLG.debug("getContact");
 			DSPModule m = getProtocol().getComponent(DSPModule.class);
-			byte[] input = getProtocol().getMessageSerializer().serializeInput(new InputMessage(m.getContact()));
+			byte[] input = getProtocol().getMessageSerializer().serializeInput(
+					new InputMessage(m.getContact()));
 			byte[] response = channel.request(input);
-			Contact c = (Contact) getProtocol().getMessageSerializer().deserializeOutput(response);
-			// we update a host because an agent does not see its public address.
+			Contact c = (Contact) getProtocol().getMessageSerializer()
+					.deserializeOutput(response);
+			// we update a host because an agent does not see its public
+			// address.
 			c.updateHost(channel.getUrl().getHost());
 			return c;
 		}
@@ -233,11 +236,14 @@ public class Client extends DataSourceContainer implements IClient {
 					JLG.debug("sending request with channel: " + channel);
 					output = channel.request(string);
 					return output;
-				} catch (ConnectException e) {
+				} catch (java.net.SocketTimeoutException e) {
+					continue;
+				} catch (SocketException e) {
 					continue;
 				}
 			}
 		}
+		detach(contact);
 		throw new NotAvailableContactException();
 	}
 
@@ -257,35 +263,40 @@ public class Client extends DataSourceContainer implements IClient {
 		sendAll(input);
 	}
 
-	public void sendAll(byte[] message) throws Exception {
-		// tell all your contact of what happened
-
-		Set<Contact> contactToBeDetached = new HashSet<Contact>();
+	public void sendAll(final byte[] message) throws Exception {
+		// tell all your contact about what happened
 		ContactMap contactMap = ds().getComponent(ContactMap.class);
-		Iterator<Contact> itc = contactMap.getContactSnapshotList().iterator();
-		while (itc.hasNext()) {
-			Contact c = itc.next();
+
+		for (final Contact c : contactMap.getArray()) {
 			if (c.isMyself()) {
 				// do not send the message to myself
 				continue;
 			}
-			try {
-				// we do not care about the response
-				send(c, message);
-			} catch (NotAvailableContactException e) {
-				contactToBeDetached.add(c);
-			} catch (Exception e) {
-				// we don't care for agent that don't understand the sent
-				// message.
-				JLG.debug("Contact answered with error: " + e.getMessage());
-			}
-		}
-		Iterator<Contact> it = contactToBeDetached.iterator();
-		while (it.hasNext()) {
-			Contact c = it.next();
-			detach(c);
-		}
+			new Thread(new Runnable() {
 
+				@Override
+				public void run() {
+					try {
+						// we do not care about the response
+						send(c, message);
+					} catch (NotAvailableContactException e) {
+						JLG.debug("detach");
+						try {
+							detach(c);
+						} catch (Exception e1) {
+							e.printStackTrace();
+							// at least we tried...
+						}
+					} catch (Exception e) {
+						// we don't care for agent that don't understand the
+						// sent
+						// message.
+						JLG.debug("Contact answered with error: "
+								+ e.getMessage());
+					}
+				}
+			}).start();
+		}
 	}
 
 	public void detach(Contact contact) throws Exception {
@@ -297,10 +308,10 @@ public class Client extends DataSourceContainer implements IClient {
 			return;
 		}
 		contactMap.remove(contact.getId());
-		DSPModule m = getProtocol().getComponent(DSPModule.class);
-		byte[] message = getProtocol().getMessageSerializer().serializeInput(
-				new InputMessage(m.detach(), contact));
-		sendAll(message);
+		// DSPModule m = getProtocol().getComponent(DSPModule.class);
+		// byte[] message = getProtocol().getMessageSerializer().serializeInput(
+		// new InputMessage(m.detach(), contact));
+		// sendAll(message);
 	}
 
 	public void send(Contact c, byte[] message) throws Exception {
@@ -315,4 +326,22 @@ public class Client extends DataSourceContainer implements IClient {
 		return ds().getComponent(Agent.class);
 	}
 
+	public void askForContact() throws Exception {
+		DSPModule m = getProtocol().getComponent(DSPModule.class);
+		byte[] input = getProtocol().getMessageSerializer().serializeInput(
+				new InputMessage(m.askForContact()));
+		for (Contact c : contactMap.getArray()) {
+			try {
+				byte[] response = request(c, input);
+				// strategy : friends of my friends are my friends.
+				Contact[] contactsOfContact = (Contact[]) getProtocol()
+						.getMessageSerializer().deserializeOutput(response);
+				for (Contact nc : contactsOfContact) {
+					contactMap.add(nc);
+				}
+			} catch (NotAvailableContactException e) {
+				detach(c);
+			}
+		}
+	}
 }

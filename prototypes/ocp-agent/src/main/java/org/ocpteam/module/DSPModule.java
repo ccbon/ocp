@@ -19,6 +19,7 @@ public class DSPModule extends Module {
 	protected static final int GET_CONTACT = 1002;
 	protected static final int PING = 1003;
 	protected static final int DETACH = 1004;
+	protected static final int ASK_FOR_CONTACT = 1005;
 
 	public ITransaction declareContact() {
 		return new ITransaction() {
@@ -109,6 +110,22 @@ public class DSPModule extends Module {
 			@Override
 			public int getId() {
 				return DETACH;
+			}
+		};
+	}
+
+	public ITransaction askForContact() {
+		return new ITransaction() {
+			
+			@Override
+			public Serializable run(Session session, Serializable[] objects)
+					throws Exception {
+				return session.ds().getComponent(ContactMap.class).getArray();
+			}
+			
+			@Override
+			public int getId() {
+				return ASK_FOR_CONTACT;
 			}
 		};
 	}
