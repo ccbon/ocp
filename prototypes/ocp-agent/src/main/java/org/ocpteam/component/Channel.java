@@ -1,6 +1,5 @@
 package org.ocpteam.component;
 
-import org.ocpteam.entity.Contact;
 import org.ocpteam.misc.URL;
 
 /**
@@ -22,8 +21,6 @@ public abstract class Channel extends DataSourceContainer {
 	}
 	
 	public abstract byte[] request(byte[] input) throws Exception;
-
-	public abstract Contact getContact() throws Exception;
 
 	public abstract String getProtocolName();
 	

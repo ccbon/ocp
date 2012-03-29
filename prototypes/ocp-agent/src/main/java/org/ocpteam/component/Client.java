@@ -157,7 +157,13 @@ public class Client extends DataSourceContainer implements IClient {
 		// For that, I need to know the channel to use.
 		JLG.debug("get contact from channel " + channel);
 		if (understand(channel)) {
-			Contact c = channel.getContact();
+			JLG.debug("getContact");
+			DSPModule m = getProtocol().getComponent(DSPModule.class);
+			byte[] input = getProtocol().getMessageSerializer().serializeInput(new InputMessage(m.getContact()));
+			byte[] response = channel.request(input);
+			Contact c = (Contact) getProtocol().getMessageSerializer().deserializeOutput(response);
+			// we update a host because an agent does not see its public address.
+			c.updateHost(channel.getUrl().getHost());
 			return c;
 		}
 		JLG.warn("channel not reachable. get contact returns null.");

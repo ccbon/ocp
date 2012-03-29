@@ -45,9 +45,12 @@ public class TCPClient extends DataSourceContainer {
 		try {
 			output = request0(input);
 		} catch (Exception e) {
-			if (e instanceof SocketException || e  instanceof EOFException) {
+			JLG.debug("try again");
+			if (e instanceof SocketException || e instanceof EOFException) {
 				createNewSocket();
 				output = request0(input);
+			} else {
+				throw e;
 			}
 		}
 		return output;
@@ -58,7 +61,7 @@ public class TCPClient extends DataSourceContainer {
 		IStreamSerializer s = protocol.getStreamSerializer();
 		s.writeMessage(out, input);
 		JLG.debug("input flush");
-		
+
 		output = s.readMessage(in);
 		return output;
 	}

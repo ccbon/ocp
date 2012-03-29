@@ -1,6 +1,5 @@
 package org.ocpteam.component;
 
-import org.ocpteam.protocol.ocp.OCPContact;
 
 public class MyselfChannel extends Channel {
 	
@@ -10,11 +9,6 @@ public class MyselfChannel extends Channel {
 	@Override
 	public byte[] request(byte[] input) throws Exception {
 		return ds().getComponent(Protocol.class).process(input, null);
-	}
-
-	@Override
-	public OCPContact getContact() throws Exception {
-		throw new Exception("why do you need to call me ?");
 	}
 
 	@Override

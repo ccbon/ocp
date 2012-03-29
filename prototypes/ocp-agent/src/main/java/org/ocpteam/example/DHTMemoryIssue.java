@@ -3,8 +3,6 @@ package org.ocpteam.example;
 import java.util.Properties;
 
 import org.ocpteam.component.NATTraversal;
-import org.ocpteam.component.TCPServer;
-import org.ocpteam.component.TCPServerHandler;
 import org.ocpteam.core.TopContainer;
 import org.ocpteam.entity.MessageSerializer;
 import org.ocpteam.misc.JLG;
@@ -50,7 +48,6 @@ public class DHTMemoryIssue extends TopContainer {
 		final DHTDataSource[] ds = new DHTDataSource[n];
 		
 		Runnable run1 = new Runnable() {
-			int counter = 1;
 			
 			@Override
 			public void run() {

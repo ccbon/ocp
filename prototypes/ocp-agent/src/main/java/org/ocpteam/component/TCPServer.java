@@ -16,10 +16,10 @@ public class TCPServer extends Container implements Runnable {
 	private boolean stoppingNow = false;
 	private ITCPServerHandler handler;
 	private ThreadGroup tg;
-	
+
 	public TCPServer() throws Exception {
 	}
-	
+
 	public void setPort(int port) {
 		this.port = port;
 	}
@@ -57,16 +57,21 @@ public class TCPServer extends Container implements Runnable {
 			e.printStackTrace();
 		}
 		// interrupt thread of tg.
-		Thread[] list = new Thread[tg.activeCount()];
-		tg.enumerate(list);
-		for (Thread th : list) {
-			ITCPServerHandler myHandler = (ITCPServerHandler) ((JLGThread) th).getRunnable();
-			Socket socket = myHandler.getSocket();
-			try {
-				socket.close();
-			} catch (IOException e) {
-				e.printStackTrace();
+		try {
+			Thread[] list = new Thread[tg.activeCount()];
+			tg.enumerate(list);
+			for (Thread th : list) {
+				ITCPServerHandler myHandler = (ITCPServerHandler) ((JLGThread) th)
+						.getRunnable();
+				Socket socket = myHandler.getSocket();
+				try {
+					socket.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 		t.interrupt();
 		JLG.debug("end stopping a TCP server with port: " + port);

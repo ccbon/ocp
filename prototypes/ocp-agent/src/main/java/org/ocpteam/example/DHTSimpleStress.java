@@ -3,8 +3,6 @@ package org.ocpteam.example;
 import java.util.Properties;
 
 import org.ocpteam.component.NATTraversal;
-import org.ocpteam.component.TCPServer;
-import org.ocpteam.component.TCPServerHandler;
 import org.ocpteam.core.TopContainer;
 import org.ocpteam.entity.MessageSerializer;
 import org.ocpteam.misc.JLG;
@@ -33,7 +31,7 @@ public class DHTSimpleStress extends TopContainer {
 	@Override
 	public void init() throws Exception {
 		super.init();
-		n = 10;
+		n = 2;
 		port = 35000;
 		JLG.debug_on();
 		JLG.bUseSet = true;
@@ -119,7 +117,7 @@ public class DHTSimpleStress extends TopContainer {
 					//JLG.debug("key" + j + " = " + dht.get("key" + j));
 				}	
 				counter++;
-				counter=counter % 100;
+				counter=counter % 10000;
 			}
 		};
 

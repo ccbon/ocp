@@ -1,12 +1,6 @@
 package org.ocpteam.component;
 
-import java.net.ConnectException;
-
-import org.ocpteam.entity.Contact;
-import org.ocpteam.entity.InputMessage;
-import org.ocpteam.misc.JLG;
 import org.ocpteam.misc.URL;
-import org.ocpteam.module.DSPModule;
 
 
 public class TCPChannel extends Channel {
@@ -42,22 +36,6 @@ public class TCPChannel extends Channel {
 			return null;
 		}
 		return result;
-	}
-
-	@Override
-	public Contact getContact() throws Exception {
-		try {
-			JLG.debug("getContact");
-			DSPModule m = getProtocol().getComponent(DSPModule.class);
-			byte[] input = getProtocol().getMessageSerializer().serializeInput(new InputMessage(m.getContact()));
-			byte[] response = request(input);
-			Contact c = (Contact) getProtocol().getMessageSerializer().deserializeOutput(response);
-			// we update a host because an agent does not see its public address.
-			c.updateHost(url.getHost());
-			return c;
-		} catch (ConnectException e) {
-			return null;
-		}
 	}
 
 	@Override

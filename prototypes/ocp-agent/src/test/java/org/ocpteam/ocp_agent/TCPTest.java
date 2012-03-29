@@ -6,6 +6,7 @@ import org.ocpteam.component.NATTraversal;
 import org.ocpteam.component.TCPClient;
 import org.ocpteam.component.TCPListener;
 import org.ocpteam.example.MinimalistProtocol;
+import org.ocpteam.interfaces.IProtocol;
 import org.ocpteam.misc.JLG;
 import org.ocpteam.misc.URL;
 
@@ -25,17 +26,18 @@ public class TCPTest {
 			int i = 0;
 			int n = 23;
 			JLG.debug_on();
-
+			IProtocol protocol = new MinimalistProtocol();
 			TCPListener tcplistener = new TCPListener();
 			tcplistener.removeComponent(NATTraversal.class);
 			tcplistener.init();
 			tcplistener.setUrl(new URL("tcp://localhost:23456"));
-			tcplistener.setProtocol(new MinimalistProtocol());
+			tcplistener.setProtocol(protocol);
 			tcplistener.start();
 
 			TCPClient tcpclient = new TCPClient();
 			tcpclient.setPort(23456);
 			tcpclient.setHostname("localhost");
+			tcpclient.setProtocol(protocol);
 			while (i < n) {
 				byte[] response = tcpclient.request("hello".getBytes());
 				JLG.debug("response[" + i + "]=" + new String(response));
