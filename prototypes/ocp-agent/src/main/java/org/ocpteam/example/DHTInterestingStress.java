@@ -1,8 +1,6 @@
 package org.ocpteam.example;
 
 import java.util.Properties;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import org.ocpteam.component.ContactMap;
 import org.ocpteam.component.DataSource;
@@ -95,7 +93,7 @@ public class DHTInterestingStress extends TopContainer {
 		}
 		JLG.debug("found datasource=" + r);
 		//JLG.debug("keyset size: " + dht.keySet().size());
-		String key = "key" + JLG.random(100);
+		//String key = "key" + JLG.random(100);
 		//JLG.debug("getting " + key + " : " + dht.get(key));
 	}
 
