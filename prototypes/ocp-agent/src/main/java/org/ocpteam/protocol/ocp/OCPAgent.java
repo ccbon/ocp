@@ -175,7 +175,6 @@ public class OCPAgent extends Agent {
 	public Contact toContact() {
 		// convert the agent public information into a contact
 		OCPContact c = new OCPContact(this.id);
-		c.setName(this.name);
 		c.publicKey = this.keyPair.getPublic().getEncoded();
 		// add the listener url and node id information
 		if (getServer() != null) {
@@ -230,7 +229,9 @@ public class OCPAgent extends Agent {
 	public boolean isResponsible(Address address) throws Exception {
 		Id nodeId = getNodeId(address);
 		OCPContact contact = getContactFromNodeId(nodeId);
+		JLG.debug("contact = " + contact);
 		return contact.getName().equals(id.toString());
+		//return true;
 	}
 
 	public void remove(Address address, byte[] addressSignature)

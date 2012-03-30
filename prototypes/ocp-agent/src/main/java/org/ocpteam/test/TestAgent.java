@@ -31,7 +31,7 @@ public class TestAgent {
 			p1.setProperty("server", "yes");
 			p1.setProperty("server.listener.1", "tcp://localhost:22220");
 			p1.setProperty("server.listener.2", "http://localhost:11110");
-			p1.setProperty("server.isFirstAgent", "yes");
+			p1.setProperty("agent.isFirst", "yes");
 			
 			p1.setProperty("network.hello", "didounette");
 			p1.setProperty("network.coucou", "jlg");

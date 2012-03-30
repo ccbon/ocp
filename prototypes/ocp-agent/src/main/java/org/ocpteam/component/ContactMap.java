@@ -10,7 +10,6 @@ import java.util.Set;
 
 import org.ocpteam.entity.Contact;
 import org.ocpteam.entity.InputMessage;
-import org.ocpteam.misc.Id;
 import org.ocpteam.misc.JLG;
 import org.ocpteam.misc.URL;
 import org.ocpteam.module.DSPModule;
@@ -29,8 +28,8 @@ public class ContactMap extends DataSourceContainer {
 		return (DSPDataSource) super.ds();
 	}
 
-	public Contact getContact(Id contactId) throws Exception {
-		Contact contact = map.get(contactId);
+	public Contact getContact(String name) throws Exception {
+		Contact contact = map.get(name);
 		if (contact == null) {
 			throw new Exception("contact not found in my contact list.");
 		}

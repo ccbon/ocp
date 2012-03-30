@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.security.PublicKey;
 import java.security.Signature;
 
-import org.ocpteam.misc.Id;
 import org.ocpteam.misc.JLG;
 
 
@@ -17,7 +16,7 @@ public class Captcha implements Serializable {
 	public String challengeObject;
 	public long created;
 	public byte[] cryptedAnswer;
-	public Id contactId;
+	public String contactId;
 	public String signatureAlgo;
 	public byte[] signature;
 
@@ -27,7 +26,8 @@ public class Captcha implements Serializable {
 		cryptedAnswer = agent.crypt("didounette".getBytes());
 		JLG.debug("cryptedAnswer = " + cryptedAnswer);
 		JLG.debug("decryptedAnswer = " + new String(agent.decrypt(cryptedAnswer)));
-		contactId = agent.id;
+		contactId = agent.id.toString();
+		JLG.debug("contactId = " + contactId);
 		signatureAlgo = agent.signatureAlgorithm;
 		Signature s = Signature.getInstance(signatureAlgo);
 		s.initSign(agent.keyPair.getPrivate());

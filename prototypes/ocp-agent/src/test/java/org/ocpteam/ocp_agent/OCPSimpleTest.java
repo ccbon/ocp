@@ -4,8 +4,11 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.Properties;
 
+import org.ocpteam.component.Agent;
 import org.ocpteam.component.DataSource;
 import org.ocpteam.misc.JLG;
+import org.ocpteam.protocol.ocp.Captcha;
+import org.ocpteam.protocol.ocp.OCPAgent;
 import org.ocpteam.protocol.ocp.OCPDataSource;
 
 public class OCPSimpleTest {
@@ -65,6 +68,17 @@ public class OCPSimpleTest {
 			JLG.debug("contact map size:" + ds.contactMap.getContactSnapshotList().size());
 			JLG.debug("contact map: " + ds.contactMap.getContactSnapshotList().toString());
 
+			OCPAgent a2 = (OCPAgent) ds2.getComponent(Agent.class);
+			String username = "jlguenego";
+			String password = "jlouis";
+			Captcha captcha = a2.wantToCreateUser(username, password);
+			
+			//String answer = JLG.input("captcha challenge: " + captcha.challengeObject + "> ");
+			String answer = "didounette";
+			a2.createUser(username, password, 2, captcha, answer);
+			JLG.debug(a2.toString());
+			
+			
 			ds2.disconnect();
 			ds.disconnect();
 		} catch (Exception e) {
