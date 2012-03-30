@@ -27,7 +27,7 @@ public class OCPSimpleTest {
 		JLG.debug_on();
 		JLG.debug("starting 2 agents");
 		JLG.debug("working directory = " + System.getProperty("user.dir"));
-
+		JLG.rm(System.getenv("TEMP") + "/ocp_agent_storage");
 		try {
 
 			// start 2 agents
