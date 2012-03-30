@@ -1,12 +1,8 @@
-package org.ocpteam.module;
+package org.ocpteam.component;
 
 import java.io.Serializable;
 import java.net.InetAddress;
 
-import org.ocpteam.component.Agent;
-import org.ocpteam.component.ContactMap;
-import org.ocpteam.component.DSPDataSource;
-import org.ocpteam.component.Module;
 import org.ocpteam.entity.Contact;
 import org.ocpteam.entity.Session;
 import org.ocpteam.interfaces.ITransaction;

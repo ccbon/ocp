@@ -1,6 +1,7 @@
 package org.ocpteam.component;
 
 import java.net.SocketException;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -8,6 +9,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Queue;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import org.apache.xmlrpc.client.XmlRpcClient;
 import org.apache.xmlrpc.client.XmlRpcClientConfigImpl;
@@ -21,7 +25,6 @@ import org.ocpteam.interfaces.IClient;
 import org.ocpteam.interfaces.IProtocol;
 import org.ocpteam.misc.JLG;
 import org.ocpteam.misc.URL;
-import org.ocpteam.module.DSPModule;
 import org.ocpteam.protocol.ocp.OCPAgent;
 
 public class Client extends DataSourceContainer implements IClient {
@@ -29,6 +32,7 @@ public class Client extends DataSourceContainer implements IClient {
 	private Map<URL, Channel> channelMap;
 	protected HashMap<String, Class<? extends Channel>> channelFactoryMap;
 	private ContactMap contactMap;
+	ExecutorService exe = Executors.newCachedThreadPool();
 
 	public Client() throws Exception {
 		addComponent(TCPChannel.class);
@@ -264,42 +268,53 @@ public class Client extends DataSourceContainer implements IClient {
 		JLG.debug("send all");
 		// tell all your contact about what happened
 		ContactMap contactMap = ds().getComponent(ContactMap.class);
-
-		for (Contact c : contactMap.getOtherContacts()) {
-
-			try {
-				// we do not care about the response
-				send(c, message);
-			} catch (NotAvailableContactException e) {
-				JLG.debug("detach");
-				try {
-					detach(c);
-				} catch (Exception e1) {
-					e.printStackTrace();
-					// at least we tried...
+		Collection<Callable<Object>> tasks = new LinkedList<Callable<Object>>();
+		for (final Contact c : contactMap.getOtherContacts()) {
+			tasks.add(Executors.callable(new Runnable() {
+				@Override
+				public void run() {
+					try {
+						// we do not care about the response
+						send(c, message);
+					} catch (NotAvailableContactException e) {
+						JLG.debug("detach");
+						try {
+							detach(c);
+						} catch (Exception e1) {
+							e.printStackTrace();
+							// at least we tried...
+						}
+					} catch (Exception e) {
+						// we don't care for agent that don't understand the
+						// sent
+						// message.
+						JLG.debug("Contact answered with error: " + e.getMessage());
+					}
 				}
-			} catch (Exception e) {
-				// we don't care for agent that don't understand the
-				// sent
-				// message.
-				JLG.debug("Contact answered with error: " + e.getMessage());
-			}
+			}));
 		}
+		exe.invokeAll(tasks);
 	}
 
 	public void detach(Contact contact) throws Exception {
 		JLG.debug("detaching contact: " + contact);
 		// tell to your contacts this contact has disappeared.
 
-		ContactMap contactMap = ds().getComponent(ContactMap.class);
-		if (!contactMap.containsValue(contact)) {
-			return;
-		}
 		contactMap.remove(contact);
-		// DSPModule m = getProtocol().getComponent(DSPModule.class);
-		// byte[] message = getProtocol().getMessageSerializer().serializeInput(
-		// new InputMessage(m.detach(), contact));
-		// sendAll(message);
+		DSPModule m = getProtocol().getComponent(DSPModule.class);
+		final byte[] message = getProtocol().getMessageSerializer().serializeInput(
+				new InputMessage(m.detach(), contact));
+
+		exe.execute(new Runnable() {
+			
+			@Override
+			public void run() {
+				try {
+					sendAll(message);
+				} catch (Exception e) {
+				}	
+			}
+		});
 	}
 
 	public void send(Contact c, byte[] message) throws Exception {
@@ -328,6 +343,9 @@ public class Client extends DataSourceContainer implements IClient {
 						.getMessageSerializer().deserializeOutput(response);
 				JLG.debug(ds().getName() + " received " + contactsOfContact.length + " contact(s).");
 				for (Contact nc : contactsOfContact) {
+					if (nc.getName().equals(ds().getName())) {
+						continue;
+					}
 					contactMap.add(nc);
 				}
 			} catch (NotAvailableContactException e) {

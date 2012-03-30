@@ -77,7 +77,7 @@ public class TCPClient extends DataSourceContainer {
 	private void createNewSocket() throws Exception {
 		JLG.debug("start new socket");
 		clientSocket = new Socket(hostname, port);
-		clientSocket.setSoTimeout(100);
+		clientSocket.setSoTimeout(5);
 		try {
 			if (in != null) {
 				in.close();

@@ -3,9 +3,9 @@ package org.ocpteam.protocol.ocp;
 import java.io.Serializable;
 
 import org.ocpteam.component.Agent;
+import org.ocpteam.component.DSPModule;
 import org.ocpteam.entity.Session;
 import org.ocpteam.interfaces.ITransaction;
-import org.ocpteam.module.DSPModule;
 
 public class OCPModule extends DSPModule {
 	

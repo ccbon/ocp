@@ -66,11 +66,14 @@ public class Contact implements Serializable {
 	@Override
 	public String toString() {
 		String result = getName();
-		Iterator<URL> itp = getUrlList().iterator();
-		while (itp.hasNext()) {
-			URL url = itp.next();
-			result += "[" + url.toString() + "]";
+		if (isMyself()) {
+			result += "<myself>";
 		}
+//		Iterator<URL> itp = getUrlList().iterator();
+//		while (itp.hasNext()) {
+//			URL url = itp.next();
+//			result += "[" + url.toString() + "]";
+//		}
 		return result;
 	}
 	

@@ -1,8 +1,14 @@
 package org.ocpteam.protocol.dht;
 
 import java.io.StreamCorruptedException;
+import java.util.Collection;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.Set;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 import org.ocpteam.component.DataSourceContainer;
 import org.ocpteam.entity.Contact;
@@ -32,29 +38,41 @@ public class DHTDataModel extends DataSourceContainer implements IMapDataModel {
 	public String get(String key) throws Exception {
 		// strategy: retrieve the first one available (locally first)
 		String value = ds().retrieve(key);
-		if (value == null) {
-			// try to find a node with contains the key.
-			DHTModule m = ds().getComponent(DHTModule.class);
-			byte[] message = ds().client.getProtocol().getMessageSerializer()
-					.serializeInput(new InputMessage(m.retrieve(), key, value));
-			for (Contact c : ds().contactMap.getOtherContacts()) {
-				try {
-					JLG.debug("request");
-					byte[] response = ds().client.request(c, message);
-					JLG.debug("request end");
-					if (response != null) {
-						value = (String) ds().client.getProtocol()
-								.getMessageSerializer()
-								.deserializeOutput(response);
-						return value;
-					}
-				} catch (NotAvailableContactException e) {
-					JLG.debug("detach");
-					ds().client.detach(c);
-				}
-			}
+		if (value != null) {
+			return value;
 		}
-		return value;
+		// try to find a node with contains the key.
+		DHTModule m = ds().getComponent(DHTModule.class);
+		final byte[] message = ds().client.getProtocol().getMessageSerializer()
+				.serializeInput(new InputMessage(m.retrieve(), key, value));
+		ExecutorService exe = Executors.newCachedThreadPool();
+		Collection<Callable<String>> tasks = new LinkedList<Callable<String>>();
+		for (final Contact c : ds().contactMap.getOtherContacts()) {
+			tasks.add(new Callable<String>() {
+
+				@Override
+				public String call() throws Exception {
+					try {
+						JLG.debug("request");
+						byte[] response = ds().client.request(c, message);
+						JLG.debug("request end");
+						if (response != null) {
+							String value = (String) ds().client.getProtocol()
+									.getMessageSerializer()
+									.deserializeOutput(response);
+							return value;
+						}
+					} catch (NotAvailableContactException e) {
+						JLG.debug("detach");
+						ds().client.detach(c);
+					}
+					throw new Exception();
+				}
+			});
+		}
+
+		return exe.invokeAny(tasks);
+
 	}
 
 	@Override
@@ -82,7 +100,7 @@ public class DHTDataModel extends DataSourceContainer implements IMapDataModel {
 				while (true) {
 					try {
 						byte[] response = ds().client.request(c, message);
-						
+
 						String[] array = (String[]) ds().client.getProtocol()
 								.getMessageSerializer()
 								.deserializeOutput(response);

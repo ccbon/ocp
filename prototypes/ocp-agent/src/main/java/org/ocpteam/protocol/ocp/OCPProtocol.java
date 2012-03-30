@@ -11,10 +11,10 @@ import java.util.Iterator;
 import java.util.LinkedList;
 
 import org.ocpteam.component.Agent;
+import org.ocpteam.component.DSPModule;
 import org.ocpteam.component.Protocol;
 import org.ocpteam.misc.Id;
 import org.ocpteam.misc.JLG;
-import org.ocpteam.module.DSPModule;
 
 public class OCPProtocol extends Protocol {
 

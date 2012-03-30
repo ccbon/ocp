@@ -12,7 +12,6 @@ import org.ocpteam.entity.Contact;
 import org.ocpteam.entity.InputMessage;
 import org.ocpteam.misc.JLG;
 import org.ocpteam.misc.URL;
-import org.ocpteam.module.DSPModule;
 
 public class ContactMap extends DataSourceContainer {
 
@@ -58,6 +57,11 @@ public class ContactMap extends DataSourceContainer {
 	}
 
 	public Contact put(String name, Contact contact) {
+		JLG.debug("adding contact to contactmap: " + contact);
+		if (contact.getName().equals(ds().getName())) {
+			// myself is already added by addMyself...
+			return contact;
+		}
 		return map.put(name, contact);
 	}
 
@@ -77,21 +81,20 @@ public class ContactMap extends DataSourceContainer {
 		return map.containsValue(contact);
 	}
 
-	public void add(Contact c) throws Exception {
-		JLG.debug("adding contact to contactmap: " + c);
-		this.put(c.getName(), c);
+	public Contact add(Contact c) throws Exception {
+		return this.put(c.getName(), c);
 	}
 
 	public void addMyself() throws Exception {
 		Contact myself = ds().getComponent(Agent.class).toContact();
 		myself.getUrlList().clear();
+		myself.setMyself(true);
 		try {
 			myself.getUrlList().add(new URL("myself://localhost:0"));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		myself.setMyself(true);
-		this.add(myself);
+		map.put(myself.getName(), myself);
 	}
 
 	public int size() {
@@ -108,6 +111,7 @@ public class ContactMap extends DataSourceContainer {
 	}
 
 	public Contact[] getOtherContacts() {
+		JLG.debug("contactmap=" + this);
 		Contact[] result = new Contact[map.size() - 1];
 		int i = 0;
 		for (Contact c : (Contact[]) map.values().toArray(new Contact[map.size()])) {

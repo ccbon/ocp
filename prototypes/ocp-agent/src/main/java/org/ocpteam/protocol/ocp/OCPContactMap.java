@@ -13,7 +13,7 @@ public class OCPContactMap extends ContactMap {
 	
 	
 	@Override
-	public void add(Contact c) throws Exception {
+	public Contact add(Contact c) throws Exception {
 		super.add(c);
 		OCPAgent agent = (OCPAgent) ds().getComponent(Agent.class);
 		OCPContact contact = (OCPContact) c;
@@ -26,5 +26,6 @@ public class OCPContactMap extends ContactMap {
 			JLG.debug("adding node to nodeMap");
 			agent.nodeMap.put(id, contact);
 		}
+		return c;
 	}
 }

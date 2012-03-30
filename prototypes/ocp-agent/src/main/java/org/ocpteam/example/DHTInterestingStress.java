@@ -1,6 +1,8 @@
 package org.ocpteam.example;
 
 import java.util.Properties;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import org.ocpteam.component.ContactMap;
 import org.ocpteam.component.DataSource;
@@ -30,6 +32,7 @@ public class DHTInterestingStress extends TopContainer {
 	public boolean stopNow = false;
 	private int duration;
 	private long activity_sleep;
+	
 
 	public DHTInterestingStress() throws Exception {
 		addComponent(DHTDataSource.class);
@@ -91,9 +94,9 @@ public class DHTInterestingStress extends TopContainer {
 
 		}
 		JLG.debug("found datasource=" + r);
-		JLG.debug("keyset size: " + dht.keySet().size());
+		//JLG.debug("keyset size: " + dht.keySet().size());
 		String key = "key" + JLG.random(100);
-		JLG.debug("getting " + key + " : " + dht.get(key));
+		//JLG.debug("getting " + key + " : " + dht.get(key));
 	}
 
 	public void start() throws Exception {
@@ -103,6 +106,7 @@ public class DHTInterestingStress extends TopContainer {
 					.getClass();
 			ds[i] = c.newInstance();
 			ds[i].init();
+			ds[i].setName("ds_" + i);
 			// unfortunately, the teleal library does not work well with many
 			// threads...
 			ds[i].listener.removeComponent(NATTraversal.class);
@@ -124,15 +128,17 @@ public class DHTInterestingStress extends TopContainer {
 
 		}
 
-		// start all
+		// start all one after the other
 		for (int i = 0; i < n; i++) {
 			ds[i].connect();
 			ContactMap cm = ds[i].getComponent(ContactMap.class);
 			JLG.println("ds[" + i + "] contact map size: " + cm.size());
+			//JLG.println("ds[" + i + "] contact map : " + cm);
 		}
 		for (int i = 0; i < n; i++) {
 			ContactMap cm = ds[i].getComponent(ContactMap.class);
 			JLG.println("ds[" + i + "] contact map size: " + cm.size());
+			//JLG.println("ds[" + i + "] contact map : " + cm);
 		}
 		
 
