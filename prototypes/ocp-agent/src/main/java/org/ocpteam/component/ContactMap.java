@@ -11,15 +11,16 @@ import java.util.Set;
 import org.ocpteam.entity.Contact;
 import org.ocpteam.entity.InputMessage;
 import org.ocpteam.misc.Id;
+import org.ocpteam.misc.JLG;
 import org.ocpteam.misc.URL;
 import org.ocpteam.module.DSPModule;
 
 public class ContactMap extends DataSourceContainer {
 
-	private Map<Id, Contact> map;
+	private Map<String, Contact> map;
 
 	public ContactMap() {
-		map = Collections.synchronizedMap(new HashMap<Id, Contact>());
+		map = Collections.synchronizedMap(new HashMap<String, Contact>());
 	}
 
 	@Override
@@ -49,20 +50,24 @@ public class ContactMap extends DataSourceContainer {
 		return new LinkedList<Contact>(map.values());
 	}
 
-	public Set<Id> keySet() {
+	public Set<String> keySet() {
 		return map.keySet();
 	}
 
-	public Contact get(Id id) {
-		return map.get(id);
+	public Contact get(String name) {
+		return map.get(name);
 	}
 
-	public Contact put(Id id, Contact contact) {
-		return map.put(id, contact);
+	public Contact put(String name, Contact contact) {
+		return map.put(name, contact);
 	}
 
-	public Contact remove(Id id) {
-		return map.remove(id);
+	public Contact remove(String name) {
+		return map.remove(name);
+	}
+	
+	public Contact remove(Contact contact) {
+		return map.remove(contact.getName());
 	}
 
 	public boolean isEmpty() {
@@ -74,7 +79,8 @@ public class ContactMap extends DataSourceContainer {
 	}
 
 	public void add(Contact c) throws Exception {
-		this.put(c.getId(), c);
+		JLG.debug("adding contact to contactmap: " + c);
+		this.put(c.getName(), c);
 	}
 
 	public void addMyself() throws Exception {
@@ -102,8 +108,17 @@ public class ContactMap extends DataSourceContainer {
 		return map.toString();
 	}
 
-	public Contact[] getArray() {
-		return (Contact[]) map.values().toArray(new Contact[map.size()]);
+	public Contact[] getOtherContacts() {
+		Contact[] result = new Contact[map.size() - 1];
+		int i = 0;
+		for (Contact c : (Contact[]) map.values().toArray(new Contact[map.size()])) {
+			if (c.isMyself()) {
+				continue;
+			}
+			result[i] = c;
+			i++;
+		}
+		return result;
 	}
 
 }

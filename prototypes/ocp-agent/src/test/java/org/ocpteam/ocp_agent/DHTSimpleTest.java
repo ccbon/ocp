@@ -8,6 +8,7 @@ import java.util.Properties;
 import java.util.Set;
 
 import org.ocpteam.component.ContactMap;
+import org.ocpteam.component.DSPDataSource;
 import org.ocpteam.component.DataSource;
 import org.ocpteam.entity.Context;
 import org.ocpteam.interfaces.IMapDataModel;
@@ -52,14 +53,16 @@ public class DHTSimpleTest {
 			JLG.debug_on();
 			DHTDataSource ds = new DHTDataSource();
 			ds.init();
+			ds.setName("first_agent");
 			Properties p = new Properties();
 			p.setProperty("network.coucou", "23");
 			p.setProperty("server", "yes");
 			p.setProperty("listener.tcp.url", "tcp://localhost:12347");
 			ds.setConfig(p);
 			ds.connect();
-			DataSource ds2 = new DHTDataSource();
+			DSPDataSource ds2 = new DHTDataSource();
 			ds2.init();
+			ds2.setName("second_agent");
 			Properties p2 = new Properties();
 			p2.setProperty("server", "yes");
 			p2.setProperty("listener.tcp.url", "tcp://localhost:12348");

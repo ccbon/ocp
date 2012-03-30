@@ -7,10 +7,16 @@ import org.ocpteam.interfaces.IAgent;
 import org.ocpteam.interfaces.IClient;
 import org.ocpteam.interfaces.IListener;
 import org.ocpteam.interfaces.IServer;
-import org.ocpteam.misc.Id;
+import org.ocpteam.misc.JLG;
 
 public class Agent extends DataSourceContainer implements IAgent {
 
+	@Override
+	public DSPDataSource ds() {
+		// TODO Auto-generated method stub
+		return (DSPDataSource) super.ds();
+	}
+	
 	@Override
 	public IClient getClient() {
 		return ds().getComponent(Client.class);
@@ -30,8 +36,10 @@ public class Agent extends DataSourceContainer implements IAgent {
 	public Contact toContact() {
 		// convert the agent public information into a contact
 		Contact c = new Contact();
-		c.setId(new Id(getServer().getListeners().get(0).getUrl().toString().getBytes()));
-		c.setName(getServer().getListeners().get(0).getUrl().toString());
+		if (ds().getName() == null) {
+			ds().setName("ds_" + JLG.random(10000000));
+		}
+		c.setName(ds().getName());
 		// add the listener url and node id information
 		if (getServer() != null) {
 			Iterator<IListener> it = getServer().getListeners().iterator();

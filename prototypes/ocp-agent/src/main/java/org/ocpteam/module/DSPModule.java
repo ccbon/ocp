@@ -103,7 +103,7 @@ public class DSPModule extends Module {
 					throws Exception {
 				Contact c = (Contact) objects[0];
 				ContactMap contactMap = session.ds().getComponent(ContactMap.class);
-				contactMap.remove(c.getId());
+				contactMap.remove(c);
 				return null;
 			}
 			
@@ -120,7 +120,7 @@ public class DSPModule extends Module {
 			@Override
 			public Serializable run(Session session, Serializable[] objects)
 					throws Exception {
-				return session.ds().getComponent(ContactMap.class).getArray();
+				return session.ds().getComponent(ContactMap.class).getOtherContacts();
 			}
 			
 			@Override

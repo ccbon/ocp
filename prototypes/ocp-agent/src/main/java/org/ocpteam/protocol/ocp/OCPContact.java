@@ -20,26 +20,16 @@ public class OCPContact extends Contact {
 
 	public OCPContact(Id id) {
 		super();
-		setId(id);
+		setName(id.toString());
 		nodeIdSet = Collections.synchronizedSortedSet(new TreeSet<Id>());
 	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (obj != null && obj.getClass().equals(this.getClass())) {
-			return ((OCPContact) obj).getId().equals(getId());
-		}
-		return false;
-	}
-
 
 	public void copy(OCPContact c) {
 		// for all member, replace
 		this.setUrlList(c.getUrlList());
-		setId(c.getId());
+		setName(c.getName());
 		this.publicKey = c.publicKey;
 		this.nodeIdSet = c.nodeIdSet;
-		setName(c.getName());
 	}
 
 

@@ -37,7 +37,7 @@ public class DHTDataModel extends DataSourceContainer implements IMapDataModel {
 			DHTModule m = ds().getComponent(DHTModule.class);
 			byte[] message = ds().client.getProtocol().getMessageSerializer()
 					.serializeInput(new InputMessage(m.retrieve(), key, value));
-			for (Contact c : ds().contactMap.getArray()) {
+			for (Contact c : ds().contactMap.getOtherContacts()) {
 				try {
 					JLG.debug("request");
 					byte[] response = ds().client.request(c, message);
@@ -76,7 +76,7 @@ public class DHTDataModel extends DataSourceContainer implements IMapDataModel {
 		DHTModule m = ds().getComponent(DHTModule.class);
 		byte[] message = ds().client.getProtocol().getMessageSerializer()
 				.serializeInput(new InputMessage(m.keySet()));
-		for (Contact c : ds().contactMap.getArray()) {
+		for (Contact c : ds().contactMap.getOtherContacts()) {
 			try {
 				int retry = 0;
 				while (true) {

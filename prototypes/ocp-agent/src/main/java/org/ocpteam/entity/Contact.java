@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.ocpteam.misc.Id;
 import org.ocpteam.misc.URL;
 
 
@@ -14,11 +13,10 @@ import org.ocpteam.misc.URL;
  * others members of the distributed network.
  *
  */
-public class Contact implements Serializable, Comparable<Contact> {
+public class Contact implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	
-	private Id id;
 	private String name;
 	private List<URL> urlList;
 
@@ -26,14 +24,6 @@ public class Contact implements Serializable, Comparable<Contact> {
 	
 	public Contact() {
 		this.urlList = new ArrayList<URL>();
-	}
-	
-	public Id getId() {
-		return id;
-	}
-
-	public void setId(Id id) {
-		this.id = id;
 	}
 
 	public String getName() {
@@ -51,19 +41,7 @@ public class Contact implements Serializable, Comparable<Contact> {
 	public void setUrlList(List<URL> urlList) {
 		this.urlList = urlList;
 	}
-	
-	
-	@Override
-	public int compareTo(Contact o) {
-		if (id == null) {
-			if (o.id == null) {
-				return 0;
-			}
-			return -1;
-		}
-		return this.id.compareTo(o.id);
-	}
-	
+		
 	public void addURL(URL url) {
 		urlList.add(url);
 	}
@@ -87,7 +65,7 @@ public class Contact implements Serializable, Comparable<Contact> {
 	
 	@Override
 	public String toString() {
-		String result = getId() + " - " + getName();
+		String result = getName();
 		Iterator<URL> itp = getUrlList().iterator();
 		while (itp.hasNext()) {
 			URL url = itp.next();
@@ -95,5 +73,14 @@ public class Contact implements Serializable, Comparable<Contact> {
 		}
 		return result;
 	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (obj != null && obj.getClass().equals(this.getClass())) {
+			return ((Contact) obj).getName().equals(getName());
+		}
+		return false;
+	}
+
 
 }

@@ -35,6 +35,7 @@ public abstract class DataSource extends TopContainer implements IComponent,
 
 	protected Context context;
 	private boolean bIsConnected;
+	private String name;
 
 	public abstract String getProtocol();
 	
@@ -141,5 +142,14 @@ public abstract class DataSource extends TopContainer implements IComponent,
 	public boolean isConnected() {
 		return bIsConnected;
 	}
+	
+	public void setName(String name) {
+		this.name = name;
+	}
+	
+	public String getName() {
+		return name;
+	}
+
 
 }

@@ -61,8 +61,7 @@ public class DHTInterestingStress extends TopContainer {
 				System.out.print("" + i);
 			} else {
 				System.out.print(" ");
-			}
-			
+			}	
 		}
 		System.out.println();
 		Context c = null;
@@ -129,9 +128,12 @@ public class DHTInterestingStress extends TopContainer {
 		for (int i = 0; i < n; i++) {
 			ds[i].connect();
 			ContactMap cm = ds[i].getComponent(ContactMap.class);
-			JLG.debug("ds[" + i + "] contact map size: " + cm.size());
+			JLG.println("ds[" + i + "] contact map size: " + cm.size());
 		}
-		
+		for (int i = 0; i < n; i++) {
+			ContactMap cm = ds[i].getComponent(ContactMap.class);
+			JLG.println("ds[" + i + "] contact map size: " + cm.size());
+		}
 		
 
 		// run availability thread.

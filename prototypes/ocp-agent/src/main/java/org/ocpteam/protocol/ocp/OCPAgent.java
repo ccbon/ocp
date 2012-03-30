@@ -38,7 +38,7 @@ import org.ocpteam.misc.JLG;
 public class OCPAgent extends Agent {
 
 	public static final String DEFAULT_SPONSOR_SERVER_URL = "http://guenego.com/ocp/ocp.php";
-	
+
 	public Id id;
 	private String name;
 
@@ -65,7 +65,7 @@ public class OCPAgent extends Agent {
 	public DSPDataSource ds() {
 		return (DSPDataSource) super.ds();
 	}
-	
+
 	public byte[] ucrypt(String password, byte[] input) throws Exception,
 			BadPaddingException {
 		SecretKey secretKey = generateSecretKey(password);
@@ -145,18 +145,19 @@ public class OCPAgent extends Agent {
 		}
 
 		// message digest for hash
-		md = MessageDigest.getInstance(ds().network.getProperty("hash", "SHA-1"));
+		md = MessageDigest.getInstance(ds().network
+				.getProperty("hash", "SHA-1"));
 
 		// all agent must have a PKI
 		keyPair = generateKeyPair();
-		signatureAlgorithm = ds().network
-				.getProperty("SignatureAlgo", "SHA1withDSA");
+		signatureAlgorithm = ds().network.getProperty("SignatureAlgo",
+				"SHA1withDSA");
 
 		// all users use the same algo for symmetric encryption
 		userSecretKeyFactory = SecretKeyFactory.getInstance(ds().network
 				.getProperty("user.cipher.algo", "PBEWithMD5AndDES"));
-		userCipher = Cipher.getInstance(ds().network.getProperty("user.cipher.algo",
-				"PBEWithMD5AndDES"));
+		userCipher = Cipher.getInstance(ds().network.getProperty(
+				"user.cipher.algo", "PBEWithMD5AndDES"));
 
 		if (ds().getProperty("server", "yes").equals("yes")) {
 			storage.attach();
@@ -208,15 +209,8 @@ public class OCPAgent extends Agent {
 			result += getServer().toString() + JLG.NL;
 		}
 		result += "Contacts:" + JLG.NL;
-		synchronized (this) {
-			ContactMap contactMap = ds().getComponent(ContactMap.class);
-			Iterator<Id> it = contactMap.keySet().iterator();
-			while (it.hasNext()) {
-				Id id = (Id) it.next();
-				Contact contact = contactMap.get(id);
-				result += id + "->" + contact + JLG.NL;
-			}
-		}
+		ContactMap contactMap = ds().getComponent(ContactMap.class);
+		result += "contact map: " + JLG.NL + contactMap;
 		result += "Nodes:" + JLG.NL;
 		synchronized (this) {
 			Iterator<Id> it = nodeMap.keySet().iterator();
@@ -236,7 +230,7 @@ public class OCPAgent extends Agent {
 	public boolean isResponsible(Address address) throws Exception {
 		Id nodeId = getNodeId(address);
 		OCPContact contact = getContactFromNodeId(nodeId);
-		return contact.getId().equals(id);
+		return contact.getName().equals(id.toString());
 	}
 
 	public void remove(Address address, byte[] addressSignature)
@@ -551,8 +545,8 @@ public class OCPAgent extends Agent {
 		Link publicUserDataLink = new Link(user, this, UserPublicInfo.getKey(
 				this, login), publicUserData.getKey(this));
 
-		getClient().createUser(contact, publicUserData, publicUserDataLink, captcha,
-				answer);
+		getClient().createUser(contact, publicUserData, publicUserDataLink,
+				captcha, answer);
 
 		// 2) create the private part of the user.
 		// no need captcha because creation of object is checked by the user
@@ -566,8 +560,6 @@ public class OCPAgent extends Agent {
 		setWithLink(user, privateUserData, privateUserDataLink);
 
 	}
-
-
 
 	public Id getNodeId(Address address) throws Exception {
 		if (nodeMap.size() == 0) {
@@ -610,7 +602,8 @@ public class OCPAgent extends Agent {
 		keyGen.init(Integer.parseInt(this.ds().getProperty("cipher.keysize",
 				"128")));
 		secretKey = keyGen.generateKey();
-		cipher = Cipher.getInstance(this.ds().getProperty("cipher.algo", "AES"));
+		cipher = Cipher
+				.getInstance(this.ds().getProperty("cipher.algo", "AES"));
 
 		// user cipher
 		byte[] salt = { 1, 1, 1, 2, 2, 2, 3, 3 };
@@ -672,7 +665,7 @@ public class OCPAgent extends Agent {
 
 	public Contact removeContact(Contact contact) {
 		ContactMap contactMap = ds().getComponent(ContactMap.class);
-		OCPContact c = (OCPContact) contactMap.remove(contact.getId());
+		OCPContact c = (OCPContact) contactMap.remove(contact);
 		try {
 			Iterator<Id> it = c.nodeIdSet.iterator();
 			while (it.hasNext()) {
@@ -720,7 +713,5 @@ public class OCPAgent extends Agent {
 	public OCPClient getClient() {
 		return (OCPClient) ds().getComponent(Client.class);
 	}
-
-	
 
 }
