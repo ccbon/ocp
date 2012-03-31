@@ -28,4 +28,7 @@ public abstract class Channel extends DataSourceContainer {
 		return ds().getComponent(Protocol.class);
 	}
 
+	public void stop() {
+	}
+
 }

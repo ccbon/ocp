@@ -50,5 +50,10 @@ public class TCPChannel extends Channel {
 	public String getProtocolName() {
 		return "tcp";
 	}
+	
+	@Override
+	public void stop() {
+		tcpClient.releaseSocket();
+	}
 
 }

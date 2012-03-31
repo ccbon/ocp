@@ -3,8 +3,11 @@ package org.ocpteam.component;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.EOFException;
+import java.io.IOException;
+import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketException;
+import java.net.SocketTimeoutException;
 
 import org.ocpteam.interfaces.IProtocol;
 import org.ocpteam.interfaces.IStreamSerializer;
@@ -45,8 +48,9 @@ public class TCPClient extends DataSourceContainer {
 		try {
 			output = request0(input);
 		} catch (Exception e) {
-			JLG.debug("try again");
-			if (e instanceof SocketException || e instanceof EOFException) {
+			if (e instanceof SocketException || e instanceof EOFException
+					|| e instanceof SocketTimeoutException) {
+				JLG.debug("try again (e=" + e + ")");
 				createNewSocket();
 				output = request0(input);
 			} else {
@@ -75,9 +79,11 @@ public class TCPClient extends DataSourceContainer {
 	}
 
 	private void createNewSocket() throws Exception {
-		JLG.debug("start new socket");
-		clientSocket = new Socket(hostname, port);
-		clientSocket.setSoTimeout(5);
+		JLG.debug("start new socket on " + hostname + ":" + port);
+		clientSocket = new Socket();
+		clientSocket.setSoTimeout(1000);
+		clientSocket.setReuseAddress(true);
+		clientSocket.connect(new InetSocketAddress(hostname, port));
 		try {
 			if (in != null) {
 				in.close();
@@ -99,6 +105,17 @@ public class TCPClient extends DataSourceContainer {
 
 	public void setProtocol(IProtocol protocol) {
 		this.protocol = protocol;
+	}
+
+	public void releaseSocket() {
+		if (clientSocket != null) {
+			try {
+				clientSocket.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 	}
 
 }

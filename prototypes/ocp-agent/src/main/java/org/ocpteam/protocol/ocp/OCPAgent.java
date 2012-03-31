@@ -583,7 +583,7 @@ public class OCPAgent extends Agent {
 	public void readConfig() throws Exception {
 
 		// debugging aspect
-		if (ds().getProperty("debug", "true").equalsIgnoreCase("true")) {
+		if (ds().getProperty("debug", "false").equalsIgnoreCase("true")) {
 			JLG.debug_on();
 			JLG.debug("working directory = " + System.getProperty("user.dir"));
 		}

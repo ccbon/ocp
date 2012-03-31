@@ -5,7 +5,7 @@ import org.ocpteam.misc.URL;
 
 public interface IListener extends IComponent {
 
-	void start();
+	void start() throws Exception;
 
 	void stop();
 

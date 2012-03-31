@@ -59,9 +59,11 @@ public class DHTInterestingStress extends TopContainer {
 		Thread.sleep(activity_sleep);
 		for (int i = 0; i < n; i++) {
 			if (ds[i].isConnected()) {
-				System.out.print("" + i);
+				int size = ds[i].contactMap.size();
+				String s = String.format("%2d", size);
+				System.out.print("X[" + s + "]");
 			} else {
-				System.out.print(" ");
+				System.out.print("     ");
 			}	
 		}
 		System.out.println();
@@ -93,8 +95,8 @@ public class DHTInterestingStress extends TopContainer {
 		}
 		JLG.debug("found datasource=" + r);
 		//JLG.debug("keyset size: " + dht.keySet().size());
-		//String key = "key" + JLG.random(100);
-		//JLG.debug("getting " + key + " : " + dht.get(key));
+		String key = "key" + JLG.random(100);
+		JLG.debug("getting " + key + " : " + dht.get(key));
 	}
 
 	public void start() throws Exception {
@@ -186,7 +188,7 @@ public class DHTInterestingStress extends TopContainer {
 			Thread.sleep(1000);
 			JLG.debug("wake up");
 			for (int i = 1; i < ds.length; i++) {
-				DataSource d = ds[i];
+				DHTDataSource d = ds[i];
 				if (d.isConnected()) {
 					// take a chance to disconnect
 					double r = Math.random();

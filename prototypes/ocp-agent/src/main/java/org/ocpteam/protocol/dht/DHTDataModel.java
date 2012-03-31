@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Set;
 import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -30,7 +31,8 @@ public class DHTDataModel extends DataSourceContainer implements IMapDataModel {
 		DHTModule m = ds().getComponent(DHTModule.class);
 		byte[] message = ds().client.getProtocol().getMessageSerializer()
 				.serializeInput(new InputMessage(m.store(), key, value));
-		ds().client.sendAll(message);
+
+		ds().client.sendAllAsync(message);
 	}
 
 	@Override
@@ -69,8 +71,14 @@ public class DHTDataModel extends DataSourceContainer implements IMapDataModel {
 				}
 			});
 		}
-
-		return exe.invokeAny(tasks);
+		if (tasks.isEmpty()) {
+			return null;
+		}
+		try {
+			value = exe.invokeAny(tasks);
+		} catch (ExecutionException e) {
+		}
+		return value;
 
 	}
 
@@ -82,7 +90,7 @@ public class DHTDataModel extends DataSourceContainer implements IMapDataModel {
 		byte[] message = ds().client.getProtocol().getMessageSerializer()
 				.serializeInput(new InputMessage(m.remove(), key));
 
-		ds().client.sendAll(message);
+		ds().client.sendAllAsync(message);
 
 	}
 

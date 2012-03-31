@@ -1,5 +1,6 @@
 package org.ocpteam.component;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -37,7 +38,7 @@ public class ContactMap extends DataSourceContainer {
 
 	public void refreshContactList() throws Exception {
 		// TODO: make independant of ocp by adding the P2P client functionality.
-		DSPModule m = ds().getComponent(DSPModule.class);
+		DSPModule m = ds().client.getProtocol().getComponent(DSPModule.class);
 		byte[] message = ds().client.getProtocol().getMessageSerializer()
 				.serializeInput(new InputMessage(m.ping()));
 		ds().client.sendAll(message);
@@ -122,6 +123,14 @@ public class ContactMap extends DataSourceContainer {
 			i++;
 		}
 		return result;
+	}
+
+	public void removeAll() {
+		map.clear();
+	}
+
+	public Collection<Contact> values() {
+		return map.values();
 	}
 
 }

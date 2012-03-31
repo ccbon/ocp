@@ -24,7 +24,7 @@ public class TCPTest {
 	public boolean test() {
 		try {
 			int i = 0;
-			int n = 23;
+			int n = 3;
 			JLG.debug_on();
 			IProtocol protocol = new MinimalistProtocol();
 			TCPListener tcplistener = new TCPListener();
@@ -45,6 +45,14 @@ public class TCPTest {
 			}
 
 			tcplistener.stop();
+			tcplistener.start();
+			i = 0;
+			while (i < n) {
+				byte[] response = tcpclient.request("hello".getBytes());
+				JLG.debug("response[" + i + "]=" + new String(response));
+				i++;
+			}
+			
 
 		} catch (Exception e) {
 			e.printStackTrace();

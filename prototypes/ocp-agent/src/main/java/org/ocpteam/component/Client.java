@@ -222,6 +222,7 @@ public class Client extends DataSourceContainer implements IClient {
 		// receiving a response
 		// For that, I need to know the channel to use.
 		// for the time being I know only the TCP channel.
+		JLG.debug("contact.getUrlList(): " + contact.getUrlList());
 		Iterator<URL> it = contact.getUrlList().iterator();
 		while (it.hasNext()) {
 			URL url = it.next();
@@ -238,13 +239,15 @@ public class Client extends DataSourceContainer implements IClient {
 					output = channel.request(string);
 					return output;
 				} catch (java.net.SocketTimeoutException e) {
+					JLG.debug("SocketTimeoutException on contact " + contact);
 					continue;
 				} catch (SocketException e) {
+					JLG.debug("SocketException on contact " + contact);
 					continue;
 				}
 			}
 		}
-		detach(contact);
+		JLG.debug("about to throw a not available exception regarding contact " + contact);
 		throw new NotAvailableContactException();
 	}
 
@@ -288,7 +291,8 @@ public class Client extends DataSourceContainer implements IClient {
 						// we don't care for agent that don't understand the
 						// sent
 						// message.
-						JLG.debug("Contact answered with error: " + e.getMessage());
+						JLG.debug("Contact answered with error: "
+								+ e.getMessage());
 					}
 				}
 			}));
@@ -298,28 +302,40 @@ public class Client extends DataSourceContainer implements IClient {
 
 	public void detach(Contact contact) throws Exception {
 		JLG.debug("detaching contact: " + contact);
-		// tell to your contacts this contact has disappeared.
-
-		contactMap.remove(contact);
-		DSPModule m = getProtocol().getComponent(DSPModule.class);
-		final byte[] message = getProtocol().getMessageSerializer().serializeInput(
-				new InputMessage(m.detach(), contact));
-
-		exe.execute(new Runnable() {
-			
-			@Override
-			public void run() {
-				try {
-					sendAll(message);
-				} catch (Exception e) {
-				}	
+		
+		Iterator<URL> it = contact.getUrlList().iterator();
+		while (it.hasNext()) {
+			Channel channel = channelMap.get(it.next());
+			if (channel != null) {
+				channel.stop();
 			}
-		});
+		}
+		contactMap.remove(contact);
+		// tell to your contacts this contact has disappeared.
+		// DSPModule m = getProtocol().getComponent(DSPModule.class);
+		// final byte[] message =
+		// getProtocol().getMessageSerializer().serializeInput(
+		// new InputMessage(m.detach(), contact));
+		//
+		// exe.execute(new Runnable() {
+		//
+		// @Override
+		// public void run() {
+		// try {
+		// sendAll(message);
+		// } catch (Exception e) {
+		// }
+		// }
+		// });
 	}
 
 	public void send(Contact c, byte[] message) throws Exception {
 		JLG.debug(ds().getName() + " sends a message to " + c);
-		request(c, message);
+		try {
+			request(c, message);
+		} catch (NotAvailableContactException e) {
+			detach(c);
+		}
 	}
 
 	public IProtocol getProtocol() {
@@ -341,9 +357,12 @@ public class Client extends DataSourceContainer implements IClient {
 				// strategy : friends of my friends are my friends.
 				Contact[] contactsOfContact = (Contact[]) getProtocol()
 						.getMessageSerializer().deserializeOutput(response);
-				JLG.debug(ds().getName() + " received " + contactsOfContact.length + " contact(s).");
+				JLG.debug(ds().getName() + " received "
+						+ contactsOfContact.length + " contact(s).");
 				for (Contact nc : contactsOfContact) {
+					JLG.debug("nc: " + nc);
 					if (nc.getName().equals(ds().getName())) {
+						JLG.debug("skipping");
 						continue;
 					}
 					contactMap.add(nc);
@@ -352,5 +371,21 @@ public class Client extends DataSourceContainer implements IClient {
 				detach(c);
 			}
 		}
+	}
+
+	public void sendAllAsync(final byte[] message) {
+		exe.execute(new Runnable() {
+
+			@Override
+			public void run() {
+				try {
+					sendAll(message);
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		});
+
 	}
 }

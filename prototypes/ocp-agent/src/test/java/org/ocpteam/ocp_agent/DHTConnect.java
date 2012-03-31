@@ -5,8 +5,10 @@ import static org.junit.Assert.assertEquals;
 import java.util.Properties;
 
 import org.junit.Test;
+import org.ocpteam.component.Client;
 import org.ocpteam.component.ContactMap;
 import org.ocpteam.component.NATTraversal;
+import org.ocpteam.component.TCPClient;
 import org.ocpteam.core.TopContainer;
 import org.ocpteam.misc.JLG;
 import org.ocpteam.protocol.dht.DHTDataSource;
@@ -40,13 +42,13 @@ public class DHTConnect extends TopContainer {
 		port = 40000;
 		JLG.debug_on();
 		JLG.bUseSet = true;
-		//JLG.set.add(TCPServer.class.getName());
-		//JLG.set.add(DHTInterestingStress.class.getName());
-		//JLG.set.add(DHTDataModel.class.getName());
-		//JLG.set.add(TCPClient.class.getName());
-		//JLG.set.add(JLG.class.getName());
-		//JLG.set.add(Client.class.getName());
-		//JLG.set.add(NATTraversal.class.getName());
+		// JLG.set.add(TCPServer.class.getName());
+		// JLG.set.add(DHTInterestingStress.class.getName());
+		// JLG.set.add(DHTDataModel.class.getName());
+		JLG.set.add(TCPClient.class.getName());
+		// JLG.set.add(JLG.class.getName());
+		JLG.set.add(Client.class.getName());
+		// JLG.set.add(NATTraversal.class.getName());
 	}
 
 	public void start() throws Exception {
@@ -56,7 +58,7 @@ public class DHTConnect extends TopContainer {
 					.getClass();
 			ds[i] = c.newInstance();
 			ds[i].init();
-			ds[i].setName("agent_" + i); 
+			ds[i].setName("a" + i);
 			// unfortunately, the teleal library does not work well with many
 			// threads...
 			ds[i].listener.removeComponent(NATTraversal.class);
@@ -88,13 +90,46 @@ public class DHTConnect extends TopContainer {
 		for (int i = 0; i < n; i++) {
 			ContactMap cm = ds[i].getComponent(ContactMap.class);
 			JLG.println("ds[" + i + "] contact map size: " + cm.size());
-			assertEquals(10, cm.size());
+			assertEquals(n, cm.size());
 		}
-		
+
+		// disconnect the #1
+		JLG.println("disconnect 1");
+		ds[1].disconnect();
+		ds[1].getComponent(ContactMap.class).removeAll();
+		ds[3].disconnect();
+		ds[3].getComponent(ContactMap.class).removeAll();
+		for (int i = 0; i < n; i++) {
+			ContactMap cm = ds[i].getComponent(ContactMap.class);
+			JLG.println("ds[" + i + "] contact map size: " + cm.size());
+		}
+		ds[0].getComponent(ContactMap.class).refreshContactList();
+		ds[2].getComponent(ContactMap.class).refreshContactList();
+		ds[5].getComponent(ContactMap.class).refreshContactList();
+		for (int i = 0; i < n; i++) {
+			ContactMap cm = ds[i].getComponent(ContactMap.class);
+			JLG.println("ds[" + i + "] contact map size: " + cm.size());
+		}
+
+		JLG.println("reconnect 1");
+		ds[1].connect();
+		for (int i = 0; i < n; i++) {
+			ContactMap cm = ds[i].getComponent(ContactMap.class);
+			JLG.println("ds[" + i + "] contact map size: " + cm.size() + ": " + cm.values());
+		}
+		JLG.println("reconnect 3");
+		//Thread.sleep(100000);
+		ds[3].connect();
+		for (int i = 0; i < n; i++) {
+			ContactMap cm = ds[i].getComponent(ContactMap.class);
+			JLG.println("ds[" + i + "] contact map size: " + cm.size() + ": " + cm.values());
+		}
+
+		//Thread.sleep(100000);
 		for (int i = 0; i < n; i++) {
 			ds[i].disconnect();
 		}
-		
+
 	}
 
 }

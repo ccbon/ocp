@@ -28,7 +28,16 @@ public class TCPServer extends Container implements Runnable {
 		// create a listener
 		JLG.debug("starting a TCP server on port:" + port);
 		try {
+			if (serverSocket != null) {
+				try {
+					serverSocket.close();
+					serverSocket = null;
+				} catch (Exception e) {
+					// TODO: handle exception
+				}
+			}
 			serverSocket = new ServerSocket(port);
+			serverSocket.setReuseAddress(true);
 			tg = new ThreadGroup("tcpserver_" + port);
 			while (stoppingNow == false) {
 				JLG.debug("waiting for a client connection");
@@ -52,26 +61,31 @@ public class TCPServer extends Container implements Runnable {
 		try {
 			if (serverSocket != null) {
 				serverSocket.close();
+				serverSocket = null;
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		// interrupt thread of tg.
-		try {
-			Thread[] list = new Thread[tg.activeCount()];
-			tg.enumerate(list);
-			for (Thread th : list) {
-				ITCPServerHandler myHandler = (ITCPServerHandler) ((JLGThread) th)
-						.getRunnable();
-				Socket socket = myHandler.getSocket();
-				try {
-					socket.close();
-				} catch (IOException e) {
-					e.printStackTrace();
+		if (tg != null) {
+			try {
+				Thread[] list = new Thread[tg.activeCount()];
+				tg.enumerate(list);
+				for (Thread th : list) {
+					ITCPServerHandler myHandler = (ITCPServerHandler) ((JLGThread) th)
+							.getRunnable();
+					Socket socket = myHandler.getSocket();
+					try {
+						socket.close();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
 				}
+
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
+			tg.interrupt();
 		}
 		t.interrupt();
 		JLG.debug("end stopping a TCP server with port: " + port);
