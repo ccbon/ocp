@@ -61,7 +61,7 @@ public class OCPDataSource extends DSPDataSource {
 	@Override
 	protected void configureServer(Server server) throws Exception {
 	}
-	
+
 	@Override
 	public String getName() {
 		if (((OCPAgent) getComponent(Agent.class)).id != null) {

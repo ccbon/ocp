@@ -160,6 +160,7 @@ public class OCPAgent extends Agent {
 				"user.cipher.algo", "PBEWithMD5AndDES"));
 
 		if (ds().getProperty("server", "yes").equals("yes")) {
+			storage = new Storage(this);
 			storage.attach();
 		}
 		JLG.debug("end");
@@ -184,10 +185,12 @@ public class OCPAgent extends Agent {
 				IListener l = it.next();
 				c.getUrlList().add(l.getUrl());
 			}
-			Iterator<Id> itn = storage.nodeSet.iterator();
-			while (itn.hasNext()) {
-				Id nodeId = (Id) itn.next();
-				c.nodeIdSet.add(nodeId);
+			if (storage != null) {
+				Iterator<Id> itn = storage.nodeSet.iterator();
+				while (itn.hasNext()) {
+					Id nodeId = (Id) itn.next();
+					c.nodeIdSet.add(nodeId);
+				}
 			}
 		} else {
 			JLG.debug("no server");
@@ -227,11 +230,14 @@ public class OCPAgent extends Agent {
 	}
 
 	public boolean isResponsible(Address address) throws Exception {
+		JLG.debug("address = " + address);
 		Id nodeId = getNodeId(address);
+		JLG.debug("nodeId = " + nodeId);
 		OCPContact contact = getContactFromNodeId(nodeId);
 		JLG.debug("contact = " + contact);
+		JLG.debug("is responsible: " + contact.getName().equals(id.toString()));
 		return contact.getName().equals(id.toString());
-		//return true;
+		// return true;
 	}
 
 	public void remove(Address address, byte[] addressSignature)
@@ -566,6 +572,7 @@ public class OCPAgent extends Agent {
 		if (nodeMap.size() == 0) {
 			throw new Exception("nodeMap is not populated.");
 		}
+		JLG.debug("nodeMap=" + nodeMap);
 		Id nodeId = nodeMap.floorKey(address);
 		if (nodeId == null) {
 			nodeId = nodeMap.lastKey();
@@ -610,9 +617,6 @@ public class OCPAgent extends Agent {
 		byte[] salt = { 1, 1, 1, 2, 2, 2, 3, 3 };
 		int count = 20;
 		userParamSpec = new PBEParameterSpec(salt, count);
-
-		// Storage
-		storage = new Storage(this);
 
 	}
 

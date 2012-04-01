@@ -18,7 +18,7 @@ public class HTTPListener extends DataSourceContainer implements IListener {
 	private Thread t;
 	
 	public HTTPListener() throws Exception {
-		addComponent(NATTraversal.class);
+		//addComponent(NATTraversal.class);
 		addComponent(HTTPServer.class);
 		addComponent(HTTPServerHandler.class);
 	}

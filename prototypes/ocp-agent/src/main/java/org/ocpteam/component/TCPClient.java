@@ -74,6 +74,18 @@ public class TCPClient extends DataSourceContainer {
 	private void retrieveSocket() throws Exception {
 		if (clientSocket == null || clientSocket.isClosed()
 				|| !clientSocket.isBound() || !clientSocket.isConnected()) {
+			JLG.debug("clientSocket=" + clientSocket);
+			if (clientSocket != null) {
+				if (clientSocket.isClosed()) {
+					JLG.debug("clientSocket is closed.");
+				}
+				if (!clientSocket.isBound()) {
+					JLG.debug("clientSocket is unbound.");
+				}
+				if (!clientSocket.isConnected()) {
+					JLG.debug("clientSocket is not connected.");
+				}
+			}
 			createNewSocket();
 		}
 	}
@@ -81,8 +93,8 @@ public class TCPClient extends DataSourceContainer {
 	private void createNewSocket() throws Exception {
 		JLG.debug("start new socket on " + hostname + ":" + port);
 		clientSocket = new Socket();
-		clientSocket.setSoTimeout(1000);
-		clientSocket.setReuseAddress(true);
+		//clientSocket.setSoTimeout(1000);
+		//clientSocket.setReuseAddress(true);
 		clientSocket.connect(new InetSocketAddress(hostname, port));
 		try {
 			if (in != null) {

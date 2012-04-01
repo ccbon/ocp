@@ -19,7 +19,7 @@ public class TCPListener extends DataSourceContainer implements IListener {
 	private TCPServerHandler handler;
 
 	public TCPListener() throws Exception {
-		addComponent(NATTraversal.class);
+		//addComponent(NATTraversal.class);
 		addComponent(TCPServer.class);
 		addComponent(TCPServerHandler.class);
 	}

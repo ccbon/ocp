@@ -32,7 +32,7 @@ public class Client extends DataSourceContainer implements IClient {
 	private Map<URL, Channel> channelMap;
 	protected HashMap<String, Class<? extends Channel>> channelFactoryMap;
 	private ContactMap contactMap;
-	ExecutorService exe = Executors.newCachedThreadPool();
+	private ExecutorService executor = Executors.newCachedThreadPool();
 
 	public Client() throws Exception {
 		addComponent(TCPChannel.class);
@@ -87,7 +87,6 @@ public class Client extends DataSourceContainer implements IClient {
 	}
 
 	private void findSponsor() throws Exception {
-		ContactMap contactMap = ds().getComponent(ContactMap.class);
 		// find some contact from your sponsor or die alone...
 		Iterator<String> it = getPotentialSponsorIterator();
 		while (it.hasNext()) {
@@ -178,7 +177,6 @@ public class Client extends DataSourceContainer implements IClient {
 	}
 
 	public Response request(byte[] string) throws Exception {
-		ContactMap contactMap = ds().getComponent(ContactMap.class);
 		if (contactMap.isEmpty()) {
 			findSponsor();
 		}
@@ -186,14 +184,12 @@ public class Client extends DataSourceContainer implements IClient {
 		if (response == null) {
 			throw new NoNetworkException();
 		}
-
 		return response;
 	}
 
 	public Response request(Queue<Contact> contactQueue, byte[] input)
 			throws Exception {
 		byte[] output = null;
-		ContactMap contactMap = ds().getComponent(ContactMap.class);
 		if (contactMap.isEmpty()) {
 			findSponsor();
 		}
@@ -258,9 +254,6 @@ public class Client extends DataSourceContainer implements IClient {
 	public void declareContact() throws Exception {
 		Contact contact = getAgent().toContact();
 		DSPModule m = getProtocol().getComponent(DSPModule.class);
-		JLG.debug("getMessageSerializer="
-				+ getProtocol().getMessageSerializer());
-		JLG.debug("DSPModule=" + m);
 		byte[] input = getProtocol().getMessageSerializer().serializeInput(
 				new InputMessage(m.declareContact(), contact));
 		JLG.debug(ds().getName() + " declares contact: " + contact);
@@ -269,8 +262,6 @@ public class Client extends DataSourceContainer implements IClient {
 
 	public void sendAll(final byte[] message) throws Exception {
 		JLG.debug("send all");
-		// tell all your contact about what happened
-		ContactMap contactMap = ds().getComponent(ContactMap.class);
 		Collection<Callable<Object>> tasks = new LinkedList<Callable<Object>>();
 		for (final Contact c : contactMap.getOtherContacts()) {
 			tasks.add(Executors.callable(new Runnable() {
@@ -297,7 +288,7 @@ public class Client extends DataSourceContainer implements IClient {
 				}
 			}));
 		}
-		exe.invokeAll(tasks);
+		executor.invokeAll(tasks);
 	}
 
 	public void detach(Contact contact) throws Exception {
@@ -312,6 +303,7 @@ public class Client extends DataSourceContainer implements IClient {
 		}
 		contactMap.remove(contact);
 		// tell to your contacts this contact has disappeared.
+		// this code is comment it for performance reasons...
 		// DSPModule m = getProtocol().getComponent(DSPModule.class);
 		// final byte[] message =
 		// getProtocol().getMessageSerializer().serializeInput(
@@ -374,7 +366,7 @@ public class Client extends DataSourceContainer implements IClient {
 	}
 
 	public void sendAllAsync(final byte[] message) {
-		exe.execute(new Runnable() {
+		executor.execute(new Runnable() {
 
 			@Override
 			public void run() {
@@ -386,6 +378,5 @@ public class Client extends DataSourceContainer implements IClient {
 				}
 			}
 		});
-
 	}
 }

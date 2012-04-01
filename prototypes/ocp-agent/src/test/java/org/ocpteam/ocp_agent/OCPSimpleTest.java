@@ -6,6 +6,7 @@ import java.util.Properties;
 
 import org.ocpteam.component.Agent;
 import org.ocpteam.component.DataSource;
+import org.ocpteam.component.NATTraversal;
 import org.ocpteam.misc.JLG;
 import org.ocpteam.protocol.ocp.Captcha;
 import org.ocpteam.protocol.ocp.OCPAgent;
@@ -24,7 +25,7 @@ public class OCPSimpleTest {
 	}
 
 	public boolean twin() {
-		
+		JLG.debug_on();	
 		JLG.debug("starting 2 agents");
 		JLG.debug("working directory = " + System.getProperty("user.dir"));
 		JLG.rm(System.getenv("TEMP") + "/ocp_agent_storage");
@@ -72,7 +73,7 @@ public class OCPSimpleTest {
 			String username = "jlguenego";
 			String password = "jlouis";
 			Captcha captcha = a2.wantToCreateUser(username, password);
-			JLG.debug_on();	
+			JLG.debug("captcha received: " + captcha);
 			//String answer = JLG.input("captcha challenge: " + captcha.challengeObject + "> ");
 			String answer = "didounette";
 			a2.createUser(username, password, 2, captcha, answer);
@@ -91,7 +92,7 @@ public class OCPSimpleTest {
 	public boolean simple() {
 		try {
 			System.out.println("Hello Test Scenario");
-			DataSource ds = new OCPDataSource();
+			OCPDataSource ds = new OCPDataSource();
 			ds.connect();
 			ds.disconnect();
 		} catch (Exception e) {

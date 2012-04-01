@@ -32,7 +32,12 @@ public class TCPServerHandler extends Component implements ITCPServerHandler {
 				JLG.debug("wait for message");
 				byte[] input = s.readMessage(in);
 				JLG.debug("received length = " + input.length);
-				byte[] response = protocol.process(input, clientSocket);
+				byte[] response = null;
+				try {
+					response = protocol.process(input, clientSocket);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 				s.writeMessage(out, response);
 				i++;
 			}

@@ -28,4 +28,20 @@ public class OCPContactMap extends ContactMap {
 		}
 		return c;
 	}
+	
+	@Override
+	public void addMyself() throws Exception {
+		super.addMyself();
+		OCPAgent agent = (OCPAgent) ds().getComponent(Agent.class);
+		OCPContact contact = (OCPContact) agent.toContact();
+		if (contact.nodeIdSet.size() == 0) {
+			throw new Exception("contact without node.");
+		}
+		Iterator<Id> it = contact.nodeIdSet.iterator();
+		while (it.hasNext()) {
+			Id id = (Id) it.next();
+			JLG.debug("adding node to nodeMap");
+			agent.nodeMap.put(id, contact);
+		}
+	}
 }
