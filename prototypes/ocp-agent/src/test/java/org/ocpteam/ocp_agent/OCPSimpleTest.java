@@ -75,8 +75,8 @@ public class OCPSimpleTest {
 			JLG.debug_on();	
 			//String answer = JLG.input("captcha challenge: " + captcha.challengeObject + "> ");
 			String answer = "didounette";
-//			a2.createUser(username, password, 2, captcha, answer);
-//			JLG.debug(a2.toString());
+			a2.createUser(username, password, 2, captcha, answer);
+			JLG.debug(a2.toString());
 			
 			
 			ds2.disconnect();

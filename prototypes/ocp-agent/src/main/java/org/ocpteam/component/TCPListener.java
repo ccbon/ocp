@@ -13,7 +13,6 @@ public class TCPListener extends DataSourceContainer implements IListener {
 	private IProtocol protocol;
 
 	protected IContainer parent;
-	private Thread t;
 
 	private TCPServer tcpServer;
 
@@ -26,7 +25,8 @@ public class TCPListener extends DataSourceContainer implements IListener {
 	}
 
 	@Override
-	public void init() {
+	public void init() throws Exception {
+		super.init();
 		handler = getComponent(TCPServerHandler.class);
 	}
 
@@ -50,11 +50,10 @@ public class TCPListener extends DataSourceContainer implements IListener {
 
 		handler.setProtocol(protocol);
 		tcpServer = getComponent(TCPServer.class).getClass().newInstance();
+		tcpServer.init();
 		tcpServer.setPort(port);
 		tcpServer.setHandler(handler);
-
-		t = new Thread(tcpServer, "TCPServer");
-		t.start();
+		tcpServer.start();
 	}
 
 	@Override
@@ -64,7 +63,7 @@ public class TCPListener extends DataSourceContainer implements IListener {
 			getComponent(NATTraversal.class).unmap();
 		}
 		if (tcpServer != null) {
-			tcpServer.stop(t);
+			tcpServer.stop();
 			tcpServer = null;
 		}
 	}

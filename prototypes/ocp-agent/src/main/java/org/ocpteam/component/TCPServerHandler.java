@@ -16,9 +16,11 @@ public class TCPServerHandler extends Component implements ITCPServerHandler {
 
 	private Socket clientSocket;
 	private IProtocol protocol;
+	private TCPServer tcpServer;
 
 	@Override
 	public void run() {
+		tcpServer.register(this);
 		DataInputStream in = null;
 		DataOutputStream out = null;
 		try {
@@ -50,6 +52,7 @@ public class TCPServerHandler extends Component implements ITCPServerHandler {
 			} catch (Exception e) {
 				JLG.error(e);
 			}
+			tcpServer.unregister(this);
 			JLG.debug("end");
 		}
 	}
@@ -75,5 +78,11 @@ public class TCPServerHandler extends Component implements ITCPServerHandler {
 	@Override
 	public Socket getSocket() {
 		return clientSocket;
+	}
+
+	@Override
+	public void setTCPServer(TCPServer tcpServer) {
+		this.tcpServer = tcpServer;
+		
 	}
 }

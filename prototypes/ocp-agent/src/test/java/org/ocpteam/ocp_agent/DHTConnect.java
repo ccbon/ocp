@@ -5,10 +5,8 @@ import static org.junit.Assert.assertEquals;
 import java.util.Properties;
 
 import org.junit.Test;
-import org.ocpteam.component.Client;
 import org.ocpteam.component.ContactMap;
 import org.ocpteam.component.NATTraversal;
-import org.ocpteam.component.TCPClient;
 import org.ocpteam.core.TopContainer;
 import org.ocpteam.misc.JLG;
 import org.ocpteam.protocol.dht.DHTDataSource;
@@ -42,12 +40,13 @@ public class DHTConnect extends TopContainer {
 		port = 40000;
 		JLG.debug_on();
 		JLG.bUseSet = true;
+		JLG.set.add(DHTConnect.class.getName());
 		// JLG.set.add(TCPServer.class.getName());
 		// JLG.set.add(DHTInterestingStress.class.getName());
 		// JLG.set.add(DHTDataModel.class.getName());
-		JLG.set.add(TCPClient.class.getName());
+		// JLG.set.add(TCPClient.class.getName());
 		// JLG.set.add(JLG.class.getName());
-		JLG.set.add(Client.class.getName());
+		// JLG.set.add(Client.class.getName());
 		// JLG.set.add(NATTraversal.class.getName());
 	}
 
@@ -84,17 +83,17 @@ public class DHTConnect extends TopContainer {
 		for (int i = 0; i < n; i++) {
 			ds[i].connect();
 			ContactMap cm = ds[i].getComponent(ContactMap.class);
-			JLG.println("ds[" + i + "] contact map size: " + cm.size());
+			JLG.debug("ds[" + i + "] contact map size: " + cm.size());
 			assertEquals(i + 1, cm.size());
 		}
 		for (int i = 0; i < n; i++) {
 			ContactMap cm = ds[i].getComponent(ContactMap.class);
-			JLG.println("ds[" + i + "] contact map size: " + cm.size());
+			JLG.debug("ds[" + i + "] contact map size: " + cm.size());
 			assertEquals(n, cm.size());
 		}
 
 		// disconnect the #1
-		JLG.println("disconnect 1");
+		JLG.debug("disconnect 1");
 		ds[1].disconnect();
 		ds[1].getComponent(ContactMap.class).removeAll();
 		ds[3].disconnect();
@@ -111,21 +110,20 @@ public class DHTConnect extends TopContainer {
 			JLG.println("ds[" + i + "] contact map size: " + cm.size());
 		}
 
-		JLG.println("reconnect 1");
+		JLG.debug("reconnect 1");
 		ds[1].connect();
 		for (int i = 0; i < n; i++) {
 			ContactMap cm = ds[i].getComponent(ContactMap.class);
 			JLG.println("ds[" + i + "] contact map size: " + cm.size() + ": " + cm.values());
 		}
-		JLG.println("reconnect 3");
-		//Thread.sleep(100000);
+		JLG.debug("reconnect 3");
 		ds[3].connect();
 		for (int i = 0; i < n; i++) {
 			ContactMap cm = ds[i].getComponent(ContactMap.class);
 			JLG.println("ds[" + i + "] contact map size: " + cm.size() + ": " + cm.values());
+			assertEquals(n, cm.size());
 		}
 
-		//Thread.sleep(100000);
 		for (int i = 0; i < n; i++) {
 			ds[i].disconnect();
 		}

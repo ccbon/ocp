@@ -120,10 +120,16 @@ public abstract class DataSource extends TopContainer implements IComponent,
 	}
 
 	public void connect() throws Exception {
+		if (bIsConnected == true) {
+			throw new Exception("already connected.");
+		}
 		bIsConnected = true;
 	}
 
 	public void disconnect() throws Exception {
+		if (bIsConnected == false) {
+			throw new Exception("already disconnected.");
+		}
 		bIsConnected = false;
 		context = null;
 	}

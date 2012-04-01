@@ -1,98 +1,107 @@
 package org.ocpteam.component;
 
-import java.io.IOException;
+import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import org.ocpteam.core.Container;
 import org.ocpteam.interfaces.ITCPServerHandler;
 import org.ocpteam.misc.JLG;
-import org.ocpteam.misc.JLGThread;
 
-public class TCPServer extends Container implements Runnable {
+public class TCPServer extends Container {
 
 	private int port;
 	private ServerSocket serverSocket;
-	private boolean stoppingNow = false;
 	private ITCPServerHandler handler;
-	private ThreadGroup tg;
 
-	public TCPServer() throws Exception {
+	private ExecutorService executor;
+	private ExecutorService pool;
+	private Set<ITCPServerHandler> handlerSet;
+	
+	@Override
+	public void init() throws Exception {
+		super.init();
+		executor = Executors.newSingleThreadExecutor();
+		pool = Executors.newCachedThreadPool();
+		handlerSet = Collections.synchronizedSet(new HashSet<ITCPServerHandler>());
 	}
 
 	public void setPort(int port) {
 		this.port = port;
 	}
-
-	public void run() {
-		// create a listener
-		JLG.debug("starting a TCP server on port:" + port);
-		try {
-			if (serverSocket != null) {
+	
+	public void start() {
+		executor.execute(new Runnable() {
+			
+			@Override
+			public void run() {
+				JLG.debug("starting a TCP server thread on port:" + port);
 				try {
-					serverSocket.close();
-					serverSocket = null;
+					if (serverSocket != null) {
+						try {
+							serverSocket.close();
+						} catch (Exception e) {
+						}
+					}
+					serverSocket = new ServerSocket();
+					serverSocket.setReuseAddress(true);
+					serverSocket.bind(new InetSocketAddress(port));
+					while (true) {
+						JLG.debug("waiting for a client connection");
+						Socket clientSocket = serverSocket.accept();
+						ITCPServerHandler myHandler = handler.duplicate();
+						myHandler.setTCPServer(TCPServer.this);
+						myHandler.setSocket(clientSocket);
+						pool.execute(myHandler);
+					}
 				} catch (Exception e) {
-					// TODO: handle exception
 				}
+				JLG.debug("TCP server thread finished");
 			}
-			serverSocket = new ServerSocket(port);
-			serverSocket.setReuseAddress(true);
-			tg = new ThreadGroup("tcpserver_" + port);
-			while (stoppingNow == false) {
-				JLG.debug("waiting for a client connection");
-				Socket clientSocket = serverSocket.accept();
-				ITCPServerHandler myHandler = handler.duplicate();
-				myHandler.setSocket(clientSocket);
-				JLGThread t = new JLGThread(tg, myHandler, "TCPHandler");
-				t.start();
-			}
-		} catch (Exception e) {
-			if (!stoppingNow) {
-				JLG.error(e);
-			}
-		}
-		JLG.debug("thread finished");
+		});
 	}
 
-	public void stop(Thread t) {
+	public void stop() {
 		JLG.debug("stopping a TCP server with port: " + port);
-		stoppingNow = true;
 		try {
 			if (serverSocket != null) {
 				serverSocket.close();
 				serverSocket = null;
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
 		}
-		// interrupt thread of tg.
-		if (tg != null) {
+		
+		// make sure we don't accept new tasks
+		pool.shutdown();
+		// for all registered handler, make sure their clientSocket is closed.
+		ITCPServerHandler[] array = handlerSet.toArray(new ITCPServerHandler[handlerSet.size()]);
+		for (ITCPServerHandler h : array) {
+			Socket clientSocket = h.getSocket();
 			try {
-				Thread[] list = new Thread[tg.activeCount()];
-				tg.enumerate(list);
-				for (Thread th : list) {
-					ITCPServerHandler myHandler = (ITCPServerHandler) ((JLGThread) th)
-							.getRunnable();
-					Socket socket = myHandler.getSocket();
-					try {
-						socket.close();
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
-				}
-
+				clientSocket.close();
 			} catch (Exception e) {
-				e.printStackTrace();
 			}
-			tg.interrupt();
 		}
-		t.interrupt();
+		pool.shutdownNow();
+		executor.shutdownNow();
 		JLG.debug("end stopping a TCP server with port: " + port);
 	}
 
 	public void setHandler(ITCPServerHandler handler) {
 		this.handler = handler;
+	}
+
+	public void register(ITCPServerHandler h) {
+		handlerSet.add(h);
+	}
+
+	public void unregister(ITCPServerHandler h) {
+		handlerSet.remove(h);
 	}
 
 }

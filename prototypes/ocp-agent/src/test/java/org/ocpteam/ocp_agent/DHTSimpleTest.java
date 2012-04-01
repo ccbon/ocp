@@ -20,8 +20,8 @@ public class DHTSimpleTest {
 	@org.junit.Test
 	public void mytest() {
 		try {
-//			assertTrue(new DHTSimpleTest().oneinstance());
-			assertTrue(new DHTSimpleTest().twoinstances());
+			assertTrue(new DHTSimpleTest().oneinstance());
+			//assertTrue(new DHTSimpleTest().twoinstances());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

@@ -94,7 +94,7 @@ public class DHTInterestingStress extends TopContainer {
 
 		}
 		JLG.debug("found datasource=" + r);
-		//JLG.debug("keyset size: " + dht.keySet().size());
+		JLG.debug("keyset size: " + dht.keySet().size());
 		String key = "key" + JLG.random(100);
 		JLG.debug("getting " + key + " : " + dht.get(key));
 	}
@@ -189,14 +189,13 @@ public class DHTInterestingStress extends TopContainer {
 			JLG.debug("wake up");
 			for (int i = 1; i < ds.length; i++) {
 				DHTDataSource d = ds[i];
+				double r = Math.random();
 				if (d.isConnected()) {
 					// take a chance to disconnect
-					double r = Math.random();
 					if (r > availabilityRate) {
 						d.disconnect();
 					}
 				} else {
-					double r = Math.random();
 					if (r <= availabilityRate && stopNow == false) {
 						d.connect();
 					}
