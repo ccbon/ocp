@@ -119,7 +119,7 @@ public abstract class DataSource extends TopContainer implements IComponent,
 		return context;
 	}
 
-	public void connect() throws Exception {
+	public synchronized void connect() throws Exception {
 		if (bIsConnected == true) {
 			throw new Exception("already connected.");
 		}
@@ -129,7 +129,7 @@ public abstract class DataSource extends TopContainer implements IComponent,
 		bIsConnected = true;
 	}
 
-	public void disconnect() throws Exception {
+	public synchronized void disconnect() throws Exception {
 		if (bIsConnected == false) {
 			throw new Exception("already disconnected.");
 		}

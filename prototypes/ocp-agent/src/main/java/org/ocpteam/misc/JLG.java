@@ -13,7 +13,10 @@ import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
+import java.io.PrintWriter;
 import java.io.Serializable;
+import java.io.StringWriter;
+import java.io.Writer;
 import java.security.KeyFactory;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -72,6 +75,20 @@ public class JLG {
 			System.out.println(sPrefix + input);
 		}
 	}
+	
+	public static void debugStackTrace() {
+		Throwable t = new Throwable();
+		StringWriter result = new StringWriter();
+		t.printStackTrace(new PrintWriter(result));
+		debug(result.toString());
+	}
+	
+	public static String getStackTrace(Throwable aThrowable) {
+	    final Writer result = new StringWriter();
+	    final PrintWriter printWriter = new PrintWriter(result);
+	    aThrowable.printStackTrace(printWriter);
+	    return result.toString();
+	  }
 
 	public static void error(Exception e) {
 		System.out.println("ERROR: " + e.getMessage());
@@ -371,5 +388,7 @@ public class JLG {
 			}
 		}
 	}
+
+
 
 }

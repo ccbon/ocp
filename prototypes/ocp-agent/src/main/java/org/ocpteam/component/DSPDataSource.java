@@ -39,7 +39,7 @@ public abstract class DSPDataSource extends DataSource {
 	}
 
 	@Override
-	public void connect() throws Exception {
+	public synchronized void connect() throws Exception {
 		super.connect();
 		if (agent.isFirstAgent()) {
 			JLG.debug("This is the first agent on the network");
@@ -68,11 +68,12 @@ public abstract class DSPDataSource extends DataSource {
 	protected void configureServer(Server server) throws Exception {
 		listener.setUrl(new URL(
 				getProperty("listener.tcp.url", "tcp://localhost:22222")));
+		server.getListeners().clear();
 		server.getListeners().add(listener);
 	}
 
 	@Override
-	public void disconnect() throws Exception {
+	public synchronized void disconnect() throws Exception {
 		super.disconnect();
 		if (server.isStarted()) {
 			JLG.debug("stopping the server");

@@ -46,7 +46,7 @@ public class DHTInterestingStress extends TopContainer {
 		port = 40000;
 		availabilityRate = 0.8;
 		JLG.debug_on();
-		//JLG.bUseSet = true;
+		JLG.bUseSet = true;
 		// JLG.set.add(TCPServer.class.getName());
 		JLG.set.add(DHTInterestingStress.class.getName());
 		// JLG.set.add(DHTDataModel.class.getName());
@@ -56,7 +56,7 @@ public class DHTInterestingStress extends TopContainer {
 		// JLG.set.add(NATTraversal.class.getName());
 	}
 
-	protected void activity() throws Exception {
+	protected void activity() {
 		for (int i = 0; i < n; i++) {
 			if (ds[i].isConnected()) {
 				int size = ds[i].contactMap.size();
@@ -67,29 +67,25 @@ public class DHTInterestingStress extends TopContainer {
 			}
 		}
 		System.out.println();
-		Context c = null;
-		int r = 0;
-		while (c == null) {
-			JLG.debug("try to pick up a connected datasource");
-			r = JLG.random(n);
-			DataSource d = ds[r];
-			c = d.getContext();
+		JLG.debug("try to pick up a connected datasource");
+		int r = JLG.random(n);
+		DataSource d = ds[r];
+		synchronized (d) {
+			if (!d.isConnected()) {
+				return;
+			}
+			try {
+				JLG.debug("found datasource=" + r);
+				Context c = d.getContext();
+				DHTDataModel dht = (DHTDataModel) c.getDataModel();
+				dht.set("key" + JLG.random(100), "value" + JLG.random(100));
+				JLG.debug("keyset size: " + dht.keySet().size());
+				String key = "key" + JLG.random(100);
+				JLG.debug("getting " + key + " : " + dht.get(key));
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
-		JLG.debug("found datasource=" + r);
-		DHTDataModel dht = (DHTDataModel) c.getDataModel();
-		dht.set("key" + JLG.random(100), "value" + JLG.random(100));
-
-		c = null;
-		while (c == null) {
-			JLG.debug("try to pick up a connected datasource 2");
-			r = JLG.random(n);
-			DataSource d = ds[r];
-			c = d.getContext();
-		}
-		JLG.debug("found datasource=" + r);
-		JLG.debug("keyset size: " + dht.keySet().size());
-		String key = "key" + JLG.random(100);
-		JLG.debug("getting " + key + " : " + dht.get(key));
 	}
 
 	public void start() throws Exception {
@@ -103,15 +99,17 @@ public class DHTInterestingStress extends TopContainer {
 				try {
 					JLG.debug("availability");
 					for (int i = 1; i < ds.length; i++) {
-						double r = Math.random();
-						if (ds[i].isConnected()) {
-							// take a chance to disconnect
-							if (r > availabilityRate) {
-								ds[i].disconnect();
-							}
-						} else {
-							if (r <= availabilityRate) {
-								ds[i].connect();
+						synchronized (ds[i]) {
+							double r = Math.random();
+							if (ds[i].isConnected()) {
+								// take a chance to disconnect
+								if (r > availabilityRate) {
+									ds[i].disconnect();
+								}
+							} else {
+								if (r <= availabilityRate) {
+									ds[i].connect();
+								}
 							}
 						}
 					}
@@ -125,18 +123,15 @@ public class DHTInterestingStress extends TopContainer {
 
 			@Override
 			public void run() {
-				try {
-					DHTInterestingStress.this.activity();
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
+				DHTInterestingStress.this.activity();
 			}
 		};
 
 		scheduler = Executors.newScheduledThreadPool(10);
-		final ScheduledFuture<?> sf = scheduler.scheduleAtFixedRate(insureAvailability, 1, 1,
-				TimeUnit.SECONDS);
-		final ScheduledFuture<?> sf2 = scheduler.scheduleAtFixedRate(activity, 0, 100, TimeUnit.MILLISECONDS);
+		final ScheduledFuture<?> sf = scheduler.scheduleAtFixedRate(
+				insureAvailability, 1, 1, TimeUnit.SECONDS);
+		final ScheduledFuture<?> sf2 = scheduler.scheduleAtFixedRate(activity,
+				0, 100, TimeUnit.MILLISECONDS);
 
 		scheduler.schedule(new Runnable() {
 			public void run() {
@@ -154,9 +149,11 @@ public class DHTInterestingStress extends TopContainer {
 
 	private void disconnectAll() throws Exception {
 		for (int i = 0; i < n; i++) {
-			JLG.debug("disconnecting " + i);
-			if (ds[i].isConnected()) {
-				ds[i].disconnect();
+			synchronized (ds[i]) {
+				JLG.debug("disconnecting " + i);
+				if (ds[i].isConnected()) {
+					ds[i].disconnect();
+				}
 			}
 		}
 	}

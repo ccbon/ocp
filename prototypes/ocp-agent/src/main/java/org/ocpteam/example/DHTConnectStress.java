@@ -1,12 +1,11 @@
 package org.ocpteam.example;
 
-import java.util.Properties;
-
-import org.ocpteam.component.ContactMap;
-import org.ocpteam.component.NATTraversal;
-import org.ocpteam.component.TCPServerHandler;
+import org.ocpteam.component.TCPClient;
+import org.ocpteam.component.TCPListener;
 import org.ocpteam.core.TopContainer;
+import org.ocpteam.interfaces.IProtocol;
 import org.ocpteam.misc.JLG;
+import org.ocpteam.misc.URL;
 import org.ocpteam.protocol.dht.DHTDataSource;
 
 public class DHTConnectStress extends TopContainer {
@@ -21,10 +20,6 @@ public class DHTConnectStress extends TopContainer {
 		}
 	}
 
-	private int n;
-	private int port;
-	private DHTDataSource[] ds;
-
 	public DHTConnectStress() throws Exception {
 		addComponent(DHTDataSource.class);
 	}
@@ -32,72 +27,30 @@ public class DHTConnectStress extends TopContainer {
 	@Override
 	public void init() throws Exception {
 		super.init();
-		n = 10;
-		port = 40000;
 		JLG.debug_on();
-		//JLG.bUseSet = true;
-		// JLG.set.add(TCPServer.class.getName());
-		JLG.set.add(DHTConnectStress.class.getName());
-		JLG.set.add(TCPServerHandler.class.getName());
-		// JLG.set.add(DHTDataModel.class.getName());
-		// JLG.set.add(TCPClient.class.getName());
-		JLG.set.add(JLG.class.getName());
-		// JLG.set.add(Client.class.getName());
-		// JLG.set.add(NATTraversal.class.getName());
 	}
 
 	public void start() throws Exception {
-
-		connectAll();
-		disconnectAll();
-		JLG.debug("app finished");
-		//JLG.showActiveThreads();
+		IProtocol protocol = new MinimalistProtocol();
+		TCPListener tcplistener = new TCPListener();
+		tcplistener.init();
+		tcplistener.setProtocol(protocol);
+		tcplistener.setUrl(new URL("tcp://localhost:12345"));
+		tcplistener.start();
+		
+		TCPClient tcpClient = new TCPClient();
+		tcpClient.init();
+		tcpClient.setHostname("localhost");
+		tcpClient.setPort(12345);
+		tcpClient.setProtocol(protocol);
+		byte[] response = tcpClient.request("coucou".getBytes());
+		JLG.debug("response=" + new String(response));
+		tcplistener.stop();
+		response = tcpClient.request("coucou".getBytes());
+		JLG.debug("response=" + new String(response));
+		
 	}
 
-	private void disconnectAll() throws Exception {
-		for (int i = 0; i < n; i++) {
-			JLG.debug("disconnecting " + i);
-			ds[i].disconnect();
-		}
-	}
 
-	private void connectAll() throws Exception {
-		ds = new DHTDataSource[n];
-		for (int i = 0; i < n; i++) {
-			ds[i] = getComponent(DHTDataSource.class).getClass().newInstance();
-			ds[i].init();
-			ds[i].setName("ds_" + i);
-			// unfortunately, the teleal library does not work well with many
-			// threads...
-			ds[i].listener.removeComponent(NATTraversal.class);
-		}
-		// first agent
-		Properties p = new Properties();
-		p.setProperty("agent.isFirst", "yes");
-		p.setProperty("listener.tcp.url", "tcp://localhost:" + port);
-		ds[0].setConfig(p);
-
-		// other agents
-		for (int i = 1; i < n; i++) {
-			p = new Properties();
-			p.setProperty("agent.isFirst", "no");
-			int port_i = port + i;
-			p.setProperty("listener.tcp.url", "tcp://localhost:" + port_i);
-			p.setProperty("sponsor.1", "tcp://localhost:" + port);
-			ds[i].setConfig(p);
-		}
-
-		// start all one after the other
-		for (int i = 0; i < n; i++) {
-			ds[i].connect();
-			ContactMap cm = ds[i].getComponent(ContactMap.class);
-			JLG.debug("ds[" + i + "] contact map size: " + cm.size());
-		}
-		for (int i = 0; i < n; i++) {
-			ContactMap cm = ds[i].getComponent(ContactMap.class);
-			JLG.debug("ds[" + i + "] contact map size: " + cm.size());
-		}
-
-	}
 
 }

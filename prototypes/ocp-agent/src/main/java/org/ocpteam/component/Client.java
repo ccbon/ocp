@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Queue;
+import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -237,6 +238,9 @@ public class Client extends DataSourceContainer implements IClient {
 				} catch (java.net.SocketTimeoutException e) {
 					JLG.debug("SocketTimeoutException on contact " + contact);
 					continue;
+				} catch (java.net.ConnectException e) {
+					JLG.debug("ConnectException on contact " + contact);
+					continue;					
 				} catch (SocketException e) {
 					JLG.debug("SocketException on contact " + contact);
 					continue;
@@ -393,9 +397,10 @@ public class Client extends DataSourceContainer implements IClient {
 	@Override
 	public void stop() throws Exception {
 		// clean channelMap
-		Iterator<URL> it = channelMap.keySet().iterator();
-		while (it.hasNext()) {
-			Channel channel = channelMap.get(it.next());
+		Set<URL> set = channelMap.keySet();
+		URL[] array = (URL[]) set.toArray(new URL[set.size()]);
+		for (URL url : array) {
+			Channel channel = channelMap.get(url);
 			if (channel != null) {
 				channel.stop();
 			}

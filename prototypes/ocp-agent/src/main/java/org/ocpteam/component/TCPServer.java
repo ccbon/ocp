@@ -35,11 +35,14 @@ public class TCPServer extends Container {
 	public void start() {
 		pool = Executors.newCachedThreadPool();
 		JLG.debug("pool class=" + pool);
+		final Throwable t = new Throwable();
+		
 		pool.execute(new Runnable() {
 			
 			@Override
 			public void run() {
 				JLG.debug("starting a TCP server thread on port:" + port);
+				JLG.debug("throwable = " + JLG.getStackTrace(t));
 				try {
 					if (serverSocket != null) {
 						try {

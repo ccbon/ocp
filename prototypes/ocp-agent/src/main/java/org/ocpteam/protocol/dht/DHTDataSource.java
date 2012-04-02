@@ -31,7 +31,7 @@ public class DHTDataSource extends DSPDataSource {
 	}
 	
 	@Override
-	public void connect() throws Exception {
+	public synchronized void connect() throws Exception {
 		super.connect();
 		Context c = new Context(getComponent(IDataModel.class));
 		setContext(c);
