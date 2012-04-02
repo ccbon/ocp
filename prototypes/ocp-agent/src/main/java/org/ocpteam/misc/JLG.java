@@ -70,7 +70,7 @@ public class JLG {
 			}
 
 			String sPrefix = "DEBUG [T=" + Thread.currentThread().getName()
-					+ "] (" + ste.getClassName() + ".java:"
+					+ "] (" + s + ".java:"
 					+ ste.getLineNumber() + ") : ";
 			System.out.println(sPrefix + input);
 		}
