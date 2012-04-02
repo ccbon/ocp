@@ -124,7 +124,6 @@ public class TCPClient extends DataSourceContainer {
 			try {
 				clientSocket.close();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}

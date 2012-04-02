@@ -361,10 +361,13 @@ public class JLG {
 				JLG.debug("running threadgroup: " + t.getName());
 			}
 			try {
-				Thread.sleep(10000);
+				Thread.sleep(1000);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+			}
+			if (Thread.activeCount() == 1) {
+				break;
 			}
 		}
 	}

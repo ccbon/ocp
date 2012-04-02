@@ -19,15 +19,12 @@ public class TCPServer extends Container {
 	private ServerSocket serverSocket;
 	private ITCPServerHandler handler;
 
-	private ExecutorService executor;
 	private ExecutorService pool;
 	private Set<ITCPServerHandler> handlerSet;
 	
 	@Override
 	public void init() throws Exception {
 		super.init();
-		executor = Executors.newSingleThreadExecutor();
-		pool = Executors.newCachedThreadPool();
 		handlerSet = Collections.synchronizedSet(new HashSet<ITCPServerHandler>());
 	}
 
@@ -36,7 +33,9 @@ public class TCPServer extends Container {
 	}
 	
 	public void start() {
-		executor.execute(new Runnable() {
+		pool = Executors.newCachedThreadPool();
+		JLG.debug("pool class=" + pool);
+		pool.execute(new Runnable() {
 			
 			@Override
 			public void run() {
@@ -84,11 +83,13 @@ public class TCPServer extends Container {
 			Socket clientSocket = h.getSocket();
 			try {
 				clientSocket.close();
+				unregister(h);
 			} catch (Exception e) {
+				e.printStackTrace();
 			}
 		}
 		pool.shutdownNow();
-		executor.shutdownNow();
+		JLG.debug("pool shutdownNow=" + pool);
 		JLG.debug("end stopping a TCP server with port: " + port);
 	}
 

@@ -123,12 +123,18 @@ public abstract class DataSource extends TopContainer implements IComponent,
 		if (bIsConnected == true) {
 			throw new Exception("already connected.");
 		}
+		if (usesComponent(Client.class)) {
+			getComponent(Client.class).start();
+		}
 		bIsConnected = true;
 	}
 
 	public void disconnect() throws Exception {
 		if (bIsConnected == false) {
 			throw new Exception("already disconnected.");
+		}
+		if (usesComponent(Client.class)) {
+			getComponent(Client.class).stop();
 		}
 		bIsConnected = false;
 		context = null;

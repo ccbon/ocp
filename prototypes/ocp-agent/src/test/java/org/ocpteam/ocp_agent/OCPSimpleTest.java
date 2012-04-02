@@ -5,8 +5,6 @@ import static org.junit.Assert.assertTrue;
 import java.util.Properties;
 
 import org.ocpteam.component.Agent;
-import org.ocpteam.component.DataSource;
-import org.ocpteam.component.NATTraversal;
 import org.ocpteam.misc.JLG;
 import org.ocpteam.protocol.ocp.Captcha;
 import org.ocpteam.protocol.ocp.OCPAgent;

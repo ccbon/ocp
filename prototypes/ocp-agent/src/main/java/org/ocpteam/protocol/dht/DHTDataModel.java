@@ -8,7 +8,6 @@ import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import org.ocpteam.component.DataSourceContainer;
 import org.ocpteam.entity.Contact;
@@ -46,7 +45,7 @@ public class DHTDataModel extends DataSourceContainer implements IMapDataModel {
 		DHTModule m = ds().getComponent(DHTModule.class);
 		final byte[] message = ds().client.getProtocol().getMessageSerializer()
 				.serializeInput(new InputMessage(m.retrieve(), key, value));
-		ExecutorService exe = Executors.newCachedThreadPool();
+		ExecutorService exe = ds().client.getExecutor();
 		Collection<Callable<String>> tasks = new LinkedList<Callable<String>>();
 		for (final Contact c : ds().contactMap.getOtherContacts()) {
 			tasks.add(new Callable<String>() {
@@ -76,7 +75,9 @@ public class DHTDataModel extends DataSourceContainer implements IMapDataModel {
 		}
 		try {
 			value = exe.invokeAny(tasks);
+		} catch (InterruptedException e) {
 		} catch (ExecutionException e) {
+		} catch (NullPointerException e) {
 		}
 		return value;
 

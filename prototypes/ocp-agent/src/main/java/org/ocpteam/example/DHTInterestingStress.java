@@ -1,6 +1,10 @@
 package org.ocpteam.example;
 
 import java.util.Properties;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 
 import org.ocpteam.component.ContactMap;
 import org.ocpteam.component.DataSource;
@@ -27,10 +31,8 @@ public class DHTInterestingStress extends TopContainer {
 	private int port;
 	private double availabilityRate;
 	private DHTDataSource[] ds;
-	public boolean stopNow = false;
 	private int duration;
-	private long activity_sleep;
-	
+	private ScheduledExecutorService scheduler;
 
 	public DHTInterestingStress() throws Exception {
 		addComponent(DHTDataSource.class);
@@ -40,23 +42,21 @@ public class DHTInterestingStress extends TopContainer {
 	public void init() throws Exception {
 		super.init();
 		n = 10;
-		duration = 1500;
+		duration = 5;
 		port = 40000;
-		availabilityRate = 0.9;
-		activity_sleep = 100;
+		availabilityRate = 0.8;
 		JLG.debug_on();
-		JLG.bUseSet = true;
-		//JLG.set.add(TCPServer.class.getName());
-		//JLG.set.add(DHTInterestingStress.class.getName());
-		//JLG.set.add(DHTDataModel.class.getName());
-		//JLG.set.add(TCPClient.class.getName());
-		//JLG.set.add(JLG.class.getName());
-		//JLG.set.add(Client.class.getName());
-		//JLG.set.add(NATTraversal.class.getName());
+		//JLG.bUseSet = true;
+		// JLG.set.add(TCPServer.class.getName());
+		JLG.set.add(DHTInterestingStress.class.getName());
+		// JLG.set.add(DHTDataModel.class.getName());
+		// JLG.set.add(TCPClient.class.getName());
+		JLG.set.add(JLG.class.getName());
+		// JLG.set.add(Client.class.getName());
+		// JLG.set.add(NATTraversal.class.getName());
 	}
 
 	protected void activity() throws Exception {
-		Thread.sleep(activity_sleep);
 		for (int i = 0; i < n; i++) {
 			if (ds[i].isConnected()) {
 				int size = ds[i].contactMap.size();
@@ -64,7 +64,7 @@ public class DHTInterestingStress extends TopContainer {
 				System.out.print("X[" + s + "]");
 			} else {
 				System.out.print("     ");
-			}	
+			}
 		}
 		System.out.println();
 		Context c = null;
@@ -74,24 +74,17 @@ public class DHTInterestingStress extends TopContainer {
 			r = JLG.random(n);
 			DataSource d = ds[r];
 			c = d.getContext();
-			if (stopNow == true) {
-				return;
-			}
 		}
 		JLG.debug("found datasource=" + r);
 		DHTDataModel dht = (DHTDataModel) c.getDataModel();
 		dht.set("key" + JLG.random(100), "value" + JLG.random(100));
-		
+
 		c = null;
 		while (c == null) {
 			JLG.debug("try to pick up a connected datasource 2");
 			r = JLG.random(n);
 			DataSource d = ds[r];
 			c = d.getContext();
-			if (stopNow == true) {
-				return;
-			}
-
 		}
 		JLG.debug("found datasource=" + r);
 		JLG.debug("keyset size: " + dht.keySet().size());
@@ -100,11 +93,78 @@ public class DHTInterestingStress extends TopContainer {
 	}
 
 	public void start() throws Exception {
+
+		connectAll();
+
+		// run availability thread.
+		final Runnable insureAvailability = new Runnable() {
+			@Override
+			public void run() {
+				try {
+					JLG.debug("availability");
+					for (int i = 1; i < ds.length; i++) {
+						double r = Math.random();
+						if (ds[i].isConnected()) {
+							// take a chance to disconnect
+							if (r > availabilityRate) {
+								ds[i].disconnect();
+							}
+						} else {
+							if (r <= availabilityRate) {
+								ds[i].connect();
+							}
+						}
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		};
+
+		final Runnable activity = new Runnable() {
+
+			@Override
+			public void run() {
+				try {
+					DHTInterestingStress.this.activity();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		};
+
+		scheduler = Executors.newScheduledThreadPool(10);
+		final ScheduledFuture<?> sf = scheduler.scheduleAtFixedRate(insureAvailability, 1, 1,
+				TimeUnit.SECONDS);
+		final ScheduledFuture<?> sf2 = scheduler.scheduleAtFixedRate(activity, 0, 100, TimeUnit.MILLISECONDS);
+
+		scheduler.schedule(new Runnable() {
+			public void run() {
+				sf.cancel(true);
+				sf2.cancel(true);
+			}
+		}, duration, TimeUnit.SECONDS);
+		Thread.sleep((duration + 1) * 1000);
+		scheduler.shutdown();
+		scheduler.shutdownNow();
+		disconnectAll();
+		JLG.debug("app finished");
+		JLG.showActiveThreads();
+	}
+
+	private void disconnectAll() throws Exception {
+		for (int i = 0; i < n; i++) {
+			JLG.debug("disconnecting " + i);
+			if (ds[i].isConnected()) {
+				ds[i].disconnect();
+			}
+		}
+	}
+
+	private void connectAll() throws Exception {
 		ds = new DHTDataSource[n];
 		for (int i = 0; i < n; i++) {
-			Class<? extends DHTDataSource> c = getComponent(DHTDataSource.class)
-					.getClass();
-			ds[i] = c.newInstance();
+			ds[i] = getComponent(DHTDataSource.class).getClass().newInstance();
 			ds[i].init();
 			ds[i].setName("ds_" + i);
 			// unfortunately, the teleal library does not work well with many
@@ -125,87 +185,19 @@ public class DHTInterestingStress extends TopContainer {
 			p.setProperty("listener.tcp.url", "tcp://localhost:" + port_i);
 			p.setProperty("sponsor.1", "tcp://localhost:" + port);
 			ds[i].setConfig(p);
-
 		}
 
 		// start all one after the other
 		for (int i = 0; i < n; i++) {
 			ds[i].connect();
 			ContactMap cm = ds[i].getComponent(ContactMap.class);
-			JLG.println("ds[" + i + "] contact map size: " + cm.size());
-			//JLG.println("ds[" + i + "] contact map : " + cm);
+			JLG.debug("ds[" + i + "] contact map size: " + cm.size());
 		}
 		for (int i = 0; i < n; i++) {
 			ContactMap cm = ds[i].getComponent(ContactMap.class);
-			JLG.println("ds[" + i + "] contact map size: " + cm.size());
-			//JLG.println("ds[" + i + "] contact map : " + cm);
+			JLG.debug("ds[" + i + "] contact map size: " + cm.size());
 		}
-		
 
-		// run availability thread.
-		Thread t = new Thread(new Runnable() {
-			@Override
-			public void run() {
-				while (stopNow == false) {
-					DHTInterestingStress.this.insureAvailability();
-				}
-			}
-		}, "insureAvailability");
-
-		t.start();
-
-		Thread t2 = new Thread(new Runnable() {
-
-			@Override
-			public void run() {
-				while (stopNow == false) {
-					try {
-						DHTInterestingStress.this.activity();
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-				}
-			}
-		}, "activity");
-		t2.start();
-
-		Thread.sleep(duration * 1000);
-		stopNow = true;
-
-		for (int i = 0; i < n; i++) {
-			JLG.debug("disconnecting " + i);
-			ds[i].disconnect();
-		}
-		JLG.debug("app finished");
-		JLG.debug("stopNow=" + stopNow);
-		//JLG.showActiveThreads();
-		
-	}
-
-	protected void insureAvailability() {
-		// every second, make a decision to switch the status of an agent.
-		try {
-			Thread.sleep(1000);
-			JLG.debug("wake up");
-			for (int i = 1; i < ds.length; i++) {
-				DHTDataSource d = ds[i];
-				double r = Math.random();
-				if (d.isConnected()) {
-					// take a chance to disconnect
-					if (r > availabilityRate) {
-						d.disconnect();
-					}
-				} else {
-					if (r <= availabilityRate && stopNow == false) {
-						d.connect();
-					}
-				}
-			}
-		} catch (Exception e) {
-			if (!stopNow) {
-				e.printStackTrace();
-			}
-		}
 	}
 
 }

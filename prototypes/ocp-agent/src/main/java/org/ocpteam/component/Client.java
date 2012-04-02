@@ -32,7 +32,7 @@ public class Client extends DataSourceContainer implements IClient {
 	private Map<URL, Channel> channelMap;
 	protected HashMap<String, Class<? extends Channel>> channelFactoryMap;
 	private ContactMap contactMap;
-	private ExecutorService executor = Executors.newCachedThreadPool();
+	private ExecutorService executor;
 
 	public Client() throws Exception {
 		addComponent(TCPChannel.class);
@@ -243,7 +243,8 @@ public class Client extends DataSourceContainer implements IClient {
 				}
 			}
 		}
-		JLG.debug("about to throw a not available exception regarding contact " + contact);
+		JLG.debug("about to throw a not available exception regarding contact "
+				+ contact);
 		throw new NotAvailableContactException();
 	}
 
@@ -288,12 +289,16 @@ public class Client extends DataSourceContainer implements IClient {
 				}
 			}));
 		}
-		executor.invokeAll(tasks);
+		try {
+			executor.invokeAll(tasks);
+		} catch (NullPointerException e) {
+		} catch (InterruptedException e) {
+		}
 	}
 
 	public void detach(Contact contact) throws Exception {
 		JLG.debug("detaching contact: " + contact);
-		
+
 		Iterator<URL> it = contact.getUrlList().iterator();
 		while (it.hasNext()) {
 			Channel channel = channelMap.get(it.next());
@@ -373,10 +378,41 @@ public class Client extends DataSourceContainer implements IClient {
 				try {
 					sendAll(message);
 				} catch (Exception e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
 		});
+	}
+
+	@Override
+	public void start() throws Exception {
+		executor = Executors.newCachedThreadPool();
+
+	}
+
+	@Override
+	public void stop() throws Exception {
+		// clean channelMap
+		Iterator<URL> it = channelMap.keySet().iterator();
+		while (it.hasNext()) {
+			Channel channel = channelMap.get(it.next());
+			if (channel != null) {
+				channel.stop();
+			}
+		}
+		if (executor != null) {
+			executor.shutdown();
+			executor.shutdownNow();
+			executor = null;
+		}
+	}
+
+	@Override
+	public boolean isStarted() {
+		return executor != null;
+	}
+
+	public ExecutorService getExecutor() {
+		return executor;
 	}
 }

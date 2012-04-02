@@ -47,15 +47,16 @@ public class TCPServerHandler extends Component implements ITCPServerHandler {
 			e.printStackTrace();
 		} finally {
 			try {
-				if (in != null) {
-					in.close();
-				}
-				if (out != null) {
-					out.close();
-				}
+				in.close();
+			} catch (Exception e) {
+			}
+			try {
+				out.close();
+			} catch (Exception e) {
+			}
+			try {
 				clientSocket.close();
 			} catch (Exception e) {
-				JLG.error(e);
 			}
 			tcpServer.unregister(this);
 			JLG.debug("end");
@@ -88,6 +89,6 @@ public class TCPServerHandler extends Component implements ITCPServerHandler {
 	@Override
 	public void setTCPServer(TCPServer tcpServer) {
 		this.tcpServer = tcpServer;
-		
+
 	}
 }
