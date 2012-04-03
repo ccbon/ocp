@@ -63,8 +63,6 @@ public class DHTDataModel extends DataSourceContainer implements IMapDataModel {
 							return value;
 						}
 					} catch (NotAvailableContactException e) {
-						JLG.debug("detach");
-						ds().client.detach(c);
 					}
 					throw new Exception();
 				}
@@ -125,7 +123,6 @@ public class DHTDataModel extends DataSourceContainer implements IMapDataModel {
 					}
 				}
 			} catch (NotAvailableContactException e) {
-				ds().client.detach(c);
 			}
 		}
 		return set;

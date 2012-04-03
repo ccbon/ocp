@@ -202,7 +202,6 @@ public class Client extends DataSourceContainer implements IClient {
 			try {
 				output = request(contact, input);
 			} catch (NotAvailableContactException e) {
-				detach(contact);
 			}
 		}
 		if (output == null) {
@@ -249,6 +248,7 @@ public class Client extends DataSourceContainer implements IClient {
 		}
 		JLG.debug("about to throw a not available exception regarding contact "
 				+ contact);
+		detach(contact);
 		throw new NotAvailableContactException();
 	}
 
@@ -335,7 +335,6 @@ public class Client extends DataSourceContainer implements IClient {
 		try {
 			request(c, message);
 		} catch (NotAvailableContactException e) {
-			detach(c);
 		}
 	}
 
@@ -369,7 +368,6 @@ public class Client extends DataSourceContainer implements IClient {
 					contactMap.add(nc);
 				}
 			} catch (NotAvailableContactException e) {
-				detach(c);
 			}
 		}
 	}
