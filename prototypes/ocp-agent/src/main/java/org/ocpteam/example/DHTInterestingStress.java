@@ -171,7 +171,7 @@ public class DHTInterestingStress extends TopContainer {
 		// first agent
 		Properties p = new Properties();
 		p.setProperty("agent.isFirst", "yes");
-		p.setProperty("listener.tcp.url", "tcp://localhost:" + port);
+		p.setProperty("server.port", "" + port);
 		ds[0].setConfig(p);
 
 		// other agents
@@ -179,7 +179,7 @@ public class DHTInterestingStress extends TopContainer {
 			p = new Properties();
 			p.setProperty("agent.isFirst", "no");
 			int port_i = port + i;
-			p.setProperty("listener.tcp.url", "tcp://localhost:" + port_i);
+			p.setProperty("server.port", "" + port_i);
 			p.setProperty("sponsor.1", "tcp://localhost:" + port);
 			ds[i].setConfig(p);
 		}

@@ -371,12 +371,16 @@ public class Client extends DataSourceContainer implements IClient {
 		return executor;
 	}
 
-	public void waitForCompletion() throws InterruptedException {
+	public void waitForCompletion() {
+		try {
 		JLG.debug("remainingTasks = " + remainingTasks);
 		while (remainingTasks > 0) {
 			JLG.debug("remainingTasks = " + remainingTasks);
 			completionService.take();
 			remainingTasks--;
+		}
+		} catch (InterruptedException e) {
+			remainingTasks = 0;
 		}
 	}
 }
