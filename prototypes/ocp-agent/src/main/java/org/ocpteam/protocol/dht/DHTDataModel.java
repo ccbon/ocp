@@ -32,6 +32,7 @@ public class DHTDataModel extends DataSourceContainer implements IMapDataModel {
 				.serializeInput(new InputMessage(m.store(), key, value));
 
 		ds().client.sendAll(message);
+		ds().client.waitForCompletion();
 	}
 
 	@Override
@@ -90,6 +91,7 @@ public class DHTDataModel extends DataSourceContainer implements IMapDataModel {
 				.serializeInput(new InputMessage(m.remove(), key));
 
 		ds().client.sendAll(message);
+		ds().client.waitForCompletion();
 
 	}
 

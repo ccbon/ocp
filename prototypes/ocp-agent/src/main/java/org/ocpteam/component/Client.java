@@ -10,6 +10,8 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Queue;
 import java.util.concurrent.Callable;
+import java.util.concurrent.CompletionService;
+import java.util.concurrent.ExecutorCompletionService;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -31,6 +33,8 @@ public class Client extends DataSourceContainer implements IClient {
 
 	private ContactMap contactMap;
 	private ExecutorService executor;
+	private CompletionService<Object> completionService;
+	private int remainingTasks;
 
 	public Client() throws Exception {
 	}
@@ -211,6 +215,7 @@ public class Client extends DataSourceContainer implements IClient {
 				new InputMessage(m.declareContact(), contact));
 		JLG.debug(ds().getName() + " declares contact: " + contact);
 		sendAll(input);
+		waitForCompletion();
 	}
 
 	public void sendAll(final byte[] message) throws Exception {
@@ -241,11 +246,16 @@ public class Client extends DataSourceContainer implements IClient {
 				}
 			}));
 		}
-		try {
-			executor.invokeAll(tasks);
-		} catch (NullPointerException e) {
-		} catch (InterruptedException e) {
+		for (Callable<Object> task : tasks) {
+			try {
+				completionService.submit(task);
+				remainingTasks++;
+				JLG.debug("increasing remainingTasks = " + remainingTasks);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
+		JLG.debug("last remainingTasks = " + remainingTasks);
 	}
 
 	public void detach(Contact contact) throws Exception {
@@ -335,24 +345,12 @@ public class Client extends DataSourceContainer implements IClient {
 		}
 	}
 
-	public void sendAllAsync(final byte[] message) {
-		executor.execute(new Runnable() {
-
-			@Override
-			public void run() {
-				try {
-					sendAll(message);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
 	@Override
 	public void start() throws Exception {
 		executor = Executors.newCachedThreadPool();
-
+		completionService = new ExecutorCompletionService<Object>(executor);
+		remainingTasks = 0;
+		JLG.debug("client started");
 	}
 
 	@Override
@@ -371,5 +369,14 @@ public class Client extends DataSourceContainer implements IClient {
 
 	public ExecutorService getExecutor() {
 		return executor;
+	}
+
+	public void waitForCompletion() throws InterruptedException {
+		JLG.debug("remainingTasks = " + remainingTasks);
+		while (remainingTasks > 0) {
+			JLG.debug("remainingTasks = " + remainingTasks);
+			completionService.take();
+			remainingTasks--;
+		}
 	}
 }

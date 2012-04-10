@@ -11,8 +11,8 @@ import org.ocpteam.component.ContactMap;
 import org.ocpteam.component.DSPDataSource;
 import org.ocpteam.component.DataSource;
 import org.ocpteam.entity.Context;
-import org.ocpteam.interfaces.IMapDataModel;
 import org.ocpteam.misc.JLG;
+import org.ocpteam.protocol.dht.DHTDataModel;
 import org.ocpteam.protocol.dht.DHTDataSource;
 
 public class DHTSimpleTest {
@@ -79,7 +79,7 @@ public class DHTSimpleTest {
 			JLG.debug("contactMap 2 size:" + cm2.size());
 			
 			Context ctx = ds.getContext();
-			IMapDataModel dm = (IMapDataModel) ctx.getDataModel();
+			DHTDataModel dm = (DHTDataModel) ctx.getDataModel();
 			dm.set("hello", "world");
 			ds.remove("hello");
 			String value = dm.get("hello");
