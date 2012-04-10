@@ -194,7 +194,6 @@ public class DHTInterestingStress extends TopContainer {
 			ContactMap cm = ds[i].getComponent(ContactMap.class);
 			JLG.debug("ds[" + i + "] contact map size: " + cm.size());
 		}
-
 	}
 
 }

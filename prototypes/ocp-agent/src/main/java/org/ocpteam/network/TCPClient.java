@@ -108,4 +108,9 @@ public class TCPClient {
 		}
 	}
 
+	public Socket getSocket() throws Exception {
+		retrieveSocket();
+		return clientSocket;
+	}
+
 }

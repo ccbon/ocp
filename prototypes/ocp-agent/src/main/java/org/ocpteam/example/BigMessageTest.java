@@ -1,11 +1,15 @@
 package org.ocpteam.example;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.Serializable;
+import java.net.Socket;
 import java.net.URI;
 
 import org.ocpteam.component.Protocol;
 import org.ocpteam.component.TCPListener;
 import org.ocpteam.interfaces.IProtocol;
+import org.ocpteam.network.TCPClient;
 
 public class BigMessageTest {
 	public static void main(String[] args) {
@@ -17,20 +21,20 @@ public class BigMessageTest {
 			l.setUrl(new URI("tcp://localhost:12345"));
 			l.start();
 
-			//TCPClient c = new TCPClient("localhost", 12345, p);
+			TCPClient c = new TCPClient("localhost", 12345, p);
 
-//			Socket socket = c.getSocket();
-//			DataInputStream in = new DataInputStream(socket.getInputStream());
-//			DataOutputStream out = new DataOutputStream(
-//					socket.getOutputStream());
-//
-//			// send a big message.
-//			int n = 10;
-//			out.writeInt(n);
-//			for (int i = 0; i < n; i++) {
-//				out.writeInt(i);
-//			}
-//
+			Socket socket = c.getSocket();
+			DataInputStream in = new DataInputStream(socket.getInputStream());
+			DataOutputStream out = new DataOutputStream(
+					socket.getOutputStream());
+
+			// send a big message.
+			int n = 10;
+			out.writeInt(n);
+			for (int i = 0; i < n; i++) {
+				out.writeInt(i);
+			}
+
 //			int nbr = in.readInt();
 //			for (int i = 0; i < nbr; i++) {
 //				int size = in.readInt();
