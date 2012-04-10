@@ -61,7 +61,7 @@ public class OCPClient extends Client implements IAuthenticable {
 			Captcha captcha, String answer) throws Exception {
 		byte[] request = OCPProtocol.message(OCPProtocol.CREATE_USER, data, link,
 				captcha, answer);
-		send(contact, request);
+		request(contact, request);
 	}
 
 	public void store(Queue<Contact> contactQueue, Address address,

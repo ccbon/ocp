@@ -24,6 +24,7 @@ import org.ocpteam.interfaces.IClient;
 import org.ocpteam.interfaces.IProtocol;
 import org.ocpteam.misc.JLG;
 import org.ocpteam.network.TCPClient;
+import org.ocpteam.network.UDPClient;
 import org.ocpteam.protocol.ocp.OCPAgent;
 
 public class Client extends DataSourceContainer implements IClient {
@@ -270,12 +271,32 @@ public class Client extends DataSourceContainer implements IClient {
 		// });
 	}
 
+	public void sendQuick(Contact c, byte[] message) throws Exception {
+		JLG.debug(ds().getName() + " sends a message to " + c);
+
+		UDPClient udpClient = contactMap.getUdpClient(c);
+		if (udpClient == null) {
+			try {
+				request(c, message);
+			} catch (Exception e) {
+			}
+			return;
+		}
+
+		try {
+			udpClient.send(message);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
 	public void send(Contact c, byte[] message) throws Exception {
 		JLG.debug(ds().getName() + " sends a message to " + c);
 		try {
 			request(c, message);
 		} catch (NotAvailableContactException e) {
 		}
+		return;
 	}
 
 	public IProtocol getProtocol() {

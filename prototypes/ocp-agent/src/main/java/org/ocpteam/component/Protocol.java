@@ -2,7 +2,9 @@ package org.ocpteam.component;
 
 import java.io.Serializable;
 import java.lang.reflect.Method;
+import java.net.DatagramPacket;
 import java.net.Socket;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -85,6 +87,14 @@ public abstract class Protocol extends DataSourceContainer implements IProtocol 
 		}
 		JLG.debug("s.getClass=" + s.getClass());
 		return getMessageSerializer().serializeOutput(s);
+	}
+	
+	@Override
+	public void process(DatagramPacket packet) {
+		byte[] input = Arrays.copyOf(packet.getData(), packet.getLength());
+		String s = new String(input);
+		JLG.debug("length=" + packet.getLength());
+		JLG.debug("message=" + s);
 	}
 
 	public Map<Integer, ITransaction> getMap() {

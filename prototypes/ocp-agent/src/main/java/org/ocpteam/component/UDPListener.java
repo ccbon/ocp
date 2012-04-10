@@ -6,26 +6,26 @@ import org.ocpteam.interfaces.IListener;
 import org.ocpteam.interfaces.IProtocol;
 import org.ocpteam.misc.JLG;
 
-public class TCPListener extends DataSourceContainer implements IListener {
+public class UDPListener extends DataSourceContainer implements IListener {
 
 	private URI url;
 
 	private IProtocol protocol;
 
-	private TCPServer tcpServer;
+	private UDPServer udpServer;
 
-	private TCPServerHandler handler;
+	private UDPServerHandler handler;
 
-	public TCPListener() throws Exception {
+	public UDPListener() throws Exception {
 		//addComponent(NATTraversal.class);
-		addComponent(TCPServer.class);
-		addComponent(TCPServerHandler.class);
+		addComponent(UDPServer.class);
+		addComponent(UDPServerHandler.class);
 	}
 
 	@Override
 	public void init() throws Exception {
 		super.init();
-		handler = getComponent(TCPServerHandler.class);
+		handler = getComponent(UDPServerHandler.class);
 	}
 
 	@Override
@@ -43,15 +43,16 @@ public class TCPListener extends DataSourceContainer implements IListener {
 		int port = url.getPort();
 		if (usesComponent(NATTraversal.class)) {
 			getComponent(NATTraversal.class).setPort(port);
+			getComponent(NATTraversal.class).setProtocol("UDP");
 			getComponent(NATTraversal.class).map();
 		}
 
 		handler.setProtocol(protocol);
-		tcpServer = getComponent(TCPServer.class).getClass().newInstance();
-		tcpServer.init();
-		tcpServer.setPort(port);
-		tcpServer.setHandler(handler);
-		tcpServer.start();
+		udpServer = getComponent(UDPServer.class).getClass().newInstance();
+		udpServer.init();
+		udpServer.setPort(port);
+		udpServer.setHandler(handler);
+		udpServer.start();
 	}
 
 	@Override
@@ -60,21 +61,20 @@ public class TCPListener extends DataSourceContainer implements IListener {
 		if (usesComponent(NATTraversal.class)) {
 			getComponent(NATTraversal.class).unmap();
 		}
-		if (tcpServer != null) {
-			tcpServer.stop();
-			tcpServer = null;
+		if (udpServer != null) {
+			udpServer.stop();
+			udpServer = null;
 		}
 	}
 
 	@Override
 	public String toString() {
-		return "TCPListener:" + url;
+		return "UDPListener:" + url;
 	}
 
 	@Override
 	public void setProtocol(IProtocol p) {
 		this.protocol = p;
-
 	}
 
 }

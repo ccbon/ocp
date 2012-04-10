@@ -13,15 +13,18 @@ import org.ocpteam.entity.Contact;
 import org.ocpteam.entity.InputMessage;
 import org.ocpteam.misc.JLG;
 import org.ocpteam.network.TCPClient;
+import org.ocpteam.network.UDPClient;
 
 public class ContactMap extends DataSourceContainer {
 
 	private Map<String, Contact> map;
 	private Map<String, TCPClient> tcpClientMap;
+	private Map<String, UDPClient> udpClientMap;
 
 	public ContactMap() {
 		map = Collections.synchronizedMap(new HashMap<String, Contact>());
 		tcpClientMap = Collections.synchronizedMap(new HashMap<String, TCPClient>());
+		udpClientMap = Collections.synchronizedMap(new HashMap<String, UDPClient>());
 	}
 
 	@Override
@@ -70,6 +73,7 @@ public class ContactMap extends DataSourceContainer {
 
 	public Contact remove(String name) {
 		tcpClientMap.remove(name);
+		udpClientMap.remove(name);
 		return map.remove(name);
 	}
 	
@@ -124,6 +128,7 @@ public class ContactMap extends DataSourceContainer {
 
 	public void removeAll() {
 		tcpClientMap.clear();
+		udpClientMap.clear();
 		map.clear();
 	}
 
@@ -138,6 +143,18 @@ public class ContactMap extends DataSourceContainer {
 			tcpClientMap.put(name, tcpClient);
 		}
 		return tcpClientMap.get(name);
+	}
+
+	public UDPClient getUdpClient(Contact contact) throws Exception {
+		if (contact.getUdpPort() <= 0) {
+			return null;
+		}
+		String name = contact.getName();
+		if (!udpClientMap.containsKey(name)) {
+			UDPClient udpClient = new UDPClient(contact.getHost(), contact.getUdpPort());
+			udpClientMap.put(name, udpClient);
+		}
+		return udpClientMap.get(name);
 	}
 
 }

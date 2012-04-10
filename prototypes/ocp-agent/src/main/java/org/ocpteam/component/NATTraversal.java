@@ -11,6 +11,7 @@ import org.teleal.cling.UpnpService;
 import org.teleal.cling.UpnpServiceImpl;
 import org.teleal.cling.support.igd.PortMappingListener;
 import org.teleal.cling.support.model.PortMapping;
+import org.teleal.cling.support.model.PortMapping.Protocol;
 
 /**
  * This class is doing NAT Traversal using the uPnP teleal cling library.
@@ -20,9 +21,18 @@ public class NATTraversal extends Component implements INATTraversal {
 
 	private UpnpService upnpService;
 	private int port;
+	private Protocol protocol = PortMapping.Protocol.TCP;
 
 	public void setPort(int port) {
 		this.port = port;
+	}
+	
+	public void setProtocol(String protocol) {
+		if  (protocol.equalsIgnoreCase("TCP")) {
+			this.protocol = PortMapping.Protocol.TCP;
+		} else if (protocol.equalsIgnoreCase("UDP")) {
+			this.protocol  = PortMapping.Protocol.UDP;
+		}
 	}
 
 	public void map() {
@@ -44,7 +54,7 @@ public class NATTraversal extends Component implements INATTraversal {
 						JLG.debug("my ip:" + addr.getHostAddress());
 						PortMapping desiredMapping = new PortMapping(port,
 								addr.getHostAddress(),
-								PortMapping.Protocol.TCP, "OCP Agent Mapping");
+								protocol, "OCP Agent Mapping");
 
 						upnpService = new UpnpServiceImpl(
 								new PortMappingListener(desiredMapping));

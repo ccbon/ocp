@@ -1,5 +1,6 @@
 package org.ocpteam.interfaces;
 
+import java.net.DatagramPacket;
 import java.net.Socket;
 
 import org.ocpteam.core.IContainer;
@@ -10,5 +11,7 @@ public interface IProtocol extends IContainer {
 
 	IStreamSerializer getStreamSerializer();
 	IMessageSerializer getMessageSerializer();
+
+	void process(DatagramPacket packet);
 
 }
