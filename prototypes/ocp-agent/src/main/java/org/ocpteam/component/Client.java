@@ -202,10 +202,6 @@ public class Client extends DataSourceContainer implements IClient {
 		throw new NotAvailableContactException();
 	}
 
-	public boolean understand(Channel c) {
-		return usesComponent(c.getClass());
-	}
-
 	public void declareContact() throws Exception {
 		Contact contact = getAgent().toContact();
 		DSPModule m = getProtocol().getComponent(DSPModule.class);
