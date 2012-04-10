@@ -1,11 +1,11 @@
 package org.ocpteam.example;
 
-import org.ocpteam.component.TCPClient;
 import org.ocpteam.component.TCPListener;
 import org.ocpteam.core.TopContainer;
 import org.ocpteam.interfaces.IProtocol;
 import org.ocpteam.misc.JLG;
 import org.ocpteam.misc.URL;
+import org.ocpteam.network.TCPClient;
 import org.ocpteam.protocol.dht.DHTDataSource;
 
 public class DHTConnectStress extends TopContainer {

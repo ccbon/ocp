@@ -6,7 +6,6 @@ import java.util.Properties;
 import org.ocpteam.component.Agent;
 import org.ocpteam.component.Authentication;
 import org.ocpteam.misc.JLG;
-import org.ocpteam.misc.JLGException;
 import org.ocpteam.protocol.ocp.Captcha;
 import org.ocpteam.protocol.ocp.OCPAgent;
 import org.ocpteam.protocol.ocp.OCPDataSource;
@@ -130,8 +129,6 @@ public class TestAgent {
 			a1.disconnect();
 			a2.disconnect();
 
-		} catch (JLGException e) {
-			System.exit(1);
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.exit(1);

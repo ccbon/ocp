@@ -10,7 +10,6 @@ import org.ocpteam.component.Server;
 import org.ocpteam.component.TCPListener;
 import org.ocpteam.interfaces.IListener;
 import org.ocpteam.misc.JLG;
-import org.ocpteam.misc.JLGException;
 import org.ocpteam.misc.URL;
 
 public class OCPServer extends Server {
@@ -40,7 +39,7 @@ public class OCPServer extends Server {
 					listener.init();
 					listener.setUrl(url);
 				} else {
-					throw new JLGException("protocol not found");
+					throw new Exception("protocol not found");
 				}
 				listener.setProtocol(ds().getComponent(Protocol.class));
 				listenerList.add(listener);

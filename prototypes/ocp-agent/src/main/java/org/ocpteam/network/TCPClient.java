@@ -1,4 +1,4 @@
-package org.ocpteam.component;
+package org.ocpteam.network;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;

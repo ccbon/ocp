@@ -23,6 +23,7 @@ import org.ocpteam.interfaces.IClient;
 import org.ocpteam.interfaces.IProtocol;
 import org.ocpteam.misc.JLG;
 import org.ocpteam.misc.URL;
+import org.ocpteam.network.TCPClient;
 import org.ocpteam.protocol.ocp.OCPAgent;
 
 public class Client extends DataSourceContainer implements IClient {

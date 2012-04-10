@@ -12,6 +12,7 @@ import java.util.Set;
 import org.ocpteam.entity.Contact;
 import org.ocpteam.entity.InputMessage;
 import org.ocpteam.misc.JLG;
+import org.ocpteam.network.TCPClient;
 
 public class ContactMap extends DataSourceContainer {
 
