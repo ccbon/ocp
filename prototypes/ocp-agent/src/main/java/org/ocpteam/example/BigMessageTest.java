@@ -1,11 +1,11 @@
 package org.ocpteam.example;
 
 import java.io.Serializable;
+import java.net.URI;
 
 import org.ocpteam.component.Protocol;
 import org.ocpteam.component.TCPListener;
 import org.ocpteam.interfaces.IProtocol;
-import org.ocpteam.misc.URL;
 
 public class BigMessageTest {
 	public static void main(String[] args) {
@@ -14,7 +14,7 @@ public class BigMessageTest {
 			TCPListener l = new TCPListener();
 			l.init();
 			l.setProtocol(p);
-			l.setUrl(new URL("tcp://localhost:12345"));
+			l.setUrl(new URI("tcp://localhost:12345"));
 			l.start();
 
 			//TCPClient c = new TCPClient("localhost", 12345, p);

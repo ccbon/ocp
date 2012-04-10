@@ -1,14 +1,15 @@
 package org.ocpteam.component;
 
+import java.net.URI;
+
 import org.ocpteam.core.IContainer;
 import org.ocpteam.interfaces.IListener;
 import org.ocpteam.interfaces.IProtocol;
 import org.ocpteam.misc.JLG;
-import org.ocpteam.misc.URL;
 
 public class TCPListener extends DataSourceContainer implements IListener {
 
-	private URL url;
+	private URI url;
 
 	private IProtocol protocol;
 
@@ -31,12 +32,12 @@ public class TCPListener extends DataSourceContainer implements IListener {
 	}
 
 	@Override
-	public URL getUrl() {
+	public URI getUrl() {
 		return url;
 	}
 
 	@Override
-	public void setUrl(URL url) {
+	public void setUrl(URI url) {
 		this.url = url;
 	}
 

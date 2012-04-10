@@ -1,6 +1,7 @@
 package org.ocpteam.component;
 
 import java.net.SocketException;
+import java.net.URI;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -22,7 +23,6 @@ import org.ocpteam.exception.NotAvailableContactException;
 import org.ocpteam.interfaces.IClient;
 import org.ocpteam.interfaces.IProtocol;
 import org.ocpteam.misc.JLG;
-import org.ocpteam.misc.URL;
 import org.ocpteam.network.TCPClient;
 import org.ocpteam.protocol.ocp.OCPAgent;
 
@@ -59,7 +59,7 @@ public class Client extends DataSourceContainer implements IClient {
 		Iterator<String> it = getPotentialSponsorIterator();
 		while (it.hasNext()) {
 			String sUrl = it.next();
-			URL url = new URL(sUrl);
+			URI url = new URI(sUrl);
 
 			Contact sponsor = getContact(url);
 			if (sponsor != null) {
@@ -121,7 +121,7 @@ public class Client extends DataSourceContainer implements IClient {
 		return list.iterator();
 	}
 
-	public Contact getContact(URL url) throws Exception {
+	public Contact getContact(URI url) throws Exception {
 		JLG.debug("getContact");
 		try {
 			TCPClient tcpClient = new TCPClient(url.getHost(), url.getPort(),

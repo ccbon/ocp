@@ -1,10 +1,11 @@
 package org.ocpteam.example;
 
+import java.net.URI;
+
 import org.ocpteam.component.TCPListener;
 import org.ocpteam.core.TopContainer;
 import org.ocpteam.interfaces.IProtocol;
 import org.ocpteam.misc.JLG;
-import org.ocpteam.misc.URL;
 import org.ocpteam.network.TCPClient;
 import org.ocpteam.protocol.dht.DHTDataSource;
 
@@ -35,7 +36,7 @@ public class DHTConnectStress extends TopContainer {
 		TCPListener tcplistener = new TCPListener();
 		tcplistener.init();
 		tcplistener.setProtocol(protocol);
-		tcplistener.setUrl(new URL("tcp://localhost:12345"));
+		tcplistener.setUrl(new URI("tcp://localhost:12345"));
 		tcplistener.start();
 		
 		TCPClient tcpClient = new TCPClient("localhost", 12345, protocol);

@@ -1,7 +1,8 @@
 package org.ocpteam.interfaces;
 
+import java.net.URI;
+
 import org.ocpteam.core.IComponent;
-import org.ocpteam.misc.URL;
 
 public interface IListener extends IComponent {
 
@@ -9,9 +10,9 @@ public interface IListener extends IComponent {
 
 	void stop();
 
-	URL getUrl();
+	URI getUrl();
 	
-	void setUrl(URL url);
+	void setUrl(URI url);
 	
 	void setProtocol(IProtocol p);
 

@@ -2,12 +2,13 @@ package org.ocpteam.ocp_agent;
 
 import static org.junit.Assert.assertTrue;
 
+import java.net.URI;
+
 import org.ocpteam.component.NATTraversal;
 import org.ocpteam.component.TCPListener;
 import org.ocpteam.example.MinimalistProtocol;
 import org.ocpteam.interfaces.IProtocol;
 import org.ocpteam.misc.JLG;
-import org.ocpteam.misc.URL;
 import org.ocpteam.network.TCPClient;
 
 public class TCPTest {
@@ -30,7 +31,7 @@ public class TCPTest {
 			TCPListener tcplistener = new TCPListener();
 			tcplistener.removeComponent(NATTraversal.class);
 			tcplistener.init();
-			tcplistener.setUrl(new URL("tcp://localhost:23456"));
+			tcplistener.setUrl(new URI("tcp://localhost:23456"));
 			tcplistener.setProtocol(protocol);
 			tcplistener.start();
 

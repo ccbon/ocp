@@ -1,5 +1,6 @@
 package org.ocpteam.protocol.ocp;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -10,7 +11,6 @@ import org.ocpteam.component.Server;
 import org.ocpteam.component.TCPListener;
 import org.ocpteam.interfaces.IListener;
 import org.ocpteam.misc.JLG;
-import org.ocpteam.misc.URL;
 
 public class OCPServer extends Server {
 
@@ -27,8 +27,8 @@ public class OCPServer extends Server {
 			String key = it.next();
 			if (key.startsWith("server.listener.")) {
 				bFound = true;
-				URL url = new URL(agent.ds().getProperty(key));
-				String sProtocol = url.getProtocol();
+				URI url = new URI(agent.ds().getProperty(key));
+				String sProtocol = url.getScheme();
 				IListener listener = null;
 				if (sProtocol.equalsIgnoreCase("tcp")) {
 					listener = ds().addComponent(TCPListener.class);
@@ -48,7 +48,7 @@ public class OCPServer extends Server {
 		}
 		if (bFound == false) {
 			IListener l = ds().addComponent(TCPListener.class);
-			l.setUrl(new URL("tcp://localhost:22222"));
+			l.setUrl(new URI("tcp://localhost:22222"));
 			l.setProtocol(ds().getComponent(Protocol.class));
 			listenerList.add(l);
 		}

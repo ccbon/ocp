@@ -1,16 +1,17 @@
 package org.ocpteam.component;
 
+import java.net.URI;
+
 import org.ocpteam.interfaces.IListener;
 import org.ocpteam.interfaces.IProtocol;
 import org.ocpteam.misc.JLG;
-import org.ocpteam.misc.URL;
 
 import com.sun.net.httpserver.HttpServer;
 
 @SuppressWarnings("restriction")
 public class HTTPListener extends DataSourceContainer implements IListener {
 
-	private URL url;
+	private URI url;
 	HttpServer oldserver;
 	private HTTPServer httpServer;
 	private HTTPServerHandler handler;
@@ -64,12 +65,12 @@ public class HTTPListener extends DataSourceContainer implements IListener {
 	}
 
 	@Override
-	public URL getUrl() {
+	public URI getUrl() {
 		return url;
 	}
 
 	@Override
-	public void setUrl(URL url) {
+	public void setUrl(URI url) {
 		this.url = url;
 	}
 

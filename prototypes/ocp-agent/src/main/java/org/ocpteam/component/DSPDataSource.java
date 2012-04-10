@@ -1,10 +1,10 @@
 package org.ocpteam.component;
 
+import java.net.URI;
 import java.util.Properties;
 
 import org.ocpteam.interfaces.IProtocol;
 import org.ocpteam.misc.JLG;
-import org.ocpteam.misc.URL;
 
 public abstract class DSPDataSource extends DataSource {
 
@@ -66,7 +66,7 @@ public abstract class DSPDataSource extends DataSource {
 	}
 
 	protected void configureServer(Server server) throws Exception {
-		listener.setUrl(new URL(
+		listener.setUrl(new URI(
 				getProperty("listener.tcp.url", "tcp://localhost:22222")));
 		server.getListeners().clear();
 		server.getListeners().add(listener);
