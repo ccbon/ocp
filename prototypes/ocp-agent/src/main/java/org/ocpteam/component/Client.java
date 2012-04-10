@@ -2,21 +2,18 @@ package org.ocpteam.component;
 
 import java.net.SocketException;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Queue;
-import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import org.apache.xmlrpc.client.XmlRpcClient;
 import org.apache.xmlrpc.client.XmlRpcClientConfigImpl;
-import org.ocpteam.core.IComponent;
 import org.ocpteam.entity.Contact;
 import org.ocpteam.entity.InputMessage;
 import org.ocpteam.entity.Response;
@@ -30,47 +27,16 @@ import org.ocpteam.protocol.ocp.OCPAgent;
 
 public class Client extends DataSourceContainer implements IClient {
 
-	private Map<URL, Channel> channelMap;
-	protected HashMap<String, Class<? extends Channel>> channelFactoryMap;
 	private ContactMap contactMap;
 	private ExecutorService executor;
 
 	public Client() throws Exception {
-		addComponent(TCPChannel.class);
-		addComponent(MyselfChannel.class);
 	}
 
 	@Override
 	public void init() throws Exception {
 		super.init();
-		channelMap = new HashMap<URL, Channel>();
-		initFactory();
 		contactMap = ds().getComponent(ContactMap.class);
-	}
-
-	public Channel newChannel(URL url) throws Exception {
-		Class<? extends Channel> c = channelFactoryMap.get(url.getProtocol()
-				.toLowerCase());
-		if (c == null) {
-			c = UnknownChannel.class;
-		}
-		Channel channel = c.newInstance();
-		channel.setParent(this.getParent());
-		channel.init();
-		channel.setUrl(url);
-		return channel;
-	}
-
-	private void initFactory() {
-		channelFactoryMap = new HashMap<String, Class<? extends Channel>>();
-		Iterator<IComponent> it = iteratorComponent();
-		while (it.hasNext()) {
-			IComponent c = it.next();
-			if (c instanceof Channel) {
-				String protocol = ((Channel) c).getProtocolName().toLowerCase();
-				channelFactoryMap.put(protocol, ((Channel) c).getClass());
-			}
-		}
 	}
 
 	/**
@@ -93,14 +59,13 @@ public class Client extends DataSourceContainer implements IClient {
 		while (it.hasNext()) {
 			String sUrl = it.next();
 			URL url = new URL(sUrl);
-			Channel channel = newChannel(url);
 
-			Contact sponsor = getContact(channel);
+			Contact sponsor = getContact(url);
 			if (sponsor != null) {
-				JLG.debug("we found a pingable sponsor channel");
+				JLG.debug("we found a pingable sponsor");
 				contactMap.add(sponsor);
 			} else {
-				JLG.warn("channel not pingable: " + channel);
+				JLG.warn("url not pingable: " + url);
 			}
 		}
 
@@ -155,26 +120,26 @@ public class Client extends DataSourceContainer implements IClient {
 		return list.iterator();
 	}
 
-	public Contact getContact(Channel channel) throws Exception {
-		// I have to request to an agent (sending to it a string and then
-		// receiving a response
-		// For that, I need to know the channel to use.
-		JLG.debug("get contact from channel " + channel);
-		if (understand(channel)) {
-			JLG.debug("getContact");
+	public Contact getContact(URL url) throws Exception {
+		JLG.debug("getContact");
+		try {
+			TCPClient tcpClient = new TCPClient(url.getHost(), url.getPort(),
+					getProtocol());
 			DSPModule m = getProtocol().getComponent(DSPModule.class);
 			byte[] input = getProtocol().getMessageSerializer().serializeInput(
 					new InputMessage(m.getContact()));
-			byte[] response = channel.request(input);
+			byte[] response = tcpClient.request(input);
 			Contact c = (Contact) getProtocol().getMessageSerializer()
 					.deserializeOutput(response);
 			// we update a host because an agent does not see its public
 			// address.
-			c.updateHost(channel.getUrl().getHost());
+			c.setHost(url.getHost());
+			tcpClient.releaseSocket();
 			return c;
+		} catch (Exception e) {
+			JLG.warn("contact not reachable. get contact returns null.");
+			return null;
 		}
-		JLG.warn("channel not reachable. get contact returns null.");
-		return null;
 	}
 
 	public Response request(byte[] string) throws Exception {
@@ -211,41 +176,26 @@ public class Client extends DataSourceContainer implements IClient {
 		return new Response(output, contact);
 	}
 
-	public byte[] request(Contact contact, byte[] string) throws Exception {
+	public byte[] request(Contact contact, byte[] input) throws Exception {
 		JLG.debug("sending request on contact: " + contact);
 		byte[] output = null;
-		// I have to request to an agent (sending to it a string and then
-		// receiving a response
-		// For that, I need to know the channel to use.
-		// for the time being I know only the TCP channel.
-		JLG.debug("contact.getUrlList(): " + contact.getUrlList());
-		Iterator<URL> it = contact.getUrlList().iterator();
-		while (it.hasNext()) {
-			URL url = it.next();
+		// use the TCP connection.
+		TCPClient tcpClient = contactMap.getTcpClient(contact);
 
-			Channel channel = null;
-			if (channelMap.containsKey(url)) {
-				channel = channelMap.get(url);
-			} else {
-				channel = newChannel(url);
-				channelMap.put(url, channel);
-			}
-			if (understand(channel)) {
-				try {
-					output = channel.request(string);
-					return output;
-				} catch (java.net.SocketTimeoutException e) {
-					JLG.debug("SocketTimeoutException on contact " + contact);
-					continue;
-				} catch (java.net.ConnectException e) {
-					JLG.debug("ConnectException on contact " + contact);
-					continue;					
-				} catch (SocketException e) {
-					JLG.debug("SocketException on contact " + contact);
-					continue;
-				}
-			}
+		try {
+			output = tcpClient.request(input);
+			return output;
+		} catch (java.net.SocketTimeoutException e) {
+			JLG.debug("SocketTimeoutException on contact " + contact);
+
+		} catch (java.net.ConnectException e) {
+			JLG.debug("ConnectException on contact " + contact);
+
+		} catch (SocketException e) {
+			JLG.debug("SocketException on contact " + contact);
+
 		}
+
 		JLG.debug("about to throw a not available exception regarding contact "
 				+ contact);
 		detach(contact);
@@ -303,13 +253,6 @@ public class Client extends DataSourceContainer implements IClient {
 	public void detach(Contact contact) throws Exception {
 		JLG.debug("detaching contact: " + contact);
 
-		Iterator<URL> it = contact.getUrlList().iterator();
-		while (it.hasNext()) {
-			Channel channel = channelMap.get(it.next());
-			if (channel != null) {
-				channel.stop();
-			}
-		}
 		contactMap.remove(contact);
 		// tell to your contacts this contact has disappeared.
 		// this code is comment it for performance reasons...
@@ -394,15 +337,6 @@ public class Client extends DataSourceContainer implements IClient {
 
 	@Override
 	public void stop() throws Exception {
-		// clean channelMap
-		Set<URL> set = channelMap.keySet();
-		URL[] array = (URL[]) set.toArray(new URL[set.size()]);
-		for (URL url : array) {
-			Channel channel = channelMap.get(url);
-			if (channel != null) {
-				channel.stop();
-			}
-		}
 		if (executor != null) {
 			executor.shutdown();
 			executor.shutdownNow();

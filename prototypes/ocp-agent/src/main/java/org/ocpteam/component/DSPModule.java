@@ -27,7 +27,7 @@ public class DSPModule extends Module {
 
 				Contact contact = (Contact) objects[0];
 				InetAddress host = session.getSocket().getInetAddress();
-				contact.updateHost(host.getHostAddress());
+				contact.setHost(host.getHostAddress());
 				session.ds().getComponent(ContactMap.class).add(contact);
 				return null;
 			}

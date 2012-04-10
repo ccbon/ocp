@@ -12,14 +12,15 @@ import java.util.Set;
 import org.ocpteam.entity.Contact;
 import org.ocpteam.entity.InputMessage;
 import org.ocpteam.misc.JLG;
-import org.ocpteam.misc.URL;
 
 public class ContactMap extends DataSourceContainer {
 
 	private Map<String, Contact> map;
+	private Map<String, TCPClient> tcpClientMap;
 
 	public ContactMap() {
 		map = Collections.synchronizedMap(new HashMap<String, Contact>());
+		tcpClientMap = Collections.synchronizedMap(new HashMap<String, TCPClient>());
 	}
 
 	@Override
@@ -67,11 +68,12 @@ public class ContactMap extends DataSourceContainer {
 	}
 
 	public Contact remove(String name) {
+		tcpClientMap.remove(name);
 		return map.remove(name);
 	}
 	
 	public Contact remove(Contact contact) {
-		return map.remove(contact.getName());
+		return remove(contact.getName());
 	}
 
 	public boolean isEmpty() {
@@ -88,13 +90,7 @@ public class ContactMap extends DataSourceContainer {
 
 	public void addMyself() throws Exception {
 		Contact myself = ds().getComponent(Agent.class).toContact();
-		myself.getUrlList().clear();
 		myself.setMyself(true);
-		try {
-			myself.getUrlList().add(new URL("myself://localhost:0"));
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 		map.put(myself.getName(), myself);
 	}
 
@@ -126,11 +122,21 @@ public class ContactMap extends DataSourceContainer {
 	}
 
 	public void removeAll() {
+		tcpClientMap.clear();
 		map.clear();
 	}
 
 	public Collection<Contact> values() {
 		return map.values();
+	}
+
+	public TCPClient getTcpClient(Contact contact) throws Exception {
+		String name = contact.getName();
+		if (!tcpClientMap.containsKey(name)) {
+			TCPClient tcpClient = new TCPClient(contact.getHost(), contact.getTcpPort(), ds().protocol);
+			tcpClientMap.put(name, tcpClient);
+		}
+		return tcpClientMap.get(name);
 	}
 
 }

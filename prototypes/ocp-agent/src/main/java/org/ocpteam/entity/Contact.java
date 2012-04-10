@@ -1,11 +1,6 @@
 package org.ocpteam.entity;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
-import org.ocpteam.misc.URL;
 
 
 /**
@@ -18,12 +13,13 @@ public class Contact implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	private String name;
-	private List<URL> urlList;
+	private String host;
+	private int tcpPort;
+	private int udpPort;
 
 	private boolean bIsMyself = false;
 	
 	public Contact() {
-		this.urlList = new ArrayList<URL>();
 	}
 
 	public String getName() {
@@ -34,18 +30,6 @@ public class Contact implements Serializable {
 		this.name = name;	
 	}
 	
-	public List<URL> getUrlList() {
-		return urlList;
-	}
-	
-	public void setUrlList(List<URL> urlList) {
-		this.urlList = urlList;
-	}
-		
-	public void addURL(URL url) {
-		urlList.add(url);
-	}
-
 	public boolean isMyself() {
 		return bIsMyself;
 	}
@@ -54,13 +38,15 @@ public class Contact implements Serializable {
 		this.bIsMyself = b;
 	}
 	
-	public void updateHost(String host) {
-		// foreach url, update the hostname
-		Iterator<URL> itp = getUrlList().iterator();
-		while (itp.hasNext()) {
-			URL url = itp.next();
-			url.setHost(host);
+	public void setHost(String host) {
+		this.host = host;
+	}
+	
+	public String getHost() throws Exception {
+		if (host == null) {
+			throw new Exception("host is null !");
 		}
+		return host;
 	}
 	
 	@Override
@@ -69,11 +55,6 @@ public class Contact implements Serializable {
 		if (isMyself()) {
 			result += "<myself>";
 		}
-//		Iterator<URL> itp = getUrlList().iterator();
-//		while (itp.hasNext()) {
-//			URL url = itp.next();
-//			result += "[" + url.toString() + "]";
-//		}
 		return result;
 	}
 	
@@ -83,6 +64,22 @@ public class Contact implements Serializable {
 			return ((Contact) obj).getName().equals(getName());
 		}
 		return false;
+	}
+
+	public int getTcpPort() {
+		return tcpPort;
+	}
+
+	public void setTcpPort(int tcpPort) {
+		this.tcpPort = tcpPort;
+	}
+
+	public int getUdpPort() {
+		return udpPort;
+	}
+
+	public void setUdpPort(int udpPort) {
+		this.udpPort = udpPort;
 	}
 
 

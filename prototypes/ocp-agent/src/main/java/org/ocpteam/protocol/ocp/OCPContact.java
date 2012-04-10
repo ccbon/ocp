@@ -24,19 +24,4 @@ public class OCPContact extends Contact {
 		nodeIdSet = Collections.synchronizedSortedSet(new TreeSet<Id>());
 	}
 
-	public void copy(OCPContact c) {
-		// for all member, replace
-		this.setUrlList(c.getUrlList());
-		setName(c.getName());
-		this.publicKey = c.publicKey;
-		this.nodeIdSet = c.nodeIdSet;
-	}
-
-
-
-
-
-
-
-
 }

@@ -40,12 +40,17 @@ public class Agent extends DataSourceContainer implements IAgent {
 			ds().setName("ds_" + JLG.random(10000000));
 		}
 		c.setName(ds().getName());
+		c.setHost("localhost");
 		// add the listener url and node id information
 		if (getServer() != null) {
 			Iterator<IListener> it = getServer().getListeners().iterator();
 			while (it.hasNext()) {
 				IListener l = it.next();
-				c.getUrlList().add(l.getUrl());
+				if (l instanceof TCPListener) {
+					int port = l.getUrl().getPort();
+					c.setTcpPort(port);
+				}
+				// TODO: add the UDPListener case.
 			}
 		}
 		return c;

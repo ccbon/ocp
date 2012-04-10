@@ -34,10 +34,7 @@ public class TCPTest {
 			tcplistener.setProtocol(protocol);
 			tcplistener.start();
 
-			TCPClient tcpclient = new TCPClient();
-			tcpclient.setPort(23456);
-			tcpclient.setHostname("localhost");
-			tcpclient.setProtocol(protocol);
+			TCPClient tcpclient = new TCPClient("localhost", 23456, protocol);
 			while (i < n) {
 				byte[] response = tcpclient.request("hello".getBytes());
 				JLG.debug("response[" + i + "]=" + new String(response));

@@ -15,8 +15,6 @@ import org.eclipse.swt.widgets.TreeItem;
 import org.ocpteam.component.Agent;
 import org.ocpteam.component.ContactMap;
 import org.ocpteam.entity.Contact;
-import org.ocpteam.misc.URL;
-
 
 public class ContactComposite extends Composite {
 
@@ -67,7 +65,8 @@ public class ContactComposite extends Composite {
 			@Override
 			public void run() {
 				try {
-					ContactMap contactMap = agent.ds().getComponent(ContactMap.class);
+					ContactMap contactMap = agent.ds().getComponent(
+							ContactMap.class);
 					contactMap.refreshContactList();
 				} catch (Exception e) {
 					// TODO: handle exception
@@ -80,16 +79,28 @@ public class ContactComposite extends Composite {
 		Iterator<Contact> it = contactMap.getContactSnapshotList().iterator();
 		while (it.hasNext()) {
 			Contact contact = it.next();
-			TreeItem contactTreeItem = new TreeItem(tree, SWT.NONE);
-			String text = contact.getName();
-			contactTreeItem.setText(text);
-			Iterator<URL> itu = contact.getUrlList().iterator();
-			while (itu.hasNext()) {
-				URL url = (URL) itu.next();
-				TreeItem urlTreeItem = new TreeItem(contactTreeItem, SWT.NONE);
-				urlTreeItem.setText(url.toString());
-				contactTreeItem.setExpanded(true);
+			try {
+				TreeItem contactTreeItem = new TreeItem(tree, SWT.NONE);
+				String text = contact.getName();
+				contactTreeItem.setText(text);
+				if (contact.isMyself()) {
+					TreeItem urlTreeItem = new TreeItem(contactTreeItem,
+							SWT.NONE);
+					urlTreeItem.setText("<myself>");
+					contactTreeItem.setExpanded(true);
+				} else if (contact.getTcpPort() > 0) {
+					TreeItem urlTreeItem = new TreeItem(contactTreeItem,
+							SWT.NONE);
+					urlTreeItem.setText("tcp://" + contact.getHost() + ":"
+							+ contact.getTcpPort());
+					contactTreeItem.setExpanded(true);
+				}
+			} catch (Exception e) {
+				TreeItem contactTreeItem = new TreeItem(tree, SWT.NONE);
+				String text = "error while printing contact: e = " + e;
+				contactTreeItem.setText(text);			
 			}
+
 		}
 
 	}

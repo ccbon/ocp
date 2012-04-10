@@ -105,7 +105,7 @@ public class OCPClient extends Client implements IAuthenticable {
 		try {
 			if (agent.ds().getProperty("network.type", "private").equalsIgnoreCase(
 					"public")) {
-				int port = agent.toContact().getUrlList().get(0).getPort();
+				int port = agent.toContact().getTcpPort();
 				XmlRpcClientConfigImpl config = new XmlRpcClientConfigImpl();
 				// TODO: need a ocp dedicated web server. I use mine for the
 				// time being.

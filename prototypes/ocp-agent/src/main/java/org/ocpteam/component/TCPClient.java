@@ -13,7 +13,7 @@ import org.ocpteam.interfaces.IProtocol;
 import org.ocpteam.interfaces.IStreamSerializer;
 import org.ocpteam.misc.JLG;
 
-public class TCPClient extends DataSourceContainer {
+public class TCPClient {
 
 	private String hostname;
 	private int port;
@@ -22,23 +22,10 @@ public class TCPClient extends DataSourceContainer {
 	private DataOutputStream out;
 	private IProtocol protocol;
 
-	public TCPClient() {
-	}
-
-	public String getHostname() {
-		return hostname;
-	}
-
-	public void setHostname(String hostname) {
+	public TCPClient(String hostname, int port, IProtocol protocol) {
 		this.hostname = hostname;
-	}
-
-	public int getPort() {
-		return port;
-	}
-
-	public void setPort(int port) {
 		this.port = port;
+		this.protocol = protocol;
 	}
 
 	public synchronized byte[] request(byte[] input) throws Exception {
@@ -109,14 +96,6 @@ public class TCPClient extends DataSourceContainer {
 		in = new DataInputStream(clientSocket.getInputStream());
 		out = new DataOutputStream(clientSocket.getOutputStream());
 		JLG.debug("end new socket");
-	}
-
-	public IProtocol getProtocol() {
-		return protocol;
-	}
-
-	public void setProtocol(IProtocol protocol) {
-		this.protocol = protocol;
 	}
 
 	public void releaseSocket() {

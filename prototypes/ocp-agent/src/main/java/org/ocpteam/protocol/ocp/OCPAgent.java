@@ -27,6 +27,7 @@ import org.ocpteam.component.Agent;
 import org.ocpteam.component.Client;
 import org.ocpteam.component.ContactMap;
 import org.ocpteam.component.DSPDataSource;
+import org.ocpteam.component.TCPListener;
 import org.ocpteam.entity.Contact;
 import org.ocpteam.entity.User;
 import org.ocpteam.interfaces.IListener;
@@ -176,6 +177,7 @@ public class OCPAgent extends Agent {
 	public Contact toContact() {
 		// convert the agent public information into a contact
 		OCPContact c = new OCPContact(this.id);
+		c.setHost("localhost");
 		c.publicKey = this.keyPair.getPublic().getEncoded();
 		// add the listener url and node id information
 		if (getServer() != null) {
@@ -183,7 +185,11 @@ public class OCPAgent extends Agent {
 			Iterator<IListener> it = getServer().getListeners().iterator();
 			while (it.hasNext()) {
 				IListener l = it.next();
-				c.getUrlList().add(l.getUrl());
+				if (l instanceof TCPListener) {
+					int port = l.getUrl().getPort();
+					c.setTcpPort(port);
+				}
+				// TODO: add the UDPListener case.
 			}
 			if (storage != null) {
 				Iterator<Id> itn = storage.nodeSet.iterator();
