@@ -20,8 +20,8 @@ public class DHTSimpleTest {
 	@org.junit.Test
 	public void mytest() {
 		try {
-			assertTrue(new DHTSimpleTest().oneinstance());
-			//assertTrue(new DHTSimpleTest().twoinstances());
+			//assertTrue(new DHTSimpleTest().oneinstance());
+			assertTrue(new DHTSimpleTest().twoinstances());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -37,7 +37,7 @@ public class DHTSimpleTest {
 			p.setProperty("network.coucou", "23");
 			p.setProperty("network.hello", "456a");
 			p.setProperty("server", "yes");
-			p.setProperty("listener.tcp.url", "tcp://localhost:12345");
+			p.setProperty("server.port", "12345");
 			ds.setConfig(p);
 			ds.connect();
 			ds.disconnect();
@@ -57,7 +57,7 @@ public class DHTSimpleTest {
 			Properties p = new Properties();
 			p.setProperty("network.coucou", "23");
 			p.setProperty("server", "yes");
-			p.setProperty("listener.tcp.url", "tcp://localhost:12347");
+			p.setProperty("server.port", "12347");
 			ds.setConfig(p);
 			ds.connect();
 			DSPDataSource ds2 = new DHTDataSource();
@@ -65,7 +65,7 @@ public class DHTSimpleTest {
 			ds2.setName("second_agent");
 			Properties p2 = new Properties();
 			p2.setProperty("server", "yes");
-			p2.setProperty("listener.tcp.url", "tcp://localhost:12348");
+			p2.setProperty("server.port", "12348");
 			p2.setProperty("agent.isFirst", "no");
 			p2.setProperty("sponsor.1", "tcp://localhost:12347");
 			ds2.setConfig(p2);
@@ -96,6 +96,9 @@ public class DHTSimpleTest {
 			Set<String> set = dm.keySet();
 			JLG.debug("set: " + set);
 			assertEquals(3, set.size());
+			
+			JLG.debug("testing sendquick");
+			ds.client.sendQuick(ds2.agent.toContact(), "hello".getBytes());
 			
 			ds.disconnect();
 			ds2.disconnect();

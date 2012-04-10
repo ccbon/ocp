@@ -138,6 +138,7 @@ public class ContactMap extends DataSourceContainer {
 
 	public TCPClient getTcpClient(Contact contact) throws Exception {
 		String name = contact.getName();
+		contact = this.get(name);
 		if (!tcpClientMap.containsKey(name)) {
 			TCPClient tcpClient = new TCPClient(contact.getHost(), contact.getTcpPort(), ds().protocol);
 			tcpClientMap.put(name, tcpClient);
@@ -146,10 +147,12 @@ public class ContactMap extends DataSourceContainer {
 	}
 
 	public UDPClient getUdpClient(Contact contact) throws Exception {
+		String name = contact.getName();
+		JLG.debug("contact name: " + name);
+		contact = this.get(name);
 		if (contact.getUdpPort() <= 0) {
 			return null;
 		}
-		String name = contact.getName();
 		if (!udpClientMap.containsKey(name)) {
 			UDPClient udpClient = new UDPClient(contact.getHost(), contact.getUdpPort());
 			udpClientMap.put(name, udpClient);

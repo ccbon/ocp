@@ -50,7 +50,10 @@ public class Agent extends DataSourceContainer implements IAgent {
 					int port = l.getUrl().getPort();
 					c.setTcpPort(port);
 				}
-				// TODO: add the UDPListener case.
+				if (l instanceof UDPListener) {
+					int port = l.getUrl().getPort();
+					c.setUdpPort(port);
+				}
 			}
 		}
 		return c;

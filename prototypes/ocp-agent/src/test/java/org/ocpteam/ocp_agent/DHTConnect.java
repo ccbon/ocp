@@ -60,7 +60,7 @@ public class DHTConnect extends TopContainer {
 			ds[i].setName("a" + i);
 			// unfortunately, the teleal library does not work well with many
 			// threads...
-			ds[i].listener.removeComponent(NATTraversal.class);
+			ds[i].tcplistener.removeComponent(NATTraversal.class);
 		}
 		// first agent
 		Properties p = new Properties();

@@ -276,6 +276,7 @@ public class Client extends DataSourceContainer implements IClient {
 
 		UDPClient udpClient = contactMap.getUdpClient(c);
 		if (udpClient == null) {
+			JLG.debug("no udp client found");
 			try {
 				request(c, message);
 			} catch (Exception e) {
@@ -284,6 +285,7 @@ public class Client extends DataSourceContainer implements IClient {
 		}
 
 		try {
+			JLG.debug("udp client found");
 			udpClient.send(message);
 		} catch (Exception e) {
 			e.printStackTrace();

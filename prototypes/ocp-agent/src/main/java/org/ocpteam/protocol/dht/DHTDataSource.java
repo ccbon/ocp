@@ -8,6 +8,7 @@ import java.util.Set;
 import org.ocpteam.component.DSPDataSource;
 import org.ocpteam.entity.Context;
 import org.ocpteam.interfaces.IDataModel;
+import org.ocpteam.misc.JLG;
 
 public class DHTDataSource extends DSPDataSource {
 
@@ -38,10 +39,12 @@ public class DHTDataSource extends DSPDataSource {
 	}
 
 	public void store(String key, String value) {
+		JLG.debug("local store: " + key + "->" + value);
 		map.put(key, value);
 	}
 
 	public String retrieve(String key) {
+		JLG.debug("local retrieve: " + key);
 		return map.get(key);
 	}
 

@@ -31,7 +31,7 @@ public class DHTDataModel extends DataSourceContainer implements IMapDataModel {
 		byte[] message = ds().client.getProtocol().getMessageSerializer()
 				.serializeInput(new InputMessage(m.store(), key, value));
 
-		ds().client.sendAllAsync(message);
+		ds().client.sendAll(message);
 	}
 
 	@Override
@@ -89,7 +89,7 @@ public class DHTDataModel extends DataSourceContainer implements IMapDataModel {
 		byte[] message = ds().client.getProtocol().getMessageSerializer()
 				.serializeInput(new InputMessage(m.remove(), key));
 
-		ds().client.sendAllAsync(message);
+		ds().client.sendAll(message);
 
 	}
 

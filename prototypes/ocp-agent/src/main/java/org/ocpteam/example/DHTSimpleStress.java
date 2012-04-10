@@ -83,7 +83,7 @@ public class DHTSimpleStress extends TopContainer {
 					ds[i] = c.newInstance();
 					ds[i].init();
 					//unfortunately, the teleal library does not work well with many threads...
-					ds[i].listener.removeComponent(NATTraversal.class);
+					ds[i].tcplistener.removeComponent(NATTraversal.class);
 				}
 				// first agent
 				Properties p = new Properties();

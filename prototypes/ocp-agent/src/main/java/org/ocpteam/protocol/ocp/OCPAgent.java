@@ -28,6 +28,7 @@ import org.ocpteam.component.Client;
 import org.ocpteam.component.ContactMap;
 import org.ocpteam.component.DSPDataSource;
 import org.ocpteam.component.TCPListener;
+import org.ocpteam.component.UDPListener;
 import org.ocpteam.entity.Contact;
 import org.ocpteam.entity.User;
 import org.ocpteam.interfaces.IListener;
@@ -189,7 +190,10 @@ public class OCPAgent extends Agent {
 					int port = l.getUrl().getPort();
 					c.setTcpPort(port);
 				}
-				// TODO: add the UDPListener case.
+				if (l instanceof UDPListener) {
+					int port = l.getUrl().getPort();
+					c.setUdpPort(port);
+				}
 			}
 			if (storage != null) {
 				Iterator<Id> itn = storage.nodeSet.iterator();

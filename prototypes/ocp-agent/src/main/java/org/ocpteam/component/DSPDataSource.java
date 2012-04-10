@@ -8,13 +8,14 @@ import org.ocpteam.misc.JLG;
 
 public abstract class DSPDataSource extends DataSource {
 
-	protected Agent agent;
+	public Agent agent;
 	public Client client;
 	protected Server server;
 
 	public Properties network;
 	public IProtocol protocol;
-	public TCPListener listener;
+	public TCPListener tcplistener;
+	public UDPListener udplistener;
 	public ContactMap contactMap;
 
 	public DSPDataSource() throws Exception {
@@ -23,6 +24,7 @@ public abstract class DSPDataSource extends DataSource {
 		addComponent(Server.class);
 		addComponent(Protocol.class, new DSPProtocol());
 		addComponent(TCPListener.class);
+		addComponent(UDPListener.class);
 		addComponent(ContactMap.class);
 	}
 
@@ -33,8 +35,10 @@ public abstract class DSPDataSource extends DataSource {
 		client = getComponent(Client.class);
 		server = getComponent(Server.class);
 		protocol = getComponent(Protocol.class);
-		listener = getComponent(TCPListener.class);
-		listener.setProtocol(protocol);
+		tcplistener = getComponent(TCPListener.class);
+		tcplistener.setProtocol(protocol);
+		udplistener = getComponent(UDPListener.class);
+		udplistener.setProtocol(protocol);
 		contactMap = getComponent(ContactMap.class);
 	}
 
@@ -49,27 +53,31 @@ public abstract class DSPDataSource extends DataSource {
 		}
 		JLG.debug("network properties: " + JLG.propertiesToString(network));
 		readNetworkConfig();
-		
+
 		if (getProperty("server", "yes").equals("yes")) {
 			JLG.debug("starting the server");
 			configureServer(server);
 			server.start();
 			contactMap.addMyself();
-			//client.declareContact();
+			// client.declareContact();
 			client.askForContact();
 			client.declareContact();
 		}
 	}
 
 	protected void readNetworkConfig() throws Exception {
-		
+
 	}
 
 	protected void configureServer(Server server) throws Exception {
-		listener.setUrl(new URI(
-				getProperty("listener.tcp.url", "tcp://localhost:22222")));
+		int port = Integer.parseInt(getProperty("server.port", "22222"));
+
+		tcplistener.setUrl(new URI("tcp://localhost:" + port));
+		udplistener.setUrl(new URI("udp://localhost:" + port));
+
 		server.getListeners().clear();
-		server.getListeners().add(listener);
+		server.getListeners().add(tcplistener);
+		server.getListeners().add(udplistener);
 	}
 
 	@Override
@@ -84,6 +92,5 @@ public abstract class DSPDataSource extends DataSource {
 	protected Properties getNetworkProperties() {
 		return JLG.extractProperties(getConfig(), "network");
 	}
-	
 
 }

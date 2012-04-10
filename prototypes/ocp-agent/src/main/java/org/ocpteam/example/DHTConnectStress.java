@@ -7,7 +7,6 @@ import org.ocpteam.core.TopContainer;
 import org.ocpteam.interfaces.IProtocol;
 import org.ocpteam.misc.JLG;
 import org.ocpteam.network.TCPClient;
-import org.ocpteam.protocol.dht.DHTDataSource;
 
 public class DHTConnectStress extends TopContainer {
 
@@ -19,10 +18,6 @@ public class DHTConnectStress extends TopContainer {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-	}
-
-	public DHTConnectStress() throws Exception {
-		addComponent(DHTDataSource.class);
 	}
 
 	@Override
