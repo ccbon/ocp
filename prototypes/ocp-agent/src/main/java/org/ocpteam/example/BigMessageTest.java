@@ -1,6 +1,5 @@
 package org.ocpteam.example;
 
-import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.Serializable;
 import java.net.Socket;
@@ -24,7 +23,7 @@ public class BigMessageTest {
 			TCPClient c = new TCPClient("localhost", 12345, p);
 
 			Socket socket = c.getSocket();
-			DataInputStream in = new DataInputStream(socket.getInputStream());
+			//DataInputStream in = new DataInputStream(socket.getInputStream());
 			DataOutputStream out = new DataOutputStream(
 					socket.getOutputStream());
 

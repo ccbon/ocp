@@ -7,7 +7,6 @@ import org.apache.xmlrpc.client.XmlRpcClientConfigImpl;
 import org.ocpteam.component.Agent;
 import org.ocpteam.component.Authentication;
 import org.ocpteam.component.Client;
-import org.ocpteam.component.DSPModule;
 import org.ocpteam.entity.Contact;
 import org.ocpteam.entity.Context;
 import org.ocpteam.entity.InputMessage;
@@ -36,19 +35,17 @@ public class OCPClient extends Client implements IAuthenticable {
 		Id[] nodeIds = null;
 		// at this time we ask to the network to give us one node_id.
 		JLG.debug("request node id");
-		OCPModule m = (OCPModule) getProtocol().getComponent(DSPModule.class);
+		OCPModule m = ds().getComponent(OCPModule.class);
 		JLG.debug("module class: " + m.getClass());
-		byte[] input = getProtocol().getMessageSerializer().serializeInput(
-				new InputMessage(m.requestNodeId()));
-		Response response = request(input);
+		Response response = request(new InputMessage(m.requestNodeId()));
 		nodeIds = new Id[1];
-		nodeIds[0] = (Id) getProtocol().getMessageSerializer().deserializeOutput(response.getBytes());
+		nodeIds[0] = (Id) response.getObject();
 		return nodeIds;
 	}
 
 	public Captcha askCaptcha(Queue<Contact> contactQueue) throws Exception {
 		Response r = request(contactQueue, OCPProtocol.GENERATE_CAPTCHA.getBytes());
-		Captcha captcha = (Captcha) JLG.deserialize(r.getBytes());
+		Captcha captcha = (Captcha) JLG.deserialize((byte[]) r.getObject());
 		JLG.debug("captcha content = " + captcha);
 		// if (!captcha.checkSignature(r.getContact())) {
 		// throw new Exception("captcha signature not consistant");
@@ -70,28 +67,25 @@ public class OCPClient extends Client implements IAuthenticable {
 		byte[] request = OCPProtocol.message(OCPProtocol.CREATE_OBJECT,
 				address.getBytes(), content);
 		Response response = request(contactQueue, request);
-		String r = new String(response.getBytes());
-		if (!r.equals(new String(OCPProtocol.SUCCESS))) {
-			throw new Exception("cannot store");
-		}
+		response.checkForError();
 	}
 
 	public byte[] getUser(Id key) throws Exception {
 		Response r = request(agent.makeContactQueue(key),
 				OCPProtocol.message(OCPProtocol.GET_USER, key.getBytes()));
 		r.checkForError();
-		return r.getBytes();
+		return (byte[]) r.getObject();
 	}
 
 	public Content getFromAddress(Address address) throws Exception {
 		Response r = request(agent.makeContactQueue(address),
 				OCPProtocol.message(OCPProtocol.GET_ADDRESS, address.getBytes()));
 		r.checkForError();
-		if (new String(r.getBytes()).equals(new String(
+		if (new String((byte[]) r.getObject()).equals(new String(
 				OCPProtocol.ADDRESS_NOT_FOUND))) {
 			return null;
 		}
-		return (Content) JLG.deserialize(r.getBytes());
+		return (Content) JLG.deserialize((byte[]) r.getObject());
 	}
 
 	public void remove(Address address, byte[] addressSignature)

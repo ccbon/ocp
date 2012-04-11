@@ -43,10 +43,8 @@ public class ContactMap extends DataSourceContainer {
 
 	public void refreshContactList() throws Exception {
 		// TODO: make independant of ocp by adding the P2P client functionality.
-		DSPModule m = ds().client.getProtocol().getComponent(DSPModule.class);
-		byte[] message = ds().client.getProtocol().getMessageSerializer()
-				.serializeInput(new InputMessage(m.ping()));
-		ds().client.sendAll(message);
+		DSPModule m = ds().getComponent(DSPModule.class);
+		ds().client.sendAll(new InputMessage(m.ping()));
 	}
 
 	public List<Contact> getContactSnapshotList() {

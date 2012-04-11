@@ -1,4 +1,4 @@
-package org.ocpteam.ocp_agent;
+package org.ocpteam.unittest;
 
 import static org.junit.Assert.assertTrue;
 
@@ -37,8 +37,8 @@ public class TCPTest {
 
 			TCPClient tcpclient = new TCPClient("localhost", 23456, protocol);
 			while (i < n) {
-				byte[] response = tcpclient.request("hello".getBytes());
-				JLG.debug("response[" + i + "]=" + new String(response));
+				String response = (String) tcpclient.request("hello");
+				JLG.debug("response[" + i + "]=" + response);
 				i++;
 			}
 
@@ -46,8 +46,8 @@ public class TCPTest {
 			tcplistener.start();
 			i = 0;
 			while (i < n) {
-				byte[] response = tcpclient.request("hello".getBytes());
-				JLG.debug("response[" + i + "]=" + new String(response));
+				String response = (String) tcpclient.request("hello");
+				JLG.debug("response[" + i + "]=" + response);
 				i++;
 			}
 			

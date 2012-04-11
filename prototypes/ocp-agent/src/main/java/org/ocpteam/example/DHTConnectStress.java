@@ -35,11 +35,11 @@ public class DHTConnectStress extends TopContainer {
 		tcplistener.start();
 		
 		TCPClient tcpClient = new TCPClient("localhost", 12345, protocol);
-		byte[] response = tcpClient.request("coucou".getBytes());
-		JLG.debug("response=" + new String(response));
+		String response = (String) tcpClient.request("coucou");
+		JLG.debug("response=" + response);
 		tcplistener.stop();
-		response = tcpClient.request("coucou".getBytes());
-		JLG.debug("response=" + new String(response));
+		response = (String) tcpClient.request("coucou");
+		JLG.debug("response=" + response);
 		
 	}
 

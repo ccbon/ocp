@@ -14,18 +14,14 @@ public class TCPListener extends DataSourceContainer implements IListener {
 
 	private TCPServer tcpServer;
 
-	private TCPServerHandler handler;
-
 	public TCPListener() throws Exception {
 		//addComponent(NATTraversal.class);
 		addComponent(TCPServer.class);
-		addComponent(TCPServerHandler.class);
 	}
 
 	@Override
 	public void init() throws Exception {
 		super.init();
-		handler = getComponent(TCPServerHandler.class);
 	}
 
 	@Override
@@ -46,11 +42,11 @@ public class TCPListener extends DataSourceContainer implements IListener {
 			getComponent(NATTraversal.class).map();
 		}
 
-		handler.setProtocol(protocol);
+		
 		tcpServer = getComponent(TCPServer.class).getClass().newInstance();
 		tcpServer.init();
 		tcpServer.setPort(port);
-		tcpServer.setHandler(handler);
+		tcpServer.setProtocol(protocol);
 		tcpServer.start();
 	}
 

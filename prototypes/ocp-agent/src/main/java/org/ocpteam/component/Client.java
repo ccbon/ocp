@@ -1,5 +1,6 @@
 package org.ocpteam.component;
 
+import java.io.Serializable;
 import java.net.SocketException;
 import java.net.URI;
 import java.util.Collection;
@@ -49,13 +50,10 @@ public class Client extends DataSourceContainer implements IClient {
 	 * @return the network properties coming from a server (or a peer)
 	 */
 	public Properties getNetworkProperties() throws Exception {
-		DSPModule m = getProtocol().getComponent(DSPModule.class);
+		DSPModule m = ds().getComponent(DSPModule.class);
 		JLG.debug("module class: " + m.getClass());
-		byte[] input = getProtocol().getMessageSerializer().serializeInput(
-				new InputMessage(m.getNetworkProperties()));
-		Response response = request(input);
-		Properties network = (Properties) getProtocol().getMessageSerializer()
-				.deserializeOutput(response.getBytes());
+		Response response = request(new InputMessage(m.getNetworkProperties()));
+		Properties network = (Properties) response.getObject();
 		return network;
 	}
 
@@ -131,12 +129,8 @@ public class Client extends DataSourceContainer implements IClient {
 		try {
 			TCPClient tcpClient = new TCPClient(url.getHost(), url.getPort(),
 					getProtocol());
-			DSPModule m = getProtocol().getComponent(DSPModule.class);
-			byte[] input = getProtocol().getMessageSerializer().serializeInput(
-					new InputMessage(m.getContact()));
-			byte[] response = tcpClient.request(input);
-			Contact c = (Contact) getProtocol().getMessageSerializer()
-					.deserializeOutput(response);
+			DSPModule m = ds().getComponent(DSPModule.class);
+			Contact c = (Contact) tcpClient.request(new InputMessage(m.getContact()));
 			// we update a host because an agent does not see its public
 			// address.
 			c.setHost(url.getHost());
@@ -148,7 +142,7 @@ public class Client extends DataSourceContainer implements IClient {
 		}
 	}
 
-	public Response request(byte[] string) throws Exception {
+	public Response request(Serializable string) throws Exception {
 		if (contactMap.isEmpty()) {
 			findSponsor();
 		}
@@ -159,9 +153,9 @@ public class Client extends DataSourceContainer implements IClient {
 		return response;
 	}
 
-	public Response request(Queue<Contact> contactQueue, byte[] input)
+	public Response request(Queue<Contact> contactQueue, Serializable input)
 			throws Exception {
-		byte[] output = null;
+		Serializable output = null;
 		if (contactMap.isEmpty()) {
 			findSponsor();
 		}
@@ -182,9 +176,10 @@ public class Client extends DataSourceContainer implements IClient {
 		return new Response(output, contact);
 	}
 
-	public byte[] request(Contact contact, byte[] input) throws Exception {
+	public Serializable request(Contact contact, Serializable input)
+			throws Exception {
 		JLG.debug("sending request on contact: " + contact);
-		byte[] output = null;
+		Serializable output = null;
 		// use the TCP connection.
 		TCPClient tcpClient = contactMap.getTcpClient(contact);
 
@@ -210,15 +205,13 @@ public class Client extends DataSourceContainer implements IClient {
 
 	public void declareContact() throws Exception {
 		Contact contact = getAgent().toContact();
-		DSPModule m = getProtocol().getComponent(DSPModule.class);
-		byte[] input = getProtocol().getMessageSerializer().serializeInput(
-				new InputMessage(m.declareContact(), contact));
+		DSPModule m = ds().getComponent(DSPModule.class);
 		JLG.debug(ds().getName() + " declares contact: " + contact);
-		sendAll(input);
+		sendAll(new InputMessage(m.declareContact(), contact));
 		waitForCompletion();
 	}
 
-	public void sendAll(final byte[] message) throws Exception {
+	public void sendAll(final Serializable message) throws Exception {
 		JLG.debug("send all");
 		Collection<Callable<Object>> tasks = new LinkedList<Callable<Object>>();
 		for (final Contact c : contactMap.getOtherContacts()) {
@@ -264,7 +257,7 @@ public class Client extends DataSourceContainer implements IClient {
 		contactMap.remove(contact);
 		// tell to your contacts this contact has disappeared.
 		// this code is comment it for performance reasons...
-		// DSPModule m = getProtocol().getComponent(DSPModule.class);
+		// DSPModule m = ds().getComponent(DSPModule.class);
 		// final byte[] message =
 		// getProtocol().getMessageSerializer().serializeInput(
 		// new InputMessage(m.detach(), contact));
@@ -302,7 +295,7 @@ public class Client extends DataSourceContainer implements IClient {
 		}
 	}
 
-	public void send(Contact c, byte[] message) throws Exception {
+	public void send(Contact c, Serializable message) throws Exception {
 		JLG.debug(ds().getName() + " sends a message to " + c);
 		try {
 			request(c, message);
@@ -320,16 +313,14 @@ public class Client extends DataSourceContainer implements IClient {
 	}
 
 	public void askForContact() throws Exception {
-		DSPModule m = getProtocol().getComponent(DSPModule.class);
-		byte[] input = getProtocol().getMessageSerializer().serializeInput(
-				new InputMessage(m.askForContact()));
+		DSPModule m = ds().getComponent(DSPModule.class);
+		
+		
 		for (Contact c : contactMap.getOtherContacts()) {
 			try {
 				JLG.debug(ds().getName() + " requests askForContact");
-				byte[] response = request(c, input);
+				Contact[] contactsOfContact = (Contact[]) request(c, new InputMessage(m.askForContact()));
 				// strategy : friends of my friends are my friends.
-				Contact[] contactsOfContact = (Contact[]) getProtocol()
-						.getMessageSerializer().deserializeOutput(response);
 				JLG.debug(ds().getName() + " received "
 						+ contactsOfContact.length + " contact(s).");
 				for (Contact nc : contactsOfContact) {
@@ -373,12 +364,12 @@ public class Client extends DataSourceContainer implements IClient {
 
 	public void waitForCompletion() {
 		try {
-		JLG.debug("remainingTasks = " + remainingTasks);
-		while (remainingTasks > 0) {
 			JLG.debug("remainingTasks = " + remainingTasks);
-			completionService.take();
-			remainingTasks--;
-		}
+			while (remainingTasks > 0) {
+				JLG.debug("remainingTasks = " + remainingTasks);
+				completionService.take();
+				remainingTasks--;
+			}
 		} catch (InterruptedException e) {
 			remainingTasks = 0;
 		}

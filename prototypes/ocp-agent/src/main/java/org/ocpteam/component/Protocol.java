@@ -1,5 +1,7 @@
 package org.ocpteam.component;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.net.DatagramPacket;
@@ -11,34 +13,28 @@ import java.util.Map;
 
 import org.ocpteam.core.IComponent;
 import org.ocpteam.entity.InputMessage;
-import org.ocpteam.entity.MessageSerializer;
 import org.ocpteam.entity.Session;
 import org.ocpteam.entity.StreamSerializer;
-import org.ocpteam.interfaces.IMessageSerializer;
 import org.ocpteam.interfaces.IProtocol;
-import org.ocpteam.interfaces.IStreamSerializer;
 import org.ocpteam.interfaces.ITransaction;
 import org.ocpteam.misc.JLG;
 
-public abstract class Protocol extends DataSourceContainer implements IProtocol {
+public class Protocol extends DataSourceContainer implements IProtocol {
 
-	private IStreamSerializer streamSerializer;
-	private IMessageSerializer messageSerializer;
+	private StreamSerializer streamSerializer;
+
 	private Map<Integer, ITransaction> map = new HashMap<Integer, ITransaction>();
+
+	public Protocol() {
+		streamSerializer = new StreamSerializer();
+	}
 
 	@Override
 	public void init() throws Exception {
 		super.init();
 		// load all module
 		JLG.debug("components: " + this.getDesigner().getMap());
-		Iterator<IComponent> it = this.iteratorComponent();
-		while (it.hasNext()) {
-			IComponent c = it.next();
-			if (c instanceof Module) {
-				load((Module) c);
-			}
-		}
-		it = ds().iteratorComponent();
+		Iterator<IComponent> it = ds().iteratorComponent();
 		while (it.hasNext()) {
 			IComponent c = it.next();
 			if (c instanceof Module) {
@@ -60,35 +56,27 @@ public abstract class Protocol extends DataSourceContainer implements IProtocol 
 	}
 
 	@Override
-	public IStreamSerializer getStreamSerializer() {
-		if (streamSerializer == null) {
-			streamSerializer = new StreamSerializer();
-		}
+	public StreamSerializer getStreamSerializer() {
 		return streamSerializer;
 	}
 
 	@Override
-	public IMessageSerializer getMessageSerializer() {
-		if (messageSerializer == null) {
-			messageSerializer = new MessageSerializer(this);
+	public void process(DataInputStream in, DataOutputStream out,
+			Socket clientSocket) throws Exception {
+		// read the first object
+		JLG.debug("about to read object");
+		Serializable o = getStreamSerializer().readObject(in);
+		if (o instanceof InputMessage) {
+			InputMessage inputMessage = (InputMessage) o;
+			Session session = new Session(ds(), clientSocket);
+			inputMessage.transaction = getMap().get(inputMessage.transid);
+			Serializable s = inputMessage.transaction.run(session,
+					inputMessage.objects);
+			getStreamSerializer().writeObject(out, s);
 		}
-		return messageSerializer;
+		JLG.debug("end process");
 	}
 
-	@Override
-	public byte[] process(byte[] input, Socket clientSocket) throws Exception {
-		InputMessage inputMessage = getMessageSerializer()
-				.deserializeInput(input);
-		Session session = new Session(ds(), clientSocket);
-		JLG.debug("running transaction: " + inputMessage.transaction.getId());
-		Serializable s = inputMessage.transaction.run(session, inputMessage.objects);
-		if (s == null) {
-			return null;
-		}
-		JLG.debug("s.getClass=" + s.getClass());
-		return getMessageSerializer().serializeOutput(s);
-	}
-	
 	@Override
 	public void process(DatagramPacket packet) {
 		byte[] input = Arrays.copyOf(packet.getData(), packet.getLength());

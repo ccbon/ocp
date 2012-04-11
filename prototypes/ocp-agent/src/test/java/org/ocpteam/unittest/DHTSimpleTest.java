@@ -1,4 +1,4 @@
-package org.ocpteam.ocp_agent;
+package org.ocpteam.unittest;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;

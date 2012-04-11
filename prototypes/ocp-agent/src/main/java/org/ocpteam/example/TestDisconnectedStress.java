@@ -4,7 +4,6 @@ import java.util.Properties;
 
 import org.ocpteam.component.ContactMap;
 import org.ocpteam.component.NATTraversal;
-import org.ocpteam.component.TCPServerHandler;
 import org.ocpteam.core.TopContainer;
 import org.ocpteam.misc.JLG;
 import org.ocpteam.protocol.dht.DHTDataSource;
@@ -38,7 +37,6 @@ public class TestDisconnectedStress extends TopContainer {
 		//JLG.bUseSet = true;
 		// JLG.set.add(TCPServer.class.getName());
 		JLG.set.add(TestDisconnectedStress.class.getName());
-		JLG.set.add(TCPServerHandler.class.getName());
 		// JLG.set.add(DHTDataModel.class.getName());
 		// JLG.set.add(TCPClient.class.getName());
 		JLG.set.add(JLG.class.getName());

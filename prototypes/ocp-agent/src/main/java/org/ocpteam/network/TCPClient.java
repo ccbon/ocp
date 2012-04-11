@@ -4,13 +4,13 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.EOFException;
 import java.io.IOException;
+import java.io.Serializable;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
 
 import org.ocpteam.interfaces.IProtocol;
-import org.ocpteam.interfaces.IStreamSerializer;
 import org.ocpteam.misc.JLG;
 
 public class TCPClient {
@@ -28,8 +28,9 @@ public class TCPClient {
 		this.protocol = protocol;
 	}
 
-	public synchronized byte[] request(byte[] input) throws Exception {
-		byte[] output = null;
+	public synchronized Serializable request(Serializable input)
+			throws Exception {
+		Serializable output = null;
 
 		retrieveSocket();
 		try {
@@ -47,13 +48,11 @@ public class TCPClient {
 		return output;
 	}
 
-	private byte[] request0(byte[] input) throws Exception {
-		byte[] output = null;
-		IStreamSerializer s = protocol.getStreamSerializer();
-		s.writeMessage(out, input);
+	private Serializable request0(Serializable input) throws Exception {
+		JLG.debug("about to write input on the socket. input=" + input);
+		protocol.getStreamSerializer().writeObject(out, input);
 		JLG.debug("input flush");
-
-		output = s.readMessage(in);
+		Serializable output = protocol.getStreamSerializer().readObject(in);
 		JLG.debug("output received");
 		return output;
 	}
@@ -80,8 +79,8 @@ public class TCPClient {
 	private void createNewSocket() throws Exception {
 		JLG.debug("start new socket on " + hostname + ":" + port);
 		clientSocket = new Socket();
-		//clientSocket.setSoTimeout(1000);
-		//clientSocket.setReuseAddress(true);
+		// clientSocket.setSoTimeout(1000);
+		// clientSocket.setReuseAddress(true);
 		clientSocket.connect(new InetSocketAddress(hostname, port));
 		try {
 			if (in != null) {
@@ -95,6 +94,7 @@ public class TCPClient {
 
 		in = new DataInputStream(clientSocket.getInputStream());
 		out = new DataOutputStream(clientSocket.getOutputStream());
+
 		JLG.debug("end new socket");
 	}
 

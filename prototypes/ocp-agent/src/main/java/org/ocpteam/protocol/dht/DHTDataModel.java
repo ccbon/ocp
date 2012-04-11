@@ -28,10 +28,7 @@ public class DHTDataModel extends DataSourceContainer implements IMapDataModel {
 		// strategy: save the pair everywhere
 		ds().store(key, value);
 		DHTModule m = ds().getComponent(DHTModule.class);
-		byte[] message = ds().client.getProtocol().getMessageSerializer()
-				.serializeInput(new InputMessage(m.store(), key, value));
-
-		ds().client.sendAll(message);
+		ds().client.sendAll(new InputMessage(m.store(), key, value));
 		ds().client.waitForCompletion();
 	}
 
@@ -44,8 +41,7 @@ public class DHTDataModel extends DataSourceContainer implements IMapDataModel {
 		}
 		// try to find a node with contains the key.
 		DHTModule m = ds().getComponent(DHTModule.class);
-		final byte[] message = ds().client.getProtocol().getMessageSerializer()
-				.serializeInput(new InputMessage(m.retrieve(), key, value));
+		final InputMessage message = new InputMessage(m.retrieve(), key, value);
 		ExecutorService exe = ds().client.getExecutor();
 		Collection<Callable<String>> tasks = new LinkedList<Callable<String>>();
 		for (final Contact c : ds().contactMap.getOtherContacts()) {
@@ -55,12 +51,9 @@ public class DHTDataModel extends DataSourceContainer implements IMapDataModel {
 				public String call() throws Exception {
 					try {
 						JLG.debug("request");
-						byte[] response = ds().client.request(c, message);
+						String value = (String) ds().client.request(c, message);
 						JLG.debug("request end");
-						if (response != null) {
-							String value = (String) ds().client.getProtocol()
-									.getMessageSerializer()
-									.deserializeOutput(response);
+						if (value != null) {
 							return value;
 						}
 					} catch (NotAvailableContactException e) {
@@ -87,10 +80,7 @@ public class DHTDataModel extends DataSourceContainer implements IMapDataModel {
 		// strategy: send to all node the remove request.
 		ds().remove(key);
 		DHTModule m = ds().getComponent(DHTModule.class);
-		byte[] message = ds().client.getProtocol().getMessageSerializer()
-				.serializeInput(new InputMessage(m.remove(), key));
-
-		ds().client.sendAll(message);
+		ds().client.sendAll(new InputMessage(m.remove(), key));
 		ds().client.waitForCompletion();
 
 	}
@@ -100,18 +90,13 @@ public class DHTDataModel extends DataSourceContainer implements IMapDataModel {
 		// strategy: merge each keyset for each node.
 		Set<String> set = new HashSet<String>(ds().keySet());
 		DHTModule m = ds().getComponent(DHTModule.class);
-		byte[] message = ds().client.getProtocol().getMessageSerializer()
-				.serializeInput(new InputMessage(m.keySet()));
+		InputMessage message = new InputMessage(m.keySet());
 		for (Contact c : ds().contactMap.getOtherContacts()) {
 			try {
 				int retry = 0;
 				while (true) {
 					try {
-						byte[] response = ds().client.request(c, message);
-
-						String[] array = (String[]) ds().client.getProtocol()
-								.getMessageSerializer()
-								.deserializeOutput(response);
+						String[] array = (String[]) ds().client.request(c, message);
 						for (String s : array) {
 							JLG.debug("s=" + s);
 							set.add(s);

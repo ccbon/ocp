@@ -4,7 +4,6 @@ import java.util.Properties;
 
 import org.ocpteam.component.NATTraversal;
 import org.ocpteam.core.TopContainer;
-import org.ocpteam.entity.MessageSerializer;
 import org.ocpteam.misc.JLG;
 import org.ocpteam.protocol.dht.DHTDataModel;
 import org.ocpteam.protocol.dht.DHTDataSource;
@@ -40,7 +39,6 @@ public class DHTMemoryIssue extends TopContainer {
 		//JLG.set.add(TCPServer.class.getName());
 		JLG.set.add(DHTMemoryIssue.class.getName());
 		//JLG.set.add(JLG.class.getName());
-		JLG.set.add(MessageSerializer.class.getName());
 		//JLG.set.add(NATTraversal.class.getName());
 	}
 

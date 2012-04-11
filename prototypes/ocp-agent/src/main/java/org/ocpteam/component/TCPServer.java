@@ -1,8 +1,12 @@
 package org.ocpteam.component;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.EOFException;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -10,34 +14,34 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import org.ocpteam.core.Container;
-import org.ocpteam.interfaces.ITCPServerHandler;
+import org.ocpteam.interfaces.IProtocol;
 import org.ocpteam.misc.JLG;
 
 public class TCPServer extends Container {
 
 	private int port;
 	private ServerSocket serverSocket;
-	private ITCPServerHandler handler;
 
 	private ExecutorService pool;
-	private Set<ITCPServerHandler> handlerSet;
-	
+	private Set<Socket> socketSet;
+	private IProtocol protocol;
+
 	@Override
 	public void init() throws Exception {
 		super.init();
-		handlerSet = Collections.synchronizedSet(new HashSet<ITCPServerHandler>());
+		socketSet = Collections.synchronizedSet(new HashSet<Socket>());
 	}
 
 	public void setPort(int port) {
 		this.port = port;
 	}
-	
+
 	public void start() {
 		pool = Executors.newCachedThreadPool();
 		JLG.debug("pool class=" + pool);
-		
+
 		pool.execute(new Runnable() {
-			
+
 			@Override
 			public void run() {
 				JLG.debug("starting a TCP server thread on port:" + port);
@@ -53,11 +57,47 @@ public class TCPServer extends Container {
 					serverSocket.bind(new InetSocketAddress(port));
 					while (true) {
 						JLG.debug("waiting for a client connection");
-						Socket clientSocket = serverSocket.accept();
-						ITCPServerHandler myHandler = handler.duplicate();
-						myHandler.setTCPServer(TCPServer.this);
-						myHandler.setSocket(clientSocket);
-						pool.execute(myHandler);
+						final Socket socket = serverSocket.accept();
+						pool.execute(new Runnable() {
+
+							@Override
+							public void run() {
+								TCPServer.this.register(socket);
+								DataInputStream in = null;
+								DataOutputStream out = null;
+								try {
+									in = new DataInputStream(socket
+											.getInputStream());
+									out = new DataOutputStream(socket
+											.getOutputStream());
+									int i = 0;
+									while (i < 1000) {
+										JLG.debug("wait for message");
+										protocol.process(in, out, socket);
+										i++;
+									}
+								} catch (SocketException e) {
+								} catch (EOFException e) {
+								} catch (Exception e) {
+									e.printStackTrace();
+								} finally {
+									try {
+										in.close();
+									} catch (Exception e) {
+									}
+									try {
+										out.close();
+									} catch (Exception e) {
+									}
+									try {
+										socket.close();
+									} catch (Exception e) {
+									}
+									TCPServer.this.unregister(socket);
+									JLG.debug("end");
+								}
+							}
+						});
 					}
 				} catch (Exception e) {
 				}
@@ -75,16 +115,15 @@ public class TCPServer extends Container {
 			}
 		} catch (Exception e) {
 		}
-		
+
 		// make sure we don't accept new tasks
 		pool.shutdown();
 		// for all registered handler, make sure their clientSocket is closed.
-		ITCPServerHandler[] array = handlerSet.toArray(new ITCPServerHandler[handlerSet.size()]);
-		for (ITCPServerHandler h : array) {
-			Socket clientSocket = h.getSocket();
+		Socket[] array = socketSet.toArray(new Socket[socketSet.size()]);
+		for (Socket socket : array) {
 			try {
-				clientSocket.close();
-				unregister(h);
+				socket.close();
+				unregister(socket);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -94,16 +133,16 @@ public class TCPServer extends Container {
 		JLG.debug("end stopping a TCP server with port: " + port);
 	}
 
-	public void setHandler(ITCPServerHandler handler) {
-		this.handler = handler;
+	public void register(Socket socket) {
+		socketSet.add(socket);
 	}
 
-	public void register(ITCPServerHandler h) {
-		handlerSet.add(h);
+	public void unregister(Socket socket) {
+		socketSet.remove(socket);
 	}
 
-	public void unregister(ITCPServerHandler h) {
-		handlerSet.remove(h);
+	public void setProtocol(IProtocol protocol) {
+		this.protocol = protocol;
 	}
 
 }

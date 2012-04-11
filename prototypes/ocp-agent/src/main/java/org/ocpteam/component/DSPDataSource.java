@@ -22,10 +22,11 @@ public abstract class DSPDataSource extends DataSource {
 		addComponent(Agent.class);
 		addComponent(Client.class);
 		addComponent(Server.class);
-		addComponent(Protocol.class, new DSPProtocol());
+		addComponent(Protocol.class);
 		addComponent(TCPListener.class);
 		addComponent(UDPListener.class);
 		addComponent(ContactMap.class);
+		addComponent(DSPModule.class);
 	}
 
 	@Override

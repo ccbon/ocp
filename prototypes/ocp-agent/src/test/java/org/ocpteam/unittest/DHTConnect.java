@@ -1,4 +1,4 @@
-package org.ocpteam.ocp_agent;
+package org.ocpteam.unittest;
 
 import static org.junit.Assert.assertEquals;
 
@@ -65,7 +65,7 @@ public class DHTConnect extends TopContainer {
 		// first agent
 		Properties p = new Properties();
 		p.setProperty("agent.isFirst", "yes");
-		p.setProperty("listener.tcp.url", "tcp://localhost:" + port);
+		p.setProperty("server.port", "" + port);
 		ds[0].setConfig(p);
 
 		// other agents
@@ -73,7 +73,7 @@ public class DHTConnect extends TopContainer {
 			p = new Properties();
 			p.setProperty("agent.isFirst", "no");
 			int port_i = port + i;
-			p.setProperty("listener.tcp.url", "tcp://localhost:" + port_i);
+			p.setProperty("server.port", "" + port_i);
 			p.setProperty("sponsor.1", "tcp://localhost:" + port);
 			ds[i].setConfig(p);
 

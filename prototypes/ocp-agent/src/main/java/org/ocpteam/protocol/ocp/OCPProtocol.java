@@ -11,8 +11,9 @@ import java.util.Iterator;
 import java.util.LinkedList;
 
 import org.ocpteam.component.Agent;
-import org.ocpteam.component.DSPModule;
 import org.ocpteam.component.Protocol;
+import org.ocpteam.entity.InputMessage;
+import org.ocpteam.entity.Session;
 import org.ocpteam.misc.Id;
 import org.ocpteam.misc.JLG;
 
@@ -20,7 +21,6 @@ public class OCPProtocol extends Protocol {
 
 	public OCPProtocol() throws Exception {
 		super();
-		addComponent(DSPModule.class, new OCPModule());
 	}
 
 	public static final int SEPARATOR = 0;
@@ -47,14 +47,28 @@ public class OCPProtocol extends Protocol {
 		return this.agent;
 	}
 	
-	public byte[] process(byte[] input, Socket clientSocket) throws Exception {
-		try {
-			return oldprocess(input, clientSocket);
-		} catch (Exception e) {
-			JLG.debug("old protocol does not work.");
+	@Override
+	public void process(DataInputStream in, DataOutputStream out,
+			Socket clientSocket) throws Exception {
+		JLG.debug("about to read object");
+		Serializable o = getStreamSerializer().readObject(in);
+		if (o instanceof InputMessage) {
+			InputMessage inputMessage = (InputMessage) o;
+			Session session = new Session(ds(), clientSocket);
+			JLG.debug("inputMessage.transid=" + inputMessage.transid);
+			inputMessage.transaction = getMap().get(inputMessage.transid);
+			if (inputMessage.transaction == null) {
+				throw new Exception("transaction unknown: " + inputMessage.transid);
+			}
+			Serializable s = inputMessage.transaction.run(session,
+					inputMessage.objects);
+			getStreamSerializer().writeObject(out, s);
 		}
-		byte[] output = super.process(input, clientSocket);
-		return output;
+		if (o instanceof byte[]) {
+			byte[] input = (byte[]) o;
+			byte[] output = oldprocess(input, clientSocket);
+			getStreamSerializer().writeObject(out, output);
+		}
 	}
 
 	public byte[] oldprocess(byte[] input, Socket clientSocket) throws Exception {

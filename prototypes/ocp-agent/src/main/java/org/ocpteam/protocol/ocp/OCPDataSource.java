@@ -26,6 +26,7 @@ public class OCPDataSource extends DSPDataSource {
 
 		addComponent(Authentication.class, new OCPAuthentication());
 		addComponent(IPersistentMap.class, new NaivePersistentMap());
+		addComponent(OCPModule.class);
 	}
 
 	@Override
