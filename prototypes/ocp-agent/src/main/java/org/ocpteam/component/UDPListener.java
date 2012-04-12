@@ -9,23 +9,17 @@ import org.ocpteam.misc.JLG;
 public class UDPListener extends DataSourceContainer implements IListener {
 
 	private URI url;
-
 	private IProtocol protocol;
-
 	private UDPServer udpServer;
-
-	private UDPServerHandler handler;
 
 	public UDPListener() throws Exception {
 		//addComponent(NATTraversal.class);
 		addComponent(UDPServer.class);
-		addComponent(UDPServerHandler.class);
 	}
 
 	@Override
 	public void init() throws Exception {
 		super.init();
-		handler = getComponent(UDPServerHandler.class);
 	}
 
 	@Override
@@ -47,11 +41,10 @@ public class UDPListener extends DataSourceContainer implements IListener {
 			getComponent(NATTraversal.class).map();
 		}
 
-		handler.setProtocol(protocol);
 		udpServer = getComponent(UDPServer.class).getClass().newInstance();
 		udpServer.init();
+		udpServer.setProtocol(protocol);
 		udpServer.setPort(port);
-		udpServer.setHandler(handler);
 		udpServer.start();
 	}
 

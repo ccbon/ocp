@@ -6,16 +6,16 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import org.ocpteam.core.Container;
-import org.ocpteam.interfaces.IUDPServerHandler;
+import org.ocpteam.interfaces.IProtocol;
 import org.ocpteam.misc.JLG;
 
 public class UDPServer extends Container {
 
 	private int port;
 	private DatagramSocket serverSocket;
-	private UDPServerHandler handler;
 
 	private ExecutorService pool;
+	private IProtocol protocol;
 
 	@Override
 	public void init() throws Exception {
@@ -24,11 +24,6 @@ public class UDPServer extends Container {
 
 	public void setPort(int port) {
 		this.port = port;
-
-	}
-
-	public void setHandler(UDPServerHandler handler) {
-		this.handler = handler;
 
 	}
 
@@ -42,12 +37,20 @@ public class UDPServer extends Container {
 					serverSocket = new DatagramSocket(port);
 					while (true) {
 						byte[] receiveData = new byte[8192];
-						DatagramPacket receivePacket = new DatagramPacket(
+						final DatagramPacket receivePacket = new DatagramPacket(
 								receiveData, receiveData.length);
 						serverSocket.receive(receivePacket);
-						IUDPServerHandler myHandler = handler.duplicate();
-						myHandler.setDatagramPacket(receivePacket);
-						pool.execute(myHandler);
+						pool.execute(new Runnable() {
+
+							@Override
+							public void run() {
+								try {
+									protocol.process(receivePacket);
+								} catch (Exception e) {
+									e.printStackTrace();
+								}
+								
+							}});
 					}
 				} catch (Exception e) {
 					//e.printStackTrace();
@@ -72,6 +75,10 @@ public class UDPServer extends Container {
 		pool.shutdownNow();
 		JLG.debug("pool shutdownNow=" + pool);
 		JLG.debug("end stopping a TCP server with port: " + port);
+	}
+
+	public void setProtocol(IProtocol protocol) {
+		this.protocol = protocol;
 	}
 
 }
