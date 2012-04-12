@@ -1,6 +1,9 @@
 package org.ocpteam.protocol.dht;
 
+import java.io.DataInputStream;
+import java.io.Serializable;
 import java.io.StreamCorruptedException;
+import java.net.Socket;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -11,6 +14,8 @@ import java.util.concurrent.ExecutorService;
 
 import org.ocpteam.component.DataSourceContainer;
 import org.ocpteam.entity.Contact;
+import org.ocpteam.entity.EOMObject;
+import org.ocpteam.entity.InputFlow;
 import org.ocpteam.entity.InputMessage;
 import org.ocpteam.exception.NotAvailableContactException;
 import org.ocpteam.interfaces.IMapDataModel;
@@ -90,14 +95,24 @@ public class DHTDataModel extends DataSourceContainer implements IMapDataModel {
 		// strategy: merge each keyset for each node.
 		Set<String> set = new HashSet<String>(ds().keySet());
 		DHTModule m = ds().getComponent(DHTModule.class);
-		InputMessage message = new InputMessage(m.keySet());
+		InputFlow message = new InputFlow(m.keySet());
 		for (Contact c : ds().contactMap.getOtherContacts()) {
 			try {
 				int retry = 0;
 				while (true) {
 					try {
-						String[] array = (String[]) ds().client.request(c, message);
-						for (String s : array) {
+						ds().client.request(c, message);
+						Socket socket = ds().contactMap.getTcpClient(c)
+								.getSocket();
+						DataInputStream in = new DataInputStream(
+								socket.getInputStream());
+						while (true) {
+							Serializable serializable = ds().protocol
+									.getStreamSerializer().readObject(in);
+							if (serializable instanceof EOMObject) {
+								break;
+							}
+							String s = (String) serializable;
 							JLG.debug("s=" + s);
 							set.add(s);
 						}

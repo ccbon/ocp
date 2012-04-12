@@ -12,9 +12,12 @@ import java.util.Iterator;
 import java.util.Map;
 
 import org.ocpteam.core.IComponent;
+import org.ocpteam.entity.EOMObject;
+import org.ocpteam.entity.InputFlow;
 import org.ocpteam.entity.InputMessage;
 import org.ocpteam.entity.Session;
 import org.ocpteam.entity.StreamSerializer;
+import org.ocpteam.interfaces.IActivity;
 import org.ocpteam.interfaces.IProtocol;
 import org.ocpteam.interfaces.ITransaction;
 import org.ocpteam.misc.JLG;
@@ -24,6 +27,8 @@ public class Protocol extends DataSourceContainer implements IProtocol {
 	private StreamSerializer streamSerializer;
 
 	private Map<Integer, ITransaction> map = new HashMap<Integer, ITransaction>();
+
+	private Map<Integer, IActivity> activityMap = new HashMap<Integer, IActivity>();
 
 	public Protocol() {
 		streamSerializer = new StreamSerializer();
@@ -51,6 +56,10 @@ public class Protocol extends DataSourceContainer implements IProtocol {
 				ITransaction t = (ITransaction) f.invoke(m);
 				map.put(t.getId(), t);
 			}
+			if (o == IActivity.class) {
+				IActivity t = (IActivity) f.invoke(m);
+				activityMap.put(t.getId(), t);
+			}
 		}
 		JLG.debug("map: " + map);
 	}
@@ -74,6 +83,14 @@ public class Protocol extends DataSourceContainer implements IProtocol {
 					inputMessage.objects);
 			getStreamSerializer().writeObject(out, s);
 		}
+		if (o instanceof InputFlow) {
+			InputFlow inputFlow = (InputFlow) o;
+			Session session = new Session(ds(), clientSocket);
+			inputFlow.activity = getActivityMap().get(inputFlow.activityid);
+			inputFlow.activity.run(session,
+					inputFlow.objects, in, out, this);
+			getStreamSerializer().writeObject(out, new EOMObject());
+		}
 		JLG.debug("end process");
 	}
 
@@ -87,6 +104,10 @@ public class Protocol extends DataSourceContainer implements IProtocol {
 
 	public Map<Integer, ITransaction> getMap() {
 		return this.map;
+	}
+
+	private Map<Integer, IActivity> getActivityMap() {
+		return this.activityMap ;
 	}
 
 }
