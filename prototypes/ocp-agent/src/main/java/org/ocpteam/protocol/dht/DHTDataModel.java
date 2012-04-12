@@ -1,9 +1,12 @@
 package org.ocpteam.protocol.dht;
 
 import java.io.DataInputStream;
+import java.io.EOFException;
 import java.io.Serializable;
 import java.io.StreamCorruptedException;
 import java.net.Socket;
+import java.net.SocketException;
+import java.net.SocketTimeoutException;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -107,6 +110,7 @@ public class DHTDataModel extends DataSourceContainer implements IMapDataModel {
 						DataInputStream in = new DataInputStream(
 								socket.getInputStream());
 						while (true) {
+
 							Serializable serializable = ds().protocol
 									.getStreamSerializer().readObject(in);
 							if (serializable instanceof EOMObject) {
@@ -115,6 +119,7 @@ public class DHTDataModel extends DataSourceContainer implements IMapDataModel {
 							String s = (String) serializable;
 							JLG.debug("s=" + s);
 							set.add(s);
+
 						}
 						break;
 					} catch (StreamCorruptedException e) {
@@ -122,6 +127,9 @@ public class DHTDataModel extends DataSourceContainer implements IMapDataModel {
 						if (retry > 3) {
 							throw e;
 						}
+					} catch (SocketException e) {
+					} catch (EOFException e) {
+					} catch (SocketTimeoutException e) {
 					}
 				}
 			} catch (NotAvailableContactException e) {
