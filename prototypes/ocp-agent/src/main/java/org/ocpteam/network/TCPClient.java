@@ -17,10 +17,12 @@ public class TCPClient {
 
 	private String hostname;
 	private int port;
+	private IProtocol protocol;
+	
 	private Socket clientSocket;
 	private DataInputStream in;
 	private DataOutputStream out;
-	private IProtocol protocol;
+	
 
 	public TCPClient(String hostname, int port, IProtocol protocol) {
 		this.hostname = hostname;

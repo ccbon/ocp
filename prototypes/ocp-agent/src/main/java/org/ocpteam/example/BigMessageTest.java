@@ -1,5 +1,6 @@
 package org.ocpteam.example;
 
+import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.Serializable;
 import java.net.Socket;
@@ -8,10 +9,12 @@ import java.net.URI;
 import org.ocpteam.component.Protocol;
 import org.ocpteam.component.TCPListener;
 import org.ocpteam.interfaces.IProtocol;
+import org.ocpteam.misc.JLG;
 import org.ocpteam.network.TCPClient;
 
 public class BigMessageTest {
 	public static void main(String[] args) {
+		JLG.debug_on();
 		try {
 			IProtocol p = new MyProtocol();
 			TCPListener l = new TCPListener();
@@ -23,7 +26,7 @@ public class BigMessageTest {
 			TCPClient c = new TCPClient("localhost", 12345, p);
 
 			Socket socket = c.getSocket();
-			//DataInputStream in = new DataInputStream(socket.getInputStream());
+			DataInputStream in = new DataInputStream(socket.getInputStream());
 			DataOutputStream out = new DataOutputStream(
 					socket.getOutputStream());
 
@@ -34,15 +37,15 @@ public class BigMessageTest {
 				out.writeInt(i);
 			}
 
-//			int nbr = in.readInt();
-//			for (int i = 0; i < nbr; i++) {
-//				int size = in.readInt();
-//				byte[] buffer = new byte[size];
-//				in.read(buffer, 0, size);
-//				Serializable s = JLG.deserialize(buffer);
-//				JLG.debug("serializable=" + s);
-//			}
-//			l.stop();
+			int nbr = in.readInt();
+			for (int i = 0; i < nbr; i++) {
+				int size = in.readInt();
+				byte[] buffer = new byte[size];
+				in.read(buffer, 0, size);
+				Serializable s = JLG.deserialize(buffer);
+				JLG.debug("serializable=" + s);
+			}
+			l.stop();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -51,6 +54,20 @@ public class BigMessageTest {
 
 class MyProtocol extends Protocol {
 	
+	@Override
+	public void process(DataInputStream in, DataOutputStream out,
+			Socket clientSocket) throws Exception {
+		// read the first object
+		JLG.debug("about to read object");
+		int n = in.readInt();
+		out.writeInt(n);
+		for (int i = 0; i < n; i++) {
+			byte[] s = JLG.serialize(new MyObject(i));
+			out.writeInt(s.length);
+			out.write(s);
+		}		
+		JLG.debug("end process");
+	}
 }
 
 class MyObject implements Serializable {

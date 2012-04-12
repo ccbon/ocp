@@ -19,5 +19,4 @@ public class MinimalistProtocol extends Protocol implements IProtocol {
 		getStreamSerializer().writeObject(out, "ok");
 	}
 
-
 }

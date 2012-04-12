@@ -6,11 +6,10 @@ import java.net.DatagramPacket;
 import java.net.Socket;
 
 import org.ocpteam.core.IContainer;
-import org.ocpteam.entity.StreamSerializer;
 
 public interface IProtocol extends IContainer {
 
-	public StreamSerializer getStreamSerializer();
+	public IStreamSerializer getStreamSerializer();
 	
 	void process(DatagramPacket packet) throws Exception;
 
