@@ -13,8 +13,6 @@ import org.ocpteam.interfaces.IPersistentMap;
 public class OCPDataSource extends DSPDataSource {
 
 	protected OCPAgent agent;
-	public ContactMap contactMap;
-	public Protocol protocol;
 
 	public OCPDataSource() throws Exception {
 		super();
@@ -33,12 +31,10 @@ public class OCPDataSource extends DSPDataSource {
 	public void init() throws Exception {
 		super.init();
 		agent = (OCPAgent) getComponent(Agent.class);
-		contactMap = getComponent(ContactMap.class);
-		protocol = getComponent(Protocol.class);
 	}
 
 	@Override
-	public String getProtocol() {
+	public String getProtocolName() {
 		return "OCP";
 	}
 

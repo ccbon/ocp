@@ -23,7 +23,7 @@ public class MapDataSource extends DataSource {
 	}
 	
 	@Override
-	public String getProtocol() {
+	public String getProtocolName() {
 		return "MAP";
 	}
 	

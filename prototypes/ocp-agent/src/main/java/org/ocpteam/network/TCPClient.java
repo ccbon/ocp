@@ -59,6 +59,29 @@ public class TCPClient {
 		return output;
 	}
 
+	public synchronized void send(Serializable input)
+			throws Exception {
+		retrieveSocket();
+		try {
+			send0(input);
+		} catch (Exception e) {
+			if (e instanceof SocketException || e instanceof EOFException
+					|| e instanceof SocketTimeoutException) {
+				JLG.debug("try again (e=" + e + ")");
+				createNewSocket();
+				send0(input);
+			} else {
+				throw e;
+			}
+		}
+	}
+
+	private void send0(Serializable input) throws Exception {
+		JLG.debug("about to write input on the socket. input=" + input);
+		protocol.getStreamSerializer().writeObject(out, input);
+		JLG.debug("input flush");
+	}
+
 	private void retrieveSocket() throws Exception {
 		if (clientSocket == null || clientSocket.isClosed()
 				|| !clientSocket.isBound() || !clientSocket.isConnected()) {

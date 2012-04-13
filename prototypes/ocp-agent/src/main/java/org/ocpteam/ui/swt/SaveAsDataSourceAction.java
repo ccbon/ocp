@@ -43,7 +43,7 @@ public class SaveAsDataSourceAction extends Action {
 						.getObject("file_ext");
 				fd.setFilterExtensions(filterExt);
 			} catch (Exception e) {
-				fd.setFilterExtensions(new String[] {"*." + window.ds.getProtocol().toLowerCase(), "*.*"});
+				fd.setFilterExtensions(new String[] {"*." + window.ds.getProtocolName().toLowerCase(), "*.*"});
 			}
 			String selected = fd.open();
 			window.getShell().setFocus();

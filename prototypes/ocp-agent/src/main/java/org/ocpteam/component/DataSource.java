@@ -22,7 +22,7 @@ public abstract class DataSource extends TopContainer implements IComponent,
 	public void setParent(IContainer parent) {
 		this.parent = parent;
 	}
-	
+
 	@Override
 	public IContainer getParent() {
 		return parent;
@@ -37,8 +37,8 @@ public abstract class DataSource extends TopContainer implements IComponent,
 	private boolean bIsConnected;
 	private String name;
 
-	public abstract String getProtocol();
-	
+	public abstract String getProtocolName();
+
 	@Override
 	public void open(File file) throws Exception {
 		bIsNew = false;
@@ -55,13 +55,12 @@ public abstract class DataSource extends TopContainer implements IComponent,
 	public void newTemp() throws Exception {
 		p = new Properties();
 		bIsNew = true;
-		
-		file = File.createTempFile("temp" + System.currentTimeMillis(),
-				"tmp");
+
+		file = File.createTempFile("temp" + System.currentTimeMillis(), "tmp");
 		file.delete();
 		file.deleteOnExit();
 	}
-	
+
 	@Override
 	public boolean isNew() {
 		return bIsNew;
@@ -73,7 +72,7 @@ public abstract class DataSource extends TopContainer implements IComponent,
 		if (bIsNew) {
 			throw new Exception("Need a filename to save a new datasource");
 		}
-		
+
 		if (this.getFile() != null) {
 			JLG.storeConfig(this.p, this.getFile().getAbsolutePath());
 		} else {
@@ -144,24 +143,28 @@ public abstract class DataSource extends TopContainer implements IComponent,
 		String packageString = this.getClass().getPackage().getName() + "."
 				+ subpackage.toLowerCase();
 		String resourceClassString = packageString + "."
-				+ getProtocol().toUpperCase() + subpackage.toUpperCase()
+				+ getProtocolName().toUpperCase() + subpackage.toUpperCase()
 				+ "Resource";
 		JLG.debug("class=" + resourceClassString);
-		return (ResourceBundle) Class.forName(resourceClassString)
-				.newInstance();
+		try {
+			ResourceBundle result = (ResourceBundle) Class.forName(
+					resourceClassString).newInstance();
+			return result;
+		} catch (ClassNotFoundException e) {
+			return null;
+		}
 	}
 
 	public boolean isConnected() {
 		return bIsConnected;
 	}
-	
+
 	public void setName(String name) {
 		this.name = name;
 	}
-	
+
 	public String getName() {
 		return name;
 	}
-
 
 }

@@ -15,7 +15,7 @@ public class ZipDataSource extends DataSource {
 	}
 	
 	@Override
-	public String getProtocol() {
+	public String getProtocolName() {
 		return "ZIP";
 	}
 	

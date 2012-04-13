@@ -59,7 +59,7 @@ public class DataSourceFactory extends Container {
 		Iterator<DataSource> it = getDataSourceIterator();
 		while (it.hasNext()) {
 			DataSource ds = it.next();
-			String p = ds.getProtocol();
+			String p = ds.getProtocolName();
 			if (p.equalsIgnoreCase(protocol)) {
 				DataSource result = ds.getClass().newInstance();
 				result.init();
@@ -73,7 +73,7 @@ public class DataSourceFactory extends Container {
 		Iterator<DataSource> it = getDataSourceIterator();
 		while (it.hasNext()) {
 			DataSource ds = it.next();
-			String p = ds.getProtocol();
+			String p = ds.getProtocolName();
 			if (p.equalsIgnoreCase(protocol)) {
 				return ds.getResource(string);
 			}

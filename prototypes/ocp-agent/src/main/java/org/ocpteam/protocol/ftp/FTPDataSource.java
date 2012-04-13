@@ -21,7 +21,7 @@ public class FTPDataSource extends DataSource {
 	}
 
 	@Override
-	public String getProtocol() {
+	public String getProtocolName() {
 		return "FTP";
 	}
 	

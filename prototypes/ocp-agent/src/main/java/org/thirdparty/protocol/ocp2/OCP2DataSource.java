@@ -14,7 +14,7 @@ public class OCP2DataSource extends OCPDataSource {
 	}
 	
 	@Override
-	public String getProtocol() {
+	public String getProtocolName() {
 		return "OCP2";
 	}
 	

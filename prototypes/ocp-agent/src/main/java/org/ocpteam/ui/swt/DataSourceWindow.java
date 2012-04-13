@@ -144,7 +144,7 @@ public class DataSourceWindow extends ApplicationWindow implements
 		// status line
 		String status = "";
 		if (ds != null) {
-			status = "Protocol: " + ds.getProtocol();
+			status = "Protocol: " + ds.getProtocolName();
 		}
 		setStatus(status);
 	}
@@ -196,7 +196,7 @@ public class DataSourceWindow extends ApplicationWindow implements
 		Iterator<DataSource> it = dsf.getDataSourceIterator();
 		while (it.hasNext()) {
 			DataSource ds = it.next();
-			String protocol = ds.getProtocol();
+			String protocol = ds.getProtocolName();
 			JLG.debug("ds=" + ds.getClass());
 			newDataSourceActionMap.put(protocol, new NewDataSourceAction(this,
 					protocol));
@@ -545,7 +545,7 @@ public class DataSourceWindow extends ApplicationWindow implements
 			protocolMenu.init();
 		} catch (Exception e) {
 			// e.printStackTrace();
-			JLG.debug("no specific menu for " + ds.getProtocol());
+			JLG.debug("no specific menu for " + ds.getProtocolName());
 		}
 		if (protocolMenu != null) {
 			MenuManager menuBar = getMenuBarManager();

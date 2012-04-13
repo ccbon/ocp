@@ -1,4 +1,4 @@
-package org.ocpteam.protocol.dht;
+package org.ocpteam.protocol.dht0;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -88,7 +88,9 @@ public class DHTModule extends Module {
 				JLG.debug("keyset...");
 				DHTDataSource ds = (DHTDataSource) session.ds();
 				Set<String> set = ds.keySet();
+				JLG.debug("set=" + set);
 				for (String s : set) {
+					JLG.debug("write " + s);
 					protocol.getStreamSerializer().writeObject(out, s);
 				}
 			}

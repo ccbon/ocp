@@ -13,7 +13,7 @@ public class SFTPDataSource extends DataSource {
 	}
 
 	@Override
-	public String getProtocol() {
+	public String getProtocolName() {
 		return "SFTP";
 	}
 

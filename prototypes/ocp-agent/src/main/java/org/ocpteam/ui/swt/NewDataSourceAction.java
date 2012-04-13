@@ -24,7 +24,7 @@ public class NewDataSourceAction extends Action {
 			}
 			w.ds = w.dsf.getInstance(protocol);
 			ResourceBundle swt = w.dsf.getResource(protocol, "swt");
-			if (swt.containsKey("NewDataSourceScenario")) {
+			if (swt != null && swt.containsKey("NewDataSourceScenario")) {
 				Scenario scenario = (Scenario) swt
 						.getObject("NewDataSourceScenario");
 				scenario.setWindow(w);

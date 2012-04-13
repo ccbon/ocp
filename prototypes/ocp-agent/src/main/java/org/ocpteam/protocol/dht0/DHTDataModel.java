@@ -1,4 +1,4 @@
-package org.ocpteam.protocol.dht;
+package org.ocpteam.protocol.dht0;
 
 import java.io.DataInputStream;
 import java.io.EOFException;
@@ -104,7 +104,7 @@ public class DHTDataModel extends DataSourceContainer implements IMapDataModel {
 				int retry = 0;
 				while (true) {
 					try {
-						ds().client.request(c, message);
+						ds().contactMap.getTcpClient(c).send(message);
 						Socket socket = ds().contactMap.getTcpClient(c)
 								.getSocket();
 						DataInputStream in = new DataInputStream(
@@ -114,12 +114,12 @@ public class DHTDataModel extends DataSourceContainer implements IMapDataModel {
 							Serializable serializable = ds().protocol
 									.getStreamSerializer().readObject(in);
 							if (serializable instanceof EOMObject) {
+								JLG.debug("EOM detected");
 								break;
 							}
 							String s = (String) serializable;
 							JLG.debug("s=" + s);
 							set.add(s);
-
 						}
 						break;
 					} catch (StreamCorruptedException e) {
