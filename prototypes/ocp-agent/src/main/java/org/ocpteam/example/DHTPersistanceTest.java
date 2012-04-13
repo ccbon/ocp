@@ -53,6 +53,7 @@ public class DHTPersistanceTest {
 			ds.disconnect();
 			JLG.debug("hello2->" + dm2.get("hello2"));
 			JLG.debug("coucou->" + dm2.get("coucou"));
+			ds2.disconnect();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

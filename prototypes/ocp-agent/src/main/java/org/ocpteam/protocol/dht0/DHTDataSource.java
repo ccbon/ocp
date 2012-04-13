@@ -15,6 +15,11 @@ import org.ocpteam.misc.JLG;
  * Strategies:
  * - Each agent store all hashtable data (replication everywhere)
  * - DataModel is Map model (key->value set)
+ * - synchronization when connecting
+ * 
+ * Potentials issues:
+ * - if 2 agents tries to set a same key with different value
+ * at same time, result is unpredictable.
  *
  */
 public class DHTDataSource extends DSPDataSource {
