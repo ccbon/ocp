@@ -25,7 +25,7 @@ public class BigMessageTest {
 
 			TCPClient c = new TCPClient("localhost", 12345, p);
 
-			Socket socket = c.getSocket();
+			Socket socket = c.borrowSocket();
 			DataInputStream in = new DataInputStream(socket.getInputStream());
 			DataOutputStream out = new DataOutputStream(
 					socket.getOutputStream());
@@ -46,6 +46,7 @@ public class BigMessageTest {
 				JLG.debug("serializable=" + s);
 			}
 			l.stop();
+			c.returnSocket(socket);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

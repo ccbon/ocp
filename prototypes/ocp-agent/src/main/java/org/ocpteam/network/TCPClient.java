@@ -3,12 +3,14 @@ package org.ocpteam.network;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.EOFException;
-import java.io.IOException;
 import java.io.Serializable;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
 
 import org.ocpteam.interfaces.IProtocol;
 import org.ocpteam.misc.JLG;
@@ -18,40 +20,76 @@ public class TCPClient {
 	private String hostname;
 	private int port;
 	private IProtocol protocol;
-	
-	private Socket clientSocket;
-	private DataInputStream in;
-	private DataOutputStream out;
-	
+	private List<Socket> socketPool;
 
 	public TCPClient(String hostname, int port, IProtocol protocol) {
 		this.hostname = hostname;
 		this.port = port;
 		this.protocol = protocol;
+		this.socketPool = Collections
+				.synchronizedList(new LinkedList<Socket>());
 	}
 
 	public synchronized Serializable request(Serializable input)
 			throws Exception {
 		Serializable output = null;
-
-		retrieveSocket();
+		Socket socket = null;
 		try {
-			output = request0(input);
+			socket = borrowSocket();
+			output = request0(input, socket);
 		} catch (Exception e) {
 			if (e instanceof SocketException || e instanceof EOFException
 					|| e instanceof SocketTimeoutException) {
 				JLG.debug("try again (e=" + e + ")");
-				createNewSocket();
-				output = request0(input);
+				destroy(socket);
+				socket = createNewSocket();
+				output = request0(input, socket);
 			} else {
 				throw e;
 			}
+		} finally {
+			returnSocket(socket);
 		}
 		return output;
 	}
 
-	private Serializable request0(Serializable input) throws Exception {
+	public synchronized Socket borrowSocket() throws Exception {
+		if (socketPool.isEmpty()) {
+			return createNewSocket();
+		} else {
+			Socket socket = socketPool.remove(0);
+			return cleanSocket(socket);
+		}
+	}
+
+	public synchronized void returnSocket(Socket socket) throws Exception {
+		socketPool.add(socket);
+	}
+
+	private Socket cleanSocket(Socket socket) throws Exception {
+		if (socket == null || socket.isClosed() || !socket.isBound()
+				|| !socket.isConnected()) {
+			JLG.debug("socket=" + socket);
+			if (socket != null) {
+				if (socket.isClosed()) {
+					JLG.debug("clientSocket is closed.");
+				}
+				if (!socket.isBound()) {
+					JLG.debug("clientSocket is unbound.");
+				}
+				if (!socket.isConnected()) {
+					JLG.debug("clientSocket is not connected.");
+				}
+			}
+			return createNewSocket();
+		}
+		return socket;
+	}
+
+	private Serializable request0(Serializable input, Socket socket) throws Exception {
 		JLG.debug("about to write input on the socket. input=" + input);
+		DataOutputStream out = new DataOutputStream(socket.getOutputStream());
+		DataInputStream in = new DataInputStream(socket.getInputStream());
 		protocol.getStreamSerializer().writeObject(out, input);
 		JLG.debug("input flush");
 		Serializable output = protocol.getStreamSerializer().readObject(in);
@@ -59,83 +97,58 @@ public class TCPClient {
 		return output;
 	}
 
-	public synchronized void send(Serializable input)
-			throws Exception {
-		retrieveSocket();
+	public synchronized void send(Serializable input) throws Exception {
+		Socket socket = null;
 		try {
-			send0(input);
+			socket = borrowSocket();
+			send0(input, socket);
 		} catch (Exception e) {
 			if (e instanceof SocketException || e instanceof EOFException
 					|| e instanceof SocketTimeoutException) {
 				JLG.debug("try again (e=" + e + ")");
-				createNewSocket();
-				send0(input);
+				destroy(socket);
+				socket = createNewSocket();
+				send0(input, socket);
 			} else {
 				throw e;
+			}
+		} finally {
+			returnSocket(socket);
+		}
+	}
+
+	private void destroy(Socket socket) {
+		if (socket != null) {
+			try {
+				socket.close();
+			} catch (Exception e) {
 			}
 		}
 	}
 
-	private void send0(Serializable input) throws Exception {
+	private void send0(Serializable input, Socket socket) throws Exception {
 		JLG.debug("about to write input on the socket. input=" + input);
+		DataOutputStream out = new DataOutputStream(socket.getOutputStream());
 		protocol.getStreamSerializer().writeObject(out, input);
 		JLG.debug("input flush");
 	}
 
-	private void retrieveSocket() throws Exception {
-		if (clientSocket == null || clientSocket.isClosed()
-				|| !clientSocket.isBound() || !clientSocket.isConnected()) {
-			JLG.debug("clientSocket=" + clientSocket);
-			if (clientSocket != null) {
-				if (clientSocket.isClosed()) {
-					JLG.debug("clientSocket is closed.");
-				}
-				if (!clientSocket.isBound()) {
-					JLG.debug("clientSocket is unbound.");
-				}
-				if (!clientSocket.isConnected()) {
-					JLG.debug("clientSocket is not connected.");
-				}
-			}
-			createNewSocket();
-		}
-	}
-
-	private void createNewSocket() throws Exception {
+	private Socket createNewSocket() throws Exception {
 		JLG.debug("start new socket on " + hostname + ":" + port);
-		clientSocket = new Socket();
-		// clientSocket.setSoTimeout(1000);
-		// clientSocket.setReuseAddress(true);
-		clientSocket.connect(new InetSocketAddress(hostname, port));
-		try {
-			if (in != null) {
-				in.close();
-			}
-			if (out != null) {
-				out.close();
-			}
-		} catch (Exception e) {
-		}
-
-		in = new DataInputStream(clientSocket.getInputStream());
-		out = new DataOutputStream(clientSocket.getOutputStream());
-
+		Socket socket = new Socket();
+		// socket.setSoTimeout(1000);
+		// socket.setReuseAddress(true);
+		socket.connect(new InetSocketAddress(hostname, port));
 		JLG.debug("end new socket");
+		return socket;
 	}
 
 	public void releaseSocket() {
-		if (clientSocket != null) {
+		for (Socket socket : socketPool) {
 			try {
-				clientSocket.close();
-			} catch (IOException e) {
-				e.printStackTrace();
+				socket.close();
+			} catch (Exception e) {
 			}
 		}
 	}
-
-	public Socket getSocket() throws Exception {
-		retrieveSocket();
-		return clientSocket;
-	}
-
 }

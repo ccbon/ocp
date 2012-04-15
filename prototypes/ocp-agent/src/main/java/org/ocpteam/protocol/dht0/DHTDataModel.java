@@ -103,10 +103,11 @@ public class DHTDataModel extends DataSourceContainer implements IMapDataModel {
 			try {
 				int retry = 0;
 				while (true) {
+					Socket socket = null;
 					try {
 						ds().contactMap.getTcpClient(c).send(message);
-						Socket socket = ds().contactMap.getTcpClient(c)
-								.getSocket();
+						socket = ds().contactMap.getTcpClient(c)
+								.borrowSocket();
 						DataInputStream in = new DataInputStream(
 								socket.getInputStream());
 						while (true) {
@@ -121,6 +122,8 @@ public class DHTDataModel extends DataSourceContainer implements IMapDataModel {
 							JLG.debug("s=" + s);
 							set.add(s);
 						}
+						ds().contactMap.getTcpClient(c)
+								.returnSocket(socket);
 						break;
 					} catch (StreamCorruptedException e) {
 						retry++;
