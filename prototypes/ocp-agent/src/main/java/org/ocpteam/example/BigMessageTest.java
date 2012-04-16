@@ -26,20 +26,29 @@ public class BigMessageTest {
 			TCPClient c = new TCPClient("localhost", 12345, p);
 
 			Socket socket = c.borrowSocket();
+			int bufferSize = socket.getSendBufferSize();
+			JLG.debug("bufferSize=" + bufferSize);
 			DataInputStream in = new DataInputStream(socket.getInputStream());
 			DataOutputStream out = new DataOutputStream(
 					socket.getOutputStream());
 
 			// send a big message.
-			int n = 10;
+			int n = 10000;
 			out.writeInt(n);
-			for (int i = 0; i < n; i++) {
-				out.writeInt(i);
-			}
-
+			out.flush();
+			JLG.debug("big message sent.");
 			int nbr = in.readInt();
+			JLG.debug("new length received: " + nbr);
+
+			if (n != nbr) {
+				throw new Exception("length differs");
+			}
 			for (int i = 0; i < nbr; i++) {
+				out.writeInt(i);
+				out.flush();
+
 				int size = in.readInt();
+				JLG.debug("object length: " + size);
 				byte[] buffer = new byte[size];
 				in.read(buffer, 0, size);
 				Serializable s = JLG.deserialize(buffer);
@@ -54,19 +63,25 @@ public class BigMessageTest {
 }
 
 class MyProtocol extends Protocol {
-	
+
 	@Override
 	public void process(DataInputStream in, DataOutputStream out,
 			Socket clientSocket) throws Exception {
 		// read the first object
 		JLG.debug("about to read object");
 		int n = in.readInt();
+		JLG.debug("n = " + n);
 		out.writeInt(n);
+		out.flush();
+		JLG.debug("length sent");
 		for (int i = 0; i < n; i++) {
-			byte[] s = JLG.serialize(new MyObject(i));
+			int x = in.readInt();
+			byte[] s = JLG.serialize(new MyObject(x));
 			out.writeInt(s.length);
 			out.write(s);
-		}		
+			out.flush();
+			JLG.debug("object sent: " + x);
+		}
 		JLG.debug("end process");
 	}
 }
