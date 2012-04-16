@@ -23,6 +23,7 @@ public class ViewExplorerAction extends Action {
 		}
 	}
 
+	@Override
 	public void run() {
 		JLG.debug("View Explorer");
 		try {

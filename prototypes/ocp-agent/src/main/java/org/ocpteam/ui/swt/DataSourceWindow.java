@@ -101,6 +101,7 @@ public class DataSourceWindow extends ApplicationWindow implements
 		super(null);
 	}
 
+	@Override
 	public void init() {
 		this.dsf = app.getComponent(DataSourceFactory.class);
 		createActions();
@@ -236,7 +237,7 @@ public class DataSourceWindow extends ApplicationWindow implements
 		menuBar.add(fileMenu);
 
 		MenuManager menuManager = new MenuManager("New");
-		String[] protocols = (String[]) newDataSourceActionMap.keySet()
+		String[] protocols = newDataSourceActionMap.keySet()
 				.toArray(new String[newDataSourceActionMap.size()]);
 		Arrays.sort(protocols);
 		for (String protocol : protocols) {
@@ -255,6 +256,7 @@ public class DataSourceWindow extends ApplicationWindow implements
 
 		MenuManager editMenu = new MenuManager("&Edit");
 		editMenu.addMenuListener(new IMenuListener() {
+			@Override
 			public void menuAboutToShow(IMenuManager arg0) {
 				DataSourceWindow.this.refresh();
 			}
@@ -365,6 +367,7 @@ public class DataSourceWindow extends ApplicationWindow implements
 		if (explorerCTabItem == null) {
 			explorerCTabItem = new CTabItem(tabFolder, SWT.NONE);
 			explorerCTabItem.addDisposeListener(new DisposeListener() {
+				@Override
 				public void widgetDisposed(DisposeEvent arg0) {
 					JLG.debug("on dispose event");
 					explorerCTabItem = null;

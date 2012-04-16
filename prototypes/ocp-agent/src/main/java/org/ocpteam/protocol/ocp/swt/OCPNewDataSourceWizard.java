@@ -30,6 +30,7 @@ public class OCPNewDataSourceWizard extends Wizard implements Scenario {
 		addPage(new NetworkWizardPage());
 	}
 
+	@Override
 	public IWizardPage getNextPage(IWizardPage page) {
 		if (page.getName().equals("firstPage")) {
 			if (bIsFirstAgent) {
@@ -96,6 +97,7 @@ public class OCPNewDataSourceWizard extends Wizard implements Scenario {
 		return super.performCancel();
 	}
 
+	@Override
 	public boolean canFinish() {
 		IWizardPage[] pages = getPages();
 		for (int i = 0; i < pages.length; i++) {

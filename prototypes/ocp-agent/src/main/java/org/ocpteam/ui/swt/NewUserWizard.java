@@ -84,6 +84,7 @@ public class NewUserWizard extends Wizard {
 		return true;
 	}
 
+	@Override
 	public boolean canFinish() {
 		return bCanFinnish;
 	}

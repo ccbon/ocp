@@ -24,6 +24,7 @@ public class Link extends Content {
 		return targetKey;
 	}
 
+	@Override
 	public Key getKey(OCPAgent agent) {
 		return key;
 	}
@@ -32,6 +33,7 @@ public class Link extends Content {
 		return key;
 	}
 	
+	@Override
 	public byte[] getContent() throws Exception {
 		return ByteUtil.concat(key.getBytes(), targetKey.getBytes());
 	}

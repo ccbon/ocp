@@ -21,6 +21,7 @@ public class NewUserSucessWizardPage extends WizardPage {
 	 * Create contents of the wizard.
 	 * @param parent
 	 */
+	@Override
 	public void createControl(Composite parent) {
 		JLG.debug("p3: creating control");
 		Composite container = new Composite(parent, SWT.NULL);

@@ -28,6 +28,7 @@ public class AboutAction extends Action {
 		}
 	}
 
+	@Override
 	public void run() {
 		JLG.debug("About");
 		Display display = window.getShell().getDisplay();

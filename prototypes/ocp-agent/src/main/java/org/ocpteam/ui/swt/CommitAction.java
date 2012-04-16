@@ -20,6 +20,7 @@ public class CommitAction extends Action {
 	}
 
 
+	@Override
 	public void run() {
 		JLG.debug("Commit");
 		if (!(w.explorerComposite instanceof ExplorerComposite)) {

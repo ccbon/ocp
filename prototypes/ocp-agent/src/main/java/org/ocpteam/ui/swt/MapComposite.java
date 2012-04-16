@@ -35,6 +35,7 @@ public class MapComposite extends Composite {
 
 		table = new Table(this, SWT.BORDER | SWT.FULL_SELECTION);
 		table.addMenuDetectListener(new MenuDetectListener() {
+			@Override
 			public void menuDetected(MenuDetectEvent arg0) {
 			}
 		});
@@ -42,10 +43,10 @@ public class MapComposite extends Composite {
 			@Override
 			public void keyPressed(KeyEvent e) {
 				switch (e.keyCode) {
-				case (int) SWT.INSERT:
+				case SWT.INSERT:
 					(new SetKeyAction(dsw)).run();
 					break;
-				case (int) SWT.F5:
+				case SWT.F5:
 					refresh();
 					break;
 				case SWT.DEL:
@@ -82,7 +83,7 @@ public class MapComposite extends Composite {
 			table.removeAll();
 			Set<String> set = mdm.keySet();
 			// Create an array containing the elements in a set
-			String[] array = (String[]) set.toArray(new String[set.size()]);
+			String[] array = set.toArray(new String[set.size()]);
 			for (String key : array) {
 				TableItem tableItem = new TableItem(table, SWT.NONE);
 				String s = key;

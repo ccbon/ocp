@@ -36,7 +36,7 @@ public class OCPFileSystem extends DataSourceContainer implements IFileSystem {
 			checkout(tree, dirFile);
 		} else if (te.isFile()) {
 			File subFile = new File(parentDir, te.getName());
-			byte[] content = (byte[]) agent.getBytes(user, p);
+			byte[] content = agent.getBytes(user, p);
 			setBinaryFile(subFile, content);
 		}
 

@@ -23,6 +23,7 @@ public class NATTraversal extends Component implements INATTraversal {
 	private int port;
 	private Protocol protocol = PortMapping.Protocol.TCP;
 
+	@Override
 	public void setPort(int port) {
 		this.port = port;
 	}
@@ -35,6 +36,7 @@ public class NATTraversal extends Component implements INATTraversal {
 		}
 	}
 
+	@Override
 	public void map() {
 		// do that in a standalone thread.
 		new Thread(new Runnable() {
@@ -78,6 +80,7 @@ public class NATTraversal extends Component implements INATTraversal {
 		});
 	}
 
+	@Override
 	public void unmap() {
 		new Thread(new Runnable() {
 

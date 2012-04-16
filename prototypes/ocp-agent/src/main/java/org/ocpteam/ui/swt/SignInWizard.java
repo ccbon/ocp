@@ -57,6 +57,7 @@ public class SignInWizard extends Wizard {
 		return true;
 	}
 
+	@Override
 	public boolean canFinish() {
 		return p1.isPageComplete();
 	}

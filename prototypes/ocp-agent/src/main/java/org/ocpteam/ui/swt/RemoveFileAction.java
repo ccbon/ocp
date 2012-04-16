@@ -26,6 +26,7 @@ public class RemoveFileAction extends Action {
 	}
 
 
+	@Override
 	public void run() {
 		JLG.debug("Delete local file");
 		int selNbr = composite.localDirectoryTable.getSelection().length;

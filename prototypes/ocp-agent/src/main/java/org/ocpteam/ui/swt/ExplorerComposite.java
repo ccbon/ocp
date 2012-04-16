@@ -107,13 +107,13 @@ public class ExplorerComposite extends Composite {
 			public void keyPressed(KeyEvent e) {
 				switch (e.keyCode) {
 				case SWT.KEYPAD_CR:
-				case (int) '\r':
+				case '\r':
 					(new OpenFileAction(ExplorerComposite.this)).run();
 					break;
-				case (int) SWT.F2:
+				case SWT.F2:
 					(new RenameFileAction(ExplorerComposite.this)).run();
 					break;
-				case (int) SWT.F5:
+				case SWT.F5:
 					reloadLocalDirectoryTable();
 					break;
 				case SWT.DEL:
@@ -130,6 +130,7 @@ public class ExplorerComposite extends Composite {
 			}
 		});
 		localDirectoryTable.addMenuDetectListener(new MenuDetectListener() {
+			@Override
 			public void menuDetected(MenuDetectEvent arg0) {
 				JLG.debug("opening context menu");
 				final MenuManager myMenu = new MenuManager("xxx");
@@ -230,7 +231,7 @@ public class ExplorerComposite extends Composite {
 			public void keyPressed(KeyEvent e) {
 				switch (e.keyCode) {
 				case SWT.KEYPAD_CR:
-				case (int) '\r':
+				case '\r':
 					(new OpenRemoteFileAction(ExplorerComposite.this))
 							.run();
 					break;
@@ -256,6 +257,7 @@ public class ExplorerComposite extends Composite {
 			}
 		});
 		remoteDirectoryTable.addMenuDetectListener(new MenuDetectListener() {
+			@Override
 			public void menuDetected(MenuDetectEvent e) {
 				JLG.debug("opening context menu");
 				final MenuManager myMenu = new MenuManager("xxx");
@@ -475,10 +477,11 @@ public class ExplorerComposite extends Composite {
 			}
 			Collection<? extends IFile> set = currentDir.listFiles();
 			// Create an array containing the elements in a set
-			IFile[] array = (IFile[]) set
+			IFile[] array = set
 					.toArray(new IFile[set.size()]);
 			// Order
 			Arrays.sort(array, new Comparator<IFile>() {
+				@Override
 				public int compare(IFile f1, IFile f2) {
 					if (f1.isFile() && f2.isDirectory()) {
 						return 1;
@@ -559,6 +562,7 @@ public class ExplorerComposite extends Composite {
 		}
 
 		Arrays.sort(children, new Comparator<File>() {
+			@Override
 			public int compare(File f1, File f2) {
 				if (f1.isFile() && f2.isDirectory()) {
 					return 1;

@@ -27,6 +27,7 @@ public class PasteAction extends Action {
 		}
 	}
 
+	@Override
 	public void run() {
 		JLG.debug("Paste");
 		if (window.explorerComposite == null) {

@@ -98,7 +98,7 @@ public class TestAgent {
 			JLG.debug("str2 = " + str2);
 			Iterator<Pointer> it = user.getUserIndex(a2).iterator();
 			while (it.hasNext()) {
-				Pointer p = (Pointer) it.next();
+				Pointer p = it.next();
 				JLG.debug("pointer p = " + p);
 				String str3 = (String) a2.get(user, p);
 				JLG.debug("str3 = " + str3);
@@ -106,7 +106,7 @@ public class TestAgent {
 			a2.remove(user, pointer);
 			it = user.getUserIndex(a2).iterator();
 			while (it.hasNext()) {
-				Pointer p = (Pointer) it.next();
+				Pointer p = it.next();
 				JLG.debug("pointer p = " + p);
 				String str3 = (String) a2.get(user, p);
 				JLG.debug("str3 = " + str3);

@@ -100,43 +100,49 @@ public class DHTDataModel extends DataSourceContainer implements IMapDataModel {
 		DHTModule m = ds().getComponent(DHTModule.class);
 		InputFlow message = new InputFlow(m.keySet());
 		for (Contact c : ds().contactMap.getOtherContacts()) {
+			Socket socket = null;
 			try {
 				int retry = 0;
 				while (true) {
-					Socket socket = null;
 					try {
-						ds().contactMap.getTcpClient(c).send(message);
-						socket = ds().contactMap.getTcpClient(c)
-								.borrowSocket();
+						socket = ds().contactMap.getTcpClient(c).borrowSocket(
+								message);
 						DataInputStream in = new DataInputStream(
 								socket.getInputStream());
 						while (true) {
-
 							Serializable serializable = ds().protocol
 									.getStreamSerializer().readObject(in);
 							if (serializable instanceof EOMObject) {
-								JLG.debug("EOM detected");
 								break;
 							}
 							String s = (String) serializable;
 							JLG.debug("s=" + s);
 							set.add(s);
 						}
-						ds().contactMap.getTcpClient(c)
-								.returnSocket(socket);
+						ds().contactMap.getTcpClient(c).returnSocket(socket);
 						break;
 					} catch (StreamCorruptedException e) {
+						if (socket != null) {
+							socket.close();
+							socket = null;
+						}
 						retry++;
 						if (retry > 3) {
 							throw e;
 						}
-					} catch (SocketException e) {
-					} catch (EOFException e) {
-					} catch (SocketTimeoutException e) {
 					}
 				}
+			} catch (SocketException e) {
+			} catch (EOFException e) {
+			} catch (SocketTimeoutException e) {
 			} catch (NotAvailableContactException e) {
+			} finally {
+				if (socket != null) {
+					socket.close();
+					socket = null;
+				}
 			}
+
 		}
 		return set;
 	}

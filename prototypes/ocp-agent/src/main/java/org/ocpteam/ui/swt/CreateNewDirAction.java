@@ -24,6 +24,7 @@ public class CreateNewDirAction extends Action {
 	}
 
 
+	@Override
 	public void run() {
 		JLG.debug("Create New Directory");
 		composite.createNewLocalDir();

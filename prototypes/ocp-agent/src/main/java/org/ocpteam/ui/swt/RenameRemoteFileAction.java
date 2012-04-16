@@ -21,6 +21,7 @@ public class RenameRemoteFileAction extends Action {
 		setToolTipText("Rename");
 	}
 
+	@Override
 	public void run() {
 		JLG.debug("Rename");
 		final TableItem item = composite.remoteDirectoryTable.getSelection()[0];
@@ -31,10 +32,11 @@ public class RenameRemoteFileAction extends Action {
 		text.setSelection(0, name.length());
 		text.setFocus();
 		text.addKeyListener(new KeyAdapter() {
+			@Override
 			public void keyPressed(KeyEvent e) {
 				switch (e.keyCode) {
 				case SWT.KEYPAD_CR:
-				case (int) '\r':
+				case '\r':
 					if ((text.getText() != "")
 							&& (!name.equals(text.getText()))) {
 						composite.renameRemoteFile(name, text.getText());

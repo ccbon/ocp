@@ -73,7 +73,7 @@ public class Storage {
 		String result = "nodeMap=" + JLG.NL;
 		Iterator<Id> it = nodeSet.iterator();
 		while (it.hasNext()) {
-			Id id = (Id) it.next();
+			Id id = it.next();
 			result += id + JLG.NL;
 		}
 		result += "Content=" + JLG.NL;

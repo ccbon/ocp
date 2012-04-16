@@ -18,6 +18,7 @@ public class Data extends Content {
 				JLG.bytesToHex(signature), JLG.bytesToHex(content));
 	}
 
+	@Override
 	public byte[] getContent() throws Exception {
 		return content;
 	}

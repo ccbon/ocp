@@ -31,6 +31,7 @@ public class FirstWizardPage extends WizardPage {
 	 * 
 	 * @param parent
 	 */
+	@Override
 	public void createControl(Composite parent) {
 		Composite container = new Composite(parent, SWT.NULL);
 		//container.setTouchEnabled(true);
@@ -44,6 +45,7 @@ public class FirstWizardPage extends WizardPage {
 		serverHostnameText = new Text(container, SWT.BORDER);
 		serverHostnameText.setText("127.0.0.1");
 		serverHostnameText.addModifyListener(new ModifyListener() {
+			@Override
 			public void modifyText(ModifyEvent e) {
 				refresh();
 			}
@@ -56,6 +58,7 @@ public class FirstWizardPage extends WizardPage {
 		
 		defaultLocalDirText = new Text(container, SWT.BORDER);
 		defaultLocalDirText.addModifyListener(new ModifyListener() {
+			@Override
 			public void modifyText(ModifyEvent e) {
 				refresh();
 			}
@@ -69,6 +72,7 @@ public class FirstWizardPage extends WizardPage {
 		
 		portText = new Text(container, SWT.BORDER);
 		portText.addModifyListener(new ModifyListener() {
+			@Override
 			public void modifyText(ModifyEvent e) {
 				refresh();
 			}

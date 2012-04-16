@@ -158,7 +158,7 @@ public class PersistentFileMap implements Map<byte[], byte[]> {
 	public void putAll(Map<? extends byte[], ? extends byte[]> m) {
 		Iterator<? extends byte[]> it = m.keySet().iterator();
 		while (it.hasNext()) {
-			byte[] address = (byte[]) it.next();
+			byte[] address = it.next();
 			byte[] content = m.get(address);
 			put(address, content);
 		}

@@ -16,6 +16,7 @@ public class SetKeyAction extends Action {
 	}
 
 
+	@Override
 	public void run() {
 		JLG.debug("Set Key");
 		SetKeyWizard wizard = new SetKeyWizard(w);

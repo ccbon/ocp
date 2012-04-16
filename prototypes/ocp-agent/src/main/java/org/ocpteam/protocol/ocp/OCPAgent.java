@@ -65,7 +65,7 @@ public class OCPAgent extends Agent {
 
 	@Override
 	public DSPDataSource ds() {
-		return (DSPDataSource) super.ds();
+		return super.ds();
 	}
 
 	public byte[] ucrypt(String password, byte[] input) throws Exception,
@@ -175,6 +175,7 @@ public class OCPAgent extends Agent {
 		}
 	}
 
+	@Override
 	public Contact toContact() {
 		// convert the agent public information into a contact
 		OCPContact c = new OCPContact(this.id);
@@ -198,7 +199,7 @@ public class OCPAgent extends Agent {
 			if (storage != null) {
 				Iterator<Id> itn = storage.nodeSet.iterator();
 				while (itn.hasNext()) {
-					Id nodeId = (Id) itn.next();
+					Id nodeId = itn.next();
 					c.nodeIdSet.add(nodeId);
 				}
 			}
@@ -227,7 +228,7 @@ public class OCPAgent extends Agent {
 		synchronized (this) {
 			Iterator<Id> it = nodeMap.keySet().iterator();
 			while (it.hasNext()) {
-				Id id = (Id) it.next();
+				Id id = it.next();
 				OCPContact contact = nodeMap.get(id);
 				result += id + "->" + contact + JLG.NL;
 			}
@@ -672,7 +673,7 @@ public class OCPAgent extends Agent {
 		}
 		Iterator<Id> it = c.nodeIdSet.iterator();
 		while (it.hasNext()) {
-			Id id = (Id) it.next();
+			Id id = it.next();
 			JLG.debug("adding node to nodeMap");
 			nodeMap.put(id, c);
 		}
@@ -684,7 +685,7 @@ public class OCPAgent extends Agent {
 		try {
 			Iterator<Id> it = c.nodeIdSet.iterator();
 			while (it.hasNext()) {
-				Id id = (Id) it.next();
+				Id id = it.next();
 				JLG.debug("removing node to nodeMap");
 				nodeMap.remove(id);
 			}

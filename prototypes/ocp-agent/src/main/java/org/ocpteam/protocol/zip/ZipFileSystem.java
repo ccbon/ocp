@@ -63,7 +63,7 @@ public class ZipFileSystem extends DataSourceContainer implements IFileSystem {
 		}
 		List<File> list = new LinkedList<File>();
 		makeList(list, file);
-		File[] files = (File[]) list.toArray(new File[list.size()]);
+		File[] files = list.toArray(new File[list.size()]);
 		File parent = file.getParentFile();
 		ZipUtils.add(ds().getFile(), remoteDir, parent, files);
 		refresh();

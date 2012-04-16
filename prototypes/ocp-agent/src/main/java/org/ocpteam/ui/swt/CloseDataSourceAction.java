@@ -24,6 +24,7 @@ public class CloseDataSourceAction extends Action {
 		}
 	}
 
+	@Override
 	public void run() {
 		JLG.debug("Close DataSource");
 

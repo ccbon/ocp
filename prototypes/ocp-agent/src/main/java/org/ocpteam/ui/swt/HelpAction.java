@@ -23,6 +23,7 @@ public class HelpAction extends Action {
 		}
 	}
 
+	@Override
 	public void run() {
 		JLG.debug("Starting help in OS default browser...");
 			Program.launch(window.getHelpURL());

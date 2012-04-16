@@ -30,9 +30,11 @@ public class TreeEntry implements Serializable, IFile {
 	}
 	
 	
+	@Override
 	public boolean isFile() {
 		return type == FILE;
 	}
+	@Override
 	public String getName() {
 		return name;
 	}

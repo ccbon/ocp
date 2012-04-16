@@ -25,6 +25,7 @@ public class OpenRemoteFileAction extends Action {
 	}
 
 
+	@Override
 	public void run() {
 		JLG.debug("Open");
 		TableItem item = composite.remoteDirectoryTable.getSelection()[0];

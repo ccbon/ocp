@@ -32,6 +32,7 @@ public class NewUserCaptchaWizardPage extends WizardPage {
 	 * 
 	 * @param parent
 	 */
+	@Override
 	public void createControl(Composite parent) {
 		Composite container = new Composite(parent, SWT.NULL);
 
@@ -53,6 +54,7 @@ public class NewUserCaptchaWizardPage extends WizardPage {
 
 		captchaAnswerText = new Text(container, SWT.BORDER);
 		captchaAnswerText.addModifyListener(new ModifyListener() {
+			@Override
 			public void modifyText(ModifyEvent arg0) {
 				getWizard().getContainer().updateButtons();
 			}

@@ -19,6 +19,7 @@ public class HTTPServerHandler extends DataSourceContainer implements HttpHandle
 	private String root;
 	private Map<String, String> extMap;
 
+	@Override
 	public void init() {
 		this.root = ds().getProperty("http.htdocs", ".");
 		extMap = new HashMap<String, String>();

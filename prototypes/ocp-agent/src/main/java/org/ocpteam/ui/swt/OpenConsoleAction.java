@@ -24,6 +24,7 @@ public class OpenConsoleAction extends Action {
 		}
 	}
 
+	@Override
 	public void run() {
 		JLG.debug("Opening Console");
 		window.open();

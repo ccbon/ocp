@@ -89,7 +89,26 @@ public class DHTInterestingStress extends TopContainer {
 	}
 
 	public void start() throws Exception {
-
+		scheduler = Executors.newScheduledThreadPool(10);
+//		scheduler.execute(new Runnable() {
+//
+//			@Override
+//			public void run() {
+//				while (true) {
+//					ThreadMXBean tmx = ManagementFactory.getThreadMXBean();
+//					long[] ids = tmx.findDeadlockedThreads();
+//					if (ids != null) {
+//						ThreadInfo[] infos = tmx.getThreadInfo(ids, true, true);
+//						System.out
+//								.println("The following threads are deadlocked:");
+//						for (ThreadInfo ti : infos) {
+//							System.out.println(ti);
+//						}
+//					}
+//				}
+//
+//			}
+//		});
 		connectAll();
 
 		// run availability thread.
@@ -127,7 +146,7 @@ public class DHTInterestingStress extends TopContainer {
 			}
 		};
 
-		scheduler = Executors.newScheduledThreadPool(10);
+		
 		final ScheduledFuture<?> sf = scheduler.scheduleAtFixedRate(
 				insureAvailability, 1, 1, TimeUnit.SECONDS);
 		final ScheduledFuture<?> sf2 = scheduler.scheduleAtFixedRate(activity,

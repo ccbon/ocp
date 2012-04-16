@@ -18,6 +18,7 @@ public class RemoveRemoteFileAction extends Action {
 	}
 
 
+	@Override
 	public void run() {
 		JLG.debug("Delete remote file");
 		int selNbr = composite.remoteDirectoryTable.getSelection().length;

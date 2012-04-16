@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 
+import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPFile;
 import org.apache.commons.net.ftp.FTPFileFilter;
 import org.ocpteam.component.DataSourceContainer;
@@ -100,7 +101,7 @@ public class FTPFileSystem extends DataSourceContainer implements IFileSystem {
 			}
 		} else {
 			FileInputStream fis = new FileInputStream(file);
-			ftp.setFileType(org.apache.commons.net.ftp.FTPClient.BINARY_FILE_TYPE);
+			ftp.setFileType(FTP.BINARY_FILE_TYPE);
 			ftp.storeFile(remoteDir + file.getName(), fis);
 			fis.close();
 		}

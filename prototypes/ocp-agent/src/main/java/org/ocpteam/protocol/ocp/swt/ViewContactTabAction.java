@@ -30,6 +30,7 @@ public class ViewContactTabAction extends Action {
 		}
 	}
 
+	@Override
 	public void run() {
 		JLG.debug("View Contact");
 		addContactTab();
@@ -53,6 +54,7 @@ public class ViewContactTabAction extends Action {
 		contactCTabItem.setShowClose(true);
 		contactCTabItem.setText("Contacts");
 		contactCTabItem.addDisposeListener(new DisposeListener() {
+			@Override
 			public void widgetDisposed(DisposeEvent arg0) {
 				JLG.debug("dispose");
 			}

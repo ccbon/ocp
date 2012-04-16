@@ -30,6 +30,7 @@ public class FTPConfigWizard extends Wizard {
 		return true;
 	}
 
+	@Override
 	public boolean canFinish() {
 		IWizardPage[] pages = getPages();
 		for (int i = 0; i < pages.length; i++) {

@@ -16,6 +16,7 @@ public class SelectAllAction extends Action {
 		setToolTipText("Select All");
 	}
 
+	@Override
 	public void run() {
 		JLG.debug("Select All");
 		Control c = window.getShell().getDisplay().getFocusControl();

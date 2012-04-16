@@ -12,6 +12,7 @@ public class DebugAction extends Action {
 		setChecked(JLG.getDebugStatus());
 	}
 
+	@Override
 	public void run() {
 
 		if (isChecked()) {

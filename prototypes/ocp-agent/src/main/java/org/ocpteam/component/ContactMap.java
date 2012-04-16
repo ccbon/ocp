@@ -11,6 +11,7 @@ import java.util.Set;
 
 import org.ocpteam.entity.Contact;
 import org.ocpteam.entity.InputMessage;
+import org.ocpteam.exception.NotAvailableContactException;
 import org.ocpteam.misc.JLG;
 import org.ocpteam.network.TCPClient;
 import org.ocpteam.network.UDPClient;
@@ -70,6 +71,10 @@ public class ContactMap extends DataSourceContainer {
 	}
 
 	public Contact remove(String name) {
+		TCPClient tcpClient = tcpClientMap.get(name);
+		if (tcpClient != null) {
+			tcpClient.releaseSocket();
+		}
 		tcpClientMap.remove(name);
 		udpClientMap.remove(name);
 		return map.remove(name);
@@ -114,7 +119,7 @@ public class ContactMap extends DataSourceContainer {
 		JLG.debug("contactmap=" + this);
 		Contact[] result = new Contact[map.size() - 1];
 		int i = 0;
-		for (Contact c : (Contact[]) map.values().toArray(new Contact[map.size()])) {
+		for (Contact c : map.values().toArray(new Contact[map.size()])) {
 			if (c.isMyself()) {
 				continue;
 			}
@@ -137,6 +142,9 @@ public class ContactMap extends DataSourceContainer {
 	public TCPClient getTcpClient(Contact contact) throws Exception {
 		String name = contact.getName();
 		contact = this.get(name);
+		if (contact == null) {
+			throw new NotAvailableContactException();
+		}
 		if (!tcpClientMap.containsKey(name)) {
 			TCPClient tcpClient = new TCPClient(contact.getHost(), contact.getTcpPort(), ds().protocol);
 			tcpClientMap.put(name, tcpClient);

@@ -70,6 +70,7 @@ public class SFTPNewDataSourceWizard extends Wizard implements Scenario {
 	}
 
 
+	@Override
 	public boolean canFinish() {
 		return p1.isPageComplete();
 	}

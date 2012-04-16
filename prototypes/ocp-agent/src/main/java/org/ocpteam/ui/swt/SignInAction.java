@@ -24,6 +24,7 @@ public class SignInAction extends Action {
 		}
 	}
 
+	@Override
 	public void run() {
 		JLG.debug("Authentication User: display a wizard...");
 		Scenario scenario = null;

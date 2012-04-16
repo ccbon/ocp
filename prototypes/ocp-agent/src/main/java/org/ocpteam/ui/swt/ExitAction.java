@@ -26,6 +26,7 @@ public class ExitAction extends Action {
 		}
 	}
 
+	@Override
 	public void run() {
 		JLG.debug("Exit");
 		if (confirm()) {

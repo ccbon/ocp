@@ -43,6 +43,7 @@ public class SSHSignInWizardPage extends WizardPage {
 	 * 
 	 * @param parent
 	 */
+	@Override
 	public void createControl(Composite parent) {
 		Composite container = new Composite(parent, SWT.NULL);
 
@@ -56,6 +57,7 @@ public class SSHSignInWizardPage extends WizardPage {
 		sessionText = new Text(container, SWT.BORDER);
 		sessionText.setText("jlouis@localhost");
 		sessionText.addModifyListener(new ModifyListener() {
+			@Override
 			public void modifyText(ModifyEvent arg0) {
 				getWizard().getContainer().updateButtons();
 			}
@@ -176,6 +178,7 @@ public class SSHSignInWizardPage extends WizardPage {
 		passphraseText = new Text(grpPrivateKey, SWT.BORDER | SWT.PASSWORD);
 		passphraseText.setBounds(10, 82, 187, 19);
 		passwordText.addModifyListener(new ModifyListener() {
+			@Override
 			public void modifyText(ModifyEvent arg0) {
 				getWizard().getContainer().updateButtons();
 			}

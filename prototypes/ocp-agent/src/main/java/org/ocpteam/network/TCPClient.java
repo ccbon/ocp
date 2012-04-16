@@ -30,7 +30,7 @@ public class TCPClient {
 				.synchronizedList(new LinkedList<Socket>());
 	}
 
-	public synchronized Serializable request(Serializable input)
+	public Serializable request(Serializable input)
 			throws Exception {
 		Serializable output = null;
 		Socket socket = null;
@@ -53,7 +53,7 @@ public class TCPClient {
 		return output;
 	}
 
-	public synchronized Socket borrowSocket() throws Exception {
+	public Socket borrowSocket() throws Exception {
 		if (socketPool.isEmpty()) {
 			return createNewSocket();
 		} else {
@@ -62,7 +62,7 @@ public class TCPClient {
 		}
 	}
 
-	public synchronized void returnSocket(Socket socket) throws Exception {
+	public void returnSocket(Socket socket) throws Exception {
 		socketPool.add(socket);
 	}
 
@@ -97,24 +97,23 @@ public class TCPClient {
 		return output;
 	}
 
-	public synchronized void send(Serializable input) throws Exception {
+	public Socket borrowSocket(Serializable input) throws Exception {
 		Socket socket = null;
 		try {
 			socket = borrowSocket();
 			send0(input, socket);
 		} catch (Exception e) {
+			destroy(socket);
 			if (e instanceof SocketException || e instanceof EOFException
 					|| e instanceof SocketTimeoutException) {
 				JLG.debug("try again (e=" + e + ")");
-				destroy(socket);
 				socket = createNewSocket();
 				send0(input, socket);
 			} else {
 				throw e;
 			}
-		} finally {
-			returnSocket(socket);
 		}
+		return socket;
 	}
 
 	private void destroy(Socket socket) {

@@ -31,6 +31,7 @@ public class NewUserFormWizardPage extends WizardPage {
 	 * Create contents of the wizard.
 	 * @param parent
 	 */
+	@Override
 	public void createControl(Composite parent) {
 		Composite container = new Composite(parent, SWT.NULL);
 
@@ -42,6 +43,7 @@ public class NewUserFormWizardPage extends WizardPage {
 		
 		usernameText = new Text(container, SWT.BORDER);
 		usernameText.addModifyListener(new ModifyListener() {
+			@Override
 			public void modifyText(ModifyEvent arg0) {
 				getWizard().getContainer().updateButtons();
 			}
@@ -54,6 +56,7 @@ public class NewUserFormWizardPage extends WizardPage {
 		
 		passwordText = new Text(container, SWT.BORDER | SWT.PASSWORD);
 		passwordText.addModifyListener(new ModifyListener() {
+			@Override
 			public void modifyText(ModifyEvent arg0) {
 				getWizard().getContainer().updateButtons();
 			}

@@ -22,6 +22,7 @@ public class SignOutAction extends Action {
 		}
 	}
 
+	@Override
 	public void run() {
 		JLG.debug("Disconnect a user...");
 		try {

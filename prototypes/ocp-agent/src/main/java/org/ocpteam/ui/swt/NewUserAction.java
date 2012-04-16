@@ -23,6 +23,7 @@ public class NewUserAction extends Action {
 		}
 	}
 
+	@Override
 	public void run() {
 		JLG.debug("Creating a new User: display a wizard...");
 		NewUserWizard.start(window);

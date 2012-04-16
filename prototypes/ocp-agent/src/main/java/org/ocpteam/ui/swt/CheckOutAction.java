@@ -18,6 +18,7 @@ public class CheckOutAction extends Action {
 		setToolTipText("Check Out");
 	}
 
+	@Override
 	public void run() {
 		JLG.debug("Check Out");
 		if (!(w.explorerComposite instanceof ExplorerComposite)) {

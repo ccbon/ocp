@@ -162,7 +162,7 @@ public class Client extends DataSourceContainer implements IClient {
 		JLG.debug("contact queue size: " + contactQueue.size());
 		Contact contact = null;
 		while ((!contactQueue.isEmpty()) && (output == null)) {
-			contact = (Contact) contactQueue.poll();
+			contact = contactQueue.poll();
 			JLG.debug("contact: " + contact);
 			try {
 				output = request(contact, input);

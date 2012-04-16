@@ -77,7 +77,7 @@ public class SFTPFileSystem extends DataSourceContainer implements IFileSystem {
 	@Override
 	public IFile getFile(String dir) throws Exception {
 		@SuppressWarnings("unchecked")
-		Vector<LsEntry> v = (Vector<LsEntry>) agent.channel.ls(dir);
+		Vector<LsEntry> v = agent.channel.ls(dir);
 		SFTPFileImpl result = new SFTPFileImpl();
 		for (int i = 0; i < v.size(); i++) {
 			String name = v.get(i).getFilename();

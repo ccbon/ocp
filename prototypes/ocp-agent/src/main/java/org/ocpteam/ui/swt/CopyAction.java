@@ -32,6 +32,7 @@ public class CopyAction extends Action {
 		}
 	}
 
+	@Override
 	public void run() {
 		JLG.debug("Copy");
 		// copy only from the local directory

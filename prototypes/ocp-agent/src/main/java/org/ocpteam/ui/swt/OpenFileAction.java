@@ -25,6 +25,7 @@ public class OpenFileAction extends Action {
 	}
 
 
+	@Override
 	public void run() {
 		JLG.debug("Open");
 		TableItem item = composite.localDirectoryTable.getSelection()[0];

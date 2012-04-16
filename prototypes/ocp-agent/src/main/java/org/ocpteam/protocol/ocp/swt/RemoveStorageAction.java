@@ -25,6 +25,7 @@ public class RemoveStorageAction extends Action {
 		}
 	}
 
+	@Override
 	public void run() {
 		JLG.debug("Removing storage...");
 		if (QuickMessage.confirm(window.getShell(), "This will destroy the storage of this agent. Are you sure ?")) {

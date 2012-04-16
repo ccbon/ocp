@@ -43,6 +43,7 @@ public class FTPNewDataSourceWizard extends Wizard implements Scenario {
 		return super.performCancel();
 	}
 
+	@Override
 	public boolean canFinish() {
 		IWizardPage[] pages = getPages();
 		for (int i = 0; i < pages.length; i++) {
