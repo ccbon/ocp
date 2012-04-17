@@ -4,14 +4,23 @@ import java.security.MessageDigest;
 import java.security.SecureRandom;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.Map;
+import java.util.NavigableMap;
+import java.util.Queue;
 import java.util.Set;
+import java.util.TreeMap;
 
+import org.ocpteam.component.ContactMap;
 import org.ocpteam.component.DSPDataSource;
+import org.ocpteam.entity.Contact;
 import org.ocpteam.entity.Context;
+import org.ocpteam.entity.Node;
 import org.ocpteam.interfaces.IDataModel;
 import org.ocpteam.misc.Id;
 import org.ocpteam.misc.JLG;
+import org.ocpteam.protocol.ocp.OCPContact;
 
 /**
  * DHT is a distributed hashtable, with no redundancy and no node detachment
@@ -30,9 +39,11 @@ public class DHT1DataSource extends DSPDataSource {
 	private DHT1DataModel dm;
 	private Id nodeId;
 	private MessageDigest md;
+	protected DHT1ContactMap contactMap;
 
 	public DHT1DataSource() throws Exception {
 		super();
+		replaceComponent(ContactMap.class, new DHT1ContactMap());
 		addComponent(IDataModel.class, new DHT1DataModel());
 		addComponent(DHT1Module.class);
 	}
@@ -43,7 +54,7 @@ public class DHT1DataSource extends DSPDataSource {
 		map = Collections.synchronizedMap(new HashMap<String, String>());
 		dm = (DHT1DataModel) getComponent(IDataModel.class);
 		nodeId = null;
-		contactClass = DHT1Contact.class;
+		contactMap = (DHT1ContactMap) getComponent(ContactMap.class);
 	}
 
 	@Override
@@ -86,19 +97,66 @@ public class DHT1DataSource extends DSPDataSource {
 		return map.get(key);
 	}
 
-	public void remove(String key) {
+	public void destroy(String key) {
 		map.remove(key);
 	}
 
 	public Set<String> keySet() {
 		return map.keySet();
 	}
-	
+
 	@Override
-	public DHT1Contact toContact() throws Exception {
-		DHT1Contact c = (DHT1Contact) super.toContact();
-		c.nodeId = nodeId;
+	public Contact toContact() throws Exception {
+		Contact c = super.toContact();
+		c.setDomain(new Node(nodeId));
 		return c;
+	}
+
+	public boolean isResponsible(String key) throws Exception {
+		Id id = getNodeId(key);
+		return id.equals(nodeId);
+	}
+
+	private Id getNodeId(String key) throws Exception {
+		Id hash = hash(key.getBytes());
+		Id nodeId = contactMap.getNodeMap().floorKey(hash);
+		if (nodeId == null) {
+			nodeId = contactMap.getNodeMap().lastKey();
+		}
+		if (nodeId == null) {
+			throw new Exception("nodeMap is not populated at all");
+		}
+		return nodeId;
+	}
+
+	public Queue<Contact> getContactQueue(String skey) throws Exception {
+		Id key = hash(skey.getBytes());
+		Queue<Contact> contactQueue = new LinkedList<Contact>();
+		NavigableMap<Id, Contact> nodeMap = new TreeMap<Id, Contact>(
+				contactMap.getNodeMap());
+		if (nodeMap.containsKey(key)) {
+			contactQueue.offer(nodeMap.get(key));
+		}
+
+		NavigableMap<Id, Contact> s = nodeMap.headMap(key, false);
+		Iterator<Id> it = s.navigableKeySet().descendingIterator();
+		while (it.hasNext()) {
+			Id nodeId = it.next();
+			Contact contact = s.get(nodeId);
+			if (!contactQueue.contains(contact)) {
+				contactQueue.offer(contact);
+			}
+		}
+		s = nodeMap.tailMap(key, false);
+		it = s.navigableKeySet().descendingIterator();
+		while (it.hasNext()) {
+			Id nodeId = it.next();
+			Contact contact = s.get(nodeId);
+			if (!contactQueue.contains(contact)) {
+				contactQueue.offer(contact);
+			}
+		}
+		return contactQueue;
 	}
 
 }

@@ -27,9 +27,10 @@ public class DHT1Module extends Module {
 					throws Exception {
 				JLG.debug("storing...");
 				DHT1DataSource ds = (DHT1DataSource) session.ds();
+				DHT1DataModel dm = (DHT1DataModel) ds.getContext().getDataModel();
 				String key = (String) objects[0];
 				String value = (String) objects[1];
-				ds.store(key, value);
+				dm.set(key, value);
 				return null;
 			}
 
@@ -68,7 +69,7 @@ public class DHT1Module extends Module {
 				JLG.debug("remove...");
 				DHT1DataSource ds = (DHT1DataSource) session.ds();
 				String key = (String) objects[0];
-				ds.remove(key);
+				ds.destroy(key);
 				return null;
 			}
 

@@ -2,6 +2,8 @@ package org.ocpteam.entity;
 
 import java.io.Serializable;
 
+import org.ocpteam.interfaces.IDomain;
+
 
 /**
  * A Contact reflects the public information that an agent can gives to the
@@ -16,6 +18,7 @@ public class Contact implements Serializable {
 	private String host;
 	private int tcpPort;
 	private int udpPort;
+	private IDomain domain;
 
 	private boolean bIsMyself = false;
 	
@@ -80,6 +83,14 @@ public class Contact implements Serializable {
 
 	public void setUdpPort(int udpPort) {
 		this.udpPort = udpPort;
+	}
+
+	public IDomain getDomain() {
+		return domain;
+	}
+
+	public void setDomain(IDomain domain) {
+		this.domain = domain;
 	}
 
 

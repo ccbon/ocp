@@ -36,13 +36,12 @@ public class DHT1DataModel extends DataSourceContainer implements IMapDataModel 
 	public void set(String key, String value) throws Exception {
 		// strategy: find the contacts responsible for the key then send the set
 		// order to the right contact
-		Queue<Contact> contacts = getContactQueue(key);
+		if (ds().isResponsible(key)) {
+			ds().store(key, value);
+		}
+		Queue<Contact> contactQueue = ds().getContactQueue(key);
 		DHT1Module m = ds().getComponent(DHT1Module.class);
-		ds().client.requestByPriority(contacts, new InputMessage(m.store(), key, value));
-	}
-
-	private Queue<Contact> getContactQueue(String key) {
-		return null;
+		ds().client.requestByPriority(contactQueue, new InputMessage(m.store(), key, value));
 	}
 
 	@Override
@@ -91,7 +90,7 @@ public class DHT1DataModel extends DataSourceContainer implements IMapDataModel 
 	@Override
 	public void remove(String key) throws Exception {
 		// strategy: send to all node the remove request.
-		ds().remove(key);
+		ds().destroy(key);
 		DHT1Module m = ds().getComponent(DHT1Module.class);
 		ds().client.sendAll(new InputMessage(m.remove(), key));
 		ds().client.waitForCompletion();

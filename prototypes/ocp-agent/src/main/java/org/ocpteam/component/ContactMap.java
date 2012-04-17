@@ -61,16 +61,8 @@ public class ContactMap extends DataSourceContainer {
 		return map.get(name);
 	}
 
-	public Contact put(String name, Contact contact) {
-		JLG.debug("adding contact to contactmap: " + contact);
-		if (contact.getName().equals(ds().getName())) {
-			// myself is already added by addMyself...
-			return contact;
-		}
-		return map.put(name, contact);
-	}
-
-	public Contact remove(String name) {
+	public Contact remove(Contact contact) {
+		String name = contact.getName();
 		TCPClient tcpClient = tcpClientMap.get(name);
 		if (tcpClient != null) {
 			tcpClient.releaseSocket();
@@ -79,27 +71,19 @@ public class ContactMap extends DataSourceContainer {
 		udpClientMap.remove(name);
 		return map.remove(name);
 	}
-	
-	public Contact remove(Contact contact) {
-		return remove(contact.getName());
-	}
 
 	public boolean isEmpty() {
 		return map.isEmpty();
 	}
 
-	public boolean containsValue(Contact contact) {
-		return map.containsValue(contact);
-	}
-
 	public Contact add(Contact c) throws Exception {
-		return this.put(c.getName(), c);
+		return map.put(c.getName(), c);
 	}
 
 	public void addMyself() throws Exception {
 		Contact myself = ds().toContact();
 		myself.setMyself(true);
-		map.put(myself.getName(), myself);
+		add(myself);
 	}
 
 	public int size() {
