@@ -7,20 +7,16 @@ import java.io.StreamCorruptedException;
 import java.net.Socket;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
-import java.util.Collection;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Set;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
 
 import org.ocpteam.component.DataSourceContainer;
 import org.ocpteam.entity.Contact;
 import org.ocpteam.entity.EOMObject;
 import org.ocpteam.entity.InputFlow;
 import org.ocpteam.entity.InputMessage;
+import org.ocpteam.entity.Response;
 import org.ocpteam.exception.NotAvailableContactException;
 import org.ocpteam.interfaces.IMapDataModel;
 import org.ocpteam.misc.JLG;
@@ -46,45 +42,14 @@ public class DHT1DataModel extends DataSourceContainer implements IMapDataModel 
 
 	@Override
 	public String get(String key) throws Exception {
-		// strategy: retrieve the first one available (locally first)
-		String value = ds().retrieve(key);
-		if (value != null) {
-			return value;
+		// strategy: if responsible look locally else ask to the right contact
+		if (ds().isResponsible(key)) {
+			ds().retrieve(key);
 		}
-		// try to find a node with contains the key.
+		Queue<Contact> contactQueue = ds().getContactQueue(key);
 		DHT1Module m = ds().getComponent(DHT1Module.class);
-		final InputMessage message = new InputMessage(m.retrieve(), key, value);
-		ExecutorService exe = ds().client.getExecutor();
-		Collection<Callable<String>> tasks = new LinkedList<Callable<String>>();
-		for (final Contact c : ds().contactMap.getOtherContacts()) {
-			tasks.add(new Callable<String>() {
-
-				@Override
-				public String call() throws Exception {
-					try {
-						JLG.debug("request");
-						String value = (String) ds().client.request(c, message);
-						JLG.debug("request end");
-						if (value != null) {
-							return value;
-						}
-					} catch (NotAvailableContactException e) {
-					}
-					throw new Exception();
-				}
-			});
-		}
-		if (tasks.isEmpty()) {
-			return null;
-		}
-		try {
-			value = exe.invokeAny(tasks);
-		} catch (InterruptedException e) {
-		} catch (ExecutionException e) {
-		} catch (NullPointerException e) {
-		}
-		return value;
-
+		Response r = ds().client.requestByPriority(contactQueue, new InputMessage(m.retrieve(), key));
+		return (String) r.getObject();
 	}
 
 	@Override

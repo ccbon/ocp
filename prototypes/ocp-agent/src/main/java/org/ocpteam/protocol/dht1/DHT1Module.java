@@ -49,8 +49,9 @@ public class DHT1Module extends Module {
 					throws Exception {
 				JLG.debug("retrieving...");
 				DHT1DataSource ds = (DHT1DataSource) session.ds();
+				DHT1DataModel dm = (DHT1DataModel) ds.getContext().getDataModel();
 				String key = (String) objects[0];
-				return ds.retrieve(key);
+				return dm.get(key);
 			}
 
 			@Override

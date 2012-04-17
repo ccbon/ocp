@@ -1,7 +1,5 @@
 package org.ocpteam.protocol.dht1;
 
-import java.util.Collections;
-import java.util.Map;
 import java.util.NavigableMap;
 import java.util.TreeMap;
 
@@ -16,7 +14,7 @@ public class DHT1ContactMap extends ContactMap {
 	@Override
 	public void init() throws Exception {
 		super.init();
-		nodeMap = (NavigableMap<Id, Contact>) Collections.synchronizedSortedMap(new TreeMap<Id, Contact>());
+		nodeMap = (NavigableMap<Id, Contact>) new TreeMap<Id, Contact>();
 	}
 	
 	@Override

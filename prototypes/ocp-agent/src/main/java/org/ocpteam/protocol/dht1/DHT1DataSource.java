@@ -20,7 +20,6 @@ import org.ocpteam.entity.Node;
 import org.ocpteam.interfaces.IDataModel;
 import org.ocpteam.misc.Id;
 import org.ocpteam.misc.JLG;
-import org.ocpteam.protocol.ocp.OCPContact;
 
 /**
  * DHT is a distributed hashtable, with no redundancy and no node detachment
