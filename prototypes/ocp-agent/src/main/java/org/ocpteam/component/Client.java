@@ -146,19 +146,16 @@ public class Client extends DataSourceContainer implements IClient {
 		if (contactMap.isEmpty()) {
 			findSponsor();
 		}
-		Response response = request(contactMap.makeContactQueue(), string);
+		Response response = requestByPriority(contactMap.makeContactQueue(), string);
 		if (response == null) {
 			throw new NoNetworkException();
 		}
 		return response;
 	}
 
-	public Response request(Queue<Contact> contactQueue, Serializable input)
+	public Response requestByPriority(Queue<Contact> contactQueue, Serializable input)
 			throws Exception {
 		Serializable output = null;
-		if (contactMap.isEmpty()) {
-			findSponsor();
-		}
 		JLG.debug("contact queue size: " + contactQueue.size());
 		Contact contact = null;
 		while ((!contactQueue.isEmpty()) && (output == null)) {
@@ -374,4 +371,6 @@ public class Client extends DataSourceContainer implements IClient {
 			remainingTasks = 0;
 		}
 	}
+
+
 }

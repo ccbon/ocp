@@ -117,7 +117,12 @@ public class ContactMap extends DataSourceContainer {
 
 	public Contact[] getOtherContacts() {
 		JLG.debug("contactmap=" + this);
-		Contact[] result = new Contact[map.size() - 1];
+		Contact[] result = null;
+		if (containsMyself()) {
+			result = new Contact[map.size() - 1];
+		} else {
+			result = new Contact[map.size()];
+		}
 		int i = 0;
 		for (Contact c : map.values().toArray(new Contact[map.size()])) {
 			if (c.isMyself()) {
@@ -127,6 +132,15 @@ public class ContactMap extends DataSourceContainer {
 			i++;
 		}
 		return result;
+	}
+
+	public boolean containsMyself() {
+		for (Contact c : map.values().toArray(new Contact[map.size()])) {
+			if (c.isMyself()) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	public void removeAll() {

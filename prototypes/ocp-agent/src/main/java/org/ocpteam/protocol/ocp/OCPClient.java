@@ -44,7 +44,7 @@ public class OCPClient extends Client implements IAuthenticable {
 	}
 
 	public Captcha askCaptcha(Queue<Contact> contactQueue) throws Exception {
-		Response r = request(contactQueue, OCPProtocol.GENERATE_CAPTCHA.getBytes());
+		Response r = requestByPriority(contactQueue, OCPProtocol.GENERATE_CAPTCHA.getBytes());
 		Captcha captcha = (Captcha) JLG.deserialize((byte[]) r.getObject());
 		JLG.debug("captcha content = " + captcha);
 		// if (!captcha.checkSignature(r.getContact())) {
@@ -66,19 +66,19 @@ public class OCPClient extends Client implements IAuthenticable {
 		// store an object at given address and put the content.
 		byte[] request = OCPProtocol.message(OCPProtocol.CREATE_OBJECT,
 				address.getBytes(), content);
-		Response response = request(contactQueue, request);
+		Response response = requestByPriority(contactQueue, request);
 		response.checkForError();
 	}
 
 	public byte[] getUser(Id key) throws Exception {
-		Response r = request(agent.makeContactQueue(key),
+		Response r = requestByPriority(agent.makeContactQueue(key),
 				OCPProtocol.message(OCPProtocol.GET_USER, key.getBytes()));
 		r.checkForError();
 		return (byte[]) r.getObject();
 	}
 
 	public Content getFromAddress(Address address) throws Exception {
-		Response r = request(agent.makeContactQueue(address),
+		Response r = requestByPriority(agent.makeContactQueue(address),
 				OCPProtocol.message(OCPProtocol.GET_ADDRESS, address.getBytes()));
 		r.checkForError();
 		if (new String((byte[]) r.getObject()).equals(new String(
@@ -90,7 +90,7 @@ public class OCPClient extends Client implements IAuthenticable {
 
 	public void remove(Address address, byte[] addressSignature)
 			throws Exception {
-		Response r = request(agent.makeContactQueue(address), OCPProtocol.message(
+		Response r = requestByPriority(agent.makeContactQueue(address), OCPProtocol.message(
 				OCPProtocol.REMOVE_ADDRESS, address, addressSignature));
 		r.checkForError();
 	}

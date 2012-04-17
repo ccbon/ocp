@@ -55,14 +55,13 @@ public abstract class DSPDataSource extends DataSource {
 		JLG.debug("network properties: " + JLG.propertiesToString(network));
 		readNetworkConfig();
 		
-		
+		client.askForContact();
 
 		if (getProperty("server", "yes").equals("yes")) {
 			JLG.debug("starting the server");
 			configureServer(server);
 			server.start();
 			contactMap.addMyself();
-			client.askForContact();
 			client.declareContact();
 		}
 	}
