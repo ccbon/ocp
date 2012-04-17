@@ -1,6 +1,5 @@
 package org.ocpteam.interfaces;
 
-import org.ocpteam.entity.Contact;
 
 
 /**
@@ -27,10 +26,4 @@ public interface IAgent {
 	 * 
 	 */
 	boolean isFirstAgent();
-	
-	
-	/**
-	 * @return a contact containing all the agent public information.
-	 */
-	public Contact toContact();
 }

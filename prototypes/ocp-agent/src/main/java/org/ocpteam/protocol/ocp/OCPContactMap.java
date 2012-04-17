@@ -33,7 +33,7 @@ public class OCPContactMap extends ContactMap {
 	public void addMyself() throws Exception {
 		super.addMyself();
 		OCPAgent agent = (OCPAgent) ds().getComponent(Agent.class);
-		OCPContact contact = (OCPContact) agent.toContact();
+		OCPContact contact = (OCPContact) ds().toContact();
 		if (contact.nodeIdSet.size() == 0) {
 			throw new Exception("contact without node.");
 		}

@@ -1,5 +1,7 @@
 package org.ocpteam.protocol.ocp;
 
+import java.util.Iterator;
+
 import org.ocpteam.component.Agent;
 import org.ocpteam.component.Authentication;
 import org.ocpteam.component.Client;
@@ -8,7 +10,10 @@ import org.ocpteam.component.DSPDataSource;
 import org.ocpteam.component.NaivePersistentMap;
 import org.ocpteam.component.Protocol;
 import org.ocpteam.component.Server;
+import org.ocpteam.entity.Contact;
 import org.ocpteam.interfaces.IPersistentMap;
+import org.ocpteam.misc.Id;
+import org.ocpteam.misc.JLG;
 
 public class OCPDataSource extends DSPDataSource {
 
@@ -31,6 +36,7 @@ public class OCPDataSource extends DSPDataSource {
 	public void init() throws Exception {
 		super.init();
 		agent = (OCPAgent) getComponent(Agent.class);
+		contactClass = OCPContact.class;
 	}
 
 	@Override
@@ -65,6 +71,24 @@ public class OCPDataSource extends DSPDataSource {
 			return ((OCPAgent) getComponent(Agent.class)).id.toString();
 		}
 		return super.getName();
+	}
+
+	@Override
+	public Contact toContact() throws Exception {
+		// convert the agent public information into a contact
+		OCPContact c = (OCPContact) super.toContact();
+		setName(agent.id.toString());
+		c.publicKey = agent.keyPair.getPublic().getEncoded();
+		// add the listener url and node id information
+		if (agent.storage != null) {
+			Iterator<Id> itn = agent.storage.nodeSet.iterator();
+			while (itn.hasNext()) {
+				Id nodeId = itn.next();
+				c.nodeIdSet.add(nodeId);
+			}
+		}
+		JLG.debug("toContact: " + c);
+		return c;
 	}
 
 }

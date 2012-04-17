@@ -18,9 +18,8 @@ public class OCPContact extends Contact {
 	public SortedSet<Id> nodeIdSet;
 	
 
-	public OCPContact(Id id) {
+	public OCPContact() {
 		super();
-		setName(id.toString());
 		nodeIdSet = Collections.synchronizedSortedSet(new TreeSet<Id>());
 	}
 

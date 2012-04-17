@@ -97,7 +97,7 @@ public class ContactMap extends DataSourceContainer {
 	}
 
 	public void addMyself() throws Exception {
-		Contact myself = ds().getComponent(Agent.class).toContact();
+		Contact myself = ds().toContact();
 		myself.setMyself(true);
 		map.put(myself.getName(), myself);
 	}

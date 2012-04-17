@@ -204,7 +204,7 @@ public class Client extends DataSourceContainer implements IClient {
 	}
 
 	public void declareContact() throws Exception {
-		Contact contact = getAgent().toContact();
+		Contact contact = ds().toContact();
 		DSPModule m = ds().getComponent(DSPModule.class);
 		JLG.debug(ds().getName() + " declares contact: " + contact);
 		sendAll(new InputMessage(m.declareContact(), contact));

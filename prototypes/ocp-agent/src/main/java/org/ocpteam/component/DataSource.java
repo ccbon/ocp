@@ -2,15 +2,18 @@ package org.ocpteam.component;
 
 import java.io.File;
 import java.net.URI;
+import java.util.Iterator;
 import java.util.Properties;
 import java.util.ResourceBundle;
 
 import org.ocpteam.core.IComponent;
 import org.ocpteam.core.IContainer;
 import org.ocpteam.core.TopContainer;
+import org.ocpteam.entity.Contact;
 import org.ocpteam.entity.Context;
 import org.ocpteam.interfaces.IConnect;
 import org.ocpteam.interfaces.IDocument;
+import org.ocpteam.interfaces.IListener;
 import org.ocpteam.misc.JLG;
 
 public abstract class DataSource extends TopContainer implements IComponent,
@@ -36,6 +39,13 @@ public abstract class DataSource extends TopContainer implements IComponent,
 	protected Context context;
 	private boolean bIsConnected;
 	private String name;
+	protected Class<? extends Contact> contactClass;
+	
+	@Override
+	public void init() throws Exception {
+		super.init();
+		contactClass = Contact.class;
+	}
 
 	public abstract String getProtocolName();
 
@@ -168,5 +178,33 @@ public abstract class DataSource extends TopContainer implements IComponent,
 	public String getName() {
 		return name;
 	}
+	
+	public Contact toContact() throws Exception {
+		// convert the agent public information into a contact
+		Contact c = contactClass.newInstance();
+		if (getName() == null) {
+			setName("ds_" + JLG.random(10000000));
+		}
+		c.setName(getName());
+		c.setHost("localhost");
+		// add the listener url and node id information
+		if (usesComponent(Server.class)) {
+			Iterator<IListener> it = getComponent(Server.class).getListeners().iterator();
+			while (it.hasNext()) {
+				IListener l = it.next();
+				if (l instanceof TCPListener) {
+					int port = l.getUrl().getPort();
+					c.setTcpPort(port);
+				}
+				if (l instanceof UDPListener) {
+					int port = l.getUrl().getPort();
+					c.setUdpPort(port);
+				}
+			}
+		}
+
+		return c;
+	}
+
 
 }

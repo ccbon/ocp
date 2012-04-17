@@ -64,8 +64,7 @@ public class DSPModule extends Module {
 			public Serializable run(Session session, Serializable[] objects)
 					throws Exception {
 				JLG.debug("get contact: ");
-				Agent agent = session.ds().getComponent(Agent.class);
-				return agent.toContact();
+				return session.ds().toContact();
 			}
 
 			@Override

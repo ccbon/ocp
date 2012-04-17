@@ -27,11 +27,8 @@ import org.ocpteam.component.Agent;
 import org.ocpteam.component.Client;
 import org.ocpteam.component.ContactMap;
 import org.ocpteam.component.DSPDataSource;
-import org.ocpteam.component.TCPListener;
-import org.ocpteam.component.UDPListener;
 import org.ocpteam.entity.Contact;
 import org.ocpteam.entity.User;
-import org.ocpteam.interfaces.IListener;
 import org.ocpteam.misc.ByteUtil;
 import org.ocpteam.misc.Cache;
 import org.ocpteam.misc.Id;
@@ -175,40 +172,6 @@ public class OCPAgent extends Agent {
 		}
 	}
 
-	@Override
-	public Contact toContact() {
-		// convert the agent public information into a contact
-		OCPContact c = new OCPContact(this.id);
-		c.setHost("localhost");
-		c.publicKey = this.keyPair.getPublic().getEncoded();
-		// add the listener url and node id information
-		if (getServer() != null) {
-			JLG.debug("server:" + getServer());
-			Iterator<IListener> it = getServer().getListeners().iterator();
-			while (it.hasNext()) {
-				IListener l = it.next();
-				if (l instanceof TCPListener) {
-					int port = l.getUrl().getPort();
-					c.setTcpPort(port);
-				}
-				if (l instanceof UDPListener) {
-					int port = l.getUrl().getPort();
-					c.setUdpPort(port);
-				}
-			}
-			if (storage != null) {
-				Iterator<Id> itn = storage.nodeSet.iterator();
-				while (itn.hasNext()) {
-					Id nodeId = itn.next();
-					c.nodeIdSet.add(nodeId);
-				}
-			}
-		} else {
-			JLG.debug("no server");
-		}
-		JLG.debug("toContact: " + c);
-		return c;
-	}
 
 	@Override
 	public String toString() {

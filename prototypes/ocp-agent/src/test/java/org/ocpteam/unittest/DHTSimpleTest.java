@@ -98,7 +98,7 @@ public class DHTSimpleTest {
 			assertEquals(3, set.size());
 			
 			JLG.debug("testing sendquick");
-			ds.client.sendQuick(ds2.agent.toContact(), "hello".getBytes());
+			ds.client.sendQuick(ds2.toContact(), "hello".getBytes());
 			
 			ds.disconnect();
 			ds2.disconnect();
