@@ -3,12 +3,12 @@ package org.ocpteam.unittest;
 import static org.junit.Assert.assertEquals;
 
 import java.util.Properties;
+import java.util.Set;
 
 import org.junit.Test;
 import org.ocpteam.component.ContactMap;
 import org.ocpteam.component.NodeMap;
 import org.ocpteam.core.TopContainer;
-import org.ocpteam.interfaces.IDataModel;
 import org.ocpteam.interfaces.IMapDataModel;
 import org.ocpteam.misc.JLG;
 import org.ocpteam.protocol.dht1.DHT1DataSource;
@@ -88,6 +88,14 @@ public class DHT1Test extends TopContainer {
 		JLG.debug("hello->" + value);
 		JLG.debug("hash(hello) = " + ds[4].hash("hello".getBytes()));
 		
+		dm.set("coucou", "Suzana");
+		for (int i = 0; i < 100; i++) {
+			dm.set("coucou" + i, "Suzana" + i);
+		}
+		
+		Set<String> keyset = dm.keySet();
+		JLG.debug("keyset: " + keyset);
+		JLG.debug("keyset size: " + keyset.size());
 		JLG.debug_off();
 		for (int i = 0; i < n; i++) {
 			ds[i].disconnect();
