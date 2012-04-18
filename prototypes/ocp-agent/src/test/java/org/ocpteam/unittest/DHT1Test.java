@@ -6,9 +6,9 @@ import java.util.Properties;
 
 import org.junit.Test;
 import org.ocpteam.component.ContactMap;
+import org.ocpteam.component.NodeMap;
 import org.ocpteam.core.TopContainer;
 import org.ocpteam.misc.JLG;
-import org.ocpteam.protocol.dht1.DHT1ContactMap;
 import org.ocpteam.protocol.dht1.DHT1DataSource;
 
 public class DHT1Test extends TopContainer {
@@ -40,6 +40,7 @@ public class DHT1Test extends TopContainer {
 		JLG.debug_on();
 		JLG.bUseSet = true;
 		JLG.set.add(DHT1Test.class.getName());
+		//JLG.set.add(ContactMap.class.getName());
 	}
 
 	public void start() throws Exception {
@@ -74,11 +75,9 @@ public class DHT1Test extends TopContainer {
 			assertEquals(i + 1, cm.size());
 		}
 		for (int i = 0; i < n; i++) {
-			DHT1ContactMap cm = (DHT1ContactMap) ds[i].getComponent(ContactMap.class);
-			JLG.debug("ds[" + i + "] contact map size: " + cm.size());
-			assertEquals(n, cm.size());
-			JLG.debug("ds[" + i + "] node map size: " + cm.getNodeMap().size());
-			JLG.debug("nodeMap:" + cm.getNodeMap());
+			NodeMap nm = ds[i].getComponent(NodeMap.class);
+			JLG.debug("nodeMap size:" + nm.getNodeMap().size());
+			JLG.debug("nodeMap:" + nm.getNodeMap());
 		}
 		
 

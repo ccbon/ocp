@@ -1,9 +1,10 @@
 package org.ocpteam.entity;
 
-import org.ocpteam.interfaces.IDomain;
+import java.io.Serializable;
+
 import org.ocpteam.misc.Id;
 
-public class Node implements IDomain {
+public class Node implements Serializable {
 
 	private Id nodeId;
 

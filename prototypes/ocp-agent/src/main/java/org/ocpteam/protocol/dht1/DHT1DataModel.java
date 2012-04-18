@@ -19,6 +19,7 @@ import org.ocpteam.entity.InputMessage;
 import org.ocpteam.entity.Response;
 import org.ocpteam.exception.NotAvailableContactException;
 import org.ocpteam.interfaces.IMapDataModel;
+import org.ocpteam.misc.Id;
 import org.ocpteam.misc.JLG;
 
 public class DHT1DataModel extends DataSourceContainer implements IMapDataModel {
@@ -32,21 +33,28 @@ public class DHT1DataModel extends DataSourceContainer implements IMapDataModel 
 	public void set(String key, String value) throws Exception {
 		// strategy: find the contacts responsible for the key then send the set
 		// order to the right contact
-		if (ds().isResponsible(key)) {
+		Id address = getAddress(key);
+		if (ds().nodeMap.isResponsible(address)) {
 			ds().store(key, value);
+			return;
 		}
-		Queue<Contact> contactQueue = ds().getContactQueue(key);
+		Queue<Contact> contactQueue = ds().nodeMap.getContactQueue(address);
 		DHT1Module m = ds().getComponent(DHT1Module.class);
 		ds().client.requestByPriority(contactQueue, new InputMessage(m.store(), key, value));
+	}
+
+	private Id getAddress(String key) throws Exception {
+		return ds().hash(key.getBytes());
 	}
 
 	@Override
 	public String get(String key) throws Exception {
 		// strategy: if responsible look locally else ask to the right contact
-		if (ds().isResponsible(key)) {
-			ds().retrieve(key);
+		Id address = getAddress(key);
+		if (ds().nodeMap.isResponsible(address)) {
+			return ds().retrieve(key);
 		}
-		Queue<Contact> contactQueue = ds().getContactQueue(key);
+		Queue<Contact> contactQueue = ds().nodeMap.getContactQueue(address);
 		DHT1Module m = ds().getComponent(DHT1Module.class);
 		Response r = ds().client.requestByPriority(contactQueue, new InputMessage(m.retrieve(), key));
 		return (String) r.getObject();
@@ -55,7 +63,12 @@ public class DHT1DataModel extends DataSourceContainer implements IMapDataModel 
 	@Override
 	public void remove(String key) throws Exception {
 		// strategy: send to all node the remove request.
-		ds().destroy(key);
+		Id address = getAddress(key);
+		if (ds().nodeMap.isResponsible(address)) {
+			ds().destroy(key);
+			return;
+		}
+
 		DHT1Module m = ds().getComponent(DHT1Module.class);
 		ds().client.sendAll(new InputMessage(m.remove(), key));
 		ds().client.waitForCompletion();

@@ -62,6 +62,9 @@ public class ContactMap extends DataSourceContainer {
 	}
 
 	public Contact remove(Contact contact) {
+		if (ds().usesComponent(NodeMap.class)) {
+			ds().getComponent(NodeMap.class).remove(contact.getNode());
+		}
 		String name = contact.getName();
 		TCPClient tcpClient = tcpClientMap.get(name);
 		if (tcpClient != null) {
@@ -77,6 +80,9 @@ public class ContactMap extends DataSourceContainer {
 	}
 
 	public Contact add(Contact c) throws Exception {
+		if (ds().usesComponent(NodeMap.class)) {
+			ds().getComponent(NodeMap.class).put(c.getNode(), c);
+		}
 		return map.put(c.getName(), c);
 	}
 
@@ -128,6 +134,9 @@ public class ContactMap extends DataSourceContainer {
 	}
 
 	public void removeAll() {
+		if (ds().usesComponent(NodeMap.class)) {
+			ds().getComponent(NodeMap.class).removeAll();
+		}
 		tcpClientMap.clear();
 		udpClientMap.clear();
 		map.clear();
