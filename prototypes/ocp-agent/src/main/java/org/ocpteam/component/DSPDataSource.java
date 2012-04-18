@@ -61,9 +61,25 @@ public abstract class DSPDataSource extends DataSource {
 			JLG.debug("starting the server");
 			configureServer(server);
 			server.start();
+			askForNode();
 			contactMap.addMyself();
 			client.declareContact();
+			synchronizeNode();
 		}
+	}
+
+	/**
+	 * transfer data from network to this node.
+	 * @throws Exception 
+	 */
+	protected void synchronizeNode() throws Exception {
+	}
+
+	/**
+	 * Request and set node 
+	 * @throws Exception 
+	 */
+	protected void askForNode() throws Exception {
 	}
 
 	protected void readNetworkConfig() throws Exception {

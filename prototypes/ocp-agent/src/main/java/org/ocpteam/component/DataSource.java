@@ -41,7 +41,7 @@ public abstract class DataSource extends TopContainer implements IComponent,
 	private boolean bIsConnected;
 	private String name;
 	protected Class<? extends Contact> contactClass;
-	protected Node node;
+	private Node node;
 	
 	@Override
 	public void init() throws Exception {

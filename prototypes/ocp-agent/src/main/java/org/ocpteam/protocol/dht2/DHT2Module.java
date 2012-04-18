@@ -1,4 +1,4 @@
-package org.ocpteam.protocol.dht1;
+package org.ocpteam.protocol.dht2;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -12,13 +12,12 @@ import org.ocpteam.interfaces.IActivity;
 import org.ocpteam.interfaces.ITransaction;
 import org.ocpteam.misc.JLG;
 
-public class DHT1Module extends Module {
+public class DHT2Module extends Module {
 
 	protected static final int STORE = 3001;
 	protected static final int RETRIEVE = 3002;
 	protected static final int REMOVE = 3003;
 	protected static final int KEYSET = 3004;
-	protected static final int SUBMAP = 3005;
 
 	public ITransaction store() {
 		return new ITransaction() {
@@ -27,8 +26,8 @@ public class DHT1Module extends Module {
 			public Serializable run(Session session, Serializable[] objects)
 					throws Exception {
 				JLG.debug("storing...");
-				DHT1DataSource ds = (DHT1DataSource) session.ds();
-				DHT1DataModel dm = (DHT1DataModel) ds.getContext().getDataModel();
+				DHT2DataSource ds = (DHT2DataSource) session.ds();
+				DHT2DataModel dm = (DHT2DataModel) ds.getContext().getDataModel();
 				String key = (String) objects[0];
 				String value = (String) objects[1];
 				dm.set(key, value);
@@ -49,8 +48,8 @@ public class DHT1Module extends Module {
 			public Serializable run(Session session, Serializable[] objects)
 					throws Exception {
 				JLG.debug("retrieving...");
-				DHT1DataSource ds = (DHT1DataSource) session.ds();
-				DHT1DataModel dm = (DHT1DataModel) ds.getContext().getDataModel();
+				DHT2DataSource ds = (DHT2DataSource) session.ds();
+				DHT2DataModel dm = (DHT2DataModel) ds.getContext().getDataModel();
 				String key = (String) objects[0];
 				return dm.get(key);
 			}
@@ -69,7 +68,7 @@ public class DHT1Module extends Module {
 			public Serializable run(Session session, Serializable[] objects)
 					throws Exception {
 				JLG.debug("remove...");
-				DHT1DataSource ds = (DHT1DataSource) session.ds();
+				DHT2DataSource ds = (DHT2DataSource) session.ds();
 				String key = (String) objects[0];
 				ds.destroy(key);
 				return null;
@@ -89,7 +88,7 @@ public class DHT1Module extends Module {
 			public void run(Session session, Serializable[] objects,
 					DataInputStream in, DataOutputStream out, Protocol protocol) throws Exception {
 				JLG.debug("keyset...");
-				DHT1DataSource ds = (DHT1DataSource) session.ds();
+				DHT2DataSource ds = (DHT2DataSource) session.ds();
 				Set<String> set = ds.keySet();
 				JLG.debug("set=" + set);
 				for (String s : set) {
@@ -101,32 +100,6 @@ public class DHT1Module extends Module {
 			@Override
 			public int getId() {
 				return KEYSET;
-			}
-		};
-	}
-
-	public IActivity subMap() {
-		return new IActivity() {
-			
-			@Override
-			public void run(Session session, Serializable[] objects,
-					DataInputStream in, DataOutputStream out, Protocol protocol)
-					throws Exception {
-				JLG.debug("submap...");
-				// normally we should filter the key where hash(key) >= given node_id...
-				DHT1DataSource ds = (DHT1DataSource) session.ds();
-				Set<String> set = ds.keySet();
-				JLG.debug("set=" + set);
-				for (String s : set) {
-					JLG.debug("write " + s);
-					protocol.getStreamSerializer().writeObject(out, s);
-					protocol.getStreamSerializer().writeObject(out, ds.retrieve(s));
-				}				
-			}
-			
-			@Override
-			public int getId() {
-				return SUBMAP;
 			}
 		};
 	}

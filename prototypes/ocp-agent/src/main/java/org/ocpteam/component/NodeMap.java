@@ -13,25 +13,25 @@ import org.ocpteam.misc.JLG;
 
 public class NodeMap extends DataSourceContainer {
 	private NavigableMap<Id, Contact> nodeMap;
-	
+
 	@Override
 	public void init() throws Exception {
 		super.init();
 		nodeMap = (NavigableMap<Id, Contact>) new TreeMap<Id, Contact>();
 	}
-	
-	public Contact get(Node node) {
-		return nodeMap.get(node.getNodeId());
+
+	public Contact getContact(Id nodeId) {
+		return nodeMap.get(nodeId);
 	}
-	
+
 	public void put(Node node, Contact c) {
-		nodeMap.put(node.getNodeId(), c);		
+		nodeMap.put(node.getNodeId(), c);
 	}
 
 	public void remove(Node node) {
-		nodeMap.remove(node.getNodeId());	
+		nodeMap.remove(node.getNodeId());
 	}
-	
+
 	public NavigableMap<Id, Contact> getNodeMap() {
 		return nodeMap;
 	}
@@ -39,7 +39,7 @@ public class NodeMap extends DataSourceContainer {
 	public void removeAll() {
 		nodeMap.clear();
 	}
-	
+
 	public boolean isResponsible(Id address) throws Exception {
 		return getNode(address).equals(ds().getNode().getNodeId());
 	}
@@ -56,7 +56,7 @@ public class NodeMap extends DataSourceContainer {
 		JLG.debug("agent=" + nodeMap.get(nodeId));
 		return nodeId;
 	}
-	
+
 	public Queue<Contact> getContactQueue(Id address) throws Exception {
 		Queue<Contact> contactQueue = new LinkedList<Contact>();
 		// take a snapshot of nodeMap.
@@ -87,5 +87,19 @@ public class NodeMap extends DataSourceContainer {
 		return contactQueue;
 	}
 
+	public Contact getPredecessor() throws Exception {
+		Id nodeId = ds().getNode().getNodeId();
+
+		Id previousNodeId = nodeMap.lowerKey(nodeId);
+		if (previousNodeId == null) {
+			previousNodeId = nodeMap.lastKey();
+		}
+		if (previousNodeId == null) {
+			throw new Exception(
+					"cannot find predecessor. It seems that the nodeMap is empty.");
+		}
+		return getContact(previousNodeId);
+
+	}
 
 }
