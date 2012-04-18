@@ -115,6 +115,11 @@ public class TCPClient {
 		}
 		return socket;
 	}
+	
+	public void send(Serializable input) throws Exception {
+		Socket socket = borrowSocket(input);
+		returnSocket(socket);
+	}
 
 	private void destroy(Socket socket) {
 		if (socket != null) {

@@ -13,6 +13,9 @@ public class StreamSerializer implements IStreamSerializer {
 	@Override
 	public Serializable readObject(DataInputStream in) throws Exception {
 		int length = in.readInt();
+		if (length == 0) {
+			return null;
+		}
 		if (length > 1000000) {
 			throw new StreamCorruptedException("Message length = " + length + ". Too big object for allocating space.");
 		}

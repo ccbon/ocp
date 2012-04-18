@@ -31,7 +31,7 @@ public class DHT1DataSource extends DSPDataSource {
 	private Map<String, String> map;
 	private DHT1DataModel dm;
 	private MessageDigest md;
-	protected NodeMap nodeMap;
+	public NodeMap nodeMap;
 
 	public DHT1DataSource() throws Exception {
 		super();

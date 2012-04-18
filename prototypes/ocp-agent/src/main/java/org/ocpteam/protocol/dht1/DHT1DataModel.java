@@ -39,6 +39,8 @@ public class DHT1DataModel extends DataSourceContainer implements IMapDataModel 
 			return;
 		}
 		Queue<Contact> contactQueue = ds().nodeMap.getContactQueue(address);
+		JLG.debug("contactQueue=" + contactQueue);
+		
 		DHT1Module m = ds().getComponent(DHT1Module.class);
 		ds().client.requestByPriority(contactQueue, new InputMessage(m.store(), key, value));
 	}
@@ -77,7 +79,7 @@ public class DHT1DataModel extends DataSourceContainer implements IMapDataModel 
 
 	@Override
 	public Set<String> keySet() throws Exception {
-		// strategy: merge each keyset for each node.
+		// strategy: merge the keyset of all contacts
 		Set<String> set = new HashSet<String>(ds().keySet());
 		DHT1Module m = ds().getComponent(DHT1Module.class);
 		InputFlow message = new InputFlow(m.keySet());

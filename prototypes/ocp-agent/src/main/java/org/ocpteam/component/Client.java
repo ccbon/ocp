@@ -158,15 +158,21 @@ public class Client extends DataSourceContainer implements IClient {
 		Serializable output = null;
 		JLG.debug("contact queue size: " + contactQueue.size());
 		Contact contact = null;
-		while ((!contactQueue.isEmpty()) && (output == null)) {
+		boolean done = false;
+		while (!contactQueue.isEmpty()) {
 			contact = contactQueue.poll();
 			JLG.debug("contact: " + contact);
 			try {
 				output = request(contact, input);
+				done = true;
+				break;
 			} catch (NotAvailableContactException e) {
+			} catch (Exception e) {
+				//unexpected but not fatal...
+				e.printStackTrace();
 			}
 		}
-		if (output == null) {
+		if (done == false) {
 			throw new NoNetworkException();
 		}
 

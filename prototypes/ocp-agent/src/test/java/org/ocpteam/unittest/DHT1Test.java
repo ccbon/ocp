@@ -8,6 +8,8 @@ import org.junit.Test;
 import org.ocpteam.component.ContactMap;
 import org.ocpteam.component.NodeMap;
 import org.ocpteam.core.TopContainer;
+import org.ocpteam.interfaces.IDataModel;
+import org.ocpteam.interfaces.IMapDataModel;
 import org.ocpteam.misc.JLG;
 import org.ocpteam.protocol.dht1.DHT1DataSource;
 
@@ -35,12 +37,12 @@ public class DHT1Test extends TopContainer {
 	@Override
 	public void init() throws Exception {
 		super.init();
-		n = 10;
+		n = 40;
 		port = 40000;
 		JLG.debug_on();
 		JLG.bUseSet = true;
 		JLG.set.add(DHT1Test.class.getName());
-		//JLG.set.add(ContactMap.class.getName());
+		JLG.set.add(NodeMap.class.getName());
 	}
 
 	public void start() throws Exception {
@@ -80,7 +82,13 @@ public class DHT1Test extends TopContainer {
 			JLG.debug("nodeMap:" + nm.getNodeMap());
 		}
 		
-
+		IMapDataModel dm = (IMapDataModel) ds[4].getContext().getDataModel();
+		dm.set("hello", "world");
+		String value = dm.get("hello");
+		JLG.debug("hello->" + value);
+		JLG.debug("hash(hello) = " + ds[4].hash("hello".getBytes()));
+		
+		JLG.debug_off();
 		for (int i = 0; i < n; i++) {
 			ds[i].disconnect();
 		}

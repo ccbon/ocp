@@ -9,6 +9,7 @@ import java.util.TreeMap;
 import org.ocpteam.entity.Contact;
 import org.ocpteam.entity.Node;
 import org.ocpteam.misc.Id;
+import org.ocpteam.misc.JLG;
 
 public class NodeMap extends DataSourceContainer {
 	private NavigableMap<Id, Contact> nodeMap;
@@ -51,6 +52,8 @@ public class NodeMap extends DataSourceContainer {
 		if (nodeId == null) {
 			throw new Exception("nodeMap is not populated at all");
 		}
+		JLG.debug("nodeId=" + nodeId);
+		JLG.debug("agent=" + nodeMap.get(nodeId));
 		return nodeId;
 	}
 	
@@ -83,7 +86,6 @@ public class NodeMap extends DataSourceContainer {
 		}
 		return contactQueue;
 	}
-
 
 
 }
