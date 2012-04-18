@@ -67,10 +67,15 @@ public class DHT1Test {
 			}
 			
 			
-			JLG.debug_off();
-			for (int i = 0; i < n; i++) {
+			for (int i = 0; i < n - 1; i++) {
 				ds[i].disconnect();
 			}
+			
+			dm = (IMapDataModel) ds[n-1].getContext().getDataModel();
+			String value = dm.get("hello");
+			JLG.debug("hello->" + value);
+			assertEquals("world", value);
+			ds[n-1].disconnect();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

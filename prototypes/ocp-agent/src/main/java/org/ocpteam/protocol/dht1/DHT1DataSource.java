@@ -1,6 +1,7 @@
 package org.ocpteam.protocol.dht1;
 
 import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.EOFException;
 import java.io.Serializable;
 import java.net.Socket;
@@ -36,6 +37,9 @@ import org.ocpteam.misc.JLG;
  * 
  * - During node arrival, the new node take a part of responsibility of its
  * predecessor. Map content is transferred.
+ * 
+ * - During node nice departure, the node send all its content to its
+ * predecessor.
  * 
  * - node_id is chosen in a random way.
  * 
@@ -89,9 +93,13 @@ public class DHT1DataSource extends DSPDataSource {
 	}
 
 	@Override
-	protected void synchronizeNode() throws Exception {
-		super.synchronizeNode();
+	protected void onNodeArrival() throws Exception {
+		super.onNodeArrival();
 		Contact predecessor = nodeMap.getPredecessor();
+		if (predecessor.isMyself()) {
+			// it means I am the last agent or the first agent.
+			return;
+		}
 		DHT1Module m = getComponent(DHT1Module.class);
 		InputFlow message = new InputFlow(m.subMap(), getNode().getNodeId());
 		Socket socket = null;
@@ -110,6 +118,50 @@ public class DHT1DataSource extends DSPDataSource {
 						.readObject(in);
 				store(key, value);
 			}
+			contactMap.getTcpClient(predecessor).returnSocket(socket);
+			socket = null;
+		} catch (SocketException e) {
+		} catch (EOFException e) {
+		} catch (SocketTimeoutException e) {
+		} catch (NotAvailableContactException e) {
+		} finally {
+			if (socket != null) {
+				socket.close();
+				socket = null;
+			}
+		}
+	}
+
+	@Override
+	protected void onNodeNiceDeparture() throws Exception {
+		super.onNodeNiceDeparture();
+		// Strategy: take all local map content and send it to the predecessor.
+		Contact predecessor = nodeMap.getPredecessor();
+		if (predecessor.isMyself()) {
+			// it means I am the last agent or the first agent.
+			return;
+		}
+		DHT1Module m = getComponent(DHT1Module.class);
+		InputFlow message = new InputFlow(m.setMap());
+		Socket socket = null;
+		try {
+
+			socket = contactMap.getTcpClient(predecessor).borrowSocket(message);
+			DataOutputStream out = new DataOutputStream(
+					socket.getOutputStream());
+			DataInputStream in = new DataInputStream(socket.getInputStream());
+			for (String key : map.keySet()) {
+				protocol.getStreamSerializer().writeObject(out, key);
+				protocol.getStreamSerializer().writeObject(out, map.get(key));
+				// read an acknowledgement for avoiding to sent to much on the
+				// stream.
+				Serializable serializable = protocol.getStreamSerializer()
+						.readObject(in);
+				if (serializable instanceof EOMObject) {
+					break;
+				}
+			}
+			protocol.getStreamSerializer().writeEOM(out);
 			contactMap.getTcpClient(predecessor).returnSocket(socket);
 			socket = null;
 		} catch (SocketException e) {

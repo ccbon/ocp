@@ -13,6 +13,9 @@ public class StreamSerializer implements IStreamSerializer {
 	@Override
 	public Serializable readObject(DataInputStream in) throws Exception {
 		int length = in.readInt();
+		if (length == -1) {
+			return new EOMObject();
+		}
 		if (length == 0) {
 			return null;
 		}

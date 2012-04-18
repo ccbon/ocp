@@ -64,7 +64,7 @@ public abstract class DSPDataSource extends DataSource {
 			askForNode();
 			contactMap.addMyself();
 			client.declareContact();
-			synchronizeNode();
+			onNodeArrival();
 		}
 	}
 
@@ -72,7 +72,7 @@ public abstract class DSPDataSource extends DataSource {
 	 * transfer data from network to this node.
 	 * @throws Exception 
 	 */
-	protected void synchronizeNode() throws Exception {
+	protected void onNodeArrival() throws Exception {
 	}
 
 	/**
@@ -101,9 +101,13 @@ public abstract class DSPDataSource extends DataSource {
 	public synchronized void disconnect() throws Exception {
 		super.disconnect();
 		if (server.isStarted()) {
+			onNodeNiceDeparture();
 			JLG.debug("stopping the server");
 			server.stop();
 		}
+	}
+
+	protected void onNodeNiceDeparture() throws Exception {		
 	}
 
 	protected Properties getNetworkProperties() {
