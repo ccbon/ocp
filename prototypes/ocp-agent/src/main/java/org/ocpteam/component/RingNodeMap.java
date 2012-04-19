@@ -63,5 +63,9 @@ public class RingNodeMap extends DataSourceContainer implements INodeMap {
 		}
 	}
 
+	public NodeMap[] getNodeMaps() {
+		return rings;
+	}
+
 
 }

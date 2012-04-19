@@ -1,9 +1,15 @@
 package org.ocpteam.protocol.dht2;
 
+import java.util.Queue;
 import java.util.Set;
 
 import org.ocpteam.component.DataSourceContainer;
+import org.ocpteam.component.NodeMap;
+import org.ocpteam.entity.Contact;
+import org.ocpteam.entity.InputMessage;
 import org.ocpteam.interfaces.IMapDataModel;
+import org.ocpteam.misc.Id;
+import org.ocpteam.misc.JLG;
 
 public class DHT2DataModel extends DataSourceContainer implements IMapDataModel {
 
@@ -14,23 +20,29 @@ public class DHT2DataModel extends DataSourceContainer implements IMapDataModel 
 
 	@Override
 	public void set(String key, String value) throws Exception {
-//		// strategy: find the contacts responsible for the key then send the set
-//		// order to the right contact
-//		Id address = getAddress(key);
-//		if (ds().nodeMap.isResponsible(address)) {
-//			ds().store(key, value);
-//			return;
-//		}
-//		Queue<Contact> contactQueue = ds().nodeMap.getContactQueue(address);
-//		JLG.debug("contactQueue=" + contactQueue);
-//		
-//		DHT2Module m = ds().getComponent(DHT2Module.class);
-//		ds().client.requestByPriority(contactQueue, new InputMessage(m.store(), key, value));
+		// Stragegy: store on all rings the pair key->value.
+		for (int i = 0; i < ds().ringNodeMap.getRingNbr(); i++) {
+			set(i, key, value);
+		}
 	}
 
-//	private Id getAddress(String key) throws Exception {
-//		return ds().hash(key.getBytes());
-//	}
+	public void set(int ring, String key, String value) throws Exception {
+		NodeMap nodeMap = ds().ringNodeMap.getNodeMaps()[ring];
+		Id address = getAddress(key);
+		if (nodeMap.isResponsible(address)) {
+			ds().store(key, value);
+			return;
+		}
+		Queue<Contact> contactQueue = nodeMap.getContactQueue(address);
+		JLG.debug("contactQueue=" + contactQueue);
+		
+		DHT2Module m = ds().getComponent(DHT2Module.class);
+		ds().client.requestByPriority(contactQueue, new InputMessage(m.store(), ring, key, value));
+	}
+
+	private Id getAddress(String key) throws Exception {
+		return ds().hash(key.getBytes());
+	}
 
 	@Override
 	public String get(String key) throws Exception {
