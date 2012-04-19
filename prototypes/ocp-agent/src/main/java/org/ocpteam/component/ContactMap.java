@@ -12,6 +12,7 @@ import java.util.Set;
 import org.ocpteam.entity.Contact;
 import org.ocpteam.entity.InputMessage;
 import org.ocpteam.exception.NotAvailableContactException;
+import org.ocpteam.interfaces.INodeMap;
 import org.ocpteam.misc.JLG;
 import org.ocpteam.network.TCPClient;
 import org.ocpteam.network.UDPClient;
@@ -62,8 +63,8 @@ public class ContactMap extends DataSourceContainer {
 	}
 
 	public Contact remove(Contact contact) {
-		if (ds().usesComponent(NodeMap.class)) {
-			ds().getComponent(NodeMap.class).remove(contact.getNode());
+		if (ds().usesComponent(INodeMap.class)) {
+			ds().getComponent(INodeMap.class).remove(contact.getNode());
 		}
 		String name = contact.getName();
 		TCPClient tcpClient = tcpClientMap.get(name);
@@ -80,8 +81,8 @@ public class ContactMap extends DataSourceContainer {
 	}
 
 	public Contact add(Contact c) throws Exception {
-		if (ds().usesComponent(NodeMap.class)) {
-			ds().getComponent(NodeMap.class).put(c.getNode(), c);
+		if (ds().usesComponent(INodeMap.class)) {
+			ds().getComponent(INodeMap.class).put(c.getNode(), c);
 		}
 		return map.put(c.getName(), c);
 	}
@@ -134,8 +135,8 @@ public class ContactMap extends DataSourceContainer {
 	}
 
 	public void removeAll() {
-		if (ds().usesComponent(NodeMap.class)) {
-			ds().getComponent(NodeMap.class).removeAll();
+		if (ds().usesComponent(INodeMap.class)) {
+			ds().getComponent(INodeMap.class).removeAll();
 		}
 		tcpClientMap.clear();
 		udpClientMap.clear();

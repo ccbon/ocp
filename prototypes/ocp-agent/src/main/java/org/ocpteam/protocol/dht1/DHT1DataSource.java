@@ -23,6 +23,7 @@ import org.ocpteam.entity.InputFlow;
 import org.ocpteam.entity.Node;
 import org.ocpteam.exception.NotAvailableContactException;
 import org.ocpteam.interfaces.IDataModel;
+import org.ocpteam.interfaces.INodeMap;
 import org.ocpteam.misc.Id;
 import org.ocpteam.misc.JLG;
 
@@ -51,11 +52,11 @@ public class DHT1DataSource extends DSPDataSource {
 	private Map<String, String> map;
 	private DHT1DataModel dm;
 	private MessageDigest md;
-	public NodeMap nodeMap;
+	public INodeMap nodeMap;
 
 	public DHT1DataSource() throws Exception {
 		super();
-		addComponent(NodeMap.class);
+		addComponent(INodeMap.class, new NodeMap());
 		addComponent(IDataModel.class, new DHT1DataModel());
 		addComponent(DHT1Module.class);
 	}
@@ -65,7 +66,7 @@ public class DHT1DataSource extends DSPDataSource {
 		super.init();
 		map = Collections.synchronizedMap(new HashMap<String, String>());
 		dm = (DHT1DataModel) getComponent(IDataModel.class);
-		nodeMap = getComponent(NodeMap.class);
+		nodeMap = getComponent(INodeMap.class);
 	}
 
 	@Override

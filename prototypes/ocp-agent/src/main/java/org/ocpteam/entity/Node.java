@@ -7,9 +7,15 @@ import org.ocpteam.misc.Id;
 public class Node implements Serializable {
 
 	private Id nodeId;
-
+	private int ring;
+	
 	public Node(Id nodeId) {
 		this.setNodeId(nodeId);
+	}
+
+	public Node(Id nodeId, int ring) {
+		this(nodeId);
+		this.setRing(ring);
 	}
 
 	public Id getNodeId() {
@@ -28,6 +34,14 @@ public class Node implements Serializable {
 	@Override
 	public String toString() {
 		return "node:" + nodeId.toString();
+	}
+
+	public int getRing() {
+		return ring;
+	}
+
+	public void setRing(int ring) {
+		this.ring = ring;
 	}
 
 }

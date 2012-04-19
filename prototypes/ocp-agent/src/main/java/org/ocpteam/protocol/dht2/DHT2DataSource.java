@@ -1,5 +1,12 @@
 package org.ocpteam.protocol.dht2;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.EOFException;
+import java.io.Serializable;
+import java.net.Socket;
+import java.net.SocketException;
+import java.net.SocketTimeoutException;
 import java.security.MessageDigest;
 import java.security.SecureRandom;
 import java.util.Collections;
@@ -8,25 +15,30 @@ import java.util.Map;
 import java.util.Set;
 
 import org.ocpteam.component.DSPDataSource;
-import org.ocpteam.component.NodeMap;
+import org.ocpteam.component.RingNodeMap;
+import org.ocpteam.entity.Contact;
 import org.ocpteam.entity.Context;
+import org.ocpteam.entity.EOMObject;
+import org.ocpteam.entity.InputFlow;
 import org.ocpteam.entity.Node;
+import org.ocpteam.exception.NotAvailableContactException;
 import org.ocpteam.interfaces.IDataModel;
+import org.ocpteam.interfaces.INodeMap;
 import org.ocpteam.misc.Id;
 import org.ocpteam.misc.JLG;
 
 /**
- * DHT2 is a distributed hashtable, with redundancy and no node detachment
- * management.
+ * DHT2 is a distributed hashtable, with ring redundancy (The DHT topology is a
+ * ring duplicated N times)
  * 
  * Strategies:
  * 
- * - Each agent is responsible for a specific territory specified by a nodeId
- * The responsibility is from node_id to succ(node_id).
+ * - Node Arrival: node chosen randomly and ring chosen as well randomly.
  * 
- * - node_id is chosen in a random way.
+ * - Node Rude Detachment: Data contained in the node is retrieved on another
+ * existing ring and replaced on the detached node ring.
  * 
- * Potentials issues: - Loss of data when an agent disappears or disconnects.
+ * Potentials issues: - Only 1 ring...
  * 
  */
 public class DHT2DataSource extends DSPDataSource {
@@ -34,11 +46,12 @@ public class DHT2DataSource extends DSPDataSource {
 	private Map<String, String> map;
 	private DHT2DataModel dm;
 	private MessageDigest md;
-	public NodeMap nodeMap;
+	public INodeMap nodeMap;
+	private int ringNbr = 3;
 
 	public DHT2DataSource() throws Exception {
 		super();
-		addComponent(NodeMap.class);
+		addComponent(INodeMap.class, new RingNodeMap());
 		addComponent(IDataModel.class, new DHT2DataModel());
 		addComponent(DHT2Module.class);
 	}
@@ -48,7 +61,7 @@ public class DHT2DataSource extends DSPDataSource {
 		super.init();
 		map = Collections.synchronizedMap(new HashMap<String, String>());
 		dm = (DHT2DataModel) getComponent(IDataModel.class);
-		nodeMap = getComponent(NodeMap.class);
+		nodeMap = getComponent(INodeMap.class);
 	}
 
 	@Override
@@ -67,7 +80,96 @@ public class DHT2DataSource extends DSPDataSource {
 	protected void readNetworkConfig() throws Exception {
 		super.readNetworkConfig();
 		md = MessageDigest.getInstance(network.getProperty("hash", "SHA-1"));
-		setNode(new Node(hash(random())));
+	}
+
+	@Override
+	protected void askForNode() throws Exception {
+		super.askForNode();
+		setNode(new Node(hash(random()), JLG.random(ringNbr)));
+	}
+
+	@Override
+	protected void onNodeArrival() throws Exception {
+		super.onNodeArrival();
+		Contact predecessor = nodeMap.getPredecessor();
+		if (predecessor.isMyself()) {
+			// it means I am the last agent or the first agent.
+			return;
+		}
+		DHT2Module m = getComponent(DHT2Module.class);
+		InputFlow message = new InputFlow(m.subMap(), getNode().getNodeId());
+		Socket socket = null;
+		try {
+
+			socket = contactMap.getTcpClient(predecessor).borrowSocket(message);
+			DataInputStream in = new DataInputStream(socket.getInputStream());
+			while (true) {
+				Serializable serializable = protocol.getStreamSerializer()
+						.readObject(in);
+				if (serializable instanceof EOMObject) {
+					break;
+				}
+				String key = (String) serializable;
+				String value = (String) protocol.getStreamSerializer()
+						.readObject(in);
+				store(key, value);
+			}
+			contactMap.getTcpClient(predecessor).returnSocket(socket);
+			socket = null;
+		} catch (SocketException e) {
+		} catch (EOFException e) {
+		} catch (SocketTimeoutException e) {
+		} catch (NotAvailableContactException e) {
+		} finally {
+			if (socket != null) {
+				socket.close();
+				socket = null;
+			}
+		}
+	}
+
+	@Override
+	protected void onNodeNiceDeparture() throws Exception {
+		super.onNodeNiceDeparture();
+		// Strategy: take all local map content and send it to the predecessor.
+		Contact predecessor = nodeMap.getPredecessor();
+		if (predecessor.isMyself()) {
+			// it means I am the last agent or the first agent.
+			return;
+		}
+		DHT2Module m = getComponent(DHT2Module.class);
+		InputFlow message = new InputFlow(m.setMap());
+		Socket socket = null;
+		try {
+
+			socket = contactMap.getTcpClient(predecessor).borrowSocket(message);
+			DataOutputStream out = new DataOutputStream(
+					socket.getOutputStream());
+			DataInputStream in = new DataInputStream(socket.getInputStream());
+			for (String key : map.keySet()) {
+				protocol.getStreamSerializer().writeObject(out, key);
+				protocol.getStreamSerializer().writeObject(out, map.get(key));
+				// read an acknowledgement for avoiding to sent to much on the
+				// stream.
+				Serializable serializable = protocol.getStreamSerializer()
+						.readObject(in);
+				if (serializable instanceof EOMObject) {
+					break;
+				}
+			}
+			protocol.getStreamSerializer().writeEOM(out);
+			contactMap.getTcpClient(predecessor).returnSocket(socket);
+			socket = null;
+		} catch (SocketException e) {
+		} catch (EOFException e) {
+		} catch (SocketTimeoutException e) {
+		} catch (NotAvailableContactException e) {
+		} finally {
+			if (socket != null) {
+				socket.close();
+				socket = null;
+			}
+		}
 	}
 
 	private byte[] random() {

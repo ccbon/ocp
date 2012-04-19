@@ -2,11 +2,15 @@ package org.ocpteam.protocol.dht2;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.EOFException;
 import java.io.Serializable;
+import java.net.SocketException;
+import java.net.SocketTimeoutException;
 import java.util.Set;
 
 import org.ocpteam.component.Module;
 import org.ocpteam.component.Protocol;
+import org.ocpteam.entity.EOMObject;
 import org.ocpteam.entity.Session;
 import org.ocpteam.interfaces.IActivity;
 import org.ocpteam.interfaces.ITransaction;
@@ -18,6 +22,8 @@ public class DHT2Module extends Module {
 	protected static final int RETRIEVE = 3002;
 	protected static final int REMOVE = 3003;
 	protected static final int KEYSET = 3004;
+	protected static final int SUBMAP = 3005;
+	protected static final int SETMAP = 3006;
 
 	public ITransaction store() {
 		return new ITransaction() {
@@ -27,7 +33,8 @@ public class DHT2Module extends Module {
 					throws Exception {
 				JLG.debug("storing...");
 				DHT2DataSource ds = (DHT2DataSource) session.ds();
-				DHT2DataModel dm = (DHT2DataModel) ds.getContext().getDataModel();
+				DHT2DataModel dm = (DHT2DataModel) ds.getContext()
+						.getDataModel();
 				String key = (String) objects[0];
 				String value = (String) objects[1];
 				dm.set(key, value);
@@ -49,7 +56,8 @@ public class DHT2Module extends Module {
 					throws Exception {
 				JLG.debug("retrieving...");
 				DHT2DataSource ds = (DHT2DataSource) session.ds();
-				DHT2DataModel dm = (DHT2DataModel) ds.getContext().getDataModel();
+				DHT2DataModel dm = (DHT2DataModel) ds.getContext()
+						.getDataModel();
 				String key = (String) objects[0];
 				return dm.get(key);
 			}
@@ -83,10 +91,11 @@ public class DHT2Module extends Module {
 
 	public IActivity keySet() {
 		return new IActivity() {
-			
+
 			@Override
 			public void run(Session session, Serializable[] objects,
-					DataInputStream in, DataOutputStream out, Protocol protocol) throws Exception {
+					DataInputStream in, DataOutputStream out, Protocol protocol)
+					throws Exception {
 				JLG.debug("keyset...");
 				DHT2DataSource ds = (DHT2DataSource) session.ds();
 				Set<String> set = ds.keySet();
@@ -100,6 +109,76 @@ public class DHT2Module extends Module {
 			@Override
 			public int getId() {
 				return KEYSET;
+			}
+		};
+	}
+
+	public IActivity subMap() {
+		return new IActivity() {
+
+			@Override
+			public void run(Session session, Serializable[] objects,
+					DataInputStream in, DataOutputStream out, Protocol protocol)
+					throws Exception {
+				JLG.debug("submap...");
+				// normally we should filter the key where hash(key) >= given
+				// node_id...
+				DHT2DataSource ds = (DHT2DataSource) session.ds();
+				Set<String> set = ds.keySet();
+				JLG.debug("set=" + set);
+				for (String s : set) {
+					JLG.debug("write " + s);
+					protocol.getStreamSerializer().writeObject(out, s);
+					protocol.getStreamSerializer().writeObject(out,
+							ds.retrieve(s));
+					
+				}
+			}
+
+			@Override
+			public int getId() {
+				return SUBMAP;
+			}
+		};
+	}
+
+	public IActivity setMap() {
+		// TODO Auto-generated method stub
+		return new IActivity() {
+
+			@Override
+			public void run(Session session, Serializable[] objects,
+					DataInputStream in, DataOutputStream out, Protocol protocol)
+					throws Exception {
+				JLG.debug("setMap...");
+				// normally we should filter the key where hash(key) >= given
+				// node_id...
+				DHT2DataSource ds = (DHT2DataSource) session.ds();
+				try {
+					while (true) {
+						Serializable serializable = protocol.getStreamSerializer()
+								.readObject(in);
+						if (serializable instanceof EOMObject) {
+							break;
+						}
+						String key = (String) serializable;
+						String value = (String) protocol.getStreamSerializer()
+								.readObject(in);
+						ds.store(key, value);
+						protocol.getStreamSerializer().writeObject(out, null);
+					}
+					
+				} catch (SocketException e) {
+				} catch (EOFException e) {
+				} catch (SocketTimeoutException e) {
+					
+				}
+
+			}
+
+			@Override
+			public int getId() {
+				return SETMAP;
 			}
 		};
 	}

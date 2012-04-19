@@ -8,10 +8,11 @@ import java.util.TreeMap;
 
 import org.ocpteam.entity.Contact;
 import org.ocpteam.entity.Node;
+import org.ocpteam.interfaces.INodeMap;
 import org.ocpteam.misc.Id;
 import org.ocpteam.misc.JLG;
 
-public class NodeMap extends DataSourceContainer {
+public class NodeMap extends DataSourceContainer implements INodeMap {
 	private NavigableMap<Id, Contact> nodeMap;
 
 	@Override
@@ -20,14 +21,16 @@ public class NodeMap extends DataSourceContainer {
 		nodeMap = (NavigableMap<Id, Contact>) new TreeMap<Id, Contact>();
 	}
 
-	public Contact getContact(Id nodeId) {
+	private Contact getContact(Id nodeId) {
 		return nodeMap.get(nodeId);
 	}
 
+	@Override
 	public void put(Node node, Contact c) {
 		nodeMap.put(node.getNodeId(), c);
 	}
 
+	@Override
 	public void remove(Node node) {
 		nodeMap.remove(node.getNodeId());
 	}
@@ -36,10 +39,12 @@ public class NodeMap extends DataSourceContainer {
 		return nodeMap;
 	}
 
+	@Override
 	public void removeAll() {
 		nodeMap.clear();
 	}
 
+	@Override
 	public boolean isResponsible(Id address) throws Exception {
 		return getNode(address).equals(ds().getNode().getNodeId());
 	}
@@ -57,6 +62,7 @@ public class NodeMap extends DataSourceContainer {
 		return nodeId;
 	}
 
+	@Override
 	public Queue<Contact> getContactQueue(Id address) throws Exception {
 		Queue<Contact> contactQueue = new LinkedList<Contact>();
 		// take a snapshot of nodeMap.
@@ -87,6 +93,7 @@ public class NodeMap extends DataSourceContainer {
 		return contactQueue;
 	}
 
+	@Override
 	public Contact getPredecessor() throws Exception {
 		Id nodeId = ds().getNode().getNodeId();
 
