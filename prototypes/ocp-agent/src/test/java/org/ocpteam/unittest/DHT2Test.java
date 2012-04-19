@@ -64,7 +64,8 @@ public class DHT2Test {
 			}
 			dm.set("coucou", "suzana");
 			ds[0].networkPicture();
-
+			
+			JLG.debug("coucou->" + dm.get("coucou"));
 			for (int i = 0; i < n; i++) {
 				ds[i].disconnect();
 			}

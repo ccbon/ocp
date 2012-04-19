@@ -17,6 +17,7 @@ import org.ocpteam.entity.Contact;
 import org.ocpteam.entity.EOMObject;
 import org.ocpteam.entity.InputFlow;
 import org.ocpteam.entity.InputMessage;
+import org.ocpteam.entity.Response;
 import org.ocpteam.exception.NotAvailableContactException;
 import org.ocpteam.interfaces.IMapDataModel;
 import org.ocpteam.misc.Id;
@@ -61,18 +62,31 @@ public class DHT2DataModel extends DataSourceContainer implements IMapDataModel 
 
 	@Override
 	public String get(String key) throws Exception {
-		return null;
-		// // strategy: if responsible look locally else ask to the right
-		// contact
-		// Id address = getAddress(key);
-		// if (ds().nodeMap.isResponsible(address)) {
-		// return ds().retrieve(key);
-		// }
-		// Queue<Contact> contactQueue = ds().nodeMap.getContactQueue(address);
-		// DHT2Module m = ds().getComponent(DHT2Module.class);
-		// Response r = ds().client.requestByPriority(contactQueue, new
-		// InputMessage(m.retrieve(), key));
-		// return (String) r.getObject();
+		// strategy : look at the first one you get.
+		Id address = getAddress(key);
+		if (ds().ringNodeMap.isResponsible(address)) {
+			return ds().retrieve(key);
+		}
+		// not found locally so look at every ring.
+		String value = null;
+		for (int i = 0; i < ds().ringNodeMap.getRingNbr(); i++) {
+			value = get(i, key);
+			if (value != null) {
+				break;
+			}
+		}
+		return value;
+
+	}
+
+	private String get(int i, String key) throws Exception {
+		Id address = getAddress(key);
+		NodeMap nodeMap = ds().ringNodeMap.getNodeMaps()[i];
+		Queue<Contact> contactQueue = nodeMap.getContactQueue(address);
+		DHT2Module m = ds().getComponent(DHT2Module.class);
+		Response r = ds().client.requestByPriority(contactQueue,
+				new InputMessage(m.retrieve(), key));
+		return (String) r.getObject();
 	}
 
 	@Override
@@ -167,7 +181,7 @@ public class DHT2DataModel extends DataSourceContainer implements IMapDataModel 
 				String key = (String) serializable;
 				String value = (String) ds().protocol.getStreamSerializer()
 						.readObject(in);
-				
+
 				localmap.put(key, value);
 			}
 			ds().contactMap.getTcpClient(c).returnSocket(socket);
