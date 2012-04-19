@@ -15,6 +15,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.ocpteam.component.DSPDataSource;
+import org.ocpteam.component.NodeMap;
 import org.ocpteam.component.RingNodeMap;
 import org.ocpteam.entity.Contact;
 import org.ocpteam.entity.Context;
@@ -79,13 +80,15 @@ public class DHT2DataSource extends DSPDataSource {
 	protected void readNetworkConfig() throws Exception {
 		super.readNetworkConfig();
 		md = MessageDigest.getInstance(network.getProperty("hash", "SHA-1"));
-		ringNodeMap.setRingNbr(Integer.parseInt(network.getProperty("ringNbr", "3")));
+		int ringNbr = Integer.parseInt(network.getProperty("ringNbr", "3"));
+		JLG.debug("ringNbr=" + ringNbr);
+		ringNodeMap.setRingNbr(ringNbr);
 	}
 
 	@Override
 	protected void askForNode() throws Exception {
 		super.askForNode();
-		setNode(new Node(hash(random()), JLG.random(ringNodeMap.getRingNbr())));
+		setNode(new Node(hash(random()), ringNodeMap.getLessPopulatedRing()));
 	}
 
 	@Override
@@ -200,5 +203,26 @@ public class DHT2DataSource extends DSPDataSource {
 
 	public Set<String> keySet() {
 		return map.keySet();
+	}
+
+	public void networkPicture() throws Exception {
+		// list all contact including myself.
+		for (NodeMap nodeMap : ringNodeMap.getNodeMaps()) {
+			for (Contact c : nodeMap.getNodeMap().values()) {
+				JLG.println("Contact: " + c);
+				Node n = c.getNode();
+				JLG.println("  Node: " + n);
+				Map<String, String> localMap = dm.localMap(c);
+				JLG.println("  Map: " + localMap);
+				for (String key : localMap.keySet()) {
+					JLG.println("address(" + key + ")=" + dm.getAddress(key));
+				}				
+			}
+		}
+		
+	}
+
+	public Map<String, String> getMap() {
+		return map;
 	}
 }

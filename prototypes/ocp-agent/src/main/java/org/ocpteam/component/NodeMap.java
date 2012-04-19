@@ -52,10 +52,11 @@ public class NodeMap extends DataSourceContainer implements INodeMap {
 	private Id getNode(Id address) throws Exception {
 		Id nodeId = nodeMap.floorKey(address);
 		if (nodeId == null) {
-			nodeId = nodeMap.lastKey();
-		}
-		if (nodeId == null) {
-			throw new Exception("nodeMap is not populated at all");
+			try {
+				nodeId = nodeMap.lastKey();
+			} catch (Exception e) {
+				throw new Exception("nodeMap is not populated at all");
+			}
 		}
 		JLG.debug("nodeId=" + nodeId);
 		JLG.debug("agent=" + nodeMap.get(nodeId));
@@ -106,6 +107,14 @@ public class NodeMap extends DataSourceContainer implements INodeMap {
 		}
 		return getContact(previousNodeId);
 
+	}
+
+	public int size() {
+		return nodeMap.size();
+	}
+
+	public boolean isEmpty() {
+		return nodeMap.isEmpty();
 	}
 
 }

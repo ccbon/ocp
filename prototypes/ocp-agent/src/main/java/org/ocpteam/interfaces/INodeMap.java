@@ -8,7 +8,7 @@ import org.ocpteam.misc.Id;
 
 public interface INodeMap extends IComponent {
 
-	void put(Node node, Contact c);
+	void put(Node node, Contact c) throws Exception;
 
 	void remove(Node node);
 

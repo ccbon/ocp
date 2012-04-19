@@ -24,6 +24,7 @@ public class DHT2Module extends Module {
 	protected static final int KEYSET = 3004;
 	protected static final int SUBMAP = 3005;
 	protected static final int SETMAP = 3006;
+	protected static final int GETLOCALMAP = 3007;
 
 	public ITransaction store() {
 		return new ITransaction() {
@@ -35,9 +36,10 @@ public class DHT2Module extends Module {
 				DHT2DataSource ds = (DHT2DataSource) session.ds();
 				DHT2DataModel dm = (DHT2DataModel) ds.getContext()
 						.getDataModel();
-				String key = (String) objects[0];
-				String value = (String) objects[1];
-				dm.set(key, value);
+				int i = (Integer) objects[0];
+				String key = (String) objects[1];
+				String value = (String) objects[2];
+				dm.set(i, key, value);
 				return null;
 			}
 
@@ -179,6 +181,34 @@ public class DHT2Module extends Module {
 			@Override
 			public int getId() {
 				return SETMAP;
+			}
+		};
+	}
+
+	public IActivity getLocalMap() {
+		// TODO Auto-generated method stub
+		return new IActivity() {
+			
+			@Override
+			public void run(Session session, Serializable[] objects,
+					DataInputStream in, DataOutputStream out, Protocol protocol)
+					throws Exception {
+				JLG.debug("localmap...");
+				DHT2DataSource ds = (DHT2DataSource) session.ds();
+				Set<String> set = ds.keySet();
+				JLG.debug("set=" + set);
+				for (String s : set) {
+					JLG.debug("write " + s);
+					protocol.getStreamSerializer().writeObject(out, s);
+					protocol.getStreamSerializer().writeObject(out,
+							ds.retrieve(s));					
+				}
+				
+			}
+			
+			@Override
+			public int getId() {
+				return GETLOCALMAP;
 			}
 		};
 	}

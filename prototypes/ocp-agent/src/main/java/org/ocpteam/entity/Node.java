@@ -33,7 +33,7 @@ public class Node implements Serializable {
 	
 	@Override
 	public String toString() {
-		return "node:" + nodeId.toString();
+		return "node:" + ring + "-" + nodeId.toString();
 	}
 
 	public int getRing() {
