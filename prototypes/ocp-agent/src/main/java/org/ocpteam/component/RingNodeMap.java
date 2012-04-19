@@ -1,48 +1,66 @@
 package org.ocpteam.component;
 
-import java.util.Queue;
-
 import org.ocpteam.entity.Contact;
 import org.ocpteam.entity.Node;
 import org.ocpteam.interfaces.INodeMap;
 import org.ocpteam.misc.Id;
 
+/**
+ * A node map with many rings. A ring is instanciated by a nodeMap.
+ *
+ */
 public class RingNodeMap extends DataSourceContainer implements INodeMap {
 
+	private int ringNbr;
+	
+	private NodeMap[] rings;
+	
 	@Override
 	public void put(Node node, Contact c) {
-		// TODO Auto-generated method stub
-		
+		int r = node.getRing();
+		rings[r].put(node, c);	
 	}
 
 	@Override
 	public void remove(Node node) {
-		// TODO Auto-generated method stub
-		
+		int r = node.getRing();
+		rings[r].remove(node);	
 	}
 
 	@Override
 	public void removeAll() {
-		// TODO Auto-generated method stub
-		
+		for (NodeMap nodeMap : rings) {
+			nodeMap.removeAll();
+		}
 	}
 
 	@Override
 	public Contact getPredecessor() throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+		Node node = ds().getNode();
+		int r = node.getRing();
+		return rings[r].getPredecessor();
 	}
 
 	@Override
 	public boolean isResponsible(Id address) throws Exception {
-		// TODO Auto-generated method stub
-		return false;
+		Node node = ds().getNode();
+		int r = node.getRing();
+		return rings[r].isResponsible(address);
 	}
 
-	@Override
-	public Queue<Contact> getContactQueue(Id address) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+	public int getRingNbr() {
+		return ringNbr;
+	}
+
+	public void setRingNbr(int ringNbr) throws Exception {
+		this.ringNbr = ringNbr;
+		rings = new NodeMap[ringNbr];
+		for (int i = 0; i < ringNbr; i++) {
+			NodeMap nodeMap = new NodeMap();
+			nodeMap.setParent(this.getParent());
+			nodeMap.init();
+			rings[i] = nodeMap;
+		}
 	}
 
 

@@ -52,7 +52,7 @@ public class DHT1DataSource extends DSPDataSource {
 	private Map<String, String> map;
 	private DHT1DataModel dm;
 	private MessageDigest md;
-	public INodeMap nodeMap;
+	public NodeMap nodeMap;
 
 	public DHT1DataSource() throws Exception {
 		super();
@@ -66,7 +66,7 @@ public class DHT1DataSource extends DSPDataSource {
 		super.init();
 		map = Collections.synchronizedMap(new HashMap<String, String>());
 		dm = (DHT1DataModel) getComponent(IDataModel.class);
-		nodeMap = getComponent(INodeMap.class);
+		nodeMap = (NodeMap) getComponent(INodeMap.class);
 	}
 
 	@Override

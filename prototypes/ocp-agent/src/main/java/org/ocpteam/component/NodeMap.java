@@ -62,7 +62,6 @@ public class NodeMap extends DataSourceContainer implements INodeMap {
 		return nodeId;
 	}
 
-	@Override
 	public Queue<Contact> getContactQueue(Id address) throws Exception {
 		Queue<Contact> contactQueue = new LinkedList<Contact>();
 		// take a snapshot of nodeMap.

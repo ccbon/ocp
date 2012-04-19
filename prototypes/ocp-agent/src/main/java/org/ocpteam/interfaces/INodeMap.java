@@ -1,7 +1,5 @@
 package org.ocpteam.interfaces;
 
-import java.util.Queue;
-
 import org.ocpteam.core.IComponent;
 import org.ocpteam.entity.Contact;
 import org.ocpteam.entity.Node;
@@ -19,7 +17,5 @@ public interface INodeMap extends IComponent {
 	Contact getPredecessor() throws Exception;
 
 	boolean isResponsible(Id address) throws Exception;
-
-	Queue<Contact> getContactQueue(Id address) throws Exception;
 
 }

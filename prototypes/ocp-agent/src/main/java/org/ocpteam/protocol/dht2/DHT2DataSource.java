@@ -46,8 +46,7 @@ public class DHT2DataSource extends DSPDataSource {
 	private Map<String, String> map;
 	private DHT2DataModel dm;
 	private MessageDigest md;
-	public INodeMap nodeMap;
-	private int ringNbr = 3;
+	public RingNodeMap nodeMap;
 
 	public DHT2DataSource() throws Exception {
 		super();
@@ -61,7 +60,7 @@ public class DHT2DataSource extends DSPDataSource {
 		super.init();
 		map = Collections.synchronizedMap(new HashMap<String, String>());
 		dm = (DHT2DataModel) getComponent(IDataModel.class);
-		nodeMap = getComponent(INodeMap.class);
+		nodeMap = (RingNodeMap) getComponent(INodeMap.class);
 	}
 
 	@Override
@@ -80,12 +79,13 @@ public class DHT2DataSource extends DSPDataSource {
 	protected void readNetworkConfig() throws Exception {
 		super.readNetworkConfig();
 		md = MessageDigest.getInstance(network.getProperty("hash", "SHA-1"));
+		nodeMap.setRingNbr(Integer.parseInt(network.getProperty("ringNbr", "3")));
 	}
 
 	@Override
 	protected void askForNode() throws Exception {
 		super.askForNode();
-		setNode(new Node(hash(random()), JLG.random(ringNbr)));
+		setNode(new Node(hash(random()), JLG.random(nodeMap.getRingNbr())));
 	}
 
 	@Override
@@ -93,7 +93,8 @@ public class DHT2DataSource extends DSPDataSource {
 		super.onNodeArrival();
 		Contact predecessor = nodeMap.getPredecessor();
 		if (predecessor.isMyself()) {
-			// it means I am the last agent or the first agent.
+			// it means I am the first agent on my ring.
+			// look at the other ring and copy all their content.
 			return;
 		}
 		DHT2Module m = getComponent(DHT2Module.class);
@@ -134,7 +135,7 @@ public class DHT2DataSource extends DSPDataSource {
 		// Strategy: take all local map content and send it to the predecessor.
 		Contact predecessor = nodeMap.getPredecessor();
 		if (predecessor.isMyself()) {
-			// it means I am the last agent or the first agent.
+			// it means I am the last agent.
 			return;
 		}
 		DHT2Module m = getComponent(DHT2Module.class);
