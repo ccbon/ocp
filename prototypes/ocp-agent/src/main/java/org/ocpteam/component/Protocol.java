@@ -70,10 +70,11 @@ public class Protocol extends DataSourceContainer implements IProtocol {
 	}
 
 	@Override
-	public void process(DataInputStream in, DataOutputStream out,
-			Socket clientSocket) throws Exception {
+	public void process(Socket clientSocket) throws Exception {
 		// read the first object
 		JLG.debug("about to read object");
+		DataInputStream in = new DataInputStream(clientSocket.getInputStream());
+		DataOutputStream out = new DataOutputStream(clientSocket.getOutputStream());
 		Serializable o = getStreamSerializer().readObject(in);
 		if (o instanceof InputMessage) {
 			InputMessage inputMessage = (InputMessage) o;
@@ -87,8 +88,7 @@ public class Protocol extends DataSourceContainer implements IProtocol {
 			InputFlow inputFlow = (InputFlow) o;
 			Session session = new Session(ds(), clientSocket);
 			inputFlow.activity = getActivityMap().get(inputFlow.activityid);
-			inputFlow.activity.run(session,
-					inputFlow.objects, in, out, this);
+			inputFlow.activity.run(session, inputFlow.objects, in, out, this);
 			getStreamSerializer().writeObject(out, new EOMObject());
 		}
 		JLG.debug("end process");
@@ -107,7 +107,7 @@ public class Protocol extends DataSourceContainer implements IProtocol {
 	}
 
 	private Map<Integer, IActivity> getActivityMap() {
-		return this.activityMap ;
+		return this.activityMap;
 	}
 
 }

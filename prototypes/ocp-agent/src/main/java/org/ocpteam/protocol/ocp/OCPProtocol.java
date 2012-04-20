@@ -48,8 +48,9 @@ public class OCPProtocol extends Protocol {
 	}
 	
 	@Override
-	public void process(DataInputStream in, DataOutputStream out,
-			Socket clientSocket) throws Exception {
+	public void process(Socket clientSocket) throws Exception {
+		DataInputStream in = new DataInputStream(clientSocket.getInputStream());
+		DataOutputStream out = new DataOutputStream(clientSocket.getOutputStream());
 		JLG.debug("about to read object");
 		Serializable o = getStreamSerializer().readObject(in);
 		if (o instanceof InputMessage) {

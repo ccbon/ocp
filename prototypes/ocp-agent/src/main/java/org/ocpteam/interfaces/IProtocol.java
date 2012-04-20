@@ -1,7 +1,5 @@
 package org.ocpteam.interfaces;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.net.DatagramPacket;
 import java.net.Socket;
 
@@ -13,7 +11,6 @@ public interface IProtocol extends IContainer {
 	
 	void process(DatagramPacket packet) throws Exception;
 
-	void process(DataInputStream in, DataOutputStream out, Socket clientSocket)
-			throws Exception;
+	void process(Socket clientSocket) throws Exception;
 
 }

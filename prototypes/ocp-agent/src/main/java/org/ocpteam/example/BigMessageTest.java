@@ -65,8 +65,9 @@ public class BigMessageTest {
 class MyProtocol extends Protocol {
 
 	@Override
-	public void process(DataInputStream in, DataOutputStream out,
-			Socket clientSocket) throws Exception {
+	public void process(Socket clientSocket) throws Exception {
+		DataInputStream in = new DataInputStream(clientSocket.getInputStream());
+		DataOutputStream out = new DataOutputStream(clientSocket.getOutputStream());
 		// read the first object
 		JLG.debug("about to read object");
 		int n = in.readInt();

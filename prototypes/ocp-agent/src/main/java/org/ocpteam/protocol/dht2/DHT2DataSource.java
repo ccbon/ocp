@@ -35,6 +35,7 @@ import org.ocpteam.misc.JLG;
  * Strategies:
  * 
  * - Node Arrival: node chosen randomly and ring chosen as well randomly.
+ * data transferred from ring predecessor.
  * 
  * - Node Rude Detachment: Data contained in the node is retrieved on another
  * existing ring and replaced on the detached node ring.
@@ -242,5 +243,14 @@ public class DHT2DataSource extends DSPDataSource {
 
 	public Map<String, String> getMap() {
 		return map;
+	}
+	
+	public synchronized void disconnectHard() throws Exception {
+		super.disconnect();
+		if (server.isStarted()) {
+			JLG.debug("stopping the server");
+			server.stop();
+		}
+		map.clear();
 	}
 }

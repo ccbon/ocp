@@ -1,7 +1,5 @@
 package org.ocpteam.component;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.EOFException;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
@@ -63,17 +61,12 @@ public class TCPServer extends Container {
 							@Override
 							public void run() {
 								TCPServer.this.register(socket);
-								DataInputStream in = null;
-								DataOutputStream out = null;
+								
 								try {
-									in = new DataInputStream(socket
-											.getInputStream());
-									out = new DataOutputStream(socket
-											.getOutputStream());
 									int i = 0;
 									while (i < 1000) {
 										JLG.debug("wait for message");
-										protocol.process(in, out, socket);
+										protocol.process(socket);
 										i++;
 									}
 								} catch (SocketException e) {
@@ -81,14 +74,6 @@ public class TCPServer extends Container {
 								} catch (Exception e) {
 									e.printStackTrace();
 								} finally {
-									try {
-										in.close();
-									} catch (Exception e) {
-									}
-									try {
-										out.close();
-									} catch (Exception e) {
-									}
 									try {
 										socket.close();
 									} catch (Exception e) {
