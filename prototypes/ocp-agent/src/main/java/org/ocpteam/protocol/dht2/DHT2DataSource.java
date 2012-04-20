@@ -45,7 +45,7 @@ import org.ocpteam.misc.JLG;
 public class DHT2DataSource extends DSPDataSource {
 
 	private Map<String, String> map;
-	private DHT2DataModel dm;
+	public DHT2DataModel dm;
 	private MessageDigest md;
 	public RingNodeMap ringNodeMap;
 
@@ -71,6 +71,7 @@ public class DHT2DataSource extends DSPDataSource {
 
 	@Override
 	public synchronized void connect() throws Exception {
+		JLG.debug("connect " + getName());
 		super.connect();
 		Context c = new Context(dm);
 		setContext(c);
@@ -78,10 +79,10 @@ public class DHT2DataSource extends DSPDataSource {
 
 	@Override
 	protected void readNetworkConfig() throws Exception {
+		JLG.debug("readNetworkConfig " + getName());
 		super.readNetworkConfig();
 		md = MessageDigest.getInstance(network.getProperty("hash", "SHA-1"));
 		int ringNbr = Integer.parseInt(network.getProperty("ringNbr", "3"));
-		JLG.debug("ringNbr=" + ringNbr);
 		ringNodeMap.setRingNbr(ringNbr);
 	}
 
@@ -96,12 +97,16 @@ public class DHT2DataSource extends DSPDataSource {
 		super.onNodeArrival();
 		Contact predecessor = ringNodeMap.getPredecessor();
 		if (predecessor.isMyself()) {
+			if (agent.isFirstAgent()) {
+				JLG.debug("first agent: ds=" + getName());
+				return;
+			}
 			// it means I am the first agent on my ring.
 			// look at the other ring and copy all their content.
-			return;
+			copyRingContent();
 		}
 		DHT2Module m = getComponent(DHT2Module.class);
-		InputFlow message = new InputFlow(m.subMap(), getNode().getNodeId());
+		InputFlow message = new InputFlow(m.transferSubMap(), getNode().getNodeId());
 		Socket socket = null;
 		try {
 
@@ -130,6 +135,19 @@ public class DHT2DataSource extends DSPDataSource {
 				socket = null;
 			}
 		}
+	}
+
+	private void copyRingContent() throws Exception {
+		JLG.debug("start to copy ring content (ds=" + getName() + " ring=" + getNode().getRing() + ")");
+		for (NodeMap nodeMap : ringNodeMap.getNodeMaps()) {
+			for (Contact c : nodeMap.getNodeMap().values()) {
+				if (c.isMyself()) {
+					continue;
+				}
+				Map<String, String> localMap = dm.localMap(c);
+				map.putAll(localMap);
+			}
+		}		
 	}
 
 	@Override
@@ -216,10 +234,10 @@ public class DHT2DataSource extends DSPDataSource {
 				JLG.println("  Map: " + localMap);
 				for (String key : localMap.keySet()) {
 					JLG.println("address(" + key + ")=" + dm.getAddress(key));
-				}				
+				}
 			}
 		}
-		
+
 	}
 
 	public Map<String, String> getMap() {

@@ -116,5 +116,10 @@ public class NodeMap extends DataSourceContainer implements INodeMap {
 	public boolean isEmpty() {
 		return nodeMap.isEmpty();
 	}
+	
+	@Override
+	public String toString() {
+		return nodeMap.toString();
+	}
 
 }

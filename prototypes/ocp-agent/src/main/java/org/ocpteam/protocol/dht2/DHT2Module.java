@@ -14,6 +14,7 @@ import org.ocpteam.entity.EOMObject;
 import org.ocpteam.entity.Session;
 import org.ocpteam.interfaces.IActivity;
 import org.ocpteam.interfaces.ITransaction;
+import org.ocpteam.misc.Id;
 import org.ocpteam.misc.JLG;
 
 public class DHT2Module extends Module {
@@ -22,7 +23,7 @@ public class DHT2Module extends Module {
 	protected static final int RETRIEVE = 3002;
 	protected static final int REMOVE = 3003;
 	protected static final int KEYSET = 3004;
-	protected static final int SUBMAP = 3005;
+	protected static final int TRANSFERSUBMAP = 3005;
 	protected static final int SETMAP = 3006;
 	protected static final int GETLOCALMAP = 3007;
 
@@ -115,31 +116,35 @@ public class DHT2Module extends Module {
 		};
 	}
 
-	public IActivity subMap() {
+	public IActivity transferSubMap() {
 		return new IActivity() {
 
 			@Override
 			public void run(Session session, Serializable[] objects,
 					DataInputStream in, DataOutputStream out, Protocol protocol)
 					throws Exception {
-				JLG.debug("submap...");
+				JLG.debug("transfer submap...");
 				// normally we should filter the key where hash(key) >= given
 				// node_id...
+				Id nodeId = (Id) objects[0];
 				DHT2DataSource ds = (DHT2DataSource) session.ds();
 				Set<String> set = ds.keySet();
 				JLG.debug("set=" + set);
 				for (String s : set) {
-					JLG.debug("write " + s);
-					protocol.getStreamSerializer().writeObject(out, s);
-					protocol.getStreamSerializer().writeObject(out,
-							ds.retrieve(s));
-					
+					Id address = ds.dm.getAddress(s);
+					if (address.compareTo(nodeId) > 0) {
+						JLG.debug("write " + s);
+						protocol.getStreamSerializer().writeObject(out, s);
+						protocol.getStreamSerializer().writeObject(out,
+								ds.retrieve(s));
+						ds.destroy(s);
+					}
 				}
 			}
 
 			@Override
 			public int getId() {
-				return SUBMAP;
+				return TRANSFERSUBMAP;
 			}
 		};
 	}
@@ -158,8 +163,8 @@ public class DHT2Module extends Module {
 				DHT2DataSource ds = (DHT2DataSource) session.ds();
 				try {
 					while (true) {
-						Serializable serializable = protocol.getStreamSerializer()
-								.readObject(in);
+						Serializable serializable = protocol
+								.getStreamSerializer().readObject(in);
 						if (serializable instanceof EOMObject) {
 							break;
 						}
@@ -169,11 +174,11 @@ public class DHT2Module extends Module {
 						ds.store(key, value);
 						protocol.getStreamSerializer().writeObject(out, null);
 					}
-					
+
 				} catch (SocketException e) {
 				} catch (EOFException e) {
 				} catch (SocketTimeoutException e) {
-					
+
 				}
 
 			}
@@ -188,7 +193,7 @@ public class DHT2Module extends Module {
 	public IActivity getLocalMap() {
 		// TODO Auto-generated method stub
 		return new IActivity() {
-			
+
 			@Override
 			public void run(Session session, Serializable[] objects,
 					DataInputStream in, DataOutputStream out, Protocol protocol)
@@ -201,11 +206,11 @@ public class DHT2Module extends Module {
 					JLG.debug("write " + s);
 					protocol.getStreamSerializer().writeObject(out, s);
 					protocol.getStreamSerializer().writeObject(out,
-							ds.retrieve(s));					
+							ds.retrieve(s));
 				}
-				
+
 			}
-			
+
 			@Override
 			public int getId() {
 				return GETLOCALMAP;

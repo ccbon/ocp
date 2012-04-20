@@ -6,7 +6,6 @@ import java.util.Properties;
 
 import org.junit.Test;
 import org.ocpteam.component.ContactMap;
-import org.ocpteam.component.NodeMap;
 import org.ocpteam.interfaces.IMapDataModel;
 import org.ocpteam.misc.JLG;
 import org.ocpteam.protocol.dht2.DHT2DataSource;
@@ -25,7 +24,8 @@ public class DHT2Test {
 			JLG.debug_on();
 			JLG.bUseSet = true;
 			JLG.set.add(DHT2Test.class.getName());
-			JLG.set.add(NodeMap.class.getName());
+			//JLG.set.add(DHT2DataSource.class.getName());
+			//JLG.set.add(RingNodeMap.class.getName());
 
 			DHT2DataSource[] ds = new DHT2DataSource[n];
 			for (int i = 0; i < n; i++) {
