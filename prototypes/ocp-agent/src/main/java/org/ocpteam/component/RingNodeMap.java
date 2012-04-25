@@ -50,10 +50,15 @@ public class RingNodeMap extends DataSourceContainer implements INodeMap {
 	}
 
 	@Override
-	public Contact getPredecessor() throws Exception {
-		Node node = ds().getNode();
+	public Contact getPredecessor(Node node) throws Exception {
 		int r = node.getRing();
-		return rings.get(r).getPredecessor();
+		return rings.get(r).getPredecessor(node);
+	}
+	
+	@Override
+	public Contact getSuccessor(Node node) throws Exception {
+		int r = node.getRing();
+		return rings.get(r).getSuccessor(node);
 	}
 
 	@Override
@@ -111,5 +116,6 @@ public class RingNodeMap extends DataSourceContainer implements INodeMap {
 		}
 		return result;
 	}
+
 
 }

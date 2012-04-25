@@ -8,4 +8,6 @@ public interface ITransaction {
 	Serializable run(Session session, Serializable[] objects) throws Exception;
 
 	int getId();
+
+	String getName();
 }

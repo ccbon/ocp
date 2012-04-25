@@ -22,7 +22,7 @@ public class DHT2Test {
 			int n = 10;
 			int port = 40000;
 			JLG.debug_on();
-			//JLG.bUseSet = true;
+			JLG.bUseSet = true;
 			JLG.set.add(DHT2Test.class.getName());
 			//JLG.set.add(DHT2DataSource.class.getName());
 			//JLG.set.add(RingNodeMap.class.getName());
@@ -65,8 +65,14 @@ public class DHT2Test {
 			dm.set("coucou", "suzana");
 			ds[0].networkPicture();
 			
+			ds[0].disconnectHard();
+			Thread.sleep(10000);
+			ds[1].contactMap.refreshContactList();
+			JLG.debug("-------------------------------------");
+			ds[1].networkPicture();
+			
 			JLG.debug("coucou->" + dm.get("coucou"));
-			for (int i = 0; i < n; i++) {
+			for (int i = 1; i < n; i++) {
 				JLG.debug("disconnecting " + ds[i].getName());
 				ds[i].disconnectHard();
 			}

@@ -25,6 +25,11 @@ public class OCPModule extends DSPModule {
 			public int getId() {
 				return REQUEST_NODE_ID;
 			}
+
+			@Override
+			public String getName() {
+				return "REQUEST_NODE_ID";
+			}
 		};
 	}
 }

@@ -96,7 +96,7 @@ public class DHT1DataSource extends DSPDataSource {
 	@Override
 	protected void onNodeArrival() throws Exception {
 		super.onNodeArrival();
-		Contact predecessor = nodeMap.getPredecessor();
+		Contact predecessor = nodeMap.getPredecessor(getNode());
 		if (predecessor.isMyself()) {
 			// it means I am the last agent or the first agent.
 			return;
@@ -137,7 +137,7 @@ public class DHT1DataSource extends DSPDataSource {
 	protected void onNodeNiceDeparture() throws Exception {
 		super.onNodeNiceDeparture();
 		// Strategy: take all local map content and send it to the predecessor.
-		Contact predecessor = nodeMap.getPredecessor();
+		Contact predecessor = nodeMap.getPredecessor(getNode());
 		if (predecessor.isMyself()) {
 			// it means I am the last agent or the first agent.
 			return;

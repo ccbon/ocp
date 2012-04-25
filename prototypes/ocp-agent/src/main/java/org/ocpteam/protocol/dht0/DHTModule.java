@@ -37,6 +37,11 @@ public class DHTModule extends Module {
 			public int getId() {
 				return STORE;
 			}
+
+			@Override
+			public String getName() {
+				return "STORE";
+			}
 		};
 	}
 
@@ -55,6 +60,11 @@ public class DHTModule extends Module {
 			@Override
 			public int getId() {
 				return RETRIEVE;
+			}
+
+			@Override
+			public String getName() {
+				return "RETRIEVE";
 			}
 		};
 	}
@@ -75,6 +85,11 @@ public class DHTModule extends Module {
 			@Override
 			public int getId() {
 				return REMOVE;
+			}
+
+			@Override
+			public String getName() {
+				return "REMOVE";
 			}
 		};
 	}

@@ -14,7 +14,9 @@ public interface INodeMap extends IComponent {
 
 	void removeAll();
 
-	Contact getPredecessor() throws Exception;
+	Contact getPredecessor(Node node) throws Exception;
+	
+	Contact getSuccessor(Node node) throws Exception;
 
 	boolean isResponsible(Id address) throws Exception;
 

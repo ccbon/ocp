@@ -94,8 +94,8 @@ public class NodeMap extends DataSourceContainer implements INodeMap {
 	}
 
 	@Override
-	public Contact getPredecessor() throws Exception {
-		Id nodeId = ds().getNode().getNodeId();
+	public Contact getPredecessor(Node node) throws Exception {
+		Id nodeId = node.getNodeId();
 
 		Id previousNodeId = nodeMap.lowerKey(nodeId);
 		if (previousNodeId == null) {
@@ -107,6 +107,21 @@ public class NodeMap extends DataSourceContainer implements INodeMap {
 		}
 		return getContact(previousNodeId);
 
+	}
+
+	@Override
+	public Contact getSuccessor(Node node) throws Exception {
+		Id nodeId = node.getNodeId();
+
+		Id nextNodeId = nodeMap.higherKey(nodeId);
+		if (nextNodeId == null) {
+			nextNodeId = nodeMap.firstKey();
+		}
+		if (nextNodeId == null) {
+			throw new Exception(
+					"cannot find successor. It seems that the nodeMap is empty.");
+		}
+		return getContact(nextNodeId);
 	}
 
 	public int size() {

@@ -26,6 +26,7 @@ public class DHT2Module extends Module {
 	protected static final int TRANSFERSUBMAP = 3005;
 	protected static final int SETMAP = 3006;
 	protected static final int GETLOCALMAP = 3007;
+	protected static final int RESTORE = 3008;
 
 	public ITransaction store() {
 		return new ITransaction() {
@@ -48,6 +49,11 @@ public class DHT2Module extends Module {
 			public int getId() {
 				return STORE;
 			}
+
+			@Override
+			public String getName() {
+				return "STORE";
+			}
 		};
 	}
 
@@ -69,6 +75,11 @@ public class DHT2Module extends Module {
 			public int getId() {
 				return RETRIEVE;
 			}
+
+			@Override
+			public String getName() {
+				return "RETRIEVE";
+			}
 		};
 	}
 
@@ -88,6 +99,11 @@ public class DHT2Module extends Module {
 			@Override
 			public int getId() {
 				return REMOVE;
+			}
+
+			@Override
+			public String getName() {
+				return "REMOVE";
 			}
 		};
 	}
@@ -131,7 +147,7 @@ public class DHT2Module extends Module {
 				Set<String> set = ds.keySet();
 				JLG.debug("set=" + set);
 				for (String s : set) {
-					Id address = ds.dm.getAddress(s);
+					Id address = ds.getAddress(s);
 					if (address.compareTo(nodeId) > 0) {
 						JLG.debug("write " + s);
 						protocol.getStreamSerializer().writeObject(out, s);
@@ -150,7 +166,6 @@ public class DHT2Module extends Module {
 	}
 
 	public IActivity setMap() {
-		// TODO Auto-generated method stub
 		return new IActivity() {
 
 			@Override
@@ -191,7 +206,6 @@ public class DHT2Module extends Module {
 	}
 
 	public IActivity getLocalMap() {
-		// TODO Auto-generated method stub
 		return new IActivity() {
 
 			@Override
@@ -214,6 +228,33 @@ public class DHT2Module extends Module {
 			@Override
 			public int getId() {
 				return GETLOCALMAP;
+			}
+		};
+	}
+
+	public ITransaction restore() {
+		return new ITransaction() {
+			
+			@Override
+			public Serializable run(Session session, Serializable[] objects)
+					throws Exception {
+				JLG.debug("restore...");
+				DHT2DataSource ds = (DHT2DataSource) session.ds();
+				// find another ring and copy the data from it.
+				Id startNodeId = (Id) objects[0];
+				Id endNodeId = (Id) objects[1];
+				ds.restore(startNodeId, endNodeId);
+				return null;
+			}
+			
+			@Override
+			public int getId() {
+				return RESTORE;
+			}
+
+			@Override
+			public String getName() {
+				return "RESTORE";
 			}
 		};
 	}

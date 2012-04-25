@@ -21,6 +21,7 @@ import org.ocpteam.entity.Contact;
 import org.ocpteam.entity.Context;
 import org.ocpteam.entity.EOMObject;
 import org.ocpteam.entity.InputFlow;
+import org.ocpteam.entity.InputMessage;
 import org.ocpteam.entity.Node;
 import org.ocpteam.exception.NotAvailableContactException;
 import org.ocpteam.interfaces.IDataModel;
@@ -34,8 +35,8 @@ import org.ocpteam.misc.JLG;
  * 
  * Strategies:
  * 
- * - Node Arrival: node chosen randomly and ring chosen as well randomly.
- * data transferred from ring predecessor.
+ * - Node Arrival: node chosen randomly and ring chosen as well randomly. data
+ * transferred from ring predecessor.
  * 
  * - Node Rude Detachment: Data contained in the node is retrieved on another
  * existing ring and replaced on the detached node ring.
@@ -96,7 +97,7 @@ public class DHT2DataSource extends DSPDataSource {
 	@Override
 	protected void onNodeArrival() throws Exception {
 		super.onNodeArrival();
-		Contact predecessor = ringNodeMap.getPredecessor();
+		Contact predecessor = ringNodeMap.getPredecessor(getNode());
 		if (predecessor.isMyself()) {
 			if (agent.isFirstAgent()) {
 				JLG.debug("first agent: ds=" + getName());
@@ -107,7 +108,8 @@ public class DHT2DataSource extends DSPDataSource {
 			copyRingContent();
 		}
 		DHT2Module m = getComponent(DHT2Module.class);
-		InputFlow message = new InputFlow(m.transferSubMap(), getNode().getNodeId());
+		InputFlow message = new InputFlow(m.transferSubMap(), getNode()
+				.getNodeId());
 		Socket socket = null;
 		try {
 
@@ -139,7 +141,8 @@ public class DHT2DataSource extends DSPDataSource {
 	}
 
 	private void copyRingContent() throws Exception {
-		JLG.debug("start to copy ring content (ds=" + getName() + " ring=" + getNode().getRing() + ")");
+		JLG.debug("start to copy ring content (ds=" + getName() + " ring="
+				+ getNode().getRing() + ")");
 		for (NodeMap nodeMap : ringNodeMap.getNodeMaps()) {
 			for (Contact c : nodeMap.getNodeMap().values()) {
 				if (c.isMyself()) {
@@ -148,16 +151,17 @@ public class DHT2DataSource extends DSPDataSource {
 				Map<String, String> localMap = dm.localMap(c);
 				map.putAll(localMap);
 			}
-		}		
+		}
 	}
 
 	@Override
 	protected void onNodeNiceDeparture() throws Exception {
 		super.onNodeNiceDeparture();
 		// Strategy: take all local map content and send it to the predecessor.
-		Contact predecessor = ringNodeMap.getPredecessor();
+		Contact predecessor = ringNodeMap.getPredecessor(getNode());
 		if (predecessor.isMyself()) {
 			// it means I am the last agent.
+			// the ring is lost...
 			return;
 		}
 		DHT2Module m = getComponent(DHT2Module.class);
@@ -205,6 +209,10 @@ public class DHT2DataSource extends DSPDataSource {
 	public Id hash(byte[] input) throws Exception {
 		return new Id(md.digest(input));
 	}
+	
+	public Id getAddress(String key) throws Exception {
+		return hash(key.getBytes());
+	}
 
 	public void store(String key, String value) {
 		JLG.debug("local store: " + key + "->" + value);
@@ -234,17 +242,16 @@ public class DHT2DataSource extends DSPDataSource {
 				Map<String, String> localMap = dm.localMap(c);
 				JLG.println("  Map: " + localMap);
 				for (String key : localMap.keySet()) {
-					JLG.println("address(" + key + ")=" + dm.getAddress(key));
+					JLG.println("address(" + key + ")=" + getAddress(key));
 				}
 			}
 		}
-
 	}
 
 	public Map<String, String> getMap() {
 		return map;
 	}
-	
+
 	public synchronized void disconnectHard() throws Exception {
 		super.disconnect();
 		if (server.isStarted()) {
@@ -253,4 +260,65 @@ public class DHT2DataSource extends DSPDataSource {
 		}
 		map.clear();
 	}
+
+	@Override
+	public void onDetach(Contact contact) {
+		// data maintained previousely by contact must be maintained on the
+		// network.
+
+		try {
+			Contact successor = ringNodeMap.getSuccessor(contact.getNode());
+			Contact predecessor = ringNodeMap.getPredecessor(contact.getNode());
+			DHT2Module m = getComponent(DHT2Module.class);
+			InputMessage message = new InputMessage(m.restore(), contact.getNode().getNodeId(), successor.getNode().getNodeId());
+			client.send(predecessor, message);
+			
+		} catch (Exception e) {
+
+		}
+	}
+
+	public void restore(Id startNodeId, Id endNodeId) throws Exception {
+		int r = getNode().getRing();
+		int backupRing = 0;
+		if (r == 0) {
+			backupRing = 1;
+		}
+		for (Contact c : ringNodeMap.getNodeMaps()[backupRing].getNodeMap().values()) {
+			DHT2Module m = getComponent(DHT2Module.class);
+			InputFlow message = new InputFlow(m.getLocalMap());
+			Socket socket = null;
+			try {
+
+				socket = contactMap.getTcpClient(c).borrowSocket(message);
+				DataInputStream in = new DataInputStream(socket.getInputStream());
+				while (true) {
+					Serializable serializable = protocol.getStreamSerializer()
+							.readObject(in);
+					if (serializable instanceof EOMObject) {
+						break;
+					}
+					String key = (String) serializable;
+					String value = (String) protocol.getStreamSerializer()
+							.readObject(in);
+					Id address = getAddress(key);
+					if ((address.compareTo(startNodeId) > 0) && (address.compareTo(endNodeId) < 0)) {
+						store(key, value);
+					}
+				}
+				contactMap.getTcpClient(c).returnSocket(socket);
+				socket = null;
+			} catch (SocketException e) {
+			} catch (EOFException e) {
+			} catch (SocketTimeoutException e) {
+			} catch (NotAvailableContactException e) {
+			} finally {
+				if (socket != null) {
+					socket.close();
+					socket = null;
+				}
+			}
+		}
+	}
+
 }

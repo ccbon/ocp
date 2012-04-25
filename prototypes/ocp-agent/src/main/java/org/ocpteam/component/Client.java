@@ -181,7 +181,12 @@ public class Client extends DataSourceContainer implements IClient {
 
 	public Serializable request(Contact contact, Serializable input)
 			throws Exception {
-		JLG.debug("sending request on contact: " + contact);
+		if (input instanceof InputMessage) {
+			InputMessage im = (InputMessage) input;
+			JLG.debug(ds().getName() + " sending message (" + im.transaction.getName() + ") on contact: " + contact);
+		} else {
+			JLG.debug("sending request on contact: " + contact);
+		}
 		Serializable output = null;
 		// use the TCP connection.
 		TCPClient tcpClient = contactMap.getTcpClient(contact);
@@ -256,8 +261,9 @@ public class Client extends DataSourceContainer implements IClient {
 
 	public void detach(Contact contact) throws Exception {
 		JLG.debug("detaching contact: " + contact);
-
+		
 		contactMap.remove(contact);
+		ds().onDetach(contact);
 		// tell to your contacts this contact has disappeared.
 		// this code is comment it for performance reasons...
 		// DSPModule m = ds().getComponent(DSPModule.class);
@@ -299,7 +305,7 @@ public class Client extends DataSourceContainer implements IClient {
 	}
 
 	public void send(Contact c, Serializable message) throws Exception {
-		JLG.debug(ds().getName() + " sends a message to " + c);
+		JLG.debug("send");
 		try {
 			request(c, message);
 		} catch (NotAvailableContactException e) {

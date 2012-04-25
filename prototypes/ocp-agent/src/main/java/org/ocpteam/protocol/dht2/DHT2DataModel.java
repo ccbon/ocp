@@ -43,7 +43,7 @@ public class DHT2DataModel extends DataSourceContainer implements IMapDataModel 
 		if (nodeMap.isEmpty()) {
 			return;
 		}
-		Id address = getAddress(key);
+		Id address = ds().getAddress(key);
 		if (nodeMap.isResponsible(address)) {
 			ds().store(key, value);
 			return;
@@ -56,14 +56,12 @@ public class DHT2DataModel extends DataSourceContainer implements IMapDataModel 
 				ring, key, value));
 	}
 
-	public Id getAddress(String key) throws Exception {
-		return ds().hash(key.getBytes());
-	}
+	
 
 	@Override
 	public String get(String key) throws Exception {
 		// strategy : look at the first one you get.
-		Id address = getAddress(key);
+		Id address = ds().getAddress(key);
 		if (ds().ringNodeMap.isResponsible(address)) {
 			return ds().retrieve(key);
 		}
@@ -80,7 +78,7 @@ public class DHT2DataModel extends DataSourceContainer implements IMapDataModel 
 	}
 
 	private String get(int i, String key) throws Exception {
-		Id address = getAddress(key);
+		Id address = ds().getAddress(key);
 		NodeMap nodeMap = ds().ringNodeMap.getNodeMaps()[i];
 		Queue<Contact> contactQueue = nodeMap.getContactQueue(address);
 		DHT2Module m = ds().getComponent(DHT2Module.class);

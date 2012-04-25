@@ -45,6 +45,11 @@ public class DHT1Module extends Module {
 			public int getId() {
 				return STORE;
 			}
+
+			@Override
+			public String getName() {
+				return "STORE";
+			}
 		};
 	}
 
@@ -66,6 +71,11 @@ public class DHT1Module extends Module {
 			public int getId() {
 				return RETRIEVE;
 			}
+
+			@Override
+			public String getName() {
+				return "RETRIEVE";
+			}
 		};
 	}
 
@@ -85,6 +95,11 @@ public class DHT1Module extends Module {
 			@Override
 			public int getId() {
 				return REMOVE;
+			}
+
+			@Override
+			public String getName() {
+				return "REMOVE";
 			}
 		};
 	}
@@ -143,7 +158,6 @@ public class DHT1Module extends Module {
 	}
 
 	public IActivity setMap() {
-		// TODO Auto-generated method stub
 		return new IActivity() {
 
 			@Override

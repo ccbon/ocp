@@ -36,6 +36,12 @@ public class DSPModule extends Module {
 			public int getId() {
 				return DECLARE_CONTACT;
 			}
+
+			@Override
+			public String getName() {
+				// TODO Auto-generated method stub
+				return "DECLARE_CONTACT";
+			}
 		};
 	}
 
@@ -54,6 +60,11 @@ public class DSPModule extends Module {
 			public int getId() {
 				return GET_NETWORK_PROPERTIES;
 			}
+
+			@Override
+			public String getName() {
+				return "GET_NETWORK_PROPERTIES";
+			}
 		};
 	}
 
@@ -71,6 +82,11 @@ public class DSPModule extends Module {
 			public int getId() {
 				return GET_CONTACT;
 			}
+
+			@Override
+			public String getName() {
+				return "GET_CONTACT";
+			}
 		};
 	}
 
@@ -86,6 +102,12 @@ public class DSPModule extends Module {
 			@Override
 			public int getId() {
 				return PING;
+			}
+
+			@Override
+			public String getName() {
+				// TODO Auto-generated method stub
+				return "PING";
 			}
 		};
 	}
@@ -106,6 +128,11 @@ public class DSPModule extends Module {
 			public int getId() {
 				return DETACH;
 			}
+
+			@Override
+			public String getName() {
+				return "DETACH";
+			}
 		};
 	}
 
@@ -121,6 +148,11 @@ public class DSPModule extends Module {
 			@Override
 			public int getId() {
 				return ASK_FOR_CONTACT;
+			}
+
+			@Override
+			public String getName() {
+				return "ASK_FOR_CONTACT";
 			}
 		};
 	}

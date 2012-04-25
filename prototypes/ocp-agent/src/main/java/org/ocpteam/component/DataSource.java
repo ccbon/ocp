@@ -217,6 +217,9 @@ public abstract class DataSource extends TopContainer implements IComponent,
 		this.node = node;
 	}
 
+	public void onDetach(Contact contact) {
+	}
+
 
 
 }
