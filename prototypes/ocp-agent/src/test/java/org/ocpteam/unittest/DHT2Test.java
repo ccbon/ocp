@@ -6,7 +6,6 @@ import java.util.Properties;
 
 import org.junit.Test;
 import org.ocpteam.component.ContactMap;
-import org.ocpteam.interfaces.IMapDataModel;
 import org.ocpteam.misc.JLG;
 import org.ocpteam.protocol.dht2.DHT2DataSource;
 
@@ -51,9 +50,7 @@ public class DHT2Test {
 			}
 
 			ds[0].connect();
-			IMapDataModel dm = (IMapDataModel) ds[0].getContext()
-					.getDataModel();
-			dm.set("hello", "world");
+			ds[0].dm.set("hello", "world");
 
 			// start all
 			for (int i = 1; i < n; i++) {
@@ -62,16 +59,16 @@ public class DHT2Test {
 				JLG.debug("ds[" + i + "] contact map size: " + cm.size());
 				assertEquals(i + 1, cm.size());
 			}
-			dm.set("coucou", "suzana");
+			ds[0].dm.set("coucou", "suzana");
 			ds[0].networkPicture();
 			
 			ds[0].disconnectHard();
-			Thread.sleep(10000);
 			ds[1].contactMap.refreshContactList();
+			ds[1].client.waitForCompletion();
 			JLG.debug("-------------------------------------");
 			ds[1].networkPicture();
 			
-			JLG.debug("coucou->" + dm.get("coucou"));
+			JLG.debug("coucou->" + ds[1].dm.get("coucou"));
 			for (int i = 1; i < n; i++) {
 				JLG.debug("disconnecting " + ds[i].getName());
 				ds[i].disconnectHard();

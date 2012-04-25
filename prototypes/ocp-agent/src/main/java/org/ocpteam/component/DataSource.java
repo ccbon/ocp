@@ -42,7 +42,7 @@ public abstract class DataSource extends TopContainer implements IComponent,
 	private String name;
 	protected Class<? extends Contact> contactClass;
 	private Node node;
-	
+
 	@Override
 	public void init() throws Exception {
 		super.init();
@@ -180,7 +180,7 @@ public abstract class DataSource extends TopContainer implements IComponent,
 	public String getName() {
 		return name;
 	}
-	
+
 	public Contact toContact() throws Exception {
 		// convert the agent public information into a contact
 		Contact c = contactClass.newInstance();
@@ -192,7 +192,8 @@ public abstract class DataSource extends TopContainer implements IComponent,
 		c.setNode(node);
 		// add the listener url and node id information
 		if (usesComponent(Server.class)) {
-			Iterator<IListener> it = getComponent(Server.class).getListeners().iterator();
+			Iterator<IListener> it = getComponent(Server.class).getListeners()
+					.iterator();
 			while (it.hasNext()) {
 				IListener l = it.next();
 				if (l instanceof TCPListener) {
@@ -208,7 +209,7 @@ public abstract class DataSource extends TopContainer implements IComponent,
 
 		return c;
 	}
-	
+
 	public Node getNode() {
 		return node;
 	}
@@ -217,9 +218,13 @@ public abstract class DataSource extends TopContainer implements IComponent,
 		this.node = node;
 	}
 
+	/**
+	 * This method is called just after a contact is detached. By default it
+	 * does nothing but you can overwrite it.
+	 * 
+	 * @param contact
+	 */
 	public void onDetach(Contact contact) {
 	}
-
-
 
 }

@@ -360,6 +360,7 @@ public class Client extends DataSourceContainer implements IClient {
 			executor.shutdownNow();
 			executor = null;
 		}
+		completionService = null;
 	}
 
 	@Override

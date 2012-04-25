@@ -253,11 +253,7 @@ public class DHT2DataSource extends DSPDataSource {
 	}
 
 	public synchronized void disconnectHard() throws Exception {
-		super.disconnect();
-		if (server.isStarted()) {
-			JLG.debug("stopping the server");
-			server.stop();
-		}
+		super.disconnectHard();
 		map.clear();
 	}
 

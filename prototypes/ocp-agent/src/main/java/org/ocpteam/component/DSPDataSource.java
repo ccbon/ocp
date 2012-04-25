@@ -106,6 +106,14 @@ public abstract class DSPDataSource extends DataSource {
 			server.stop();
 		}
 	}
+	
+	public synchronized void disconnectHard() throws Exception {
+		super.disconnect();
+		if (server.isStarted()) {
+			JLG.debug("stopping the server");
+			server.stop();
+		}
+	}
 
 	protected void onNodeNiceDeparture() throws Exception {		
 	}
