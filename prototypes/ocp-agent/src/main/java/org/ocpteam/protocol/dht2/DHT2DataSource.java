@@ -17,6 +17,7 @@ import java.util.Set;
 import org.ocpteam.component.DSPDataSource;
 import org.ocpteam.component.NodeMap;
 import org.ocpteam.component.RingNodeMap;
+import org.ocpteam.entity.Address;
 import org.ocpteam.entity.Contact;
 import org.ocpteam.entity.Context;
 import org.ocpteam.entity.EOMObject;
@@ -210,8 +211,8 @@ public class DHT2DataSource extends DSPDataSource {
 		return new Id(md.digest(input));
 	}
 	
-	public Id getAddress(String key) throws Exception {
-		return hash(key.getBytes());
+	public Address getAddress(String key) throws Exception {
+		return new Address(hash(key.getBytes()));
 	}
 
 	public void store(String key, String value) {

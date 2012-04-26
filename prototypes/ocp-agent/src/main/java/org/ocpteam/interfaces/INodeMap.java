@@ -1,9 +1,9 @@
 package org.ocpteam.interfaces;
 
 import org.ocpteam.core.IComponent;
+import org.ocpteam.entity.Address;
 import org.ocpteam.entity.Contact;
 import org.ocpteam.entity.Node;
-import org.ocpteam.misc.Id;
 
 
 public interface INodeMap extends IComponent {
@@ -18,6 +18,6 @@ public interface INodeMap extends IComponent {
 	
 	Contact getSuccessor(Node node) throws Exception;
 
-	boolean isResponsible(Id address) throws Exception;
+	boolean isResponsible(Address address) throws Exception;
 
 }

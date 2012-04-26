@@ -12,6 +12,7 @@ import java.util.LinkedList;
 
 import org.ocpteam.component.Agent;
 import org.ocpteam.component.Protocol;
+import org.ocpteam.entity.Address;
 import org.ocpteam.entity.InputMessage;
 import org.ocpteam.entity.Session;
 import org.ocpteam.misc.Id;

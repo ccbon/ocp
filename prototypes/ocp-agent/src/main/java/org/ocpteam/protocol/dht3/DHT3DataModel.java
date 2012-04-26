@@ -15,6 +15,7 @@ import java.util.Set;
 
 import org.ocpteam.component.DSContainer;
 import org.ocpteam.component.NodeMap;
+import org.ocpteam.entity.Address;
 import org.ocpteam.entity.Contact;
 import org.ocpteam.entity.EOMObject;
 import org.ocpteam.entity.InputFlow;
@@ -40,7 +41,7 @@ public class DHT3DataModel extends DSContainer<DHT3DataSource> implements IMapDa
 		if (nodeMap.isEmpty()) {
 			return;
 		}
-		Id address = ds().getAddress(key);
+		Address address = ds().getAddress(key);
 		if (nodeMap.isResponsible(address)) {
 			ds().store(key, value);
 			return;
@@ -58,7 +59,7 @@ public class DHT3DataModel extends DSContainer<DHT3DataSource> implements IMapDa
 	@Override
 	public String get(String key) throws Exception {
 		// strategy : look at the first one you get.
-		Id address = ds().getAddress(key);
+		Address address = ds().getAddress(key);
 		if (ds().ringNodeMap.isResponsible(address)) {
 			return ds().retrieve(key);
 		}
@@ -98,7 +99,7 @@ public class DHT3DataModel extends DSContainer<DHT3DataSource> implements IMapDa
 		if (nodeMap.isEmpty()) {
 			return;
 		}
-		Id address = ds().getAddress(key);
+		Address address = ds().getAddress(key);
 		if (nodeMap.isResponsible(address)) {
 			ds().destroy(key);
 			return;

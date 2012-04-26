@@ -3,11 +3,15 @@ package org.ocpteam.component;
 import java.net.URI;
 import java.util.Properties;
 
+import org.ocpteam.entity.Contact;
+import org.ocpteam.entity.Node;
 import org.ocpteam.interfaces.IProtocol;
 import org.ocpteam.misc.JLG;
 
 public abstract class DSPDataSource extends DataSource {
 
+	private Node node;
+	
 	public Agent agent;
 	public Client client;
 	protected Server server;
@@ -41,6 +45,14 @@ public abstract class DSPDataSource extends DataSource {
 		udplistener = getComponent(UDPListener.class);
 		udplistener.setProtocol(protocol);
 		contactMap = getComponent(ContactMap.class);
+	}
+	
+	public Node getNode() {
+		return node;
+	}
+
+	public void setNode(Node node) {
+		this.node = node;
 	}
 
 	@Override
@@ -120,6 +132,13 @@ public abstract class DSPDataSource extends DataSource {
 
 	protected Properties getNetworkProperties() {
 		return JLG.extractProperties(getConfig(), "network");
+	}
+	
+	@Override
+	public Contact toContact() throws Exception {
+		Contact c = super.toContact();
+		c.setNode(node);
+		return c;
 	}
 
 

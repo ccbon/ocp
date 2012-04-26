@@ -3,17 +3,17 @@ package org.ocpteam.component;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.ocpteam.entity.Address;
 import org.ocpteam.entity.Contact;
 import org.ocpteam.entity.Node;
 import org.ocpteam.interfaces.INodeMap;
-import org.ocpteam.misc.Id;
 import org.ocpteam.misc.JLG;
 
 /**
  * A node map with many rings. A ring is instanciated by a nodeMap.
  * 
  */
-public class RingNodeMap extends DSContainer<DataSource> implements INodeMap {
+public class RingNodeMap extends DSContainer<DSPDataSource> implements INodeMap {
 
 	private int ringNbr;
 
@@ -62,7 +62,7 @@ public class RingNodeMap extends DSContainer<DataSource> implements INodeMap {
 	}
 
 	@Override
-	public boolean isResponsible(Id address) throws Exception {
+	public boolean isResponsible(Address address) throws Exception {
 		Node node = ds().getNode();
 		if (node == null) {
 			return false;

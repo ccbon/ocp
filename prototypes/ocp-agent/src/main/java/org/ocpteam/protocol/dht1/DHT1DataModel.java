@@ -12,6 +12,7 @@ import java.util.Queue;
 import java.util.Set;
 
 import org.ocpteam.component.DSContainer;
+import org.ocpteam.entity.Address;
 import org.ocpteam.entity.Contact;
 import org.ocpteam.entity.EOMObject;
 import org.ocpteam.entity.InputFlow;
@@ -19,7 +20,6 @@ import org.ocpteam.entity.InputMessage;
 import org.ocpteam.entity.Response;
 import org.ocpteam.exception.NotAvailableContactException;
 import org.ocpteam.interfaces.IMapDataModel;
-import org.ocpteam.misc.Id;
 import org.ocpteam.misc.JLG;
 
 public class DHT1DataModel extends DSContainer<DHT1DataSource> implements IMapDataModel {
@@ -28,7 +28,7 @@ public class DHT1DataModel extends DSContainer<DHT1DataSource> implements IMapDa
 	public void set(String key, String value) throws Exception {
 		// strategy: find the contacts responsible for the key then send the set
 		// order to the right contact
-		Id address = getAddress(key);
+		Address address = getAddress(key);
 		if (ds().nodeMap.isResponsible(address)) {
 			ds().store(key, value);
 			return;
@@ -40,14 +40,14 @@ public class DHT1DataModel extends DSContainer<DHT1DataSource> implements IMapDa
 		ds().client.requestByPriority(contactQueue, new InputMessage(m.store(), key, value));
 	}
 
-	private Id getAddress(String key) throws Exception {
-		return ds().hash(key.getBytes());
+	private Address getAddress(String key) throws Exception {
+		return new Address(ds().hash(key.getBytes()));
 	}
 
 	@Override
 	public String get(String key) throws Exception {
 		// strategy: if responsible look locally else ask to the right contact
-		Id address = getAddress(key);
+		Address address = getAddress(key);
 		if (ds().nodeMap.isResponsible(address)) {
 			return ds().retrieve(key);
 		}
@@ -60,7 +60,7 @@ public class DHT1DataModel extends DSContainer<DHT1DataSource> implements IMapDa
 	@Override
 	public void remove(String key) throws Exception {
 		// strategy: send to all node the remove request.
-		Id address = getAddress(key);
+		Address address = getAddress(key);
 		if (ds().nodeMap.isResponsible(address)) {
 			ds().destroy(key);
 			return;

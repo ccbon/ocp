@@ -6,13 +6,14 @@ import java.util.NavigableMap;
 import java.util.Queue;
 import java.util.TreeMap;
 
+import org.ocpteam.entity.Address;
 import org.ocpteam.entity.Contact;
 import org.ocpteam.entity.Node;
 import org.ocpteam.interfaces.INodeMap;
 import org.ocpteam.misc.Id;
 import org.ocpteam.misc.JLG;
 
-public class NodeMap extends DSContainer<DataSource> implements INodeMap {
+public class NodeMap extends DSContainer<DSPDataSource> implements INodeMap {
 	private NavigableMap<Id, Contact> nodeMap;
 
 	@Override
@@ -45,7 +46,7 @@ public class NodeMap extends DSContainer<DataSource> implements INodeMap {
 	}
 
 	@Override
-	public boolean isResponsible(Id address) throws Exception {
+	public boolean isResponsible(Address address) throws Exception {
 		Node node = ds().getNode();
 		if (node == null) {
 			return false;

@@ -11,7 +11,6 @@ import org.ocpteam.core.IContainer;
 import org.ocpteam.core.TopContainer;
 import org.ocpteam.entity.Contact;
 import org.ocpteam.entity.Context;
-import org.ocpteam.entity.Node;
 import org.ocpteam.interfaces.IConnect;
 import org.ocpteam.interfaces.IDocument;
 import org.ocpteam.interfaces.IListener;
@@ -41,7 +40,7 @@ public abstract class DataSource extends TopContainer implements IComponent,
 	private boolean bIsConnected;
 	private String name;
 	protected Class<? extends Contact> contactClass;
-	private Node node;
+	
 
 	@Override
 	public void init() throws Exception {
@@ -189,7 +188,6 @@ public abstract class DataSource extends TopContainer implements IComponent,
 		}
 		c.setName(getName());
 		c.setHost("localhost");
-		c.setNode(node);
 		// add the listener url and node id information
 		if (usesComponent(Server.class)) {
 			Iterator<IListener> it = getComponent(Server.class).getListeners()
@@ -208,14 +206,6 @@ public abstract class DataSource extends TopContainer implements IComponent,
 		}
 
 		return c;
-	}
-
-	public Node getNode() {
-		return node;
-	}
-
-	public void setNode(Node node) {
-		this.node = node;
 	}
 
 	/**
