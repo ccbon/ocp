@@ -46,7 +46,11 @@ public class NodeMap extends DSContainer<DataSource> implements INodeMap {
 
 	@Override
 	public boolean isResponsible(Id address) throws Exception {
-		return getNode(address).equals(getRoot().getNode().getNodeId());
+		Node node = ds().getNode();
+		if (node == null) {
+			return false;
+		}
+		return getNode(address).equals(node.getNodeId());
 	}
 
 	private Id getNode(Id address) throws Exception {
