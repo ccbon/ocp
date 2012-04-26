@@ -89,10 +89,13 @@ public class DHT2Module implements IModule {
 			@Override
 			public Serializable run(Session session, Serializable[] objects)
 					throws Exception {
-				JLG.debug("remove...");
+				JLG.debug("storing...");
 				DHT2DataSource ds = (DHT2DataSource) session.ds();
-				String key = (String) objects[0];
-				ds.destroy(key);
+				DHT2DataModel dm = (DHT2DataModel) ds.getContext()
+						.getDataModel();
+				int i = (Integer) objects[0];
+				String key = (String) objects[1];
+				dm.remove(i, key);
 				return null;
 			}
 

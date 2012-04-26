@@ -84,17 +84,29 @@ public class DHT2DataModel extends DSContainer<DHT2DataSource> implements IMapDa
 
 	@Override
 	public void remove(String key) throws Exception {
-		// // strategy: send to all node the remove request.
-		// Id address = getAddress(key);
-		// if (ds().nodeMap.isResponsible(address)) {
-		// ds().destroy(key);
-		// return;
-		// }
-		//
-		// DHT2Module m = ds().getComponent(DHT2Module.class);
-		// ds().client.sendAll(new InputMessage(m.remove(), key));
-		// ds().client.waitForCompletion();
-		//
+		// Stragegy: remove on all rings the pair key->value.
+		for (int i = 0; i < ds().ringNodeMap.getRingNbr(); i++) {
+			remove(i, key);
+		}
+
+	}
+
+	public void remove(int ring, String key) throws Exception {
+		NodeMap nodeMap = ds().ringNodeMap.getNodeMaps()[ring];
+		if (nodeMap.isEmpty()) {
+			return;
+		}
+		Id address = ds().getAddress(key);
+		if (nodeMap.isResponsible(address)) {
+			ds().destroy(key);
+			return;
+		}
+		Queue<Contact> contactQueue = nodeMap.getContactQueue(address);
+		JLG.debug("contactQueue=" + contactQueue);
+
+		DHT2Module m = ds().getComponent(DHT2Module.class);
+		ds().client.requestByPriority(contactQueue, new InputMessage(m.remove(),
+				ring, key));
 	}
 
 	@Override

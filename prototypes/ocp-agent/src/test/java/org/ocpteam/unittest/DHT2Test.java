@@ -60,6 +60,7 @@ public class DHT2Test {
 				assertEquals(i + 1, cm.size());
 			}
 			ds[0].dm.set("coucou", "suzana");
+			ds[0].dm.remove("hello");
 			ds[0].networkPicture();
 			
 			ds[0].disconnectHard();

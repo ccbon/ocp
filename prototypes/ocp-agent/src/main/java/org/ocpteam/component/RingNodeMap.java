@@ -63,7 +63,7 @@ public class RingNodeMap extends DSContainer<DataSource> implements INodeMap {
 
 	@Override
 	public boolean isResponsible(Id address) throws Exception {
-		Node node = getRoot().getNode();
+		Node node = ds().getNode();
 		int r = node.getRing();
 		return rings.get(r).isResponsible(address);
 	}
