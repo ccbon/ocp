@@ -101,7 +101,6 @@ public class DataSourceWindow extends ApplicationWindow implements
 		super(null);
 	}
 
-	@Override
 	public void init() {
 		this.dsf = app.getComponent(DataSourceFactory.class);
 		createActions();

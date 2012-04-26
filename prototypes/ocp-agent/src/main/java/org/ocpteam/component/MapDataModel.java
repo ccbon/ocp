@@ -3,9 +3,10 @@ package org.ocpteam.component;
 import java.util.Map;
 import java.util.Set;
 
+import org.ocpteam.core.Container;
 import org.ocpteam.interfaces.IMapDataModel;
 
-public class MapDataModel extends DataSourceContainer implements IMapDataModel {
+public class MapDataModel extends Container<DataSource> implements IMapDataModel {
 
 	protected Map<String, String> map;
 	

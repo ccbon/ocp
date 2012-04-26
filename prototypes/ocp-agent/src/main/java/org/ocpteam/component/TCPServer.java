@@ -11,11 +11,10 @@ import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import org.ocpteam.core.Container;
 import org.ocpteam.interfaces.IProtocol;
 import org.ocpteam.misc.JLG;
 
-public class TCPServer extends Container {
+public class TCPServer {
 
 	private int port;
 	private ServerSocket serverSocket;
@@ -24,9 +23,7 @@ public class TCPServer extends Container {
 	private Set<Socket> socketSet;
 	private IProtocol protocol;
 
-	@Override
-	public void init() throws Exception {
-		super.init();
+	public TCPServer() throws Exception {
 		socketSet = Collections.synchronizedSet(new HashSet<Socket>());
 	}
 

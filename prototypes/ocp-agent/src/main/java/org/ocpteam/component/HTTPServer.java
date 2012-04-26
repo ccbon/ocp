@@ -3,13 +3,12 @@ package org.ocpteam.component;
 import java.net.InetSocketAddress;
 import java.util.concurrent.Executors;
 
-import org.ocpteam.core.Container;
 import org.ocpteam.misc.JLG;
 
 import com.sun.net.httpserver.HttpServer;
 
 @SuppressWarnings("restriction")
-public class HTTPServer extends Container implements Runnable {
+public class HTTPServer implements Runnable {
 
 	private int port;
 	private HTTPServerHandler handler;

@@ -6,7 +6,7 @@ import org.ocpteam.interfaces.IListener;
 import org.ocpteam.interfaces.IProtocol;
 import org.ocpteam.misc.JLG;
 
-public class TCPListener extends DataSourceContainer implements IListener {
+public class TCPListener extends DSContainer<DataSource> implements IListener {
 
 	private URI url;
 
@@ -17,11 +17,6 @@ public class TCPListener extends DataSourceContainer implements IListener {
 	public TCPListener() throws Exception {
 		//addComponent(NATTraversal.class);
 		addComponent(TCPServer.class);
-	}
-
-	@Override
-	public void init() throws Exception {
-		super.init();
 	}
 
 	@Override
@@ -41,10 +36,8 @@ public class TCPListener extends DataSourceContainer implements IListener {
 			getComponent(NATTraversal.class).setPort(port);
 			getComponent(NATTraversal.class).map();
 		}
-
-		
+	
 		tcpServer = getComponent(TCPServer.class).getClass().newInstance();
-		tcpServer.init();
 		tcpServer.setPort(port);
 		tcpServer.setProtocol(protocol);
 		tcpServer.start();

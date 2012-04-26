@@ -5,14 +5,14 @@ import java.io.DataOutputStream;
 import java.io.Serializable;
 import java.util.Set;
 
-import org.ocpteam.component.Module;
 import org.ocpteam.component.Protocol;
 import org.ocpteam.entity.Session;
 import org.ocpteam.interfaces.IActivity;
+import org.ocpteam.interfaces.IModule;
 import org.ocpteam.interfaces.ITransaction;
 import org.ocpteam.misc.JLG;
 
-public class DHTModule extends Module {
+public class DHTModule implements IModule {
 
 	protected static final int STORE = 3001;
 	protected static final int RETRIEVE = 3002;

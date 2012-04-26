@@ -2,11 +2,12 @@ package org.ocpteam.component;
 
 import java.net.URI;
 
+import org.ocpteam.core.Container;
 import org.ocpteam.interfaces.IListener;
 import org.ocpteam.interfaces.IProtocol;
 import org.ocpteam.misc.JLG;
 
-public class UDPListener extends DataSourceContainer implements IListener {
+public class UDPListener extends Container<DataSource> implements IListener {
 
 	private URI url;
 	private IProtocol protocol;
@@ -15,11 +16,6 @@ public class UDPListener extends DataSourceContainer implements IListener {
 	public UDPListener() throws Exception {
 		//addComponent(NATTraversal.class);
 		addComponent(UDPServer.class);
-	}
-
-	@Override
-	public void init() throws Exception {
-		super.init();
 	}
 
 	@Override
@@ -42,7 +38,6 @@ public class UDPListener extends DataSourceContainer implements IListener {
 		}
 
 		udpServer = getComponent(UDPServer.class).getClass().newInstance();
-		udpServer.init();
 		udpServer.setProtocol(protocol);
 		udpServer.setPort(port);
 		udpServer.start();

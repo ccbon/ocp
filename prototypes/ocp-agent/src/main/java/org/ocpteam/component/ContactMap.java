@@ -17,7 +17,7 @@ import org.ocpteam.misc.JLG;
 import org.ocpteam.network.TCPClient;
 import org.ocpteam.network.UDPClient;
 
-public class ContactMap extends DataSourceContainer {
+public class ContactMap extends DSContainer<DSPDataSource> {
 
 	private Map<String, Contact> map;
 	private Map<String, TCPClient> tcpClientMap;
@@ -27,12 +27,6 @@ public class ContactMap extends DataSourceContainer {
 		map = Collections.synchronizedMap(new HashMap<String, Contact>());
 		tcpClientMap = Collections.synchronizedMap(new HashMap<String, TCPClient>());
 		udpClientMap = Collections.synchronizedMap(new HashMap<String, UDPClient>());
-	}
-
-	@Override
-	public DSPDataSource ds() {
-		// TODO Auto-generated method stub
-		return (DSPDataSource) super.ds();
 	}
 
 	public Contact getContact(String name) throws Exception {

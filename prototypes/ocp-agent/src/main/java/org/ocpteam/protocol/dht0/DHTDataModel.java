@@ -15,7 +15,7 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 
-import org.ocpteam.component.DataSourceContainer;
+import org.ocpteam.component.DSContainer;
 import org.ocpteam.entity.Contact;
 import org.ocpteam.entity.EOMObject;
 import org.ocpteam.entity.InputFlow;
@@ -24,12 +24,7 @@ import org.ocpteam.exception.NotAvailableContactException;
 import org.ocpteam.interfaces.IMapDataModel;
 import org.ocpteam.misc.JLG;
 
-public class DHTDataModel extends DataSourceContainer implements IMapDataModel {
-
-	@Override
-	public DHTDataSource ds() {
-		return (DHTDataSource) super.ds();
-	}
+public class DHTDataModel extends DSContainer<DHTDataSource> implements IMapDataModel {
 
 	@Override
 	public void set(String key, String value) throws Exception {

@@ -11,18 +11,18 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import org.ocpteam.core.IComponent;
 import org.ocpteam.entity.EOMObject;
 import org.ocpteam.entity.InputFlow;
 import org.ocpteam.entity.InputMessage;
 import org.ocpteam.entity.Session;
 import org.ocpteam.entity.StreamSerializer;
 import org.ocpteam.interfaces.IActivity;
+import org.ocpteam.interfaces.IModule;
 import org.ocpteam.interfaces.IProtocol;
 import org.ocpteam.interfaces.ITransaction;
 import org.ocpteam.misc.JLG;
 
-public class Protocol extends DataSourceContainer implements IProtocol {
+public class Protocol extends DSContainer<DataSource> implements IProtocol {
 
 	private StreamSerializer streamSerializer;
 
@@ -39,16 +39,16 @@ public class Protocol extends DataSourceContainer implements IProtocol {
 		super.init();
 		// load all module
 		JLG.debug("components: " + this.getDesigner().getMap());
-		Iterator<IComponent> it = ds().iteratorComponent();
+		Iterator<Object> it = getRoot().iteratorComponent();
 		while (it.hasNext()) {
-			IComponent c = it.next();
-			if (c instanceof Module) {
-				load((Module) c);
+			Object o = it.next();
+			if (o instanceof IModule) {
+				load((IModule) o);
 			}
 		}
 	}
 
-	public void load(Module m) throws Exception {
+	public void load(IModule m) throws Exception {
 		JLG.debug("loading module: " + m.getClass());
 		for (Method f : m.getClass().getMethods()) {
 			Object o = f.getReturnType();

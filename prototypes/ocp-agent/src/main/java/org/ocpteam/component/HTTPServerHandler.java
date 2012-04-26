@@ -7,6 +7,8 @@ import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.ocpteam.core.Container;
+import org.ocpteam.core.IContainer;
 import org.ocpteam.misc.JLG;
 
 import com.sun.net.httpserver.Headers;
@@ -14,14 +16,14 @@ import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 
 @SuppressWarnings("restriction")
-public class HTTPServerHandler extends DataSourceContainer implements HttpHandler {
+public class HTTPServerHandler extends Container<IContainer> implements HttpHandler {
 
 	private String root;
 	private Map<String, String> extMap;
 
 	@Override
 	public void init() {
-		this.root = ds().getProperty("http.htdocs", ".");
+		this.root = getRoot().getProperty("http.htdocs", ".");
 		extMap = new HashMap<String, String>();
 		extMap.put("txt", "text/plain");
 		extMap.put("html", "text/html");

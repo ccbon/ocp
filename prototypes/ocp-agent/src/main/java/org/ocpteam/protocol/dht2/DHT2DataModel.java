@@ -11,7 +11,7 @@ import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
 
-import org.ocpteam.component.DataSourceContainer;
+import org.ocpteam.component.DSContainer;
 import org.ocpteam.component.NodeMap;
 import org.ocpteam.entity.Contact;
 import org.ocpteam.entity.EOMObject;
@@ -23,12 +23,7 @@ import org.ocpteam.interfaces.IMapDataModel;
 import org.ocpteam.misc.Id;
 import org.ocpteam.misc.JLG;
 
-public class DHT2DataModel extends DataSourceContainer implements IMapDataModel {
-
-	@Override
-	public DHT2DataSource ds() {
-		return (DHT2DataSource) super.ds();
-	}
+public class DHT2DataModel extends DSContainer<DHT2DataSource> implements IMapDataModel {
 
 	@Override
 	public void set(String key, String value) throws Exception {

@@ -5,11 +5,10 @@ import java.net.DatagramSocket;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import org.ocpteam.core.Container;
 import org.ocpteam.interfaces.IProtocol;
 import org.ocpteam.misc.JLG;
 
-public class UDPServer extends Container {
+public class UDPServer {
 
 	private int port;
 	private DatagramSocket serverSocket;
@@ -17,14 +16,8 @@ public class UDPServer extends Container {
 	private ExecutorService pool;
 	private IProtocol protocol;
 
-	@Override
-	public void init() throws Exception {
-		super.init();
-	}
-
 	public void setPort(int port) {
 		this.port = port;
-
 	}
 
 	public void start() {

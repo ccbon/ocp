@@ -12,12 +12,12 @@ import org.ocpteam.interfaces.IServer;
  * its listeners. Idem for stopping.
  * 
  */
-public class Server extends DataSourceContainer implements IServer {
+public class Server extends DSContainer<DataSource> implements IServer {
 
 	protected boolean bIsStarted = false;
 
 	protected List<IListener> listenerList = new ArrayList<IListener>();
-
+	
 	@Override
 	public boolean isStarted() {
 		return bIsStarted;

@@ -9,18 +9,18 @@ import java.util.Properties;
 import java.util.ResourceBundle;
 
 import org.ocpteam.core.Container;
-import org.ocpteam.core.IComponent;
+import org.ocpteam.core.IContainer;
 import org.ocpteam.misc.JLG;
 
-public class DataSourceFactory extends Container {
+public class DataSourceFactory extends Container<IContainer> {
 	public static ResourceBundle extensionResource = ResourceBundle
 			.getBundle("extensions");
 	
 	public Iterator<DataSource> getDataSourceIterator() {
 		List<DataSource> l = new LinkedList<DataSource>();
-		Iterator<IComponent> it = iteratorComponent();
+		Iterator<Object> it = iteratorComponent();
 		while (it.hasNext()) {
-			IComponent functionality = it.next();
+			Object functionality = it.next();
 			if (functionality instanceof DataSource) {
 				l.add((DataSource) functionality);
 			}

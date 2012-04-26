@@ -5,47 +5,46 @@ import java.util.Properties;
 
 import org.ocpteam.misc.JLG;
 
-
 public class TopContainer implements IContainer {
-	
+
 	protected Properties p = new Properties();
-	
+
 	private Designer designer;
-	
+
 	@Override
-	public <T extends IComponent> boolean usesComponent(Class<T> c) {
+	public <T> boolean usesComponent(Class<T> c) {
 		return designer.uses(c);
 	}
 
 	@Override
-	public <T extends IComponent> T getComponent(Class<T> c) {
+	public <T> T getComponent(Class<T> c) {
 		return designer.get(c);
 	}
 
 	@Override
-	public <T extends IComponent> T addComponent(Class<T> c) throws Exception {
+	public <T> T addComponent(Class<T> c) throws Exception {
 		return designer.add(c);
 	}
 
 	@Override
-	public <T extends IComponent> T addComponent(Class<T> c, T instance)
+	public <T> T addComponent(Class<T> c, T instance)
 			throws Exception {
 		return designer.add(c, instance);
 	}
 
 	@Override
-	public <T extends IComponent> void replaceComponent(Class<T> c, T instance)
+	public <T> void replaceComponent(Class<T> c, T instance)
 			throws Exception {
 		designer.replace(c, instance);
 	}
 
 	@Override
-	public <T extends IComponent> T removeComponent(Class<T> c) {
+	public <T> T removeComponent(Class<T> c) {
 		return designer.remove(c);
 	}
-	
+
 	@Override
-	public Iterator<IComponent> iteratorComponent() {
+	public Iterator<Object> iteratorComponent() {
 		return designer.iterator();
 	}
 
@@ -57,17 +56,16 @@ public class TopContainer implements IContainer {
 	public Designer getDesigner() {
 		return designer;
 	}
-	
+
 	@Override
 	public void setConfig(Properties p) {
 		this.p = p;
 	}
-	
+
 	@Override
 	public Properties getConfig() {
 		return p;
 	}
-
 
 	@Override
 	public String getProperty(String key) {
@@ -83,7 +81,7 @@ public class TopContainer implements IContainer {
 	public void setProperty(String key, String value) {
 		p.setProperty(key, value);
 	}
-	
+
 	@Override
 	public Iterator<String> iterator() {
 		return p.stringPropertyNames().iterator();
@@ -97,12 +95,14 @@ public class TopContainer implements IContainer {
 	@Override
 	public void init() throws Exception {
 		JLG.debug("init class " + getClass());
-		Iterator<IComponent> it = designer.iterator();
+		Iterator<Object> it = designer.iterator();
 		while (it.hasNext()) {
-			it.next().init();
+			Object o = it.next();
+			if (o instanceof IContainer) {
+				((IContainer) o).init();
+			}
 		}
-		
-	}
 
+	}
 
 }

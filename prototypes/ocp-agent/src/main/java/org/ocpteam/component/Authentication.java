@@ -6,7 +6,7 @@ import org.ocpteam.entity.User;
 import org.ocpteam.interfaces.IAuthenticable;
 import org.ocpteam.misc.JLG;
 
-public class Authentication extends DataSourceContainer {
+public class Authentication extends DSContainer<DataSource> {
 
 	private Object challenge;
 	private String login;
@@ -79,12 +79,12 @@ public class Authentication extends DataSourceContainer {
 	}
 
 	public void login() throws Exception {
-		IAuthenticable client = (IAuthenticable) ds().getComponent(Client.class);
+		IAuthenticable client = (IAuthenticable) getRoot().getComponent(Client.class);
 		client.login();
 	}
 
 	public void logout() throws Exception {
-		IAuthenticable client = (IAuthenticable) ds().getComponent(Client.class);
+		IAuthenticable client = (IAuthenticable) getRoot().getComponent(Client.class);
 		client.logout();
 		reset();
 	}

@@ -1,7 +1,7 @@
 package org.ocpteam.core;
 
-
-public class Container extends TopContainer implements IComponent {
+public class Container<T extends IContainer> extends TopContainer implements
+		IComponent {
 
 	private IContainer parent;
 
@@ -14,10 +14,11 @@ public class Container extends TopContainer implements IComponent {
 	public IContainer getParent() {
 		return parent;
 	}
-	
+
+	@SuppressWarnings("unchecked")
 	@Override
-	public IContainer getRoot() {
-		return parent.getRoot();
+	public T getRoot() {
+		return (T) parent.getRoot();
 	}
-	
+
 }

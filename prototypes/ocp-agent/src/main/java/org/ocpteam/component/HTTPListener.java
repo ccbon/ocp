@@ -9,7 +9,7 @@ import org.ocpteam.misc.JLG;
 import com.sun.net.httpserver.HttpServer;
 
 @SuppressWarnings("restriction")
-public class HTTPListener extends DataSourceContainer implements IListener {
+public class HTTPListener extends DSContainer<DataSource> implements IListener {
 
 	private URI url;
 	HttpServer oldserver;

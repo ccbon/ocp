@@ -12,7 +12,7 @@ import org.ocpteam.interfaces.INodeMap;
 import org.ocpteam.misc.Id;
 import org.ocpteam.misc.JLG;
 
-public class NodeMap extends DataSourceContainer implements INodeMap {
+public class NodeMap extends DSContainer<DataSource> implements INodeMap {
 	private NavigableMap<Id, Contact> nodeMap;
 
 	@Override
@@ -46,7 +46,7 @@ public class NodeMap extends DataSourceContainer implements INodeMap {
 
 	@Override
 	public boolean isResponsible(Id address) throws Exception {
-		return getNode(address).equals(ds().getNode().getNodeId());
+		return getNode(address).equals(getRoot().getNode().getNodeId());
 	}
 
 	private Id getNode(Id address) throws Exception {

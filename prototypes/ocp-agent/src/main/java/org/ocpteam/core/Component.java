@@ -19,8 +19,4 @@ public class Component implements IComponent {
 		return parent.getRoot();
 	}
 
-	@Override
-	public void init() {
-	}
-
 }

@@ -30,7 +30,7 @@ import org.ocpteam.network.TCPClient;
 import org.ocpteam.network.UDPClient;
 import org.ocpteam.protocol.ocp.OCPAgent;
 
-public class Client extends DataSourceContainer implements IClient {
+public class Client extends DSContainer<DSPDataSource> implements IClient {
 
 	private ContactMap contactMap;
 	private ExecutorService executor;

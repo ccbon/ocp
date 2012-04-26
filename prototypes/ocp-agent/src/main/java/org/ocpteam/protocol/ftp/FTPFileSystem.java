@@ -7,12 +7,11 @@ import java.io.FileOutputStream;
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPFile;
 import org.apache.commons.net.ftp.FTPFileFilter;
-import org.ocpteam.component.DataSourceContainer;
 import org.ocpteam.interfaces.IFile;
 import org.ocpteam.interfaces.IFileSystem;
 import org.ocpteam.misc.JLG;
 
-public class FTPFileSystem extends DataSourceContainer implements IFileSystem {
+public class FTPFileSystem implements IFileSystem {
 
 	private org.apache.commons.net.ftp.FTPClient ftp;
 

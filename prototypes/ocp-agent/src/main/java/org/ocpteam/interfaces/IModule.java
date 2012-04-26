@@ -1,5 +1,5 @@
 package org.ocpteam.interfaces;
 
-public interface IDataModel {
+public interface IModule {
 
 }

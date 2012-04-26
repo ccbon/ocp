@@ -7,18 +7,22 @@ import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
-import org.ocpteam.component.DataSourceContainer;
+import org.ocpteam.core.Container;
 import org.ocpteam.interfaces.IFile;
 import org.ocpteam.interfaces.IFileSystem;
 import org.ocpteam.misc.JLG;
 
-public class ZipFileSystem extends DataSourceContainer implements IFileSystem {
+public class ZipFileSystem extends Container<ZipDataSource> implements IFileSystem {
 
 	public ZipFileImpl root;
 
 	public ZipFileSystem() {
 	}
 
+	ZipDataSource ds() {
+		return getRoot();
+	}
+	
 	@Override
 	public void checkoutAll(String localDir) throws Exception {
 		// TODO Auto-generated method stub

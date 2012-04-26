@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.util.Vector;
 
-import org.ocpteam.component.DataSourceContainer;
 import org.ocpteam.entity.User;
 import org.ocpteam.interfaces.IFile;
 import org.ocpteam.interfaces.IFileSystem;
@@ -13,7 +12,7 @@ import org.ocpteam.misc.JLG;
 import com.jcraft.jsch.ChannelSftp.LsEntry;
 import com.jcraft.jsch.SftpATTRS;
 
-public class SFTPFileSystem extends DataSourceContainer implements IFileSystem {
+public class SFTPFileSystem implements IFileSystem {
 
 	private SFTPClient agent;
 	protected User user;

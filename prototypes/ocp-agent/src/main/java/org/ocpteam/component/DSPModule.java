@@ -5,10 +5,11 @@ import java.net.InetAddress;
 
 import org.ocpteam.entity.Contact;
 import org.ocpteam.entity.Session;
+import org.ocpteam.interfaces.IModule;
 import org.ocpteam.interfaces.ITransaction;
 import org.ocpteam.misc.JLG;
 
-public class DSPModule extends Module {
+public class DSPModule implements IModule {
 
 	protected static final int DECLARE_CONTACT = 1000;
 	protected static final int GET_NETWORK_PROPERTIES = 1001;

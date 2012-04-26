@@ -2,9 +2,9 @@ package org.ocpteam.interfaces;
 
 import java.net.URI;
 
-import org.ocpteam.core.IComponent;
+import org.ocpteam.core.IContainer;
 
-public interface IListener extends IComponent {
+public interface IListener extends IContainer {
 
 	void start() throws Exception;
 

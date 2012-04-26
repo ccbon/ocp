@@ -13,7 +13,7 @@ import org.ocpteam.misc.JLG;
  * A node map with many rings. A ring is instanciated by a nodeMap.
  * 
  */
-public class RingNodeMap extends DataSourceContainer implements INodeMap {
+public class RingNodeMap extends DSContainer<DataSource> implements INodeMap {
 
 	private int ringNbr;
 
@@ -32,7 +32,7 @@ public class RingNodeMap extends DataSourceContainer implements INodeMap {
 			rings.put(r, nodeMap);
 		}
 		rings.get(r).put(node, c);
-		JLG.debug("ringNodeMap contains " + ds().getName());
+		JLG.debug("ringNodeMap contains " + getRoot().getName());
 		JLG.debug("ringNodeMap " + this);
 	}
 
@@ -63,7 +63,7 @@ public class RingNodeMap extends DataSourceContainer implements INodeMap {
 
 	@Override
 	public boolean isResponsible(Id address) throws Exception {
-		Node node = ds().getNode();
+		Node node = getRoot().getNode();
 		int r = node.getRing();
 		return rings.get(r).isResponsible(address);
 	}

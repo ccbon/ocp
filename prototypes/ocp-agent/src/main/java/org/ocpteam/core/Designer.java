@@ -4,72 +4,77 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-
 public class Designer {
 
-	private Map<Class<IComponent>, IComponent> map;
+	private Map<Class<Object>, Object> map;
 
 	private IContainer parent;
-	
+
 	public Designer(IContainer parent) {
-		map = new HashMap<Class<IComponent>, IComponent>();
+		map = new HashMap<Class<Object>, Object>();
 		this.parent = parent;
 	}
-	
+
 	public IContainer getParent() {
 		return parent;
 	}
 
-	public <T extends IComponent> boolean uses(Class<T> c) {
+	public <T> boolean uses(Class<T> c) {
 		return map.containsKey(c);
 	}
 
 	@SuppressWarnings("unchecked")
-	public <T extends IComponent> T get(Class<T> c) {
+	public <T> T get(Class<T> c) {
 		return (T) map.get(c);
 	}
 
 	@SuppressWarnings("unchecked")
-	public <T extends IComponent> T add(Class<T> c) throws Exception {
+	public <T> T add(Class<T> c) throws Exception {
 		if (!map.containsKey(c)) {
 			T instance = c.newInstance();
-			instance.setParent(parent);
-			map.put((Class<IComponent>) c, instance);
+			if (instance instanceof IComponent) {
+				((IComponent) instance).setParent(parent);
+			}
+			map.put((Class<Object>) c, instance);
 		}
 		return (T) map.get(c);
 	}
 
 	@SuppressWarnings("unchecked")
-	public <T extends IComponent> T add(Class<T> c, T instance) throws Exception {
+	public <T> T add(Class<T> c, T instance) throws Exception {
 		if (!map.containsKey(c)) {
-			instance.setParent(parent);
-			map.put((Class<IComponent>) c, instance);
+			if (instance instanceof IComponent) {
+				((IComponent) instance).setParent(parent);
+			}
+			map.put((Class<Object>) c, instance);
 		}
 		return (T) map.get(c);
 	}
-	
+
 	@SuppressWarnings("unchecked")
-	public <T extends IComponent> void replace(Class<T> c, T instance) throws Exception {
+	public <T> void replace(Class<T> c, T instance)
+			throws Exception {
 		if (map.containsKey(c)) {
-			instance.setParent(parent);
-			map.put((Class<IComponent>) c, instance);
-		}  else {
+			if (instance instanceof IComponent) {
+				((IComponent) instance).setParent(parent);
+			}
+			map.put((Class<Object>) c, instance);
+		} else {
 			throw new Exception("functionality not existing");
 		}
 	}
 
-	public Iterator<IComponent> iterator() {
+	public Iterator<Object> iterator() {
 		return map.values().iterator();
 	}
 
 	@SuppressWarnings("unchecked")
-	public <T extends IComponent> T remove(Class<T> c) {
+	public <T> T remove(Class<T> c) {
 		return (T) map.remove(c);
 	}
-	
-	public Map<Class<IComponent>, IComponent> getMap() {
+
+	public Map<Class<Object>, Object> getMap() {
 		return map;
 	}
-
 
 }
