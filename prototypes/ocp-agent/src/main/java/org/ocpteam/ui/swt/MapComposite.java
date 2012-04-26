@@ -2,6 +2,7 @@ package org.ocpteam.ui.swt;
 
 import java.util.Set;
 
+import org.eclipse.jface.action.MenuManager;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
@@ -9,6 +10,7 @@ import org.eclipse.swt.events.MenuDetectEvent;
 import org.eclipse.swt.events.MenuDetectListener;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
@@ -36,7 +38,23 @@ public class MapComposite extends Composite {
 		table = new Table(this, SWT.BORDER | SWT.FULL_SELECTION);
 		table.addMenuDetectListener(new MenuDetectListener() {
 			@Override
-			public void menuDetected(MenuDetectEvent arg0) {
+			public void menuDetected(MenuDetectEvent arg0) {	
+				JLG.debug("opening context menu");
+				final MenuManager myMenu = new MenuManager("xxx");
+				final Menu menu = myMenu.createContextMenu(MapComposite.this.dsw.getShell());
+
+				int sel = table.getSelection().length;
+				if (sel > 0) {
+					RemoveKeyAction removeKeyAction = new RemoveKeyAction(MapComposite.this.dsw);
+					myMenu.add(removeKeyAction);
+				}
+				if (sel == 0) {
+					myMenu.add(new SetKeyAction(MapComposite.this.dsw));
+				}
+				menu.setEnabled(true);
+				myMenu.setVisible(true);
+				menu.setVisible(true);
+
 			}
 		});
 		table.addKeyListener(new KeyAdapter() {
