@@ -3,10 +3,12 @@ package org.ocpteam.protocol.dht2;
 import java.io.DataInputStream;
 import java.io.EOFException;
 import java.io.Serializable;
+import java.io.StreamCorruptedException;
 import java.net.Socket;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
@@ -111,57 +113,56 @@ public class DHT2DataModel extends DSContainer<DHT2DataSource> implements IMapDa
 
 	@Override
 	public Set<String> keySet() throws Exception {
-		return null;
-		// // strategy: merge the keyset of all contacts
-		// Set<String> set = new HashSet<String>(ds().keySet());
-		// DHT2Module m = ds().getComponent(DHT2Module.class);
-		// InputFlow message = new InputFlow(m.keySet());
-		// for (Contact c : ds().contactMap.getOtherContacts()) {
-		// Socket socket = null;
-		// try {
-		// int retry = 0;
-		// while (true) {
-		// try {
-		// socket = ds().contactMap.getTcpClient(c).borrowSocket(
-		// message);
-		// DataInputStream in = new DataInputStream(
-		// socket.getInputStream());
-		// while (true) {
-		// Serializable serializable = ds().protocol
-		// .getStreamSerializer().readObject(in);
-		// if (serializable instanceof EOMObject) {
-		// break;
-		// }
-		// String s = (String) serializable;
-		// JLG.debug("s=" + s);
-		// set.add(s);
-		// }
-		// ds().contactMap.getTcpClient(c).returnSocket(socket);
-		// break;
-		// } catch (StreamCorruptedException e) {
-		// if (socket != null) {
-		// socket.close();
-		// socket = null;
-		// }
-		// retry++;
-		// if (retry > 3) {
-		// throw e;
-		// }
-		// }
-		// }
-		// } catch (SocketException e) {
-		// } catch (EOFException e) {
-		// } catch (SocketTimeoutException e) {
-		// } catch (NotAvailableContactException e) {
-		// } finally {
-		// if (socket != null) {
-		// socket.close();
-		// socket = null;
-		// }
-		// }
-		//
-		// }
-		// return set;
+		// strategy: go on all contact and get back all keys...
+		Set<String> set = new HashSet<String>(ds().keySet());
+		DHT2Module m = ds().getComponent(DHT2Module.class);
+		InputFlow message = new InputFlow(m.keySet());
+		for (Contact c : ds().contactMap.getOtherContacts()) {
+			Socket socket = null;
+			try {
+				int retry = 0;
+				while (true) {
+					try {
+						socket = ds().contactMap.getTcpClient(c).borrowSocket(
+								message);
+						DataInputStream in = new DataInputStream(
+								socket.getInputStream());
+						while (true) {
+							Serializable serializable = ds().protocol
+									.getStreamSerializer().readObject(in);
+							if (serializable instanceof EOMObject) {
+								break;
+							}
+							String s = (String) serializable;
+							JLG.debug("s=" + s);
+							set.add(s);
+						}
+						ds().contactMap.getTcpClient(c).returnSocket(socket);
+						break;
+					} catch (StreamCorruptedException e) {
+						if (socket != null) {
+							socket.close();
+							socket = null;
+						}
+						retry++;
+						if (retry > 3) {
+							throw e;
+						}
+					}
+				}
+			} catch (SocketException e) {
+			} catch (EOFException e) {
+			} catch (SocketTimeoutException e) {
+			} catch (NotAvailableContactException e) {
+			} finally {
+				if (socket != null) {
+					socket.close();
+					socket = null;
+				}
+			}
+
+		}
+		return set;
 	}
 
 	public Map<String, String> localMap(Contact c) throws Exception {

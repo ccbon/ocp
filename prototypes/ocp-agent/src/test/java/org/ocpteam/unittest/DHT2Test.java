@@ -60,6 +60,7 @@ public class DHT2Test {
 				assertEquals(i + 1, cm.size());
 			}
 			ds[0].dm.set("coucou", "suzana");
+			JLG.debug("keyset: " + ds[0].dm.keySet());
 			ds[0].dm.remove("hello");
 			ds[0].networkPicture();
 			
