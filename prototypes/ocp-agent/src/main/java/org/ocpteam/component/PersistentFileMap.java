@@ -1,4 +1,4 @@
-package org.ocpteam.misc;
+package org.ocpteam.component;
 
 import java.io.File;
 import java.util.Collection;
@@ -7,22 +7,26 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
-public class PersistentFileMap implements Map<byte[], byte[]> {
+import org.ocpteam.entity.Address;
+import org.ocpteam.interfaces.IPersistentMap;
+import org.ocpteam.misc.JLG;
+
+public class PersistentFileMap implements Map<Address, byte[]>, IPersistentMap {
 
 	private File dir;
 
-	public static class PersistentMapEntry implements Map.Entry<byte[], byte[]> {
+	public static class PersistentMapEntry implements Map.Entry<Address, byte[]> {
 
-		private byte[] address;
+		private Address address;
 		private byte[] content;
 
-		public PersistentMapEntry(byte[] address, byte[] content) {
+		public PersistentMapEntry(Address address, byte[] content) {
 			this.address = address;
 			this.content = content;
 		}
 
 		@Override
-		public byte[] getKey() {
+		public Address getKey() {
 			return address;
 		}
 
@@ -61,7 +65,7 @@ public class PersistentFileMap implements Map<byte[], byte[]> {
 	public boolean containsKey(Object key) {
 		try {
 			for (File child : dir.listFiles()) {
-				byte[] address = JLG.hexToBytes(child.getName());
+				Address address = new Address(JLG.hexToBytes(child.getName()));
 				if (address.equals(key)) {
 					return true;
 				}
@@ -91,11 +95,11 @@ public class PersistentFileMap implements Map<byte[], byte[]> {
 	}
 
 	@Override
-	public Set<java.util.Map.Entry<byte[], byte[]>> entrySet() {
-		Set<java.util.Map.Entry<byte[], byte[]>> result = new HashSet<java.util.Map.Entry<byte[], byte[]>>();
+	public Set<java.util.Map.Entry<Address, byte[]>> entrySet() {
+		Set<java.util.Map.Entry<Address, byte[]>> result = new HashSet<java.util.Map.Entry<Address, byte[]>>();
 		try {
 			for (File child : dir.listFiles()) {
-				byte[] address = JLG.hexToBytes(child.getName());
+				Address address = new Address(JLG.hexToBytes(child.getName()));
 				byte[] content = JLG.getBinaryFile(child);
 				PersistentMapEntry entry = new PersistentMapEntry(address,
 						content);
@@ -112,7 +116,7 @@ public class PersistentFileMap implements Map<byte[], byte[]> {
 	@Override
 	public byte[] get(Object key) {
 		try {
-			File file = new File(dir, JLG.bytesToHex((byte[]) key));
+			File file = new File(dir, JLG.bytesToHex(((Address) key).getBytes()));
 			if (file.exists()) {
 				byte[] content = JLG.getBinaryFile(file);
 				return content;
@@ -129,11 +133,11 @@ public class PersistentFileMap implements Map<byte[], byte[]> {
 	}
 
 	@Override
-	public Set<byte[]> keySet() {
-		Set<byte[]> result = new HashSet<byte[]>();
+	public Set<Address> keySet() {
+		Set<Address> result = new HashSet<Address>();
 		try {
 			for (File child : dir.listFiles()) {
-				byte[] address = JLG.hexToBytes(child.getName());
+				Address address = new Address(JLG.hexToBytes(child.getName()));
 				result.add(address);
 			}
 		} catch (Exception e) {
@@ -144,21 +148,21 @@ public class PersistentFileMap implements Map<byte[], byte[]> {
 	}
 
 	@Override
-	public byte[] put(byte[] key, byte[] value) {
+	public byte[] put(Address key, byte[] value) {
 		try {
-			File file = new File(dir, JLG.bytesToHex(key));
+			File file = new File(dir, JLG.bytesToHex(key.getBytes()));
 			JLG.setBinaryFile(file, value);
 		} catch (Exception e) {
 			JLG.error(e);
 		}
-		return null;
+		return value;
 	}
 
 	@Override
-	public void putAll(Map<? extends byte[], ? extends byte[]> m) {
-		Iterator<? extends byte[]> it = m.keySet().iterator();
+	public void putAll(Map<? extends Address, ? extends byte[]> m) {
+		Iterator<? extends Address> it = m.keySet().iterator();
 		while (it.hasNext()) {
-			byte[] address = it.next();
+			Address address = it.next();
 			byte[] content = m.get(address);
 			put(address, content);
 		}
@@ -167,7 +171,7 @@ public class PersistentFileMap implements Map<byte[], byte[]> {
 	@Override
 	public byte[] remove(Object key) {
 		try {
-			File file = new File(dir, JLG.bytesToHex((byte[]) key));
+			File file = new File(dir, JLG.bytesToHex(((Address) key).getBytes()));
 			if (file.exists()) {
 				byte[] content = JLG.getBinaryFile(file);
 				file.delete();

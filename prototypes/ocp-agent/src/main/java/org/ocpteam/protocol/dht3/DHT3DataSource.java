@@ -35,9 +35,9 @@ import org.ocpteam.misc.JLG;
  * 
  * Strategies:
  * 
- * keys are in a hash set and reflect their content: key=hash(value). key 0 is
- * special: its value is a list of all stored keys. This allows to retrieve all
- * keys.
+ * keys are addresses and reflect their content: key=hash(value). key 0 is
+ * special: its value is an address that store an address list of all stored
+ * keys. This allows to retrieve all keys.
  * 
  * 
  * 

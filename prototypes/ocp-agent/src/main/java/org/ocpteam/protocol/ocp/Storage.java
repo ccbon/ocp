@@ -13,7 +13,7 @@ import org.ocpteam.misc.JLG;
 public class Storage {
 
 	public NavigableSet<Id> nodeSet; // set of node referenced by their id
-	private Map<byte[], byte[]> contentMap;
+	private Map<Address, byte[]> contentMap;
 	public OCPAgent agent;
 
 	public Storage(OCPAgent agent) throws Exception {
@@ -49,7 +49,7 @@ public class Storage {
 	}
 
 	public void put(Address address, Content content) throws Exception {
-		contentMap.put(address.getBytes(), JLG.serialize(content));
+		contentMap.put(address, JLG.serialize(content));
 		// Rude detachment: now tell to your agent backuper what you have
 		// stored.
 		// declare(ADD, address, data.getKey(agent));
@@ -57,7 +57,7 @@ public class Storage {
 
 	public Content get(Address address) {
 		try {
-			byte[] array = contentMap.get(address.getBytes());
+			byte[] array = contentMap.get(address);
 			if (array == null) {
 				return null;
 			} else {
@@ -78,13 +78,12 @@ public class Storage {
 			result += id + JLG.NL;
 		}
 		result += "Content=" + JLG.NL;
-		Iterator<byte[]> itc = contentMap.keySet().iterator();
+		Iterator<Address> itc = contentMap.keySet().iterator();
 		while (itc.hasNext()) {
-			byte[] id = itc.next();
-			Address address = new Address(id);
+			Address address = itc.next();
 			Content content = null;
 			try {
-				content = (Content) JLG.deserialize(contentMap.get(id));
+				content = (Content) JLG.deserialize(contentMap.get(address));
 			} catch (Exception e) {
 				JLG.error(e);
 			}
@@ -111,7 +110,7 @@ public class Storage {
 					"Cannot remove data. Verifying signature failed.");
 		}
 		// JLG.debug("signature ok");
-		contentMap.remove(address.getBytes());
+		contentMap.remove(address);
 	}
 
 	public void removeAll() {
