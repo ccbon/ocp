@@ -88,6 +88,9 @@ public class Protocol extends DSContainer<DataSource> implements IProtocol {
 			InputFlow inputFlow = (InputFlow) o;
 			Session session = new Session(ds(), clientSocket);
 			inputFlow.activity = getActivityMap().get(inputFlow.activityid);
+			if (inputFlow.activity == null) {
+				throw new Exception("activity not found. inputFlow.activityid=" + inputFlow.activityid);
+			}
 			inputFlow.activity.run(session, inputFlow.objects, in, out, this);
 			getStreamSerializer().writeObject(out, new EOMObject());
 		}

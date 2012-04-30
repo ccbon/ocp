@@ -1,0 +1,16 @@
+package org.ocpteam.interfaces;
+
+import java.util.Map;
+
+import org.ocpteam.entity.Address;
+
+public interface IAddressMap {
+
+	byte[] get(Address address) throws Exception;
+
+	void put(Address address, byte[] value) throws Exception;
+
+	void remove(Address address) throws Exception;
+
+	Map<Address, byte[]> getLocalMap();
+}

@@ -3,175 +3,91 @@ package org.ocpteam.protocol.dht3;
 import java.io.DataInputStream;
 import java.io.EOFException;
 import java.io.Serializable;
-import java.io.StreamCorruptedException;
 import java.net.Socket;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Queue;
 import java.util.Set;
 
 import org.ocpteam.component.DSContainer;
-import org.ocpteam.component.NodeMap;
+import org.ocpteam.component.MapModule;
 import org.ocpteam.entity.Address;
 import org.ocpteam.entity.Contact;
 import org.ocpteam.entity.EOMObject;
 import org.ocpteam.entity.InputFlow;
-import org.ocpteam.entity.InputMessage;
-import org.ocpteam.entity.Response;
 import org.ocpteam.exception.NotAvailableContactException;
 import org.ocpteam.interfaces.IMapDataModel;
-import org.ocpteam.misc.Id;
 import org.ocpteam.misc.JLG;
 
-public class DHT3DataModel extends DSContainer<DHT3DataSource> implements IMapDataModel {
+public class DHT3DataModel extends DSContainer<DHT3DataSource> implements
+		IMapDataModel {
 
 	@Override
 	public void set(String key, String value) throws Exception {
-		// Stragegy: store on all rings the pair key->value.
-		for (int i = 0; i < ds().ringNodeMap.getRingNbr(); i++) {
-			set(i, key, value);
-		}
-	}
-
-	public void set(int ring, String key, String value) throws Exception {
-		NodeMap nodeMap = ds().ringNodeMap.getNodeMaps()[ring];
-		if (nodeMap.isEmpty()) {
-			return;
-		}
 		Address address = ds().getAddress(key);
-		if (nodeMap.isResponsible(address)) {
-			ds().store(key, value);
-			return;
-		}
-		Queue<Contact> contactQueue = nodeMap.getContactQueue(address);
-		JLG.debug("contactQueue=" + contactQueue);
-
-		DHT3Module m = ds().getComponent(DHT3Module.class);
-		ds().client.requestByPriority(contactQueue, new InputMessage(m.store(),
-				ring, key, value));
+		ds().map.put(address, value.getBytes());
+		setRootContent(key, address);
+		JLG.debug("set finished.");
 	}
 
-	
+	private void setRootContent(String key, Address address) throws Exception {
+		HashMap<String, Address> directory = getRootContent();
+		directory.put(key, address);
+		ds().map.put(getRootAddress(), JLG.serialize(directory));
+	}
+
+	private Address getRootAddress() throws Exception {
+		return ds().getAddress("qwerasdf!@#$1234");
+	}
+
+	@SuppressWarnings("unchecked")
+	private HashMap<String, Address> getRootContent() throws Exception {
+		byte[] root = ds().map.get(getRootAddress());
+		if (root == null) {
+			return new HashMap<String, Address>();
+		} else {
+			return (HashMap<String, Address>) JLG.deserialize(root);
+		}
+	}
 
 	@Override
 	public String get(String key) throws Exception {
-		// strategy : look at the first one you get.
-		Address address = ds().getAddress(key);
-		if (ds().ringNodeMap.isResponsible(address)) {
-			return ds().retrieve(key);
+		HashMap<String, Address> directory = getRootContent();
+		Address address = directory.get(key);
+		if (address == null) {
+			return null;
 		}
-		// not found locally so look at every ring.
-		String value = null;
-		for (int i = 0; i < ds().ringNodeMap.getRingNbr(); i++) {
-			value = get(i, key);
-			if (value != null) {
-				break;
-			}
-		}
-		return value;
-
-	}
-
-	private String get(int i, String key) throws Exception {
-		Id address = ds().getAddress(key);
-		NodeMap nodeMap = ds().ringNodeMap.getNodeMaps()[i];
-		Queue<Contact> contactQueue = nodeMap.getContactQueue(address);
-		DHT3Module m = ds().getComponent(DHT3Module.class);
-		Response r = ds().client.requestByPriority(contactQueue,
-				new InputMessage(m.retrieve(), key));
-		return (String) r.getObject();
+		return new String(ds().map.get(address));
 	}
 
 	@Override
 	public void remove(String key) throws Exception {
-		// Stragegy: remove on all rings the pair key->value.
-		for (int i = 0; i < ds().ringNodeMap.getRingNbr(); i++) {
-			remove(i, key);
-		}
+		Address address = ds().getAddress(key);
+		ds().map.remove(address);
+		removeRootContent(key, address);
 
 	}
 
-	public void remove(int ring, String key) throws Exception {
-		NodeMap nodeMap = ds().ringNodeMap.getNodeMaps()[ring];
-		if (nodeMap.isEmpty()) {
-			return;
-		}
-		Address address = ds().getAddress(key);
-		if (nodeMap.isResponsible(address)) {
-			ds().destroy(key);
-			return;
-		}
-		Queue<Contact> contactQueue = nodeMap.getContactQueue(address);
-		JLG.debug("contactQueue=" + contactQueue);
-
-		DHT3Module m = ds().getComponent(DHT3Module.class);
-		ds().client.requestByPriority(contactQueue, new InputMessage(m.remove(),
-				ring, key));
+	private void removeRootContent(String key, Address address)
+			throws Exception {
+		HashMap<String, Address> directory = getRootContent();
+		directory.remove(key);
+		ds().map.put(getRootAddress(), JLG.serialize(directory));
 	}
 
 	@Override
 	public Set<String> keySet() throws Exception {
-		// strategy: go on all contact and get back all keys...
-		Set<String> set = new HashSet<String>(ds().keySet());
-		DHT3Module m = ds().getComponent(DHT3Module.class);
-		InputFlow message = new InputFlow(m.keySet());
-		for (Contact c : ds().contactMap.getOtherContacts()) {
-			Socket socket = null;
-			try {
-				int retry = 0;
-				while (true) {
-					try {
-						socket = ds().contactMap.getTcpClient(c).borrowSocket(
-								message);
-						DataInputStream in = new DataInputStream(
-								socket.getInputStream());
-						while (true) {
-							Serializable serializable = ds().protocol
-									.getStreamSerializer().readObject(in);
-							if (serializable instanceof EOMObject) {
-								break;
-							}
-							String s = (String) serializable;
-							JLG.debug("s=" + s);
-							set.add(s);
-						}
-						ds().contactMap.getTcpClient(c).returnSocket(socket);
-						break;
-					} catch (StreamCorruptedException e) {
-						if (socket != null) {
-							socket.close();
-							socket = null;
-						}
-						retry++;
-						if (retry > 3) {
-							throw e;
-						}
-					}
-				}
-			} catch (SocketException e) {
-			} catch (EOFException e) {
-			} catch (SocketTimeoutException e) {
-			} catch (NotAvailableContactException e) {
-			} finally {
-				if (socket != null) {
-					socket.close();
-					socket = null;
-				}
-			}
-
-		}
-		return set;
+		HashMap<String, Address> directory = getRootContent();
+		return directory.keySet();
 	}
 
-	public Map<String, String> localMap(Contact c) throws Exception {
+	public Map<Address, byte[]> localMap(Contact c) throws Exception {
 		if (c.isMyself()) {
-			return ds().getMap();
+			return ds().map.getLocalMap();
 		}
-		Map<String, String> localmap = new HashMap<String, String>();
-		DHT3Module m = ds().getComponent(DHT3Module.class);
+		Map<Address, byte[]> localmap = new HashMap<Address, byte[]>();
+		MapModule m = ds().getComponent(MapModule.class);
 		InputFlow message = new InputFlow(m.getLocalMap());
 
 		Socket socket = null;
@@ -185,8 +101,8 @@ public class DHT3DataModel extends DSContainer<DHT3DataSource> implements IMapDa
 				if (serializable instanceof EOMObject) {
 					break;
 				}
-				String key = (String) serializable;
-				String value = (String) ds().protocol.getStreamSerializer()
+				Address key = (Address) serializable;
+				byte[] value = (byte[]) ds().protocol.getStreamSerializer()
 						.readObject(in);
 
 				localmap.put(key, value);
