@@ -8,19 +8,12 @@ import org.ocpteam.entity.Contact;
 import org.ocpteam.entity.InputMessage;
 import org.ocpteam.entity.Response;
 import org.ocpteam.interfaces.IAddressMap;
+import org.ocpteam.interfaces.INodeMap;
 
 public class AddressMap extends DSContainer<DSPDataSource> implements IAddressMap {
 
 	private NodeMap nodeMap;
 	private Map<Address, byte[]> localMap;
-	
-	public NodeMap getNodeMap() {
-		return nodeMap;
-	}
-
-	public void setNodeMap(NodeMap nodeMap) {
-		this.nodeMap = nodeMap;
-	}
 	
 	public void setLocalMap(Map<Address, byte[]> localMap) {
 		this.localMap = localMap;
@@ -62,6 +55,11 @@ public class AddressMap extends DSContainer<DSPDataSource> implements IAddressMa
 	@Override
 	public Map<Address, byte[]> getLocalMap() {
 		return localMap;
+	}
+
+	@Override
+	public void setNodeMap(INodeMap nodeMap) {
+		this.nodeMap = (NodeMap) nodeMap;
 	}
 
 

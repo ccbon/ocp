@@ -1,4 +1,4 @@
-package org.ocpteam.protocol.dht3;
+package org.ocpteam.protocol.dht4;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -13,11 +13,12 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.ocpteam.component.AddressMap;
 import org.ocpteam.component.AddressMapDataModel;
 import org.ocpteam.component.DSPDataSource;
 import org.ocpteam.component.MapModule;
 import org.ocpteam.component.NodeMap;
+import org.ocpteam.component.RingAddressMap;
+import org.ocpteam.component.RingNodeMap;
 import org.ocpteam.entity.Address;
 import org.ocpteam.entity.Contact;
 import org.ocpteam.entity.Context;
@@ -39,17 +40,17 @@ import org.ocpteam.misc.JLG;
  * 
  * 
  */
-public class DHT3DataSource extends DSPDataSource {
+public class DHT4DataSource extends DSPDataSource {
 
-	public AddressMap map;
+	public IAddressMap map;
 	public AddressMapDataModel dm;
 	private MessageDigest md;
-	public NodeMap nodeMap;
+	public RingNodeMap ringNodeMap;
 
-	public DHT3DataSource() throws Exception {
+	public DHT4DataSource() throws Exception {
 		super();
-		addComponent(INodeMap.class, new NodeMap());
-		addComponent(IAddressMap.class, new AddressMap());
+		addComponent(INodeMap.class, new RingNodeMap());
+		addComponent(IAddressMap.class, new RingAddressMap());
 		addComponent(IDataModel.class, new AddressMapDataModel());
 		addComponent(MapModule.class);
 	}
@@ -58,9 +59,9 @@ public class DHT3DataSource extends DSPDataSource {
 	public void init() throws Exception {
 		super.init();
 		dm = (AddressMapDataModel) getComponent(IDataModel.class);
-		nodeMap = (NodeMap) getComponent(INodeMap.class);
-		map = (AddressMap) getComponent(IAddressMap.class);
-		map.setNodeMap(nodeMap);
+		ringNodeMap = (RingNodeMap) getComponent(INodeMap.class);
+		map = (RingAddressMap) getComponent(IAddressMap.class);
+		map.setNodeMap(ringNodeMap);
 		map.setLocalMap(Collections
 				.synchronizedMap(new HashMap<Address, byte[]>()));
 	}
@@ -94,7 +95,7 @@ public class DHT3DataSource extends DSPDataSource {
 	@Override
 	protected void onNodeArrival() throws Exception {
 		super.onNodeArrival();
-		Contact predecessor = nodeMap.getPredecessor(getNode());
+		Contact predecessor = ringNodeMap.getPredecessor(getNode());
 		if (predecessor.isMyself()) {
 			if (agent.isFirstAgent()) {
 				JLG.debug("first agent: ds=" + getName());
@@ -138,7 +139,7 @@ public class DHT3DataSource extends DSPDataSource {
 	protected void onNodeNiceDeparture() throws Exception {
 		super.onNodeNiceDeparture();
 		// Strategy: take all local map content and send it to the predecessor.
-		Contact predecessor = nodeMap.getPredecessor(getNode());
+		Contact predecessor = ringNodeMap.getPredecessor(getNode());
 		if (predecessor.isMyself()) {
 			// it means I am the last agent.
 			// the ring is lost...
@@ -193,12 +194,14 @@ public class DHT3DataSource extends DSPDataSource {
 
 	public void networkPicture() throws Exception {
 		// list all contact including myself.
-		for (Contact c : nodeMap.getNodeMap().values()) {
-			JLG.println("Contact: " + c);
-			Node n = c.getNode();
-			JLG.println("  Node: " + n);
-			Map<Address, byte[]> localMap = dm.localMap(c);
-			JLG.println("  Map: " + localMap);
+		for (NodeMap nodeMap : ringNodeMap.getNodeMaps()) {
+			for (Contact c : nodeMap.getNodeMap().values()) {
+				JLG.println("Contact: " + c);
+				Node n = c.getNode();
+				JLG.println("  Node: " + n);
+				Map<Address, byte[]> localMap = dm.localMap(c);
+				JLG.println("  Map: " + localMap);
+			}
 		}
 	}
 

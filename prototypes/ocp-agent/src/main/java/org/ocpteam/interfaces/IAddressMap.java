@@ -13,4 +13,8 @@ public interface IAddressMap {
 	void remove(Address address) throws Exception;
 
 	Map<Address, byte[]> getLocalMap();
+
+	void setNodeMap(INodeMap nodeMap);
+
+	void setLocalMap(Map<Address, byte[]> localMap);
 }

@@ -1,4 +1,4 @@
-package org.ocpteam.protocol.dht3;
+package org.ocpteam.component;
 
 import java.io.DataInputStream;
 import java.io.EOFException;
@@ -10,8 +10,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import org.ocpteam.component.DSContainer;
-import org.ocpteam.component.MapModule;
 import org.ocpteam.entity.Address;
 import org.ocpteam.entity.Contact;
 import org.ocpteam.entity.EOMObject;
@@ -19,8 +17,9 @@ import org.ocpteam.entity.InputFlow;
 import org.ocpteam.exception.NotAvailableContactException;
 import org.ocpteam.interfaces.IMapDataModel;
 import org.ocpteam.misc.JLG;
+import org.ocpteam.protocol.dht3.DHT3DataSource;
 
-public class DHT3DataModel extends DSContainer<DHT3DataSource> implements
+public class AddressMapDataModel extends DSContainer<DHT3DataSource> implements
 		IMapDataModel {
 
 	@Override
@@ -58,7 +57,12 @@ public class DHT3DataModel extends DSContainer<DHT3DataSource> implements
 		if (address == null) {
 			return null;
 		}
-		return new String(ds().map.get(address));
+		byte[] value = ds().map.get(address);
+		if (value != null) {
+			return new String(value);
+		} else {
+			return null;
+		}
 	}
 
 	@Override
