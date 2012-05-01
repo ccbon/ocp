@@ -5,7 +5,6 @@ import static org.junit.Assert.assertEquals;
 import java.util.Properties;
 
 import org.junit.Test;
-import org.ocpteam.component.Client;
 import org.ocpteam.component.ContactMap;
 import org.ocpteam.misc.JLG;
 import org.ocpteam.protocol.dht4.DHT4DataSource;
@@ -24,9 +23,6 @@ public class DHT4Test {
 			JLG.debug_on();
 			JLG.bUseSet = true;
 			JLG.set.add(DHT4Test.class.getName());
-			JLG.set.add(Client.class.getName());
-			//JLG.set.add(RingNodeMap.class.getName());
-
 			DHT4DataSource[] ds = new DHT4DataSource[n];
 			for (int i = 0; i < n; i++) {
 				ds[i] = new DHT4DataSource();

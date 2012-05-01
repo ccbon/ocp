@@ -19,6 +19,11 @@ public class RingNodeMap extends DSContainer<DSPDataSource> implements INodeMap 
 
 	private Map<Integer, NodeMap> rings;
 
+	public void readNetworkConfig() throws Exception {
+		setRingNbr(Integer.parseInt(ds().network.getProperty("ringNbr", "3")));
+		JLG.debug("ringNbr=" + ringNbr);
+	}
+	
 	@Override
 	public void put(Node node, Contact c) throws Exception {
 		int r = node.getRing();

@@ -7,7 +7,6 @@ import java.io.Serializable;
 import java.net.Socket;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
-import java.security.SecureRandom;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -17,6 +16,7 @@ import org.ocpteam.component.DSPDataSource;
 import org.ocpteam.component.MapModule;
 import org.ocpteam.component.MessageDigest;
 import org.ocpteam.component.NodeMap;
+import org.ocpteam.component.Random;
 import org.ocpteam.component.RingAddressMap;
 import org.ocpteam.component.RingMapModule;
 import org.ocpteam.component.RingNodeMap;
@@ -47,6 +47,9 @@ public class DHT4DataSource extends DSPDataSource {
 	public AddressMapDataModel dm;
 	
 	public RingNodeMap ringNodeMap;
+	private MessageDigest md;
+	private Random random;
+	private Map<Address, byte[]> localMap;
 
 	public DHT4DataSource() throws Exception {
 		super();
@@ -56,6 +59,8 @@ public class DHT4DataSource extends DSPDataSource {
 		addComponent(MapModule.class);
 		addComponent(RingMapModule.class);
 		addComponent(MessageDigest.class);
+		addComponent(Random.class);
+		localMap = Collections.synchronizedMap(new HashMap<Address, byte[]>());
 	}
 
 	@Override
@@ -65,8 +70,9 @@ public class DHT4DataSource extends DSPDataSource {
 		ringNodeMap = (RingNodeMap) getComponent(INodeMap.class);
 		map = (RingAddressMap) getComponent(IAddressMap.class);
 		map.setNodeMap(ringNodeMap);
-		map.setLocalMap(Collections
-				.synchronizedMap(new HashMap<Address, byte[]>()));
+		map.setLocalMap(localMap);
+		md = getComponent(MessageDigest.class);
+		random = getComponent(Random.class);
 	}
 
 	@Override
@@ -83,18 +89,9 @@ public class DHT4DataSource extends DSPDataSource {
 	}
 
 	@Override
-	protected void readNetworkConfig() throws Exception {
-		JLG.debug("readNetworkConfig " + getName());
-		super.readNetworkConfig();
-		getComponent(MessageDigest.class).setAlgo(network.getProperty("hash", "SHA-1"));
-		int ringNbr = Integer.parseInt(network.getProperty("ringNbr", "3"));
-		ringNodeMap.setRingNbr(ringNbr);
-	}
-
-	@Override
 	protected void askForNode() throws Exception {
 		super.askForNode();
-		setNode(new Node(new Id(getComponent(MessageDigest.class).hash(random())), ringNodeMap.getLessPopulatedRing()));
+		setNode(new Node(new Id(md.hash(random.generate())), ringNodeMap.getLessPopulatedRing()));
 	}
 
 	@Override
@@ -180,13 +177,6 @@ public class DHT4DataSource extends DSPDataSource {
 				socket = null;
 			}
 		}
-	}
-
-	private byte[] random() {
-		SecureRandom random = new SecureRandom();
-		byte bytes[] = new byte[20];
-		random.nextBytes(bytes);
-		return bytes;
 	}
 
 	public void networkPicture() throws Exception {

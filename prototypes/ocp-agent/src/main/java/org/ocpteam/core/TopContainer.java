@@ -1,5 +1,6 @@
 package org.ocpteam.core;
 
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.Properties;
 
@@ -103,6 +104,11 @@ public class TopContainer implements IContainer {
 			}
 		}
 
+	}
+
+	@Override
+	public Collection<Object> components() {
+		return designer.getMap().values();
 	}
 
 }

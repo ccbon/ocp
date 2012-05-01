@@ -7,7 +7,6 @@ import java.io.Serializable;
 import java.net.Socket;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
-import java.security.SecureRandom;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -18,6 +17,7 @@ import org.ocpteam.component.DSPDataSource;
 import org.ocpteam.component.MapModule;
 import org.ocpteam.component.MessageDigest;
 import org.ocpteam.component.NodeMap;
+import org.ocpteam.component.Random;
 import org.ocpteam.entity.Address;
 import org.ocpteam.entity.Contact;
 import org.ocpteam.entity.Context;
@@ -44,6 +44,8 @@ public class DHT3DataSource extends DSPDataSource {
 	public IAddressMap map;
 	public AddressMapDataModel dm;
 	public NodeMap nodeMap;
+	private MessageDigest md;
+	private Random random;
 
 	public DHT3DataSource() throws Exception {
 		super();
@@ -52,6 +54,7 @@ public class DHT3DataSource extends DSPDataSource {
 		addComponent(IDataModel.class, new AddressMapDataModel());
 		addComponent(MapModule.class);
 		addComponent(MessageDigest.class);
+		addComponent(Random.class);
 	}
 
 	@Override
@@ -63,6 +66,8 @@ public class DHT3DataSource extends DSPDataSource {
 		map.setNodeMap(nodeMap);
 		map.setLocalMap(Collections
 				.synchronizedMap(new HashMap<Address, byte[]>()));
+		md = getComponent(MessageDigest.class);
+		random = getComponent(Random.class);
 	}
 
 	@Override
@@ -79,16 +84,9 @@ public class DHT3DataSource extends DSPDataSource {
 	}
 
 	@Override
-	protected void readNetworkConfig() throws Exception {
-		JLG.debug("readNetworkConfig " + getName());
-		super.readNetworkConfig();
-		getComponent(MessageDigest.class).setAlgo(network.getProperty("hash", "SHA-1"));
-	}
-
-	@Override
 	protected void askForNode() throws Exception {
 		super.askForNode();
-		setNode(new Node(new Id(getComponent(MessageDigest.class).hash(random()))));
+		setNode(new Node(new Id(md.hash(random.generate()))));
 	}
 
 	@Override
@@ -174,13 +172,6 @@ public class DHT3DataSource extends DSPDataSource {
 				socket = null;
 			}
 		}
-	}
-
-	private byte[] random() {
-		SecureRandom random = new SecureRandom();
-		byte bytes[] = new byte[20];
-		random.nextBytes(bytes);
-		return bytes;
 	}
 
 	public void networkPicture() throws Exception {

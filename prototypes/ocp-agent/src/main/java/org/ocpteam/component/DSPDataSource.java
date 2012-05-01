@@ -1,5 +1,6 @@
 package org.ocpteam.component;
 
+import java.lang.reflect.Method;
 import java.net.URI;
 import java.util.Properties;
 
@@ -11,7 +12,7 @@ import org.ocpteam.misc.JLG;
 public abstract class DSPDataSource extends DataSource {
 
 	private Node node;
-	
+
 	public Agent agent;
 	public Client client;
 	protected Server server;
@@ -46,7 +47,7 @@ public abstract class DSPDataSource extends DataSource {
 		udplistener.setProtocol(protocol);
 		contactMap = getComponent(ContactMap.class);
 	}
-	
+
 	public Node getNode() {
 		return node;
 	}
@@ -66,7 +67,7 @@ public abstract class DSPDataSource extends DataSource {
 		}
 		JLG.debug("network properties: " + JLG.propertiesToString(network));
 		readNetworkConfig();
-		
+
 		client.askForContact();
 
 		if (getProperty("server", "yes").equals("yes")) {
@@ -82,23 +83,31 @@ public abstract class DSPDataSource extends DataSource {
 
 	/**
 	 * transfer data from network to this node.
-	 * @throws Exception 
+	 * 
+	 * @throws Exception
 	 */
 	protected void onNodeArrival() throws Exception {
 	}
 
 	/**
-	 * Request and set node 
-	 * @throws Exception 
+	 * Request and set node
+	 * 
+	 * @throws Exception
 	 */
 	protected void askForNode() throws Exception {
 	}
 
 	protected void readNetworkConfig() throws Exception {
-		if (usesComponent(MessageDigest.class)) {
-			getComponent(MessageDigest.class).setAlgo(network.getProperty("hash", "SHA-1"));
+		// TODO: Foreach component, if the component find a property for it,
+		// then it has to take it.
+		for (Object component : components()) {
+			try {
+				Method m = component.getClass().getMethod("readNetworkConfig");
+				JLG.debug("invoke");
+				m.invoke(component);
+			} catch (NoSuchMethodException e) {
+			}
 		}
-
 	}
 
 	protected void configureServer(Server server) throws Exception {
@@ -121,7 +130,7 @@ public abstract class DSPDataSource extends DataSource {
 			server.stop();
 		}
 	}
-	
+
 	public synchronized void disconnectHard() throws Exception {
 		super.disconnect();
 		if (server.isStarted()) {
@@ -130,19 +139,18 @@ public abstract class DSPDataSource extends DataSource {
 		}
 	}
 
-	protected void onNodeNiceDeparture() throws Exception {		
+	protected void onNodeNiceDeparture() throws Exception {
 	}
 
 	protected Properties getNetworkProperties() {
 		return JLG.extractProperties(getConfig(), "network");
 	}
-	
+
 	@Override
 	public Contact toContact() throws Exception {
 		Contact c = super.toContact();
 		c.setNode(node);
 		return c;
 	}
-
 
 }

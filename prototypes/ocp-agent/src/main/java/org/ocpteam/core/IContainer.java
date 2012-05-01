@@ -1,5 +1,6 @@
 package org.ocpteam.core;
 
+import java.util.Collection;
 import java.util.Iterator;
 
 import org.ocpteam.interfaces.IConfig;
@@ -25,6 +26,8 @@ public interface IContainer extends IConfig {
 	public <T> T removeComponent(Class<T> c);
 	
 	public Iterator<Object> iteratorComponent();
+	
+	public Collection<Object> components();
 	
 	public void init() throws Exception;
 
