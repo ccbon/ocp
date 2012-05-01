@@ -7,13 +7,14 @@ import org.ocpteam.entity.Address;
 import org.ocpteam.entity.Contact;
 import org.ocpteam.entity.Node;
 import org.ocpteam.interfaces.INodeMap;
+import org.ocpteam.misc.Id;
 import org.ocpteam.misc.JLG;
 
 /**
  * A node map with many rings. A ring is instanciated by a nodeMap.
  * 
  */
-public class RingNodeMap extends DSContainer<DSPDataSource> implements INodeMap {
+public class RingNodeMap extends DSContainer<AddressDataSource> implements INodeMap {
 
 	private int ringNbr;
 
@@ -123,6 +124,14 @@ public class RingNodeMap extends DSContainer<DSPDataSource> implements INodeMap 
 			result += nodeMap.toString() + JLG.NL;
 		}
 		return result;
+	}
+
+	@Override
+	public void askForNode() throws Exception {
+		ds().setNode(new Node(new Id(ds().md.hash(ds().random.generate())),
+				getLessPopulatedRing()));
+
+		
 	}
 
 

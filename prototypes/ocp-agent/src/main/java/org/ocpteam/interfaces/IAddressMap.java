@@ -18,4 +18,10 @@ public interface IAddressMap {
 
 	void setLocalMap(Map<Address, byte[]> synchronizedMap);
 
+	void onNodeArrival() throws Exception;
+
+	void onNodeNiceDeparture() throws Exception;
+
+	void networkPicture() throws Exception;
+
 }

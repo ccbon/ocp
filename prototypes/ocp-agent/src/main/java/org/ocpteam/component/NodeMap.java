@@ -13,7 +13,7 @@ import org.ocpteam.interfaces.INodeMap;
 import org.ocpteam.misc.Id;
 import org.ocpteam.misc.JLG;
 
-public class NodeMap extends DSContainer<DSPDataSource> implements INodeMap {
+public class NodeMap extends DSContainer<AddressDataSource> implements INodeMap {
 	private NavigableMap<Id, Contact> nodeMap;
 
 	@Override
@@ -27,7 +27,10 @@ public class NodeMap extends DSContainer<DSPDataSource> implements INodeMap {
 	}
 
 	@Override
-	public void put(Node node, Contact c) {
+	public void put(Node node, Contact c) throws Exception {
+		if (nodeMap == null) {
+			throw new Exception("nodeMap is null");
+		}
 		nodeMap.put(node.getNodeId(), c);
 	}
 
@@ -144,6 +147,11 @@ public class NodeMap extends DSContainer<DSPDataSource> implements INodeMap {
 	@Override
 	public String toString() {
 		return nodeMap.toString();
+	}
+
+	@Override
+	public void askForNode() throws Exception {
+		ds().setNode(new Node(new Id(ds().md.hash(ds().random.generate()))));
 	}
 
 }

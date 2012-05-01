@@ -1,16 +1,28 @@
 package org.ocpteam.component;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.EOFException;
+import java.io.Serializable;
+import java.net.Socket;
+import java.net.SocketException;
+import java.net.SocketTimeoutException;
 import java.util.Map;
 import java.util.Queue;
 
 import org.ocpteam.entity.Address;
 import org.ocpteam.entity.Contact;
+import org.ocpteam.entity.EOMObject;
+import org.ocpteam.entity.InputFlow;
 import org.ocpteam.entity.InputMessage;
+import org.ocpteam.entity.Node;
 import org.ocpteam.entity.Response;
+import org.ocpteam.exception.NotAvailableContactException;
 import org.ocpteam.interfaces.IAddressMap;
 import org.ocpteam.interfaces.INodeMap;
+import org.ocpteam.misc.JLG;
 
-public class RingAddressMap extends DSContainer<DSPDataSource> implements
+public class RingAddressMap extends DSContainer<AddressDataSource> implements
 		IAddressMap {
 
 	private RingNodeMap ringNodeMap;
@@ -69,8 +81,8 @@ public class RingAddressMap extends DSContainer<DSPDataSource> implements
 		}
 		Queue<Contact> contactQueue = nodeMap.getContactQueue(address);
 		RingMapModule m = ds().getComponent(RingMapModule.class);
-		ds().client.requestByPriority(contactQueue, new InputMessage(m.putOnRing(),
-				ring, address, value));
+		ds().client.requestByPriority(contactQueue,
+				new InputMessage(m.putOnRing(), ring, address, value));
 	}
 
 	@Override
@@ -94,8 +106,8 @@ public class RingAddressMap extends DSContainer<DSPDataSource> implements
 		}
 		Queue<Contact> contactQueue = nodeMap.getContactQueue(address);
 		RingMapModule m = ds().getComponent(RingMapModule.class);
-		ds().client.requestByPriority(contactQueue, new InputMessage(
-				m.removeOnRing(), ring, address));
+		ds().client.requestByPriority(contactQueue,
+				new InputMessage(m.removeOnRing(), ring, address));
 
 	}
 
@@ -113,6 +125,110 @@ public class RingAddressMap extends DSContainer<DSPDataSource> implements
 	@Override
 	public void setNodeMap(INodeMap nodeMap) {
 		this.ringNodeMap = (RingNodeMap) nodeMap;
+	}
+
+	@Override
+	public void onNodeArrival() throws Exception {
+		// strategy: copy the <address, value> from the predecessor which have
+		// address >= node_id
+		Contact predecessor = ringNodeMap.getPredecessor(ds().getNode());
+		if (predecessor.isMyself()) {
+			if (ds().agent.isFirstAgent()) {
+				JLG.debug("first agent: ds=" + ds().getName());
+				return;
+			}
+		}
+		MapModule m = ds().getComponent(MapModule.class);
+		InputFlow message = new InputFlow(m.transferSubMap(), ds().getNode()
+				.getNodeId());
+		Socket socket = null;
+		try {
+
+			socket = ds().contactMap.getTcpClient(predecessor).borrowSocket(
+					message);
+			DataInputStream in = new DataInputStream(socket.getInputStream());
+			while (true) {
+				Serializable serializable = ds().protocol.getStreamSerializer()
+						.readObject(in);
+				if (serializable instanceof EOMObject) {
+					break;
+				}
+				Address address = (Address) serializable;
+				byte[] value = (byte[]) ds().protocol.getStreamSerializer()
+						.readObject(in);
+				getLocalMap().put(address, value);
+			}
+			ds().contactMap.getTcpClient(predecessor).returnSocket(socket);
+			socket = null;
+		} catch (SocketException e) {
+		} catch (EOFException e) {
+		} catch (SocketTimeoutException e) {
+		} catch (NotAvailableContactException e) {
+		} finally {
+			if (socket != null) {
+				socket.close();
+				socket = null;
+			}
+		}
+
+	}
+
+	@Override
+	public void onNodeNiceDeparture() throws Exception {
+		// Strategy: take all local map content and send it to the predecessor.
+		Contact predecessor = ringNodeMap.getPredecessor(ds().getNode());
+		if (predecessor.isMyself()) {
+			// it means I am the last agent.
+			// the ring is lost...
+			return;
+		}
+		MapModule m = ds().getComponent(MapModule.class);
+		InputFlow message = new InputFlow(m.setMap());
+		Socket socket = null;
+		try {
+
+			socket = ds().contactMap.getTcpClient(predecessor).borrowSocket(
+					message);
+			DataOutputStream out = new DataOutputStream(
+					socket.getOutputStream());
+			DataInputStream in = new DataInputStream(socket.getInputStream());
+			for (Address address : getLocalMap().keySet()) {
+				ds().protocol.getStreamSerializer().writeObject(out, address);
+				ds().protocol.getStreamSerializer().writeObject(out,
+						getLocalMap().get(address));
+				// read an acknowledgement for avoiding to sent to much on the
+				// stream.
+				ds().protocol.getStreamSerializer().readObject(in);
+			}
+			ds().protocol.getStreamSerializer().writeEOM(out);
+			ds().contactMap.getTcpClient(predecessor).returnSocket(socket);
+			socket = null;
+		} catch (SocketException e) {
+		} catch (EOFException e) {
+		} catch (SocketTimeoutException e) {
+		} catch (NotAvailableContactException e) {
+		} finally {
+			if (socket != null) {
+				socket.close();
+				socket = null;
+			}
+		}
+
+	}
+
+	@Override
+	public void networkPicture() throws Exception {
+		// list all contact including myself.
+		for (NodeMap nodeMap : ringNodeMap.getNodeMaps()) {
+			for (Contact c : nodeMap.getNodeMap().values()) {
+				JLG.println("Contact: " + c);
+				Node n = c.getNode();
+				JLG.println("  Node: " + n);
+				Map<Address, byte[]> localMap = ds().localMap(c);
+				JLG.println("  Map: " + localMap);
+			}
+		}
+		
 	}
 
 }

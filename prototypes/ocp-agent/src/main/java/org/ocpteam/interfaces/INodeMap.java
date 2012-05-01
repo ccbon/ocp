@@ -20,4 +20,6 @@ public interface INodeMap extends IComponent {
 
 	boolean isResponsible(Address address) throws Exception;
 
+	void askForNode() throws Exception;
+
 }

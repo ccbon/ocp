@@ -1,20 +1,9 @@
 package org.ocpteam.component;
 
-import java.io.DataInputStream;
-import java.io.EOFException;
-import java.io.Serializable;
-import java.net.Socket;
-import java.net.SocketException;
-import java.net.SocketTimeoutException;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.Set;
 
 import org.ocpteam.entity.Address;
-import org.ocpteam.entity.Contact;
-import org.ocpteam.entity.EOMObject;
-import org.ocpteam.entity.InputFlow;
-import org.ocpteam.exception.NotAvailableContactException;
 import org.ocpteam.interfaces.IAddressMap;
 import org.ocpteam.interfaces.IMapDataModel;
 import org.ocpteam.misc.JLG;
@@ -94,43 +83,4 @@ public class AddressMapDataModel extends DSContainer<DSPDataSource> implements
 		return directory.keySet();
 	}
 
-	public Map<Address, byte[]> localMap(Contact c) throws Exception {
-		if (c.isMyself()) {
-			return getMap().getLocalMap();
-		}
-		Map<Address, byte[]> localmap = new HashMap<Address, byte[]>();
-		MapModule m = ds().getComponent(MapModule.class);
-		InputFlow message = new InputFlow(m.getLocalMap());
-
-		Socket socket = null;
-		try {
-
-			socket = ds().contactMap.getTcpClient(c).borrowSocket(message);
-			DataInputStream in = new DataInputStream(socket.getInputStream());
-			while (true) {
-				Serializable serializable = ds().protocol.getStreamSerializer()
-						.readObject(in);
-				if (serializable instanceof EOMObject) {
-					break;
-				}
-				Address key = (Address) serializable;
-				byte[] value = (byte[]) ds().protocol.getStreamSerializer()
-						.readObject(in);
-
-				localmap.put(key, value);
-			}
-			ds().contactMap.getTcpClient(c).returnSocket(socket);
-		} catch (SocketException e) {
-		} catch (EOFException e) {
-		} catch (SocketTimeoutException e) {
-		} catch (NotAvailableContactException e) {
-		} finally {
-			if (socket != null) {
-				socket.close();
-				socket = null;
-			}
-		}
-
-		return localmap;
-	}
 }
