@@ -7,7 +7,6 @@ import java.io.Serializable;
 import java.net.Socket;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
-import java.security.MessageDigest;
 import java.security.SecureRandom;
 import java.util.Collections;
 import java.util.HashMap;
@@ -17,6 +16,7 @@ import org.ocpteam.component.AddressMap;
 import org.ocpteam.component.AddressMapDataModel;
 import org.ocpteam.component.DSPDataSource;
 import org.ocpteam.component.MapModule;
+import org.ocpteam.component.MessageDigest;
 import org.ocpteam.component.NodeMap;
 import org.ocpteam.entity.Address;
 import org.ocpteam.entity.Contact;
@@ -41,9 +41,8 @@ import org.ocpteam.misc.JLG;
  */
 public class DHT3DataSource extends DSPDataSource {
 
-	public AddressMap map;
+	public IAddressMap map;
 	public AddressMapDataModel dm;
-	private MessageDigest md;
 	public NodeMap nodeMap;
 
 	public DHT3DataSource() throws Exception {
@@ -52,6 +51,7 @@ public class DHT3DataSource extends DSPDataSource {
 		addComponent(IAddressMap.class, new AddressMap());
 		addComponent(IDataModel.class, new AddressMapDataModel());
 		addComponent(MapModule.class);
+		addComponent(MessageDigest.class);
 	}
 
 	@Override
@@ -67,7 +67,7 @@ public class DHT3DataSource extends DSPDataSource {
 
 	@Override
 	public String getProtocolName() {
-		return "DHT1";
+		return "DHT3";
 	}
 
 	@Override
@@ -82,13 +82,13 @@ public class DHT3DataSource extends DSPDataSource {
 	protected void readNetworkConfig() throws Exception {
 		JLG.debug("readNetworkConfig " + getName());
 		super.readNetworkConfig();
-		md = MessageDigest.getInstance(network.getProperty("hash", "SHA-1"));
+		getComponent(MessageDigest.class).setAlgo(network.getProperty("hash", "SHA-1"));
 	}
 
 	@Override
 	protected void askForNode() throws Exception {
 		super.askForNode();
-		setNode(new Node(hash(random())));
+		setNode(new Node(new Id(getComponent(MessageDigest.class).hash(random()))));
 	}
 
 	@Override
@@ -181,14 +181,6 @@ public class DHT3DataSource extends DSPDataSource {
 		byte bytes[] = new byte[20];
 		random.nextBytes(bytes);
 		return bytes;
-	}
-
-	public Id hash(byte[] input) throws Exception {
-		return new Id(md.digest(input));
-	}
-
-	public Address getAddress(String key) throws Exception {
-		return new Address(hash(key.getBytes()));
 	}
 
 	public void networkPicture() throws Exception {

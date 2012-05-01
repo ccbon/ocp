@@ -153,6 +153,7 @@ public class DHT1Test {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
+			assertEquals(0, 1);
 		}
 	}
 

@@ -7,7 +7,6 @@ import java.io.Serializable;
 import java.net.Socket;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
-import java.security.MessageDigest;
 import java.security.SecureRandom;
 import java.util.Collections;
 import java.util.HashMap;
@@ -16,8 +15,10 @@ import java.util.Map;
 import org.ocpteam.component.AddressMapDataModel;
 import org.ocpteam.component.DSPDataSource;
 import org.ocpteam.component.MapModule;
+import org.ocpteam.component.MessageDigest;
 import org.ocpteam.component.NodeMap;
 import org.ocpteam.component.RingAddressMap;
+import org.ocpteam.component.RingMapModule;
 import org.ocpteam.component.RingNodeMap;
 import org.ocpteam.entity.Address;
 import org.ocpteam.entity.Contact;
@@ -44,7 +45,7 @@ public class DHT4DataSource extends DSPDataSource {
 
 	public IAddressMap map;
 	public AddressMapDataModel dm;
-	private MessageDigest md;
+	
 	public RingNodeMap ringNodeMap;
 
 	public DHT4DataSource() throws Exception {
@@ -53,6 +54,8 @@ public class DHT4DataSource extends DSPDataSource {
 		addComponent(IAddressMap.class, new RingAddressMap());
 		addComponent(IDataModel.class, new AddressMapDataModel());
 		addComponent(MapModule.class);
+		addComponent(RingMapModule.class);
+		addComponent(MessageDigest.class);
 	}
 
 	@Override
@@ -68,7 +71,7 @@ public class DHT4DataSource extends DSPDataSource {
 
 	@Override
 	public String getProtocolName() {
-		return "DHT1";
+		return "DHT4";
 	}
 
 	@Override
@@ -83,13 +86,15 @@ public class DHT4DataSource extends DSPDataSource {
 	protected void readNetworkConfig() throws Exception {
 		JLG.debug("readNetworkConfig " + getName());
 		super.readNetworkConfig();
-		md = MessageDigest.getInstance(network.getProperty("hash", "SHA-1"));
+		getComponent(MessageDigest.class).setAlgo(network.getProperty("hash", "SHA-1"));
+		int ringNbr = Integer.parseInt(network.getProperty("ringNbr", "3"));
+		ringNodeMap.setRingNbr(ringNbr);
 	}
 
 	@Override
 	protected void askForNode() throws Exception {
 		super.askForNode();
-		setNode(new Node(hash(random())));
+		setNode(new Node(new Id(getComponent(MessageDigest.class).hash(random())), ringNodeMap.getLessPopulatedRing()));
 	}
 
 	@Override
@@ -119,7 +124,7 @@ public class DHT4DataSource extends DSPDataSource {
 				Address address = (Address) serializable;
 				byte[] value = (byte[]) protocol.getStreamSerializer()
 						.readObject(in);
-				map.put(address, value);
+				map.getLocalMap().put(address, value);
 			}
 			contactMap.getTcpClient(predecessor).returnSocket(socket);
 			socket = null;
@@ -182,14 +187,6 @@ public class DHT4DataSource extends DSPDataSource {
 		byte bytes[] = new byte[20];
 		random.nextBytes(bytes);
 		return bytes;
-	}
-
-	public Id hash(byte[] input) throws Exception {
-		return new Id(md.digest(input));
-	}
-
-	public Address getAddress(String key) throws Exception {
-		return new Address(hash(key.getBytes()));
 	}
 
 	public void networkPicture() throws Exception {

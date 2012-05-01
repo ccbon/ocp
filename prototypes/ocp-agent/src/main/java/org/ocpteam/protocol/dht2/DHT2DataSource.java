@@ -69,7 +69,7 @@ public class DHT2DataSource extends DSPDataSource {
 
 	@Override
 	public String getProtocolName() {
-		return "DHT1";
+		return "DHT2";
 	}
 
 	@Override

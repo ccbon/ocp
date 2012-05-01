@@ -15,17 +15,25 @@ import org.ocpteam.entity.Contact;
 import org.ocpteam.entity.EOMObject;
 import org.ocpteam.entity.InputFlow;
 import org.ocpteam.exception.NotAvailableContactException;
+import org.ocpteam.interfaces.IAddressMap;
 import org.ocpteam.interfaces.IMapDataModel;
 import org.ocpteam.misc.JLG;
-import org.ocpteam.protocol.dht3.DHT3DataSource;
 
-public class AddressMapDataModel extends DSContainer<DHT3DataSource> implements
+public class AddressMapDataModel extends DSContainer<DSPDataSource> implements
 		IMapDataModel {
 
+	IAddressMap getMap() {
+		return ds().getComponent(IAddressMap.class);
+	}
+	
+	public Address getAddress(String key) throws Exception {
+		return new Address(ds().getComponent(MessageDigest.class).hash(key.getBytes()));
+	}
+	
 	@Override
 	public void set(String key, String value) throws Exception {
-		Address address = ds().getAddress(key);
-		ds().map.put(address, value.getBytes());
+		Address address = getAddress(key);
+		getMap().put(address, value.getBytes());
 		setRootContent(key, address);
 		JLG.debug("set finished.");
 	}
@@ -33,16 +41,16 @@ public class AddressMapDataModel extends DSContainer<DHT3DataSource> implements
 	private void setRootContent(String key, Address address) throws Exception {
 		HashMap<String, Address> directory = getRootContent();
 		directory.put(key, address);
-		ds().map.put(getRootAddress(), JLG.serialize(directory));
+		getMap().put(getRootAddress(), JLG.serialize(directory));
 	}
 
 	private Address getRootAddress() throws Exception {
-		return ds().getAddress("qwerasdf!@#$1234");
+		return getAddress("qwerasdf!@#$1234");
 	}
 
 	@SuppressWarnings("unchecked")
 	private HashMap<String, Address> getRootContent() throws Exception {
-		byte[] root = ds().map.get(getRootAddress());
+		byte[] root = getMap().get(getRootAddress());
 		if (root == null) {
 			return new HashMap<String, Address>();
 		} else {
@@ -57,7 +65,7 @@ public class AddressMapDataModel extends DSContainer<DHT3DataSource> implements
 		if (address == null) {
 			return null;
 		}
-		byte[] value = ds().map.get(address);
+		byte[] value = getMap().get(address);
 		if (value != null) {
 			return new String(value);
 		} else {
@@ -67,8 +75,8 @@ public class AddressMapDataModel extends DSContainer<DHT3DataSource> implements
 
 	@Override
 	public void remove(String key) throws Exception {
-		Address address = ds().getAddress(key);
-		ds().map.remove(address);
+		Address address = getAddress(key);
+		getMap().remove(address);
 		removeRootContent(key, address);
 
 	}
@@ -77,7 +85,7 @@ public class AddressMapDataModel extends DSContainer<DHT3DataSource> implements
 			throws Exception {
 		HashMap<String, Address> directory = getRootContent();
 		directory.remove(key);
-		ds().map.put(getRootAddress(), JLG.serialize(directory));
+		getMap().put(getRootAddress(), JLG.serialize(directory));
 	}
 
 	@Override
@@ -88,7 +96,7 @@ public class AddressMapDataModel extends DSContainer<DHT3DataSource> implements
 
 	public Map<Address, byte[]> localMap(Contact c) throws Exception {
 		if (c.isMyself()) {
-			return ds().map.getLocalMap();
+			return getMap().getLocalMap();
 		}
 		Map<Address, byte[]> localmap = new HashMap<Address, byte[]>();
 		MapModule m = ds().getComponent(MapModule.class);

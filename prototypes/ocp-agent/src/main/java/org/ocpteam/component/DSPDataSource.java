@@ -95,6 +95,9 @@ public abstract class DSPDataSource extends DataSource {
 	}
 
 	protected void readNetworkConfig() throws Exception {
+		if (usesComponent(MessageDigest.class)) {
+			getComponent(MessageDigest.class).setAlgo(network.getProperty("hash", "SHA-1"));
+		}
 
 	}
 

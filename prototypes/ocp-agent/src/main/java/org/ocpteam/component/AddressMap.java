@@ -15,6 +15,7 @@ public class AddressMap extends DSContainer<DSPDataSource> implements IAddressMa
 	private NodeMap nodeMap;
 	private Map<Address, byte[]> localMap;
 	
+	@Override
 	public void setLocalMap(Map<Address, byte[]> localMap) {
 		this.localMap = localMap;
 	}

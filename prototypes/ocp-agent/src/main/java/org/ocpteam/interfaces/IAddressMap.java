@@ -16,5 +16,6 @@ public interface IAddressMap {
 
 	void setNodeMap(INodeMap nodeMap);
 
-	void setLocalMap(Map<Address, byte[]> localMap);
+	void setLocalMap(Map<Address, byte[]> synchronizedMap);
+
 }

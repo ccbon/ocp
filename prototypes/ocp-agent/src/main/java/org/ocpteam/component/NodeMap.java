@@ -60,7 +60,11 @@ public class NodeMap extends DSContainer<DSPDataSource> implements INodeMap {
 			try {
 				nodeId = nodeMap.lastKey();
 			} catch (Exception e) {
-				throw new Exception("nodeMap is not populated at all");
+				if (nodeMap.isEmpty()) {
+					throw new Exception("nodeMap is not populated at all");
+				} else {
+					throw e;
+				}
 			}
 		}
 		JLG.debug("nodeId=" + nodeId);
@@ -136,7 +140,7 @@ public class NodeMap extends DSContainer<DSPDataSource> implements INodeMap {
 	public boolean isEmpty() {
 		return nodeMap.isEmpty();
 	}
-	
+
 	@Override
 	public String toString() {
 		return nodeMap.toString();

@@ -5,11 +5,12 @@ import static org.junit.Assert.assertEquals;
 import java.util.Properties;
 
 import org.junit.Test;
+import org.ocpteam.component.Client;
 import org.ocpteam.component.ContactMap;
 import org.ocpteam.misc.JLG;
-import org.ocpteam.protocol.dht2.DHT2DataSource;
+import org.ocpteam.protocol.dht4.DHT4DataSource;
 
-public class DHT2Test {
+public class DHT4Test {
 
 	@Test
 	public void mytest() {
@@ -22,13 +23,13 @@ public class DHT2Test {
 			int port = 40000;
 			JLG.debug_on();
 			JLG.bUseSet = true;
-			JLG.set.add(DHT2Test.class.getName());
-			//JLG.set.add(DHT2DataSource.class.getName());
+			JLG.set.add(DHT4Test.class.getName());
+			JLG.set.add(Client.class.getName());
 			//JLG.set.add(RingNodeMap.class.getName());
 
-			DHT2DataSource[] ds = new DHT2DataSource[n];
+			DHT4DataSource[] ds = new DHT4DataSource[n];
 			for (int i = 0; i < n; i++) {
-				ds[i] = new DHT2DataSource();
+				ds[i] = new DHT4DataSource();
 				ds[i].init();
 				ds[i].setName("a" + i);
 			}
@@ -51,6 +52,7 @@ public class DHT2Test {
 
 			ds[0].connect();
 			ds[0].dm.set("hello", "world");
+			JLG.debug("hello->" + ds[0].dm.get("hello"));
 
 			// start all
 			for (int i = 1; i < n; i++) {
@@ -59,9 +61,12 @@ public class DHT2Test {
 				JLG.debug("ds[" + i + "] contact map size: " + cm.size());
 				assertEquals(i + 1, cm.size());
 			}
+			
+			
+			
 			ds[0].dm.set("coucou", "suzana");
 			JLG.debug("keyset: " + ds[0].dm.keySet());
-			ds[0].dm.remove("hello");
+			//ds[0].dm.remove("hello");
 			ds[0].networkPicture();
 			
 			ds[0].disconnectHard();
@@ -71,6 +76,7 @@ public class DHT2Test {
 			ds[1].networkPicture();
 			
 			JLG.debug("coucou->" + ds[1].dm.get("coucou"));
+			ds[1].client.waitForCompletion();
 			for (int i = 1; i < n; i++) {
 				JLG.debug("disconnecting " + ds[i].getName());
 				ds[i].disconnectHard();

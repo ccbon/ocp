@@ -1,5 +1,7 @@
 package org.ocpteam.unittest;
 
+import static org.junit.Assert.assertEquals;
+
 import java.util.Properties;
 
 import org.junit.Test;
@@ -81,13 +83,8 @@ public class DHT3Test {
 
 		} catch (Exception e) {
 			e.printStackTrace();
+			assertEquals(0, 1);
 		}
 
 	}
-
-	private void assertEquals(int i, int size) {
-		// TODO Auto-generated method stub
-		
-	}
-
 }
