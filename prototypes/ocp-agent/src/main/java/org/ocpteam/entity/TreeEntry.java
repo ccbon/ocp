@@ -1,4 +1,4 @@
-package org.ocpteam.protocol.ocp;
+package org.ocpteam.entity;
 
 import java.io.Serializable;
 import java.util.Collection;

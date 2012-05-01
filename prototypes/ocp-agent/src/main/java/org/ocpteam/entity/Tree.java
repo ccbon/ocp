@@ -1,4 +1,4 @@
-package org.ocpteam.protocol.ocp;
+package org.ocpteam.entity;
 
 import java.io.Serializable;
 import java.util.Collection;
@@ -7,7 +7,12 @@ import java.util.Map;
 
 import org.ocpteam.interfaces.IFile;
 
-
+/**
+ * A Tree is a map<filename, TreeEntry> structure. It is used to form a file
+ * system from a map. And even better it is used to form a versioned file
+ * system.
+ * 
+ */
 public class Tree implements Serializable, IFile {
 
 	/**

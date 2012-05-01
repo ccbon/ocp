@@ -29,6 +29,7 @@ import org.ocpteam.component.ContactMap;
 import org.ocpteam.component.DSPDataSource;
 import org.ocpteam.entity.Address;
 import org.ocpteam.entity.Contact;
+import org.ocpteam.entity.Pointer;
 import org.ocpteam.entity.User;
 import org.ocpteam.misc.ByteUtil;
 import org.ocpteam.misc.Cache;
@@ -438,7 +439,7 @@ public class OCPAgent extends Agent {
 	}
 
 	private Key[] getKeys(OCPUser user, Pointer pointer) throws Exception {
-		Key pointerKey = pointer.asKey();
+		Key pointerKey = new Key(pointer.getBytes());
 		Data data = (Data) get(pointerKey);
 		if (data == null) {
 			throw new Exception("Cannot get keys for pointer " + pointer);
@@ -456,7 +457,7 @@ public class OCPAgent extends Agent {
 			remove(user, keys[i]);
 		}
 		// 2) remove the pointer as a key
-		remove(user, pointer.asKey());
+		remove(user, new Key(pointer.getBytes()));
 		// 3) remove the pointer from the user index
 		user.remove(this, pointer);
 	}

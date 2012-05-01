@@ -5,6 +5,8 @@ import java.util.Iterator;
 import java.util.NavigableSet;
 import java.util.TreeSet;
 
+import org.ocpteam.entity.Pointer;
+
 public class UserIndex implements Serializable {
 
 	private static final long serialVersionUID = 1L;

@@ -9,6 +9,7 @@ import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 
+import org.ocpteam.entity.Pointer;
 import org.ocpteam.entity.User;
 import org.ocpteam.misc.JLG;
 

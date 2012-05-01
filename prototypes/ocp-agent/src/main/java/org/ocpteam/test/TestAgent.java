@@ -5,13 +5,13 @@ import java.util.Properties;
 
 import org.ocpteam.component.Agent;
 import org.ocpteam.component.Authentication;
+import org.ocpteam.entity.Pointer;
 import org.ocpteam.misc.JLG;
 import org.ocpteam.protocol.ocp.Captcha;
 import org.ocpteam.protocol.ocp.OCPAgent;
 import org.ocpteam.protocol.ocp.OCPDataSource;
 import org.ocpteam.protocol.ocp.OCPFileSystem;
 import org.ocpteam.protocol.ocp.OCPUser;
-import org.ocpteam.protocol.ocp.Pointer;
 
 
 public class TestAgent {

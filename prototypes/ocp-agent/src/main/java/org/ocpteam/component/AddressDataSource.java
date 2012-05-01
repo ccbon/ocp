@@ -23,7 +23,7 @@ public abstract class AddressDataSource extends DSPDataSource {
 	protected INodeMap nodeMap;
 	protected IAddressMap map;
 	protected Map<Address, byte[]> localMap;
-	protected MessageDigest md;
+	public MessageDigest md;
 	protected Random random;
 
 	public AddressDataSource() throws Exception {
