@@ -194,7 +194,7 @@ public class DHT4DataSource extends DSPDataSource {
 
 	public synchronized void disconnectHard() throws Exception {
 		super.disconnectHard();
-		map.getLocalMap().clear();
+		localMap.clear();
 	}
 
 }
