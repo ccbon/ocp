@@ -1,9 +1,9 @@
 package org.ocpteam.protocol.dht5;
 
 import org.ocpteam.component.AddressDataSource;
-import org.ocpteam.component.AddressFSDataModel;
 import org.ocpteam.component.PersistentFileMap;
 import org.ocpteam.entity.Context;
+import org.ocpteam.fs.BFSDataModel;
 import org.ocpteam.interfaces.IDataModel;
 import org.ocpteam.interfaces.IPersistentMap;
 import org.ocpteam.misc.JLG;
@@ -17,18 +17,18 @@ import org.ocpteam.misc.JLG;
  */
 public class DHT5DataSource extends AddressDataSource {
 
-	public AddressFSDataModel dm;
+	public IDataModel dm;
 
 	public DHT5DataSource() throws Exception {
 		super();
-		addComponent(IDataModel.class, new AddressFSDataModel());
+		addComponent(IDataModel.class, new BFSDataModel());
 		addComponent(IPersistentMap.class, new PersistentFileMap());
 	}
 
 	@Override
 	public void init() throws Exception {
 		super.init();
-		dm = (AddressFSDataModel) getComponent(IDataModel.class);
+		dm = getComponent(IDataModel.class);
 	}
 
 	@Override

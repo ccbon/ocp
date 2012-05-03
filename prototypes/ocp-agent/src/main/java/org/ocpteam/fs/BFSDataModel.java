@@ -1,17 +1,24 @@
-package org.ocpteam.component;
+package org.ocpteam.fs;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
 
+import org.ocpteam.component.AddressDataSource;
+import org.ocpteam.component.DSContainer;
 import org.ocpteam.entity.Address;
-import org.ocpteam.entity.Pointer;
-import org.ocpteam.entity.Tree;
-import org.ocpteam.entity.TreeEntry;
 import org.ocpteam.interfaces.IAddressMap;
 import org.ocpteam.interfaces.IFile;
 import org.ocpteam.interfaces.IFileSystem;
 import org.ocpteam.misc.JLG;
 
-public class AddressFSDataModel extends DSContainer<AddressDataSource> implements IFileSystem {
+/**
+ * File System Data Model with big file support.
+ *
+ */
+public class BFSDataModel extends DSContainer<AddressDataSource> implements
+		IFileSystem {
 
 	private IAddressMap map;
 	private Address rootAddress;
@@ -21,14 +28,14 @@ public class AddressFSDataModel extends DSContainer<AddressDataSource> implement
 		super.init();
 		map = ds().getComponent(IAddressMap.class);
 	}
-	
+
 	public Address getRootAddress() {
 		if (rootAddress == null) {
 			rootAddress = new Address(ds().md.hash("".getBytes()));
 		}
 		return rootAddress;
 	}
-	
+
 	@Override
 	public void checkoutAll(String localDir) throws Exception {
 		JLG.rm(localDir);
@@ -40,13 +47,13 @@ public class AddressFSDataModel extends DSContainer<AddressDataSource> implement
 		Tree rootTree = getTree(p);
 		checkout(rootTree, new File(localDir));
 	}
-	
+
 	private Pointer getRootPointer() throws Exception {
 		byte[] root = map.get(getRootAddress());
 		if (root == null) {
 			return null;
 		}
-		return new Pointer(root);
+		return (Pointer) ds().serializer.deserialize(root);
 	}
 
 	private void checkout(Tree rootTree, File file) throws Exception {
@@ -54,7 +61,7 @@ public class AddressFSDataModel extends DSContainer<AddressDataSource> implement
 			checkout(te, file);
 		}
 	}
-	
+
 	private void checkout(TreeEntry te, File parentDir) throws Exception {
 		Pointer p = te.getPointer();
 		if (te.isTree()) {
@@ -64,9 +71,22 @@ public class AddressFSDataModel extends DSContainer<AddressDataSource> implement
 			Tree tree = getTree(p);
 			checkout(tree, dirFile);
 		} else if (te.isFile()) {
-			File subFile = new File(parentDir, te.getName());
-			byte[] content = get(p);
-			JLG.setBinaryFile(subFile, content);
+			createLocalFile(p, new File(parentDir, te.getName()));
+		}
+	}
+
+	private void createLocalFile(Pointer p, File file) throws Exception {
+		OutputStream out = null;
+		try {
+			out = new FileOutputStream(file, false);
+
+			for (Address address : p.getAddresses()) {
+				byte[] content = map.get(address);
+				out.write(content);
+				out.flush();
+			}
+		} finally {
+			out.close();
 		}
 	}
 
@@ -81,7 +101,7 @@ public class AddressFSDataModel extends DSContainer<AddressDataSource> implement
 	}
 
 	private void setRootPointer(Pointer p) throws Exception {
-		map.put(getRootAddress(), p.getBytes());
+		map.put(getRootAddress(), ds().serializer.serialize(p));
 	}
 
 	private Pointer commit(File file) throws Exception {
@@ -100,20 +120,42 @@ public class AddressFSDataModel extends DSContainer<AddressDataSource> implement
 			}
 			result = set(ds().serializer.serialize(tree));
 		} else { // file
-			byte[] content = JLG.getBinaryFile(file);
-			result = set(content);
+			result = createRemoteFile(file);
 		}
 		return result;
 	}
 
-	private byte[] get(Pointer p) throws Exception {
-		return map.get(new Address(p.getBytes()));
+	/**
+	 * Put a file on the cloud.
+	 * 
+	 * @param file
+	 * @return a pointer to the file
+	 * @throws Exception
+	 */
+	private Pointer createRemoteFile(File file) throws Exception {
+		FileInputStream fis = null;
+		Pointer pointer = new Pointer();
+		try {
+			byte[] buffer = new byte[50000];
+			fis = new FileInputStream(file);
+			int n = fis.read(buffer);
+			while (n >= 0) {
+				Address address = new Address(ds().md.hash(buffer));
+				map.put(address, buffer);
+				pointer.add(address);
+				n = fis.read(buffer);
+			}
+
+		} finally { // always close input stream
+			fis.close();
+		}
+		return pointer;
 	}
 
 	private Pointer set(byte[] value) throws Exception {
 		Address address = new Address(ds().md.hash(value));
 		map.put(address, value);
-		return new Pointer(address.getBytes());
+		return new Pointer(address);
 	}
 
 	@Override
@@ -221,7 +263,7 @@ public class AddressFSDataModel extends DSContainer<AddressDataSource> implement
 	public String getDefaultLocalDir() {
 		return System.getProperty("user.home");
 	}
-	
+
 	private Tree getTree(String path) throws Exception {
 		String[] dirnames = path.split("/");
 		if (path.equals("/")) {
@@ -245,9 +287,13 @@ public class AddressFSDataModel extends DSContainer<AddressDataSource> implement
 		}
 		return tree;
 	}
-	
+
 	private Tree getTree(Pointer p) throws Exception {
 		return (Tree) ds().serializer.deserialize(get(p));
+	}
+	
+	private byte[] get(Pointer p) throws Exception {
+		return map.get(p.getAddresses().get(0));
 	}
 
 	private Tree[] getTreeStack(String[] dirnames) throws Exception {
