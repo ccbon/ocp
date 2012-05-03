@@ -46,7 +46,7 @@ public class OCPClient extends Client implements IAuthenticable {
 
 	public Captcha askCaptcha(Queue<Contact> contactQueue) throws Exception {
 		Response r = requestByPriority(contactQueue, OCPProtocol.GENERATE_CAPTCHA.getBytes());
-		Captcha captcha = (Captcha) JLG.deserialize((byte[]) r.getObject());
+		Captcha captcha = (Captcha) ds().serializer.deserialize((byte[]) r.getObject());
 		JLG.debug("captcha content = " + captcha);
 		// if (!captcha.checkSignature(r.getContact())) {
 		// throw new Exception("captcha signature not consistant");
@@ -86,7 +86,7 @@ public class OCPClient extends Client implements IAuthenticable {
 				OCPProtocol.ADDRESS_NOT_FOUND))) {
 			return null;
 		}
-		return (Content) JLG.deserialize((byte[]) r.getObject());
+		return (Content) ds().serializer.deserialize((byte[]) r.getObject());
 	}
 
 	public void remove(Address address, byte[] addressSignature)
@@ -135,7 +135,7 @@ public class OCPClient extends Client implements IAuthenticable {
 			if (content == null) {
 				throw new Exception("user unknown");
 			}
-			User user = (User) JLG.deserialize(agent
+			User user = (User) ds().serializer.deserialize(agent
 					.udecrypt(password, content));
 			if (user == null) {
 				throw new Exception("user unknown");

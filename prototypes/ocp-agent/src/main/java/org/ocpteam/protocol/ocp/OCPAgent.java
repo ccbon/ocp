@@ -385,7 +385,7 @@ public class OCPAgent extends Agent {
 	public Pointer set(OCPUser user, Serializable serializable)
 			throws Exception {
 		JLG.debug("set serializable: " + serializable.getClass());
-		return set(user, JLG.serialize(serializable));
+		return set(user, ds().serializer.serialize(serializable));
 	}
 
 	public Pointer set(OCPUser user, byte[] bytes) throws Exception {
@@ -407,13 +407,13 @@ public class OCPAgent extends Agent {
 	}
 
 	private Pointer makePointer(OCPUser user, Key[] keys) throws Exception {
-		Data data = new Data(this, user, user.crypt(JLG.serialize(keys)));
+		Data data = new Data(this, user, user.crypt(ds().serializer.serialize(keys)));
 		Pointer pointer = new Pointer(set(data).getBytes());
 		return pointer;
 	}
 
 	public Serializable get(OCPUser user, Pointer pointer) throws Exception {
-		return JLG.deserialize(getBytes(user, pointer));
+		return ds().serializer.deserialize(getBytes(user, pointer));
 	}
 
 	public byte[] getBytes(OCPUser user, Pointer pointer) throws Exception {
@@ -446,7 +446,7 @@ public class OCPAgent extends Agent {
 		}
 		byte[] ciphertext = data.getContent();
 		byte[] cleartext = user.decrypt(ciphertext);
-		Key[] keys = (Key[]) JLG.deserialize(cleartext);
+		Key[] keys = (Key[]) ds().serializer.deserialize(cleartext);
 		return keys;
 	}
 
@@ -535,7 +535,7 @@ public class OCPAgent extends Agent {
 		// no need captcha because creation of object is checked by the user
 		// public info
 		Key key = new Key(hash(ucrypt(password, (login + password).getBytes())));
-		byte[] content = ucrypt(password, JLG.serialize(user));
+		byte[] content = ucrypt(password, ds().serializer.serialize(user));
 		Content privateUserData = new Data(this, user, content);
 		Link privateUserDataLink = new Link(user, this, key,
 				privateUserData.getKey(this));

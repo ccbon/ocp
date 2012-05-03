@@ -14,7 +14,7 @@ import org.ocpteam.misc.JLG;
  * A node map with many rings. A ring is instanciated by a nodeMap.
  * 
  */
-public class RingNodeMap extends DSContainer<AddressDataSource> implements INodeMap {
+public class RingNodeMap extends DSContainer<DSPDataSource> implements INodeMap {
 
 	private int ringNbr;
 
@@ -128,7 +128,9 @@ public class RingNodeMap extends DSContainer<AddressDataSource> implements INode
 
 	@Override
 	public void askForNode() throws Exception {
-		ds().setNode(new Node(new Id(ds().md.hash(ds().random.generate())),
+		MessageDigest md = ds().getComponent(MessageDigest.class);
+		Random random = ds().getComponent(Random.class);
+		ds().setNode(new Node(new Id(md.hash(random.generate())),
 				getLessPopulatedRing()));
 
 		

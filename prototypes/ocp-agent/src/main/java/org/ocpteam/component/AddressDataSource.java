@@ -17,6 +17,8 @@ import org.ocpteam.entity.InputFlow;
 import org.ocpteam.exception.NotAvailableContactException;
 import org.ocpteam.interfaces.IAddressMap;
 import org.ocpteam.interfaces.INodeMap;
+import org.ocpteam.interfaces.IPersistentMap;
+import org.ocpteam.misc.JLG;
 
 public abstract class AddressDataSource extends DSPDataSource {
 
@@ -34,12 +36,19 @@ public abstract class AddressDataSource extends DSPDataSource {
 		addComponent(RingMapModule.class);
 		addComponent(MessageDigest.class);
 		addComponent(Random.class);
-		localMap = Collections.synchronizedMap(new HashMap<Address, byte[]>());
+		// addComponent(IPersistentMap.class, new PersistentFileMap());
 	}
 
 	@Override
 	public void init() throws Exception {
 		super.init();
+		if (usesComponent(IPersistentMap.class)) {
+			localMap = Collections
+					.synchronizedMap(getComponent(IPersistentMap.class));
+		} else {
+			localMap = Collections
+					.synchronizedMap(new HashMap<Address, byte[]>());
+		}
 		nodeMap = getComponent(INodeMap.class);
 		map = getComponent(IAddressMap.class);
 		map.setNodeMap(nodeMap);
@@ -49,17 +58,28 @@ public abstract class AddressDataSource extends DSPDataSource {
 	}
 
 	@Override
+	protected void readNetworkConfig() throws Exception {
+		super.readNetworkConfig();
+		if (usesComponent(IPersistentMap.class)) {
+			String dir = getProperty("localmap.dir", System.getenv("TEMP")
+					+ "/" + getProtocolName());
+			JLG.debug("dir=" + dir);
+			getComponent(IPersistentMap.class).setRoot(dir);
+		}
+	}
+
+	@Override
 	protected void askForNode() throws Exception {
 		super.askForNode();
 		nodeMap.askForNode();
 	}
-	
+
 	@Override
 	protected void onNodeNiceDeparture() throws Exception {
 		super.onNodeNiceDeparture();
 		map.onNodeNiceDeparture();
 	}
-	
+
 	@Override
 	protected void onNodeArrival() throws Exception {
 		super.onNodeArrival();
@@ -71,11 +91,11 @@ public abstract class AddressDataSource extends DSPDataSource {
 		super.disconnectHard();
 		localMap.clear();
 	}
-	
+
 	public void networkPicture() throws Exception {
 		map.networkPicture();
 	}
-	
+
 	public Map<Address, byte[]> localMap(Contact c) throws Exception {
 		if (c.isMyself()) {
 			return map.getLocalMap();
@@ -115,7 +135,5 @@ public abstract class AddressDataSource extends DSPDataSource {
 
 		return localmap;
 	}
-
-
 
 }

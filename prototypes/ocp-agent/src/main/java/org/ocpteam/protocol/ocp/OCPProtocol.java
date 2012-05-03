@@ -23,6 +23,11 @@ public class OCPProtocol extends Protocol {
 	public OCPProtocol() throws Exception {
 		super();
 	}
+	
+	@Override
+	public OCPDataSource ds() {
+		return (OCPDataSource) super.ds();
+	}
 
 	public static final int SEPARATOR = 0;
 
@@ -112,7 +117,7 @@ public class OCPProtocol extends Protocol {
 					return ADDRESS_NOT_FOUND;
 				}
 				// serialize it.
-				return JLG.serialize(data);
+				return ds().serializer.serialize(data);
 			} catch (Exception e) {
 				JLG.error(e);
 				return ERROR;
@@ -138,9 +143,9 @@ public class OCPProtocol extends Protocol {
 
 				// TODO handle when user already exists.
 
-				ObjectData data = (ObjectData) JLG.deserialize(it.next());
-				Link link = (Link) JLG.deserialize(it.next());
-				Captcha captcha = (Captcha) JLG.deserialize(it.next());
+				ObjectData data = (ObjectData) ds().serializer.deserialize(it.next());
+				Link link = (Link) ds().serializer.deserialize(it.next());
+				Captcha captcha = (Captcha) ds().serializer.deserialize(it.next());
 				String answer = new String(it.next());
 
 				captcha.check(agent, answer);

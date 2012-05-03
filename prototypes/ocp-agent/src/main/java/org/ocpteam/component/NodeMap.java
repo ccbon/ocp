@@ -13,7 +13,7 @@ import org.ocpteam.interfaces.INodeMap;
 import org.ocpteam.misc.Id;
 import org.ocpteam.misc.JLG;
 
-public class NodeMap extends DSContainer<AddressDataSource> implements INodeMap {
+public class NodeMap extends DSContainer<DSPDataSource> implements INodeMap {
 	private NavigableMap<Id, Contact> nodeMap;
 
 	@Override
@@ -151,7 +151,8 @@ public class NodeMap extends DSContainer<AddressDataSource> implements INodeMap 
 
 	@Override
 	public void askForNode() throws Exception {
-		ds().setNode(new Node(new Id(ds().md.hash(ds().random.generate()))));
+		MessageDigest md = ds().getComponent(MessageDigest.class);
+		Random random = ds().getComponent(Random.class);
+		ds().setNode(new Node(new Id(md.hash(random.generate()))));
 	}
-
 }

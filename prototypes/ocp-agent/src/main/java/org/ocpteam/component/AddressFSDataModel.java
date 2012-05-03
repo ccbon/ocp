@@ -37,7 +37,7 @@ public class AddressFSDataModel extends DSContainer<AddressDataSource> implement
 		if (p == null) {
 			return;
 		}
-		Tree rootTree = (Tree) JLG.deserialize(get(p));
+		Tree rootTree = (Tree) ds().serializer.deserialize(get(p));
 		checkout(rootTree, new File(localDir));
 	}
 	
@@ -61,7 +61,7 @@ public class AddressFSDataModel extends DSContainer<AddressDataSource> implement
 			File dirFile = new File(parentDir, te.getName());
 			dirFile.mkdir();
 
-			Tree tree = (Tree) JLG.deserialize(get(p));
+			Tree tree = (Tree) ds().serializer.deserialize(get(p));
 			checkout(tree, dirFile);
 		} else if (te.isFile()) {
 			File subFile = new File(parentDir, te.getName());
@@ -98,7 +98,7 @@ public class AddressFSDataModel extends DSContainer<AddressDataSource> implement
 					tree.addFile(child.getName(), p);
 				}
 			}
-			result = set(JLG.serialize(tree));
+			result = set(ds().serializer.serialize(tree));
 		} else { // file
 			byte[] content = JLG.getBinaryFile(file);
 			result = set(content);
@@ -139,11 +139,11 @@ public class AddressFSDataModel extends DSContainer<AddressDataSource> implement
 		} else {
 			tree.addFile(file.getName(), p);
 		}
-		p = set(JLG.serialize(tree));
+		p = set(ds().serializer.serialize(tree));
 		for (int i = dirnames.length - 2; i >= 0; i--) {
 			tree = trees[i];
 			tree.addTree(dirnames[i + 1], p);
-			p = set(JLG.serialize(tree));
+			p = set(ds().serializer.serialize(tree));
 		}
 		setRootPointer(p);
 	}
@@ -162,14 +162,14 @@ public class AddressFSDataModel extends DSContainer<AddressDataSource> implement
 		}
 		JLG.debug("dirnames.length = " + dirnames.length);
 		Tree[] trees = getTreeStack(dirnames);
-		Pointer p = set(JLG.serialize(new Tree()));
+		Pointer p = set(ds().serializer.serialize(new Tree()));
 		Tree tree = trees[trees.length - 1];
 		tree.addTree(newDir, p);
-		p = set(JLG.serialize(tree));
+		p = set(ds().serializer.serialize(tree));
 		for (int i = dirnames.length - 2; i >= 0; i--) {
 			tree = trees[i];
 			tree.addTree(dirnames[i + 1], p);
-			p = set(JLG.serialize(tree));
+			p = set(ds().serializer.serialize(tree));
 		}
 		setRootPointer(p);
 	}
@@ -186,11 +186,11 @@ public class AddressFSDataModel extends DSContainer<AddressDataSource> implement
 
 		Tree tree = trees[trees.length - 1];
 		tree.removeEntry(name);
-		Pointer p = set(JLG.serialize(tree));
+		Pointer p = set(ds().serializer.serialize(tree));
 		for (int i = dirnames.length - 2; i >= 0; i--) {
 			tree = trees[i];
 			tree.addTree(dirnames[i + 1], p);
-			p = set(JLG.serialize(tree));
+			p = set(ds().serializer.serialize(tree));
 		}
 		setRootPointer(p);
 	}
@@ -208,11 +208,11 @@ public class AddressFSDataModel extends DSContainer<AddressDataSource> implement
 
 		Tree tree = trees[trees.length - 1];
 		tree.renameEntry(oldName, newName);
-		Pointer p = set(JLG.serialize(tree));
+		Pointer p = set(ds().serializer.serialize(tree));
 		for (int i = dirnames.length - 2; i >= 0; i--) {
 			tree = trees[i];
 			tree.addTree(dirnames[i + 1], p);
-			p = set(JLG.serialize(tree));
+			p = set(ds().serializer.serialize(tree));
 		}
 		setRootPointer(p);
 	}
@@ -232,7 +232,7 @@ public class AddressFSDataModel extends DSContainer<AddressDataSource> implement
 		if (p == null) {
 			return null;
 		}
-		Tree tree = (Tree) JLG.deserialize(get(p));
+		Tree tree = (Tree) ds().serializer.deserialize(get(p));
 
 		for (int i = 1; i < dirnames.length; i++) {
 			String dirname = dirnames[i];
@@ -241,7 +241,7 @@ public class AddressFSDataModel extends DSContainer<AddressDataSource> implement
 				return null;
 			}
 			p = te.getPointer();
-			tree = (Tree) JLG.deserialize(get(p));
+			tree = (Tree) ds().serializer.deserialize(get(p));
 		}
 		return tree;
 	}
@@ -254,7 +254,7 @@ public class AddressFSDataModel extends DSContainer<AddressDataSource> implement
 		if (p == null) {
 			tree = new Tree();
 		} else {
-			tree = (Tree) JLG.deserialize(get(p));
+			tree = (Tree) ds().serializer.deserialize(get(p));
 		}
 		treeStack[0] = tree;
 		for (int i = 1; i < dirnames.length; i++) {
@@ -265,7 +265,7 @@ public class AddressFSDataModel extends DSContainer<AddressDataSource> implement
 
 			} else {
 				p = te.getPointer();
-				tree = (Tree) JLG.deserialize(get(p));
+				tree = (Tree) ds().serializer.deserialize(get(p));
 			}
 			treeStack[i] = tree;
 		}

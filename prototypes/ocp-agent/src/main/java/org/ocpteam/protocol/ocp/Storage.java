@@ -49,7 +49,7 @@ public class Storage {
 	}
 
 	public void put(Address address, Content content) throws Exception {
-		contentMap.put(address, JLG.serialize(content));
+		contentMap.put(address, agent.ds().serializer.serialize(content));
 		// Rude detachment: now tell to your agent backuper what you have
 		// stored.
 		// declare(ADD, address, data.getKey(agent));
@@ -61,7 +61,7 @@ public class Storage {
 			if (array == null) {
 				return null;
 			} else {
-				return (Content) JLG.deserialize(array);
+				return (Content) agent.ds().serializer.deserialize(array);
 			}
 		} catch (Exception e) {
 			JLG.error(e);
@@ -83,7 +83,7 @@ public class Storage {
 			Address address = itc.next();
 			Content content = null;
 			try {
-				content = (Content) JLG.deserialize(contentMap.get(address));
+				content = (Content) agent.ds().serializer.deserialize(contentMap.get(address));
 			} catch (Exception e) {
 				JLG.error(e);
 			}

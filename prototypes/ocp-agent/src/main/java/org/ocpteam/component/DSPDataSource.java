@@ -7,6 +7,7 @@ import java.util.Properties;
 import org.ocpteam.entity.Contact;
 import org.ocpteam.entity.Node;
 import org.ocpteam.interfaces.IProtocol;
+import org.ocpteam.interfaces.ISerializer;
 import org.ocpteam.misc.JLG;
 
 public abstract class DSPDataSource extends DataSource {
@@ -23,6 +24,8 @@ public abstract class DSPDataSource extends DataSource {
 	public UDPListener udplistener;
 	public ContactMap contactMap;
 
+	public ISerializer serializer;
+
 	public DSPDataSource() throws Exception {
 		addComponent(Agent.class);
 		addComponent(Client.class);
@@ -32,6 +35,7 @@ public abstract class DSPDataSource extends DataSource {
 		addComponent(UDPListener.class);
 		addComponent(ContactMap.class);
 		addComponent(DSPModule.class);
+		addComponent(ISerializer.class, new Serializer());
 	}
 
 	@Override
@@ -46,6 +50,7 @@ public abstract class DSPDataSource extends DataSource {
 		udplistener = getComponent(UDPListener.class);
 		udplistener.setProtocol(protocol);
 		contactMap = getComponent(ContactMap.class);
+		serializer = getComponent(ISerializer.class);
 	}
 
 	public Node getNode() {

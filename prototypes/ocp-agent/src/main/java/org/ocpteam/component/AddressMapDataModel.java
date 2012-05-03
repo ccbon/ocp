@@ -30,7 +30,7 @@ public class AddressMapDataModel extends DSContainer<DSPDataSource> implements
 	private void setRootContent(String key, Address address) throws Exception {
 		HashMap<String, Address> directory = getRootContent();
 		directory.put(key, address);
-		getMap().put(getRootAddress(), JLG.serialize(directory));
+		getMap().put(getRootAddress(), ds().serializer.serialize(directory));
 	}
 
 	private Address getRootAddress() throws Exception {
@@ -43,7 +43,7 @@ public class AddressMapDataModel extends DSContainer<DSPDataSource> implements
 		if (root == null) {
 			return new HashMap<String, Address>();
 		} else {
-			return (HashMap<String, Address>) JLG.deserialize(root);
+			return (HashMap<String, Address>) ds().serializer.deserialize(root);
 		}
 	}
 
@@ -74,7 +74,7 @@ public class AddressMapDataModel extends DSContainer<DSPDataSource> implements
 			throws Exception {
 		HashMap<String, Address> directory = getRootContent();
 		directory.remove(key);
-		getMap().put(getRootAddress(), JLG.serialize(directory));
+		getMap().put(getRootAddress(), ds().serializer.serialize(directory));
 	}
 
 	@Override

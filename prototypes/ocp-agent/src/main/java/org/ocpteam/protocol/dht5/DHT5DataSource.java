@@ -2,8 +2,10 @@ package org.ocpteam.protocol.dht5;
 
 import org.ocpteam.component.AddressDataSource;
 import org.ocpteam.component.AddressFSDataModel;
+import org.ocpteam.component.PersistentFileMap;
 import org.ocpteam.entity.Context;
 import org.ocpteam.interfaces.IDataModel;
+import org.ocpteam.interfaces.IPersistentMap;
 import org.ocpteam.misc.JLG;
 
 /**
@@ -20,6 +22,7 @@ public class DHT5DataSource extends AddressDataSource {
 	public DHT5DataSource() throws Exception {
 		super();
 		addComponent(IDataModel.class, new AddressFSDataModel());
+		addComponent(IPersistentMap.class, new PersistentFileMap());
 	}
 
 	@Override
