@@ -18,11 +18,4 @@ public class User implements Serializable {
 	public String getLogin() {
 		return login;
 	}
-	
-	public String getDefaultLocalDir() {
-		return System.getProperty("user.home");
-	}
-
-
-
 }

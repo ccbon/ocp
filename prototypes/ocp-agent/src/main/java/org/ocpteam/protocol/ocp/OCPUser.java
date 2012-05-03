@@ -133,7 +133,6 @@ public class OCPUser extends User {
 
 	}
 
-	@Override
 	public String getDefaultLocalDir() {
 		return System.getProperty("user.home") + File.separator + "ocp"
 				+ File.separator + getLogin();

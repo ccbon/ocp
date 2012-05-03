@@ -79,12 +79,12 @@ public class Authentication extends DSContainer<DataSource> {
 	}
 
 	public void login() throws Exception {
-		IAuthenticable client = (IAuthenticable) getRoot().getComponent(Client.class);
+		IAuthenticable client = getRoot().getComponent(IAuthenticable.class);
 		client.login();
 	}
 
 	public void logout() throws Exception {
-		IAuthenticable client = (IAuthenticable) getRoot().getComponent(Client.class);
+		IAuthenticable client = getRoot().getComponent(IAuthenticable.class);
 		client.logout();
 		reset();
 	}

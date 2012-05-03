@@ -3,7 +3,8 @@ package org.ocpteam.protocol.ftp;
 import java.io.IOException;
 
 import org.ocpteam.component.Authentication;
-import org.ocpteam.component.Client;
+import org.ocpteam.component.DSContainer;
+import org.ocpteam.component.DataSource;
 import org.ocpteam.entity.Context;
 import org.ocpteam.entity.User;
 import org.ocpteam.interfaces.IAuthenticable;
@@ -11,7 +12,7 @@ import org.ocpteam.interfaces.IConnect;
 import org.ocpteam.interfaces.IDataModel;
 import org.ocpteam.misc.JLG;
 
-public class FTPClient extends Client implements IAuthenticable, IConnect {
+public class FTPClient extends DSContainer<DataSource> implements IAuthenticable, IConnect {
 
 	private String hostname;
 	org.apache.commons.net.ftp.FTPClient ftp;

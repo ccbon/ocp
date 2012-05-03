@@ -15,10 +15,10 @@ import com.jcraft.jsch.SftpATTRS;
 public class SFTPFileSystem implements IFileSystem {
 
 	private SFTPClient agent;
-	protected User user;
+	protected SFTPUser user;
 
 	public SFTPFileSystem(User user, SFTPClient agent) {
-		this.user = user;
+		this.user = (SFTPUser) user;
 		this.agent = agent;
 	}
 

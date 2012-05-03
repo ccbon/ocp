@@ -11,6 +11,7 @@ import org.ocpteam.component.PersistentFileMap;
 import org.ocpteam.component.Protocol;
 import org.ocpteam.component.Server;
 import org.ocpteam.entity.Contact;
+import org.ocpteam.interfaces.IAuthenticable;
 import org.ocpteam.interfaces.IPersistentMap;
 import org.ocpteam.misc.Id;
 import org.ocpteam.misc.JLG;
@@ -37,6 +38,8 @@ public class OCPDataSource extends DSPDataSource {
 		super.init();
 		agent = (OCPAgent) getComponent(Agent.class);
 		contactClass = OCPContact.class;
+		addComponent(IAuthenticable.class, (IAuthenticable) client);
+		
 	}
 
 	@Override

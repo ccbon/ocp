@@ -25,12 +25,13 @@ import org.ocpteam.exception.NoNetworkException;
 import org.ocpteam.exception.NotAvailableContactException;
 import org.ocpteam.interfaces.IClient;
 import org.ocpteam.interfaces.IProtocol;
+import org.ocpteam.interfaces.IStartable;
 import org.ocpteam.misc.JLG;
 import org.ocpteam.network.TCPClient;
 import org.ocpteam.network.UDPClient;
 import org.ocpteam.protocol.ocp.OCPAgent;
 
-public class Client extends DSContainer<DSPDataSource> implements IClient {
+public class Client extends DSContainer<DSPDataSource> implements IClient, IStartable {
 
 	private ContactMap contactMap;
 	private ExecutorService executor;

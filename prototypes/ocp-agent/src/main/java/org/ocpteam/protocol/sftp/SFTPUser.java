@@ -12,7 +12,6 @@ public class SFTPUser extends User {
 		dir = challenge.getDefaultLocalDir();
 	}
 
-	@Override
 	public String getDefaultLocalDir() {
 		return dir;
 	}

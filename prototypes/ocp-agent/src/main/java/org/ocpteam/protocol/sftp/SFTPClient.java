@@ -1,10 +1,12 @@
 package org.ocpteam.protocol.sftp;
 
 import org.ocpteam.component.Authentication;
-import org.ocpteam.component.Client;
+import org.ocpteam.component.DSContainer;
+import org.ocpteam.component.DataSource;
 import org.ocpteam.entity.Context;
 import org.ocpteam.entity.User;
 import org.ocpteam.interfaces.IAuthenticable;
+import org.ocpteam.interfaces.IClient;
 import org.ocpteam.interfaces.IDataModel;
 import org.ocpteam.misc.JLG;
 
@@ -12,7 +14,7 @@ import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.Session;
 
-public class SFTPClient extends Client implements IAuthenticable {
+public class SFTPClient extends DSContainer<DataSource> implements IAuthenticable, IClient {
 
 	public SFTPClient() throws Exception {
 		super();
