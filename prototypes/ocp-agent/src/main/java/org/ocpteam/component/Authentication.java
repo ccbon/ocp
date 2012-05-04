@@ -4,14 +4,13 @@ import java.net.URI;
 
 import org.ocpteam.entity.User;
 import org.ocpteam.interfaces.IAuthenticable;
-import org.ocpteam.misc.JLG;
 
-public class Authentication extends DSContainer<DataSource> {
+public class Authentication extends UserIdentification {
 
 	private Object challenge;
-	private String login;
 	private User user;
 
+	@Override
 	public void initFromURI() {
 		URI uri = null;
 		try {
@@ -22,40 +21,23 @@ public class Authentication extends DSContainer<DataSource> {
 
 		if (uri != null && uri.getUserInfo() != null) {
 			String[] array = uri.getUserInfo().split(":");
-			String login = array[0];
-			this.setLogin(login);
+			this.username = array[0];
 			if (array.length > 1) {
 				this.setChallenge(array[1]);
 			}
 		}
 	}
 
-	public Authentication(DataSource ds, String username, Object challenge) {
-		this.login = username;
-		this.challenge = challenge;
-	}
-
-	public Authentication() {
-	}
-
 	public Object getChallenge() {
 		return challenge;
 	}
-
-	public String getLogin() {
-		return login;
-	}
-
+	
 	public void setUser(User user) {
 		this.user = user;
 	}
 
 	public User getUser() {
 		return this.user;
-	}
-
-	public void setLogin(String login) {
-		this.login = login;
 	}
 
 	public void setChallenge(Object challenge) {
@@ -65,23 +47,26 @@ public class Authentication extends DSContainer<DataSource> {
 
 	public void reset() {
 		this.user = null;
-		this.login = null;
+		this.username = null;
 		this.challenge = null;
 	}
 
+	@Override
 	public void login() throws Exception {
 		IAuthenticable client = getRoot().getComponent(IAuthenticable.class);
 		client.login();
 	}
 
+	@Override
 	public void logout() throws Exception {
 		IAuthenticable client = getRoot().getComponent(IAuthenticable.class);
 		client.logout();
 		reset();
 	}
 
+	@Override
 	public boolean canLogin() {
-		return !JLG.isNullOrEmpty(this.login) && this.challenge != null;
+		return super.canLogin() && this.challenge != null;
 	}
 
 }

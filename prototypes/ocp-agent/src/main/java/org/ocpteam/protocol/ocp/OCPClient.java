@@ -29,6 +29,11 @@ public class OCPClient extends Client implements IAuthenticable {
 		super.init();
 		agent = (OCPAgent) ds().getComponent(Agent.class);
 	}
+	
+	@Override
+	public OCPDataSource ds() {
+		return (OCPDataSource) super.ds();
+	}
 
 	private OCPAgent agent;
 
@@ -122,9 +127,9 @@ public class OCPClient extends Client implements IAuthenticable {
 	@Override
 	public void login() throws Exception {
 		try {
-			Authentication a = ds().getComponent(Authentication.class);
+			Authentication a = ds().authentication;
 			String password = (String) a.getChallenge();
-			String login = a.getLogin();
+			String login = a.getUsername();
 			Id key = agent.hash(agent.ucrypt(password,
 					(login + password).getBytes()));
 			byte[] content = null;

@@ -10,6 +10,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.ocpteam.component.Authentication;
+import org.ocpteam.component.UserIdentification;
 import org.ocpteam.misc.JLG;
 import org.ocpteam.misc.swt.QuickMessage;
 import org.ocpteam.protocol.ocp.OCPAgent;
@@ -84,8 +85,8 @@ public class NewUserCaptchaWizardPage extends WizardPage {
 			OCPAgent agent = (OCPAgent) wizard.getAgent();
 			agent.createUser(wizard.getUsername(), wizard.getPassword(), 2,
 					wizard.getCaptcha(), captchaAnswerText.getText());
-			Authentication auth = wizard.window.ds.getComponent(Authentication.class);
-			auth.setLogin(wizard.getUsername());
+			Authentication auth = (Authentication) wizard.window.ds.getComponent(UserIdentification.class);
+			auth.setUsername(wizard.getUsername());
 			auth.setChallenge(wizard.getPassword());
 			wizard.window.signIn();
 			wizard.bCanFinnish = true;

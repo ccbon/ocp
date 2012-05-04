@@ -5,6 +5,7 @@ import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Shell;
 import org.ocpteam.component.Authentication;
+import org.ocpteam.component.UserIdentification;
 import org.ocpteam.misc.JLG;
 import org.ocpteam.misc.swt.QuickMessage;
 
@@ -46,8 +47,8 @@ public class SignInWizard extends Wizard {
 	public boolean performFinish() {
 		JLG.debug("sign in user");
 		try {
-			Authentication a = window.ds.getComponent(Authentication.class);
-			a.setLogin(p1.usernameText.getText());
+			Authentication a = (Authentication) window.ds.getComponent(UserIdentification.class);
+			a.setUsername(p1.usernameText.getText());
 			a.setChallenge(p1.passwordText.getText());
 			window.signIn();
 		} catch (Exception e) {

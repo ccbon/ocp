@@ -38,7 +38,6 @@ import org.eclipse.swt.widgets.Tray;
 import org.eclipse.swt.widgets.TrayItem;
 import org.eclipse.wb.swt.SWTResourceManager;
 import org.ocpteam.component.Agent;
-import org.ocpteam.component.Authentication;
 import org.ocpteam.component.DataSource;
 import org.ocpteam.component.DataSourceFactory;
 import org.ocpteam.component.Server;
@@ -114,16 +113,14 @@ public class DataSourceWindow extends ApplicationWindow implements IComponent {
 
 	void refresh() {
 		// action status
-		boolean bAuth = ds != null && (ds.usesComponent(Authentication.class) || ds.usesComponent(UserIdentification.class));
+		boolean bAuth = ds != null
+				&& ds.usesComponent(UserIdentification.class);
 		closeDataSourceAction.setEnabled(ds != null);
 		saveDataSourceAction.setEnabled(ds != null);
 		saveAsDataSourceAction.setEnabled(ds != null);
-		signInAction.setEnabled(ds != null
-				&& bAuth && context == null);
-		signOutAction.setEnabled(ds != null
-				&& bAuth && context != null);
-		newUserAction.setEnabled(ds != null
-				&& ds.usesComponent(Authentication.class) && context == null
+		signInAction.setEnabled(bAuth && context == null);
+		signOutAction.setEnabled(bAuth && context != null);
+		newUserAction.setEnabled(bAuth && context == null
 				&& ds.usesComponent(UserCreation.class));
 
 		viewExplorerAction.setEnabled(context != null);
@@ -460,13 +457,6 @@ public class DataSourceWindow extends ApplicationWindow implements IComponent {
 				} else {
 					signInAction.run();
 				}
-			} else if (ds.usesComponent(Authentication.class)) {
-				ds.getComponent(Authentication.class).initFromURI();
-				if (ds.getComponent(Authentication.class).canLogin()) {
-					signIn();
-				} else {
-					signInAction.run();
-				}
 			}
 		} catch (Exception e) {
 			throw QuickMessage.exception(getShell(),
@@ -572,9 +562,6 @@ public class DataSourceWindow extends ApplicationWindow implements IComponent {
 	}
 
 	public void signIn() throws Exception {
-		if (ds.usesComponent(Authentication.class)) {
-			ds.getComponent(Authentication.class).login();
-		}
 		if (ds.usesComponent(UserIdentification.class)) {
 			ds.getComponent(UserIdentification.class).login();
 		}
@@ -587,9 +574,6 @@ public class DataSourceWindow extends ApplicationWindow implements IComponent {
 
 	public void signOut() throws Exception {
 		context = null;
-		if (ds.usesComponent(Authentication.class)) {
-			ds.getComponent(Authentication.class).logout();
-		}
 		if (ds.usesComponent(UserIdentification.class)) {
 			ds.getComponent(UserIdentification.class).logout();
 		}

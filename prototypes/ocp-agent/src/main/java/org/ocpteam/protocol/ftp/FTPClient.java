@@ -4,7 +4,6 @@ import java.io.IOException;
 
 import org.ocpteam.component.Authentication;
 import org.ocpteam.component.DSContainer;
-import org.ocpteam.component.DataSource;
 import org.ocpteam.entity.Context;
 import org.ocpteam.entity.User;
 import org.ocpteam.interfaces.IAuthenticable;
@@ -12,7 +11,7 @@ import org.ocpteam.interfaces.IConnect;
 import org.ocpteam.interfaces.IDataModel;
 import org.ocpteam.misc.JLG;
 
-public class FTPClient extends DSContainer<DataSource> implements IAuthenticable, IConnect {
+public class FTPClient extends DSContainer<FTPDataSource> implements IAuthenticable, IConnect {
 
 	private String hostname;
 	org.apache.commons.net.ftp.FTPClient ftp;
@@ -49,8 +48,8 @@ public class FTPClient extends DSContainer<DataSource> implements IAuthenticable
 			ftp.connect(hostname);
 		} catch (Exception e) {
 		}
-		Authentication a = ds().getComponent(Authentication.class);
-		String login = a.getLogin();
+		Authentication a = ds().authentication;
+		String login = a.getUsername();
 		String password = (String) a.getChallenge();
 		if (ftp.login(login, password)) {
 			JLG.debug("ftp logged in.");

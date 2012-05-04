@@ -13,7 +13,7 @@ import org.ocpteam.misc.JLG;
  */
 public class UserIdentification extends DSContainer<DataSource> {
 
-	private String username;
+	protected String username;
 
 	public String getUsername() throws Exception {
 		if (username == null) {
@@ -56,7 +56,7 @@ public class UserIdentification extends DSContainer<DataSource> {
 		this.username = username;
 	}
 
-	public void logout() {
+	public void logout() throws Exception {
 		this.username = null;
 	}
 

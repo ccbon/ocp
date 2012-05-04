@@ -2,7 +2,7 @@ package org.ocpteam.protocol.sftp;
 
 import org.ocpteam.component.Authentication;
 import org.ocpteam.component.DSContainer;
-import org.ocpteam.component.DataSource;
+import org.ocpteam.component.UserIdentification;
 import org.ocpteam.entity.Context;
 import org.ocpteam.entity.User;
 import org.ocpteam.interfaces.IAuthenticable;
@@ -14,7 +14,7 @@ import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.Session;
 
-public class SFTPClient extends DSContainer<DataSource> implements IAuthenticable, IClient {
+public class SFTPClient extends DSContainer<SFTPDataSource> implements IAuthenticable, IClient {
 
 	public SFTPClient() throws Exception {
 		super();
@@ -28,8 +28,8 @@ public class SFTPClient extends DSContainer<DataSource> implements IAuthenticabl
 	public void login() throws Exception {
 		try {
 			jsch = new JSch();
-			Authentication a = ds().getComponent(Authentication.class);
-			String login = a.getLogin();
+			Authentication a = (Authentication) ds().getComponent(UserIdentification.class);
+			String login = a.getUsername();
 			Object challenge = a.getChallenge();
 			String[] array = login.split("@");
 			String username = array[0];

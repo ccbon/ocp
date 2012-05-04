@@ -41,13 +41,14 @@ public class SignInAction extends Action {
 				scenario.run();
 				window.signIn();
 			} else {
-				if (window.ds.usesComponent(Authentication.class)) {
-					SignInWizard.start(window);
-				}
 				if (window.ds.usesComponent(UserIdentification.class)) {
-					SignInUIWizard.start(window);
+					UserIdentification ui = window.ds.getComponent(UserIdentification.class);
+					if (ui instanceof Authentication) {
+						SignInWizard.start(window);
+					} else {
+						SignInUIWizard.start(window);
+					}
 				}
-				
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

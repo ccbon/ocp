@@ -89,9 +89,7 @@ public abstract class DSPDataSource extends DataSource {
 
 		if (usesComponent(IDataModel.class)) {
 			
-			if (usesComponent(UserIdentification.class)
-					|| usesComponent(Authentication.class)) {
-			} else {
+			if (!usesComponent(UserIdentification.class)) {
 				// if no user management then attach the data model.
 				setContext(new Context(getComponent(IDataModel.class)));
 			}
