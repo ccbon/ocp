@@ -42,6 +42,7 @@ import org.ocpteam.component.Authentication;
 import org.ocpteam.component.DataSource;
 import org.ocpteam.component.DataSourceFactory;
 import org.ocpteam.component.Server;
+import org.ocpteam.component.UserCreation;
 import org.ocpteam.component.UserIdentification;
 import org.ocpteam.core.IComponent;
 import org.ocpteam.core.IContainer;
@@ -123,7 +124,7 @@ public class DataSourceWindow extends ApplicationWindow implements IComponent {
 				&& bAuth && context != null);
 		newUserAction.setEnabled(ds != null
 				&& ds.usesComponent(Authentication.class) && context == null
-				&& ds.getComponent(Authentication.class).allowsUserCreation());
+				&& ds.usesComponent(UserCreation.class));
 
 		viewExplorerAction.setEnabled(context != null);
 

@@ -10,6 +10,7 @@ import org.ocpteam.component.DSPDataSource;
 import org.ocpteam.component.PersistentFileMap;
 import org.ocpteam.component.Protocol;
 import org.ocpteam.component.Server;
+import org.ocpteam.component.UserCreation;
 import org.ocpteam.entity.Contact;
 import org.ocpteam.interfaces.IAuthenticable;
 import org.ocpteam.interfaces.IPersistentMap;
@@ -28,7 +29,8 @@ public class OCPDataSource extends DSPDataSource {
 		replaceComponent(Protocol.class, new OCPProtocol());
 		replaceComponent(ContactMap.class, new OCPContactMap());
 
-		addComponent(Authentication.class, new OCPAuthentication());
+		addComponent(Authentication.class);
+		addComponent(UserCreation.class);
 		addComponent(IPersistentMap.class, new PersistentFileMap());
 		addComponent(OCPModule.class);
 	}

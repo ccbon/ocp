@@ -69,15 +69,6 @@ public class Authentication extends DSContainer<DataSource> {
 		this.challenge = null;
 	}
 
-	/**
-	 * To be overridden if necessary according protocol rules.
-	 * 
-	 * @return true if the protocol allow user creation, false otherwise
-	 */
-	public boolean allowsUserCreation() {
-		return false;
-	}
-
 	public void login() throws Exception {
 		IAuthenticable client = getRoot().getComponent(IAuthenticable.class);
 		client.login();
