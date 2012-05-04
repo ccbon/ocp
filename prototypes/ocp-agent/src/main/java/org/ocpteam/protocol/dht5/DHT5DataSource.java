@@ -2,11 +2,10 @@ package org.ocpteam.protocol.dht5;
 
 import org.ocpteam.component.AddressDataSource;
 import org.ocpteam.component.PersistentFileMap;
-import org.ocpteam.entity.Context;
+import org.ocpteam.component.UserIdentification;
 import org.ocpteam.fs.BFSDataModel;
 import org.ocpteam.interfaces.IDataModel;
 import org.ocpteam.interfaces.IPersistentMap;
-import org.ocpteam.misc.JLG;
 
 /**
  * DHT5 is a distributed hashtable based on AddressDataSource. The data model is
@@ -23,6 +22,7 @@ public class DHT5DataSource extends AddressDataSource {
 		super();
 		addComponent(IDataModel.class, new BFSDataModel());
 		addComponent(IPersistentMap.class, new PersistentFileMap());
+		addComponent(UserIdentification.class);
 	}
 
 	@Override
@@ -34,14 +34,6 @@ public class DHT5DataSource extends AddressDataSource {
 	@Override
 	public String getProtocolName() {
 		return "DHT5";
-	}
-
-	@Override
-	public synchronized void connect() throws Exception {
-		JLG.debug("connect " + getName());
-		super.connect();
-		Context c = new Context(dm);
-		setContext(c);
 	}
 
 }

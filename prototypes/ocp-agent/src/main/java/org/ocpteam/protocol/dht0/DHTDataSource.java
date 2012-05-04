@@ -6,7 +6,6 @@ import java.util.Map;
 import java.util.Set;
 
 import org.ocpteam.component.DSPDataSource;
-import org.ocpteam.entity.Context;
 import org.ocpteam.interfaces.IDataModel;
 import org.ocpteam.misc.JLG;
 
@@ -56,8 +55,6 @@ public class DHTDataSource extends DSPDataSource {
 				map.put(s, dm.get(s));
 			}
 		}
-		Context c = new Context(getComponent(IDataModel.class));
-		setContext(c);
 	}
 
 	public void store(String key, String value) {

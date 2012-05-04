@@ -44,12 +44,6 @@ public class ZipDataSource extends DataSource {
 		JLG.debug("opening datasource: " + getFile());
 		ZipFileSystem fs = (ZipFileSystem) getComponent(IDataModel.class);
 		fs.refresh();
-		context = new Context(fs, "/");
-	}
-	
-	@Override
-	public void disconnect() {
-		context = null;
 	}
 	
 	@Override

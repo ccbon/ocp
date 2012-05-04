@@ -4,11 +4,9 @@ import org.ocpteam.component.AddressDataSource;
 import org.ocpteam.component.AddressMap;
 import org.ocpteam.component.AddressMapDataModel;
 import org.ocpteam.component.NodeMap;
-import org.ocpteam.entity.Context;
 import org.ocpteam.interfaces.IAddressMap;
 import org.ocpteam.interfaces.IDataModel;
 import org.ocpteam.interfaces.INodeMap;
-import org.ocpteam.misc.JLG;
 
 /**
  * DHT3 is a distributed hashtable based on DHT1. The storage is now the
@@ -38,14 +36,6 @@ public class DHT3DataSource extends AddressDataSource {
 	@Override
 	public String getProtocolName() {
 		return "DHT3";
-	}
-
-	@Override
-	public synchronized void connect() throws Exception {
-		JLG.debug("connect " + getName());
-		super.connect();
-		Context c = new Context(dm);
-		setContext(c);
 	}
 
 }

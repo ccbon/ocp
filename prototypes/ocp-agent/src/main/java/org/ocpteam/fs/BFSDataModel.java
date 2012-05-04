@@ -7,6 +7,7 @@ import java.io.OutputStream;
 
 import org.ocpteam.component.AddressDataSource;
 import org.ocpteam.component.DSContainer;
+import org.ocpteam.component.UserIdentification;
 import org.ocpteam.entity.Address;
 import org.ocpteam.interfaces.IAddressMap;
 import org.ocpteam.interfaces.IFile;
@@ -15,13 +16,12 @@ import org.ocpteam.misc.JLG;
 
 /**
  * File System Data Model with big file support.
- *
+ * 
  */
 public class BFSDataModel extends DSContainer<AddressDataSource> implements
 		IFileSystem {
 
 	private IAddressMap map;
-	private Address rootAddress;
 
 	@Override
 	public void init() throws Exception {
@@ -29,11 +29,13 @@ public class BFSDataModel extends DSContainer<AddressDataSource> implements
 		map = ds().getComponent(IAddressMap.class);
 	}
 
-	public Address getRootAddress() {
-		if (rootAddress == null) {
-			rootAddress = new Address(ds().md.hash("".getBytes()));
+	public Address getRootAddress() throws Exception {
+		String rootString = "";
+		if (ds().usesComponent(UserIdentification.class)) {
+			rootString = ds().getComponent(UserIdentification.class)
+					.getUsername();
 		}
-		return rootAddress;
+		return new Address(ds().md.hash(rootString.getBytes()));
 	}
 
 	@Override
@@ -101,7 +103,9 @@ public class BFSDataModel extends DSContainer<AddressDataSource> implements
 	}
 
 	private void setRootPointer(Pointer p) throws Exception {
-		map.put(getRootAddress(), ds().serializer.serialize(p));
+		byte[] value = null;
+		value = ds().serializer.serialize(p);
+		map.put(getRootAddress(), value);
 	}
 
 	private Pointer commit(File file) throws Exception {
@@ -291,7 +295,7 @@ public class BFSDataModel extends DSContainer<AddressDataSource> implements
 	private Tree getTree(Pointer p) throws Exception {
 		return (Tree) ds().serializer.deserialize(get(p));
 	}
-	
+
 	private byte[] get(Pointer p) throws Exception {
 		return map.get(p.getAddresses().get(0));
 	}

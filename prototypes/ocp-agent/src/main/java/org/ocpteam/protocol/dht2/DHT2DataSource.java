@@ -19,7 +19,6 @@ import org.ocpteam.component.Random;
 import org.ocpteam.component.RingNodeMap;
 import org.ocpteam.entity.Address;
 import org.ocpteam.entity.Contact;
-import org.ocpteam.entity.Context;
 import org.ocpteam.entity.EOMObject;
 import org.ocpteam.entity.InputFlow;
 import org.ocpteam.entity.InputMessage;
@@ -75,14 +74,6 @@ public class DHT2DataSource extends DSPDataSource {
 	@Override
 	public String getProtocolName() {
 		return "DHT2";
-	}
-
-	@Override
-	public synchronized void connect() throws Exception {
-		JLG.debug("connect " + getName());
-		super.connect();
-		Context c = new Context(dm);
-		setContext(c);
 	}
 
 	@Override

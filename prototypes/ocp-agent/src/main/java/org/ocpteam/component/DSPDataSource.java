@@ -5,7 +5,9 @@ import java.net.URI;
 import java.util.Properties;
 
 import org.ocpteam.entity.Contact;
+import org.ocpteam.entity.Context;
 import org.ocpteam.entity.Node;
+import org.ocpteam.interfaces.IDataModel;
 import org.ocpteam.interfaces.IProtocol;
 import org.ocpteam.interfaces.ISerializer;
 import org.ocpteam.misc.JLG;
@@ -83,6 +85,16 @@ public abstract class DSPDataSource extends DataSource {
 			contactMap.addMyself();
 			client.declareContact();
 			onNodeArrival();
+		}
+
+		if (usesComponent(IDataModel.class)) {
+			
+			if (usesComponent(UserIdentification.class)
+					|| usesComponent(Authentication.class)) {
+			} else {
+				// if no user management then attach the data model.
+				setContext(new Context(getComponent(IDataModel.class)));
+			}
 		}
 	}
 

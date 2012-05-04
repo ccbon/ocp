@@ -5,7 +5,6 @@ import java.util.Map;
 
 import org.ocpteam.component.DataSource;
 import org.ocpteam.component.MapDataModel;
-import org.ocpteam.entity.Context;
 import org.ocpteam.interfaces.IDataModel;
 
 public class MapDataSource extends DataSource {
@@ -31,7 +30,6 @@ public class MapDataSource extends DataSource {
 	public void connect() throws Exception {
 		MapDataModel dm = (MapDataModel) getComponent(IDataModel.class);
 		dm.setMap(map);
-		context = new Context(getComponent(IDataModel.class), null);
 	}
 
 }

@@ -42,6 +42,7 @@ import org.ocpteam.component.Authentication;
 import org.ocpteam.component.DataSource;
 import org.ocpteam.component.DataSourceFactory;
 import org.ocpteam.component.Server;
+import org.ocpteam.component.UserIdentification;
 import org.ocpteam.core.IComponent;
 import org.ocpteam.core.IContainer;
 import org.ocpteam.entity.Context;
@@ -51,8 +52,7 @@ import org.ocpteam.interfaces.IMapDataModel;
 import org.ocpteam.misc.JLG;
 import org.ocpteam.misc.swt.QuickMessage;
 
-public class DataSourceWindow extends ApplicationWindow implements
-		IComponent {
+public class DataSourceWindow extends ApplicationWindow implements IComponent {
 
 	public static final int ON_DS_CLOSE = 0;
 	OpenDataSourceAction openDataSourceAction;
@@ -113,20 +113,17 @@ public class DataSourceWindow extends ApplicationWindow implements
 
 	void refresh() {
 		// action status
+		boolean bAuth = ds != null && (ds.usesComponent(Authentication.class) || ds.usesComponent(UserIdentification.class));
 		closeDataSourceAction.setEnabled(ds != null);
 		saveDataSourceAction.setEnabled(ds != null);
 		saveAsDataSourceAction.setEnabled(ds != null);
 		signInAction.setEnabled(ds != null
-				&& ds.usesComponent(Authentication.class)
-				&& context == null);
+				&& bAuth && context == null);
 		signOutAction.setEnabled(ds != null
-				&& ds.usesComponent(Authentication.class)
-				&& context != null);
+				&& bAuth && context != null);
 		newUserAction.setEnabled(ds != null
-				&& ds.usesComponent(Authentication.class)
-				&& context == null
-				&& ds.getComponent(Authentication.class)
-						.allowsUserCreation());
+				&& ds.usesComponent(Authentication.class) && context == null
+				&& ds.getComponent(Authentication.class).allowsUserCreation());
 
 		viewExplorerAction.setEnabled(context != null);
 
@@ -236,8 +233,8 @@ public class DataSourceWindow extends ApplicationWindow implements
 		menuBar.add(fileMenu);
 
 		MenuManager menuManager = new MenuManager("New");
-		String[] protocols = newDataSourceActionMap.keySet()
-				.toArray(new String[newDataSourceActionMap.size()]);
+		String[] protocols = newDataSourceActionMap.keySet().toArray(
+				new String[newDataSourceActionMap.size()]);
 		Arrays.sort(protocols);
 		for (String protocol : protocols) {
 			menuManager.add(newDataSourceActionMap.get(protocol));
@@ -374,17 +371,18 @@ public class DataSourceWindow extends ApplicationWindow implements
 			});
 
 			explorerCTabItem.setShowClose(true);
-			
+
 			if (dm instanceof IFileSystem) {
 				explorerCTabItem.setText("Explorer");
-				explorerComposite = new ExplorerComposite(tabFolder, SWT.NONE, this);
+				explorerComposite = new ExplorerComposite(tabFolder, SWT.NONE,
+						this);
 			} else if (dm instanceof IMapDataModel) {
 				explorerCTabItem.setText("Map");
 				explorerComposite = new MapComposite(tabFolder, SWT.NONE, this);
 			} else {
 				throw new Exception("datamodel not understood");
 			}
-			
+
 			explorerCTabItem.setControl(explorerComposite);
 
 		}
@@ -454,6 +452,13 @@ public class DataSourceWindow extends ApplicationWindow implements
 			context = ds.getContext();
 			if (context != null) {
 				viewExplorerAction.run();
+			} else if (ds.usesComponent(UserIdentification.class)) {
+				ds.getComponent(UserIdentification.class).initFromURI();
+				if (ds.getComponent(UserIdentification.class).canLogin()) {
+					signIn();
+				} else {
+					signInAction.run();
+				}
 			} else if (ds.usesComponent(Authentication.class)) {
 				ds.getComponent(Authentication.class).initFromURI();
 				if (ds.getComponent(Authentication.class).canLogin()) {
@@ -566,7 +571,13 @@ public class DataSourceWindow extends ApplicationWindow implements
 	}
 
 	public void signIn() throws Exception {
-		ds.getComponent(Authentication.class).login();
+		if (ds.usesComponent(Authentication.class)) {
+			ds.getComponent(Authentication.class).login();
+		}
+		if (ds.usesComponent(UserIdentification.class)) {
+			ds.getComponent(UserIdentification.class).login();
+		}
+
 		context = ds.getContext();
 		if (context != null) {
 			viewExplorerAction.run();
@@ -575,7 +586,13 @@ public class DataSourceWindow extends ApplicationWindow implements
 
 	public void signOut() throws Exception {
 		context = null;
-		ds.getComponent(Authentication.class).logout();
+		if (ds.usesComponent(Authentication.class)) {
+			ds.getComponent(Authentication.class).logout();
+		}
+		if (ds.usesComponent(UserIdentification.class)) {
+			ds.getComponent(UserIdentification.class).logout();
+		}
+		ds.setContext(null);
 	}
 
 	public String getHelpURL() {
@@ -597,7 +614,7 @@ public class DataSourceWindow extends ApplicationWindow implements
 		this.app = parent;
 
 	}
-	
+
 	@Override
 	public IContainer getParent() {
 		return this.app;
@@ -614,7 +631,5 @@ public class DataSourceWindow extends ApplicationWindow implements
 	public IContainer getRoot() {
 		return this.app.getRoot();
 	}
-
-
 
 }

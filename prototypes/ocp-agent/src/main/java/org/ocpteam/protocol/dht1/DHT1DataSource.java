@@ -17,7 +17,6 @@ import java.util.Set;
 import org.ocpteam.component.DSPDataSource;
 import org.ocpteam.component.NodeMap;
 import org.ocpteam.entity.Contact;
-import org.ocpteam.entity.Context;
 import org.ocpteam.entity.EOMObject;
 import org.ocpteam.entity.InputFlow;
 import org.ocpteam.entity.Node;
@@ -50,7 +49,6 @@ import org.ocpteam.misc.JLG;
 public class DHT1DataSource extends DSPDataSource {
 
 	private Map<String, String> map;
-	private DHT1DataModel dm;
 	private MessageDigest md;
 	public NodeMap nodeMap;
 
@@ -65,20 +63,12 @@ public class DHT1DataSource extends DSPDataSource {
 	public void init() throws Exception {
 		super.init();
 		map = Collections.synchronizedMap(new HashMap<String, String>());
-		dm = (DHT1DataModel) getComponent(IDataModel.class);
 		nodeMap = (NodeMap) getComponent(INodeMap.class);
 	}
 
 	@Override
 	public String getProtocolName() {
 		return "DHT1";
-	}
-
-	@Override
-	public synchronized void connect() throws Exception {
-		super.connect();
-		Context c = new Context(dm);
-		setContext(c);
 	}
 
 	@Override

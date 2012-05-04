@@ -11,11 +11,17 @@ public class User implements Serializable {
 
 	protected String login;
 
+	private Object root;
+
 	public User(String login) {
 		this.login = login; 
 	}
 
 	public String getLogin() {
 		return login;
+	}
+
+	public Object getRoot() {
+		return root;
 	}
 }
