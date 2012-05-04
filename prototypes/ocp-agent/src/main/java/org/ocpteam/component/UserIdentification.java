@@ -3,28 +3,23 @@ package org.ocpteam.component;
 import java.net.URI;
 
 import org.ocpteam.entity.Context;
-import org.ocpteam.entity.User;
 import org.ocpteam.interfaces.IDataModel;
 import org.ocpteam.misc.JLG;
 
+/**
+ * Component used to include user functionality to a storage protocol.
+ * This do not include authentication.
+ *
+ */
 public class UserIdentification extends DSContainer<DataSource> {
 
 	private String username;
-	private User user;
 
 	public String getUsername() throws Exception {
 		if (username == null) {
 			throw new Exception("user not identified. Please login...");
 		}
 		return username;
-	}
-
-	public void setUser(User user) {
-		this.user = user;
-	}
-
-	public User getUser() {
-		return user;
 	}
 
 	public void initFromURI() {
@@ -64,7 +59,6 @@ public class UserIdentification extends DSContainer<DataSource> {
 
 	public void logout() {
 		this.username = null;
-		this.user = null;
 	}
 
 }
