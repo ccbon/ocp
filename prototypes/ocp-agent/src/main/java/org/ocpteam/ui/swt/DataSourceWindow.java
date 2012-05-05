@@ -41,7 +41,6 @@ import org.ocpteam.component.Agent;
 import org.ocpteam.component.DataSource;
 import org.ocpteam.component.DataSourceFactory;
 import org.ocpteam.component.Server;
-import org.ocpteam.component.UserCreation;
 import org.ocpteam.component.UserIdentification;
 import org.ocpteam.core.IComponent;
 import org.ocpteam.core.IContainer;
@@ -49,6 +48,7 @@ import org.ocpteam.entity.Context;
 import org.ocpteam.interfaces.IDataModel;
 import org.ocpteam.interfaces.IFileSystem;
 import org.ocpteam.interfaces.IMapDataModel;
+import org.ocpteam.interfaces.IUserCreation;
 import org.ocpteam.misc.JLG;
 import org.ocpteam.misc.swt.QuickMessage;
 
@@ -121,7 +121,7 @@ public class DataSourceWindow extends ApplicationWindow implements IComponent {
 		signInAction.setEnabled(bAuth && context == null);
 		signOutAction.setEnabled(bAuth && context != null);
 		newUserAction.setEnabled(bAuth && context == null
-				&& ds.usesComponent(UserCreation.class));
+				&& ds.usesComponent(IUserCreation.class));
 
 		viewExplorerAction.setEnabled(context != null);
 

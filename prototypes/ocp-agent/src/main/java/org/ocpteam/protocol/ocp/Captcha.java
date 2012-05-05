@@ -1,13 +1,13 @@
 package org.ocpteam.protocol.ocp;
 
-import java.io.Serializable;
 import java.security.PublicKey;
 import java.security.Signature;
 
+import org.ocpteam.interfaces.ICaptcha;
 import org.ocpteam.misc.JLG;
 
 
-public class Captcha implements Serializable {
+public class Captcha implements ICaptcha {
 
 	/**
 	 * 

@@ -49,7 +49,6 @@ public class NewUserWizard extends Wizard {
 		};
 		dialog.open();
 		JLG.debug("about to dispose shell");
-		// shell.dispose();
 	}
 
 	private NewUserFormWizardPage p1;
