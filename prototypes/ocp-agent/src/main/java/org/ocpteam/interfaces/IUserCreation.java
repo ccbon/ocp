@@ -12,7 +12,7 @@ public interface IUserCreation {
 	 */
 	void setCaptcha(ICaptcha captcha);
 
-	void setUser(IUser user);
+	void setUser(String string) throws Exception;
 
 	void setPassword(String password);
 
@@ -27,5 +27,5 @@ public interface IUserCreation {
 	String getAnswer();
 
 	void setAnswer(String answer);
-
+	
 }

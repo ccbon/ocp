@@ -27,8 +27,8 @@ public class OCPUserCreation extends DSContainer<OCPDataSource> implements
 	}
 
 	@Override
-	public void setUser(IUser user) {
-		this.user = user;
+	public void setUser(String username) throws Exception {
+		this.user = new OCPUser(ds().agent, username, 2);
 	}
 
 	@Override

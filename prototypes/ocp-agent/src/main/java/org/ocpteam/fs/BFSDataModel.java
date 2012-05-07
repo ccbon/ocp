@@ -9,9 +9,11 @@ import org.ocpteam.component.AddressDataSource;
 import org.ocpteam.component.DSContainer;
 import org.ocpteam.component.UserIdentification;
 import org.ocpteam.entity.Address;
+import org.ocpteam.entity.AddressUser;
 import org.ocpteam.interfaces.IAddressMap;
 import org.ocpteam.interfaces.IFile;
 import org.ocpteam.interfaces.IFileSystem;
+import org.ocpteam.interfaces.IUserCreation;
 import org.ocpteam.misc.JLG;
 
 /**
@@ -34,6 +36,11 @@ public class BFSDataModel extends DSContainer<AddressDataSource> implements
 		if (ds().usesComponent(UserIdentification.class)) {
 			rootString = ds().getComponent(UserIdentification.class)
 					.getUsername();
+		}
+		if (ds().usesComponent(IUserCreation.class)) {
+			AddressUser user = (AddressUser) ds().getComponent(IUserCreation.class)
+					.getUser();
+			rootString = user.getRootString();
 		}
 		return new Address(ds().md.hash(rootString.getBytes()));
 	}

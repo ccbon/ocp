@@ -44,8 +44,6 @@ public class UserIdentification extends DSContainer<DataSource> {
 		if (!canLogin()) {
 			throw new Exception("username not provided.");
 		}
-		// TODO: if authentication needed then prove that you really have the
-		// right to be identified as the user specified.
 		
 		// if login succeed, then attach a context to the ds.
 		Context c = new Context(ds().getComponent(IDataModel.class));

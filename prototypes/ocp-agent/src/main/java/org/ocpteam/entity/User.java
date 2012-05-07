@@ -8,7 +8,7 @@ public class User implements IUser {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private String username;
+	protected String username;
 
 	public User(String username) {
 		this.username = username;

@@ -6,6 +6,7 @@ import org.ocpteam.component.PersistentFileMap;
 import org.ocpteam.component.UserCreation;
 import org.ocpteam.component.UserIdentification;
 import org.ocpteam.fs.BFSDataModel;
+import org.ocpteam.interfaces.IAuthenticable;
 import org.ocpteam.interfaces.IDataModel;
 import org.ocpteam.interfaces.IPersistentMap;
 import org.ocpteam.interfaces.IUserCreation;
@@ -24,7 +25,9 @@ public class DHT5v1DataSource extends AddressDataSource {
 		addComponent(IDataModel.class, new BFSDataModel());
 		addComponent(IPersistentMap.class, new PersistentFileMap());
 		addComponent(UserIdentification.class, new Authentication());
-		addComponent(IUserCreation.class, new UserCreation());
+		UserCreation uc = new UserCreation();
+		addComponent(IUserCreation.class, uc);
+		addComponent(IAuthenticable.class, uc);
 	}
 
 	@Override

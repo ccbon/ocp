@@ -12,12 +12,10 @@ import org.ocpteam.component.DataSource;
 import org.ocpteam.interfaces.ICaptcha;
 import org.ocpteam.interfaces.IUserCreation;
 import org.ocpteam.misc.JLG;
-import org.ocpteam.protocol.ocp.OCPAgent;
-import org.ocpteam.protocol.ocp.OCPUser;
 
 public class NewUserFormWizardPage extends WizardPage {
-	private Text usernameText;
-	private Text passwordText;
+	Text usernameText;
+	Text passwordText;
 
 	/**
 	 * Create the wizard.
@@ -87,8 +85,7 @@ public class NewUserFormWizardPage extends WizardPage {
 		NewUserWizard wizard = (NewUserWizard) getWizard();
 		DataSource ds = wizard.window.ds;
 		IUserCreation uc = ds.getComponent(IUserCreation.class);
-		OCPAgent agent = (OCPAgent) wizard.window.agent;
-		uc.setUser(new OCPUser(agent, usernameText.getText(), 2));
+		uc.setUser(usernameText.getText());
 		uc.setPassword(passwordText.getText());
 		if (uc.needsCaptcha()) {
 			ICaptcha c = uc.getCaptcha();

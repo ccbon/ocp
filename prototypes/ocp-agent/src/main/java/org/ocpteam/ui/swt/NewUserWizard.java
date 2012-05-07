@@ -95,6 +95,9 @@ public class NewUserWizard extends Wizard {
 			if (uc.needsCaptcha()) {
 				uc.setCaptcha(getCaptcha());
 				uc.setAnswer(p2.captchaAnswerText.getText());
+			} else {
+				uc.setUser(p1.usernameText.getText());
+				uc.setPassword(p1.passwordText.getText());
 			}
 			uc.createUser();
 			if (window.ds.usesComponent(UserIdentification.class)) {
