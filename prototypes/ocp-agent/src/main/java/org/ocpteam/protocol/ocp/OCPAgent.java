@@ -12,7 +12,6 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.NavigableMap;
 import java.util.Queue;
-import java.util.Set;
 import java.util.TreeMap;
 
 import javax.crypto.BadPaddingException;
@@ -30,7 +29,6 @@ import org.ocpteam.component.DSPDataSource;
 import org.ocpteam.entity.Address;
 import org.ocpteam.entity.Contact;
 import org.ocpteam.entity.Pointer;
-import org.ocpteam.entity.User;
 import org.ocpteam.misc.ByteUtil;
 import org.ocpteam.misc.Cache;
 import org.ocpteam.misc.Id;
@@ -377,11 +375,6 @@ public class OCPAgent extends Agent {
 		return result;
 	}
 
-	public Set<Id> getIndex(User user) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 	public Pointer set(OCPUser user, Serializable serializable)
 			throws Exception {
 		JLG.debug("set serializable: " + serializable.getClass());
@@ -515,7 +508,8 @@ public class OCPAgent extends Agent {
 
 	public void createUser(String login, String password, int backupNbr,
 			Captcha captcha, String answer) throws Exception {
-
+		JLG.debug("creating user: " + login + ", " + password + ", " + backupNbr + ", answer=" + answer);
+		JLG.debug("captcha=" + captcha);
 		OCPUser user = new OCPUser(this, login, backupNbr);
 		UserPublicInfo upi = user.getPublicInfo(this);
 

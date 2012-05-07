@@ -6,9 +6,13 @@ import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
-import org.ocpteam.component.Agent;
+import org.ocpteam.component.Authentication;
+import org.ocpteam.component.UserIdentification;
+import org.ocpteam.interfaces.ICaptcha;
+import org.ocpteam.interfaces.IUser;
+import org.ocpteam.interfaces.IUserCreation;
 import org.ocpteam.misc.JLG;
-import org.ocpteam.protocol.ocp.Captcha;
+import org.ocpteam.misc.swt.QuickMessage;
 
 
 public class NewUserWizard extends Wizard {
@@ -27,9 +31,6 @@ public class NewUserWizard extends Wizard {
 					if (page.getClass() == NewUserFormWizardPage.class) {
 						JLG.debug("form page");
 						((NewUserFormWizardPage) page).onNextPage();
-					} else if (page.getClass() == NewUserCaptchaWizardPage.class) {
-						JLG.debug("captcha page");
-						((NewUserCaptchaWizardPage) page).onNextPage();
 					}
 					super.nextPressed();
 				} catch (Exception e) {
@@ -42,7 +43,6 @@ public class NewUserWizard extends Wizard {
 			
 			@Override
 			protected void finishPressed() {
-				// TODO Auto-generated method stub
 				super.finishPressed();
 				window.tabFolder.setFocus();
 			}
@@ -53,67 +53,82 @@ public class NewUserWizard extends Wizard {
 
 	private NewUserFormWizardPage p1;
 	private NewUserCaptchaWizardPage p2;
-	private NewUserSucessWizardPage p3;
-	private Agent agent;
-	private Captcha captcha;
-	private String username;
-	private String password;
-	public boolean bCanFinnish;
+	private IUser user;
+	private ICaptcha captcha;
 	public DataSourceWindow window;
 
 	public NewUserWizard(DataSourceWindow window) {
-		this.agent = window.agent;
 		this.window = window;
 		setWindowTitle("Create new user Wizard");
-		bCanFinnish = false;
 	}
 
 	@Override
 	public void addPages() {
 		p1 = new NewUserFormWizardPage();
 		addPage(p1);
-		p2 = new NewUserCaptchaWizardPage();
-		addPage(p2);
-		p3 = new NewUserSucessWizardPage();
-		addPage(p3);
+		IUserCreation uc = window.ds.getComponent(IUserCreation.class);
+		if (uc.needsCaptcha()) {
+			p2 = new NewUserCaptchaWizardPage();
+			addPage(p2);
+		}
 	}
-
+	
 	@Override
-	public boolean performFinish() {
+	public boolean canFinish() {
+		IWizardPage[] pages = getPages();
+		for (int i = 0; i < pages.length; i++) {
+			if (!pages[i].isPageComplete()) {
+				JLG.debug("page not completed: " + i);
+				return false;
+			}
+		}
+		JLG.debug("all pages completed.");
 		return true;
 	}
 
 	@Override
-	public boolean canFinish() {
-		return bCanFinnish;
+	public boolean performFinish() {
+		try {
+			JLG.debug("creating the user");
+			IUserCreation uc = window.ds
+					.getComponent(IUserCreation.class);
+			if (uc.needsCaptcha()) {
+				uc.setCaptcha(getCaptcha());
+				uc.setAnswer(p2.captchaAnswerText.getText());
+			}
+			uc.createUser();
+			if (window.ds.usesComponent(UserIdentification.class)) {
+				UserIdentification ui = window.ds
+						.getComponent(UserIdentification.class);
+				if (ui instanceof Authentication) {
+					Authentication auth = (Authentication) ui;
+					auth.setUsername(uc.getUser().getUsername());
+					auth.setChallenge(uc.getPassword());
+				}
+				window.signIn();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			QuickMessage.error(getShell(),
+					"Sorry. Cannot create the user. e=" + e.getMessage());
+		}
+		return true;
 	}
 
-	public Agent getAgent() {
-		return agent;
-	}
-
-	public void setCaptcha(Captcha c) {
+	public void setCaptcha(ICaptcha c) {
 		this.captcha = c;
 	}
 
-	public void setUsername(String text) {
-		this.username = text;
-	}
-
-	public void setPassword(String text) {
-		this.password = text;
-	}
-
-	public String getUsername() {
-		return username;
-	}
-
-	public String getPassword() {
-		return password;
-	}
-
-	public Captcha getCaptcha() {
+	public ICaptcha getCaptcha() {
 		return captcha;
+	}
+
+	public IUser getUser() {
+		return user;
+	}
+
+	public void setUser(IUser user) {
+		this.user = user;
 	}
 
 }

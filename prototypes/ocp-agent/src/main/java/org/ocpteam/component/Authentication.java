@@ -2,13 +2,13 @@ package org.ocpteam.component;
 
 import java.net.URI;
 
-import org.ocpteam.entity.User;
 import org.ocpteam.interfaces.IAuthenticable;
+import org.ocpteam.interfaces.IUser;
 
 public class Authentication extends UserIdentification {
 
 	private Object challenge;
-	private User user;
+	private IUser user;
 
 	@Override
 	public void initFromURI() {
@@ -32,11 +32,11 @@ public class Authentication extends UserIdentification {
 		return challenge;
 	}
 	
-	public void setUser(User user) {
+	public void setUser(IUser user) {
 		this.user = user;
 	}
 
-	public User getUser() {
+	public IUser getUser() {
 		return this.user;
 	}
 

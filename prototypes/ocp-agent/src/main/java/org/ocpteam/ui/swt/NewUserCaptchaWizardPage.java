@@ -9,15 +9,10 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
-import org.ocpteam.component.Authentication;
-import org.ocpteam.component.UserIdentification;
 import org.ocpteam.misc.JLG;
-import org.ocpteam.misc.swt.QuickMessage;
-import org.ocpteam.protocol.ocp.OCPAgent;
-
 
 public class NewUserCaptchaWizardPage extends WizardPage {
-	private Text captchaAnswerText;
+	public Text captchaAnswerText;
 
 	/**
 	 * Create the wizard.
@@ -71,28 +66,11 @@ public class NewUserCaptchaWizardPage extends WizardPage {
 	}
 
 	@Override
-	public boolean canFlipToNextPage() {
+	public boolean isPageComplete() {
 		if (captchaAnswerText.getText().equals("")) {
 			return false;
 		}
-		return super.canFlipToNextPage();
-	}
-
-	public void onNextPage() throws Exception {
-		try {
-			JLG.debug("creating the user");
-			NewUserWizard wizard = (NewUserWizard) getWizard();
-			OCPAgent agent = (OCPAgent) wizard.getAgent();
-			agent.createUser(wizard.getUsername(), wizard.getPassword(), 2,
-					wizard.getCaptcha(), captchaAnswerText.getText());
-			Authentication auth = (Authentication) wizard.window.ds.getComponent(UserIdentification.class);
-			auth.setUsername(wizard.getUsername());
-			auth.setChallenge(wizard.getPassword());
-			wizard.window.signIn();
-			wizard.bCanFinnish = true;
-		} catch (Exception e) {
-			throw QuickMessage.exception(getShell(), "Sorry. Cannot create the user.", e);
-		}
+		return super.isPageComplete();
 	}
 
 }

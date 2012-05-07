@@ -8,7 +8,7 @@ public class Data extends Content {
 	
 	public Data(OCPAgent agent, OCPUser user, byte[] content) throws Exception {
 		this.content = content;
-		this.username = user.getLogin().getBytes();
+		this.username = user.getUsername().getBytes();
 		this.signature = user.sign(agent, content);
 	}
 	

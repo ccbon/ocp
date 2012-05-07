@@ -12,7 +12,6 @@ import org.ocpteam.entity.Contact;
 import org.ocpteam.entity.Context;
 import org.ocpteam.entity.InputMessage;
 import org.ocpteam.entity.Response;
-import org.ocpteam.entity.User;
 import org.ocpteam.interfaces.IAuthenticable;
 import org.ocpteam.interfaces.IDataModel;
 import org.ocpteam.misc.Id;
@@ -140,7 +139,7 @@ public class OCPClient extends Client implements IAuthenticable {
 			if (content == null) {
 				throw new Exception("user unknown");
 			}
-			User user = (User) ds().serializer.deserialize(agent
+			OCPUser user = (OCPUser) ds().serializer.deserialize(agent
 					.udecrypt(password, content));
 			if (user == null) {
 				throw new Exception("user unknown");

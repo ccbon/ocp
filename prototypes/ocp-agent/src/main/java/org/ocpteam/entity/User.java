@@ -1,27 +1,22 @@
 package org.ocpteam.entity;
 
-import java.io.Serializable;
+import org.ocpteam.interfaces.IUser;
 
-public class User implements Serializable {
+public class User implements IUser {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	private String username;
 
-	protected String login;
-
-	private Object root;
-
-	public User(String login) {
-		this.login = login; 
+	public User(String username) {
+		this.username = username;
 	}
 
-	public String getLogin() {
-		return login;
+	@Override
+	public String getUsername() {
+		return username;
 	}
 
-	public Object getRoot() {
-		return root;
-	}
 }

@@ -29,6 +29,7 @@ public class FTPNewDataSourceWizard extends Wizard implements Scenario {
 	public boolean performFinish() {
 		try {
 			w.ds = new FTPDataSource();
+			w.ds.init();
 			URI uri = new URI("ftp://" + p1.serverHostnameText.getText() + ":" + p1.portText.getText() + p1.defaultLocalDirText.getText());
 			w.ds.setURI(uri);
 		} catch (Exception e) {

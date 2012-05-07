@@ -17,7 +17,7 @@ public class Link extends Content {
 		this.setKey(key);
 		this.targetKey = targetKey;
 		this.signature = user.sign(agent, ByteUtil.concat(getContent()));
-		this.username = user.getLogin().getBytes();
+		this.username = user.getUsername().getBytes();
 	}
 	
 	public Key getTargetKey() {

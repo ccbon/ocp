@@ -1,5 +1,9 @@
 package org.ocpteam.interfaces;
 
-public interface IUser {
+import java.io.Serializable;
+
+public interface IUser extends Serializable {
+
+	String getUsername();
 
 }

@@ -10,11 +10,11 @@ import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 
 import org.ocpteam.entity.Pointer;
-import org.ocpteam.entity.User;
+import org.ocpteam.interfaces.IUser;
 import org.ocpteam.misc.JLG;
 
 
-public class OCPUser extends User {
+public class OCPUser implements IUser {
 
 	private Key indexKey;
 	private Key rootKey;
@@ -25,15 +25,16 @@ public class OCPUser extends User {
 	private SecretKey secretKey;
 	private String cipherAlgo = "AES";
 	private int keySize = 128;
+	private String username;
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 
-	public OCPUser(OCPAgent agent, String login, int backupNbr)
+	public OCPUser(OCPAgent agent, String username, int backupNbr)
 			throws Exception {
-		super(login);
+		this.username = username;
 		this.backupNbr = backupNbr;
 		this.indexKey = new Key(agent.generateId()); // refer to the list of
 														// pointer
@@ -52,9 +53,9 @@ public class OCPUser extends User {
 
 	public UserPublicInfo getPublicInfo(OCPAgent agent) throws Exception {
 		UserPublicInfo upi = new UserPublicInfo();
-		upi.setLogin(login);
+		upi.setLogin(username);
 		upi.setPublicKey(keyPair.getPublic());
-		upi.setKey(new Key(agent.hash(login.getBytes())));
+		upi.setKey(new Key(agent.hash(username.getBytes())));
 		return upi;
 	}
 
@@ -135,14 +136,19 @@ public class OCPUser extends User {
 
 	public String getDefaultLocalDir() {
 		return System.getProperty("user.home") + File.separator + "ocp"
-				+ File.separator + getLogin();
+				+ File.separator + getUsername();
 	}
 
 	@Override
 	public String toString() {
-		return "login=" + login + ";public_key="
+		return "login=" + getUsername() + ";public_key="
 				+ keyPair.getPublic().getAlgorithm() + "-"
 				+ JLG.bytesToHex(keyPair.getPublic().getEncoded());
+	}
+
+	@Override
+	public String getUsername() {
+		return this.username;
 	}
 
 }
