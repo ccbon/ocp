@@ -7,13 +7,13 @@ import java.io.OutputStream;
 
 import org.ocpteam.component.AddressDataSource;
 import org.ocpteam.component.DSContainer;
-import org.ocpteam.component.UserIdentification;
 import org.ocpteam.entity.Address;
 import org.ocpteam.entity.AddressUser;
 import org.ocpteam.interfaces.IAddressMap;
 import org.ocpteam.interfaces.IFile;
 import org.ocpteam.interfaces.IFileSystem;
 import org.ocpteam.interfaces.IUserCreation;
+import org.ocpteam.interfaces.IUserManagement;
 import org.ocpteam.misc.JLG;
 
 /**
@@ -33,8 +33,8 @@ public class BFSDataModel extends DSContainer<AddressDataSource> implements
 
 	public Address getRootAddress() throws Exception {
 		String rootString = "";
-		if (ds().usesComponent(UserIdentification.class)) {
-			rootString = ds().getComponent(UserIdentification.class)
+		if (ds().usesComponent(IUserManagement.class)) {
+			rootString = ds().getComponent(IUserManagement.class)
 					.getUsername();
 		}
 		if (ds().usesComponent(IUserCreation.class)) {

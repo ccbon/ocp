@@ -2,27 +2,27 @@ package org.ocpteam.protocol.ftp;
 
 import java.net.URI;
 
-import org.ocpteam.component.Authentication;
 import org.ocpteam.component.DataSource;
-import org.ocpteam.component.UserIdentification;
+import org.ocpteam.component.UserManagement;
 import org.ocpteam.interfaces.IAuthenticable;
 import org.ocpteam.interfaces.IDataModel;
+import org.ocpteam.interfaces.IUserManagement;
 
 public class FTPDataSource extends DataSource {
 
-	public Authentication authentication;
+	public IUserManagement um;
 
 	public FTPDataSource() throws Exception {
 		super();
 		addComponent(IAuthenticable.class, new FTPClient());
 		addComponent(IDataModel.class, new FTPFileSystem());
-		addComponent(UserIdentification.class, new Authentication());
+		addComponent(IUserManagement.class, new UserManagement());
 	}
 	
 	@Override
 	public void init() throws Exception {
 		super.init();
-		authentication = (Authentication) getComponent(UserIdentification.class);
+		um = getComponent(IUserManagement.class);
 	}
 
 	public FTPDataSource(URI uri) {

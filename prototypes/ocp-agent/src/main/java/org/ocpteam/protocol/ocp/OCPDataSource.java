@@ -3,25 +3,25 @@ package org.ocpteam.protocol.ocp;
 import java.util.Iterator;
 
 import org.ocpteam.component.Agent;
-import org.ocpteam.component.Authentication;
 import org.ocpteam.component.Client;
 import org.ocpteam.component.ContactMap;
 import org.ocpteam.component.DSPDataSource;
 import org.ocpteam.component.PersistentFileMap;
 import org.ocpteam.component.Protocol;
 import org.ocpteam.component.Server;
-import org.ocpteam.component.UserIdentification;
+import org.ocpteam.component.UserManagement;
 import org.ocpteam.entity.Contact;
 import org.ocpteam.interfaces.IAuthenticable;
 import org.ocpteam.interfaces.IPersistentMap;
 import org.ocpteam.interfaces.IUserCreation;
+import org.ocpteam.interfaces.IUserManagement;
 import org.ocpteam.misc.Id;
 import org.ocpteam.misc.JLG;
 
 public class OCPDataSource extends DSPDataSource {
 
 	protected OCPAgent agent;
-	public Authentication authentication;
+	public IUserManagement um;
 
 	public OCPDataSource() throws Exception {
 		super();
@@ -31,7 +31,7 @@ public class OCPDataSource extends DSPDataSource {
 		replaceComponent(Protocol.class, new OCPProtocol());
 		replaceComponent(ContactMap.class, new OCPContactMap());
 
-		addComponent(UserIdentification.class, new Authentication());
+		addComponent(IUserManagement.class, new UserManagement());
 		addComponent(IUserCreation.class, new OCPUserCreation());
 		addComponent(IPersistentMap.class, new PersistentFileMap());
 		addComponent(OCPModule.class);
@@ -41,7 +41,7 @@ public class OCPDataSource extends DSPDataSource {
 	public void init() throws Exception {
 		super.init();
 		agent = (OCPAgent) getComponent(Agent.class);
-		authentication = (Authentication) getComponent(UserIdentification.class);
+		um = getComponent(IUserManagement.class);
 		contactClass = OCPContact.class;
 		addComponent(IAuthenticable.class, (IAuthenticable) client);
 		

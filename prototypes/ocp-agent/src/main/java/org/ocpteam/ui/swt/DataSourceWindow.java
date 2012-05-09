@@ -41,7 +41,6 @@ import org.ocpteam.component.Agent;
 import org.ocpteam.component.DataSource;
 import org.ocpteam.component.DataSourceFactory;
 import org.ocpteam.component.Server;
-import org.ocpteam.component.UserIdentification;
 import org.ocpteam.core.IComponent;
 import org.ocpteam.core.IContainer;
 import org.ocpteam.entity.Context;
@@ -49,6 +48,7 @@ import org.ocpteam.interfaces.IDataModel;
 import org.ocpteam.interfaces.IFileSystem;
 import org.ocpteam.interfaces.IMapDataModel;
 import org.ocpteam.interfaces.IUserCreation;
+import org.ocpteam.interfaces.IUserManagement;
 import org.ocpteam.misc.JLG;
 import org.ocpteam.misc.swt.QuickMessage;
 
@@ -114,7 +114,7 @@ public class DataSourceWindow extends ApplicationWindow implements IComponent {
 	void refresh() {
 		// action status
 		boolean bAuth = ds != null
-				&& ds.usesComponent(UserIdentification.class);
+				&& ds.usesComponent(IUserManagement.class);
 		closeDataSourceAction.setEnabled(ds != null);
 		saveDataSourceAction.setEnabled(ds != null);
 		saveAsDataSourceAction.setEnabled(ds != null);
@@ -357,6 +357,7 @@ public class DataSourceWindow extends ApplicationWindow implements IComponent {
 			throw new Exception("missing context");
 		}
 		IDataModel dm = context.getDataModel();
+		JLG.debug("dm=" + dm);
 
 		if (explorerCTabItem == null) {
 			explorerCTabItem = new CTabItem(tabFolder, SWT.NONE);
@@ -450,9 +451,9 @@ public class DataSourceWindow extends ApplicationWindow implements IComponent {
 			context = ds.getContext();
 			if (context != null) {
 				viewExplorerAction.run();
-			} else if (ds.usesComponent(UserIdentification.class)) {
-				ds.getComponent(UserIdentification.class).initFromURI();
-				if (ds.getComponent(UserIdentification.class).canLogin()) {
+			} else if (ds.usesComponent(IUserManagement.class)) {
+				ds.getComponent(IUserManagement.class).initFromURI();
+				if (ds.getComponent(IUserManagement.class).canLogin()) {
 					signIn();
 				} else {
 					signInAction.run();
@@ -562,8 +563,8 @@ public class DataSourceWindow extends ApplicationWindow implements IComponent {
 	}
 
 	public void signIn() throws Exception {
-		if (ds.usesComponent(UserIdentification.class)) {
-			ds.getComponent(UserIdentification.class).login();
+		if (ds.usesComponent(IUserManagement.class)) {
+			ds.getComponent(IUserManagement.class).login();
 		}
 
 		context = ds.getContext();
@@ -574,8 +575,8 @@ public class DataSourceWindow extends ApplicationWindow implements IComponent {
 
 	public void signOut() throws Exception {
 		context = null;
-		if (ds.usesComponent(UserIdentification.class)) {
-			ds.getComponent(UserIdentification.class).logout();
+		if (ds.usesComponent(IUserManagement.class)) {
+			ds.getComponent(IUserManagement.class).logout();
 		}
 		ds.setContext(null);
 	}

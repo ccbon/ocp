@@ -6,14 +6,12 @@ import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
-import org.ocpteam.component.Authentication;
-import org.ocpteam.component.UserIdentification;
 import org.ocpteam.interfaces.ICaptcha;
 import org.ocpteam.interfaces.IUser;
 import org.ocpteam.interfaces.IUserCreation;
+import org.ocpteam.interfaces.IUserManagement;
 import org.ocpteam.misc.JLG;
 import org.ocpteam.misc.swt.QuickMessage;
-
 
 public class NewUserWizard extends Wizard {
 
@@ -40,7 +38,7 @@ public class NewUserWizard extends Wizard {
 
 				getContents().setFocus();
 			}
-			
+
 			@Override
 			protected void finishPressed() {
 				super.finishPressed();
@@ -72,7 +70,7 @@ public class NewUserWizard extends Wizard {
 			addPage(p2);
 		}
 	}
-	
+
 	@Override
 	public boolean canFinish() {
 		IWizardPage[] pages = getPages();
@@ -90,8 +88,7 @@ public class NewUserWizard extends Wizard {
 	public boolean performFinish() {
 		try {
 			JLG.debug("creating the user");
-			IUserCreation uc = window.ds
-					.getComponent(IUserCreation.class);
+			IUserCreation uc = window.ds.getComponent(IUserCreation.class);
 			if (uc.needsCaptcha()) {
 				uc.setCaptcha(getCaptcha());
 				uc.setAnswer(p2.captchaAnswerText.getText());
@@ -100,20 +97,17 @@ public class NewUserWizard extends Wizard {
 				uc.setPassword(p1.passwordText.getText());
 			}
 			uc.createUser();
-			if (window.ds.usesComponent(UserIdentification.class)) {
-				UserIdentification ui = window.ds
-						.getComponent(UserIdentification.class);
-				if (ui instanceof Authentication) {
-					Authentication auth = (Authentication) ui;
-					auth.setUsername(uc.getUser().getUsername());
-					auth.setChallenge(uc.getPassword());
-				}
+			if (window.ds.usesComponent(IUserManagement.class)) {
+				IUserManagement ui = window.ds
+						.getComponent(IUserManagement.class);
+				ui.setUsername(uc.getUser().getUsername());
+				ui.setChallenge(uc.getPassword());
 				window.signIn();
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			QuickMessage.error(getShell(),
-					"Sorry. Cannot create the user. e=" + e.getMessage());
+			QuickMessage.error(getShell(), "Sorry. Cannot create the user. e="
+					+ e.getMessage());
 		}
 		return true;
 	}

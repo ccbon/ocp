@@ -9,12 +9,13 @@ import org.ocpteam.interfaces.ICaptcha;
 import org.ocpteam.interfaces.IDataModel;
 import org.ocpteam.interfaces.IUser;
 import org.ocpteam.interfaces.IUserCreation;
+import org.ocpteam.interfaces.IUserManagement;
 
 /**
  * Component for user creation.
  *
  */
-public class UserCreation extends DSContainer<AddressDataSource> implements IUserCreation, IAuthenticable {
+public class AddressUserCreation extends DSContainer<AddressDataSource> implements IUserCreation, IAuthenticable {
 
 	private IUser user;
 	private IAddressMap map;
@@ -78,7 +79,7 @@ public class UserCreation extends DSContainer<AddressDataSource> implements IUse
 
 	@Override
 	public void login() throws Exception {
-		Authentication a = (Authentication) ds().getComponent(UserIdentification.class);
+		IUserManagement a = ds().getComponent(IUserManagement.class);
 		Address address = new Address(ds().md.hash((a.getUsername() + a.getChallenge()).getBytes()));
 		byte[] value = map.get(address);
 		if (value == null) {

@@ -4,9 +4,8 @@ import java.util.Iterator;
 import java.util.Properties;
 
 import org.ocpteam.component.Agent;
-import org.ocpteam.component.Authentication;
-import org.ocpteam.component.UserIdentification;
 import org.ocpteam.entity.Pointer;
+import org.ocpteam.interfaces.IUserManagement;
 import org.ocpteam.misc.JLG;
 import org.ocpteam.protocol.ocp.Captcha;
 import org.ocpteam.protocol.ocp.OCPAgent;
@@ -79,11 +78,11 @@ public class TestAgent {
 			JLG.debug(decryptedMessage);
 			//System.exit(0);
 			
-			Authentication auth = (Authentication) ds2.getComponent(UserIdentification.class);
+			IUserManagement auth = ds2.getComponent(IUserManagement.class);
 			auth.setUsername(username);
 			auth.setChallenge(password);
 			auth.login();
-			OCPUser user = (OCPUser) auth.getUser();
+			OCPUser user = (OCPUser) ds2.getContext().getUser();
 			JLG.debug(user.toString());
 			
 			

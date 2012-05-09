@@ -10,6 +10,7 @@ import org.ocpteam.entity.Node;
 import org.ocpteam.interfaces.IDataModel;
 import org.ocpteam.interfaces.IProtocol;
 import org.ocpteam.interfaces.ISerializer;
+import org.ocpteam.interfaces.IUserManagement;
 import org.ocpteam.misc.JLG;
 
 public abstract class DSPDataSource extends DataSource {
@@ -89,7 +90,7 @@ public abstract class DSPDataSource extends DataSource {
 
 		if (usesComponent(IDataModel.class)) {
 			
-			if (!usesComponent(UserIdentification.class)) {
+			if (!usesComponent(IUserManagement.class)) {
 				// if no user management then attach the data model.
 				setContext(new Context(getComponent(IDataModel.class)));
 			}

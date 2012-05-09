@@ -2,13 +2,13 @@ package org.ocpteam.protocol.ftp;
 
 import java.io.IOException;
 
-import org.ocpteam.component.Authentication;
 import org.ocpteam.component.DSContainer;
 import org.ocpteam.entity.Context;
 import org.ocpteam.entity.User;
 import org.ocpteam.interfaces.IAuthenticable;
 import org.ocpteam.interfaces.IConnect;
 import org.ocpteam.interfaces.IDataModel;
+import org.ocpteam.interfaces.IUserManagement;
 import org.ocpteam.misc.JLG;
 
 public class FTPClient extends DSContainer<FTPDataSource> implements IAuthenticable, IConnect {
@@ -48,15 +48,14 @@ public class FTPClient extends DSContainer<FTPDataSource> implements IAuthentica
 			ftp.connect(hostname);
 		} catch (Exception e) {
 		}
-		Authentication a = ds().authentication;
+		IUserManagement a = ds().um;
 		String login = a.getUsername();
 		String password = (String) a.getChallenge();
 		if (ftp.login(login, password)) {
 			JLG.debug("ftp logged in.");
 			IDataModel dm = new FTPFileSystem(this);
-			ds().setContext(new Context(dm, "/"));
 			User user = new User(login);
-			a.setUser(user);
+			ds().setContext(new Context(user, dm, "/"));
 		} else {
 			throw new Exception("Cannot Login.");
 		}

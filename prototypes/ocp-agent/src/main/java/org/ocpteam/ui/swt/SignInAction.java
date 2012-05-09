@@ -5,8 +5,7 @@ import java.util.ResourceBundle;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.graphics.ImageData;
-import org.ocpteam.component.Authentication;
-import org.ocpteam.component.UserIdentification;
+import org.ocpteam.interfaces.IAuthenticable;
 import org.ocpteam.misc.JLG;
 
 public class SignInAction extends Action {
@@ -41,14 +40,13 @@ public class SignInAction extends Action {
 				scenario.run();
 				window.signIn();
 			} else {
-				if (window.ds.usesComponent(UserIdentification.class)) {
-					UserIdentification ui = window.ds.getComponent(UserIdentification.class);
-					if (ui instanceof Authentication) {
-						SignInWizard.start(window);
-					} else {
-						SignInUIWizard.start(window);
-					}
+
+				if (window.ds.usesComponent(IAuthenticable.class)) {
+					SignInWizard.start(window);
+				} else {
+					SignInUIWizard.start(window);
 				}
+
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

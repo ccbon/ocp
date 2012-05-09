@@ -1,13 +1,12 @@
 package org.ocpteam.protocol.sftp;
 
-import org.ocpteam.component.Authentication;
 import org.ocpteam.component.DSContainer;
-import org.ocpteam.component.UserIdentification;
 import org.ocpteam.entity.Context;
 import org.ocpteam.entity.User;
 import org.ocpteam.interfaces.IAuthenticable;
 import org.ocpteam.interfaces.IClient;
 import org.ocpteam.interfaces.IDataModel;
+import org.ocpteam.interfaces.IUserManagement;
 import org.ocpteam.misc.JLG;
 
 import com.jcraft.jsch.ChannelSftp;
@@ -28,7 +27,7 @@ public class SFTPClient extends DSContainer<SFTPDataSource> implements IAuthenti
 	public void login() throws Exception {
 		try {
 			jsch = new JSch();
-			Authentication a = (Authentication) ds().getComponent(UserIdentification.class);
+			IUserManagement a = ds().getComponent(IUserManagement.class);
 			String login = a.getUsername();
 			Object challenge = a.getChallenge();
 			String[] array = login.split("@");
@@ -63,8 +62,9 @@ public class SFTPClient extends DSContainer<SFTPDataSource> implements IAuthenti
 			channel.connect();
 			User user = new SFTPUser(login, c);
 			IDataModel dm = new SFTPFileSystem(user, this);
-			ds().setContext(new Context(dm, "/"));
-			a.setUser(user);
+			JLG.debug("setting context");
+			ds().setContext(new Context(user, dm, "/"));
+			JLG.debug("dm=" + ds().getContext().getDataModel().getClass());
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new Exception("Cannot login");
