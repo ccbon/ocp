@@ -9,7 +9,7 @@ import org.ocpteam.component.ContactMap;
 import org.ocpteam.component.NATTraversal;
 import org.ocpteam.core.TopContainer;
 import org.ocpteam.misc.JLG;
-import org.ocpteam.protocol.dht0.DHTDataSource;
+import org.ocpteamx.protocol.dht0.DHTDataSource;
 
 public class DHTConnect extends TopContainer {
 

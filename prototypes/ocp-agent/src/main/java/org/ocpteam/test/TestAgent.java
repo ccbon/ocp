@@ -7,11 +7,11 @@ import org.ocpteam.component.Agent;
 import org.ocpteam.entity.Pointer;
 import org.ocpteam.interfaces.IUserManagement;
 import org.ocpteam.misc.JLG;
-import org.ocpteam.protocol.ocp.Captcha;
-import org.ocpteam.protocol.ocp.OCPAgent;
-import org.ocpteam.protocol.ocp.OCPDataSource;
-import org.ocpteam.protocol.ocp.OCPFileSystem;
-import org.ocpteam.protocol.ocp.OCPUser;
+import org.ocpteamx.protocol.ocp.Captcha;
+import org.ocpteamx.protocol.ocp.OCPAgent;
+import org.ocpteamx.protocol.ocp.OCPDataSource;
+import org.ocpteamx.protocol.ocp.OCPFileSystem;
+import org.ocpteamx.protocol.ocp.OCPUser;
 
 
 public class TestAgent {

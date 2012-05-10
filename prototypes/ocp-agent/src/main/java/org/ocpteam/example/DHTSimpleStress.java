@@ -5,8 +5,8 @@ import java.util.Properties;
 import org.ocpteam.component.NATTraversal;
 import org.ocpteam.core.TopContainer;
 import org.ocpteam.misc.JLG;
-import org.ocpteam.protocol.dht0.DHTDataModel;
-import org.ocpteam.protocol.dht0.DHTDataSource;
+import org.ocpteamx.protocol.dht0.DHTDataModel;
+import org.ocpteamx.protocol.dht0.DHTDataSource;
 
 public class DHTSimpleStress extends TopContainer {
 

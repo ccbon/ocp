@@ -29,7 +29,7 @@ import org.ocpteam.interfaces.IStartable;
 import org.ocpteam.misc.JLG;
 import org.ocpteam.network.TCPClient;
 import org.ocpteam.network.UDPClient;
-import org.ocpteam.protocol.ocp.OCPAgent;
+import org.ocpteamx.protocol.ocp.OCPAgent;
 
 public class Client extends DSContainer<DSPDataSource> implements IClient, IStartable {
 

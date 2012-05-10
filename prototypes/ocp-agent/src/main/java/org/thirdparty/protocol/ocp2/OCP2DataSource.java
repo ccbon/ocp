@@ -4,7 +4,7 @@ import java.util.ResourceBundle;
 
 import org.ocpteam.interfaces.IPersistentMap;
 import org.ocpteam.misc.JLG;
-import org.ocpteam.protocol.ocp.OCPDataSource;
+import org.ocpteamx.protocol.ocp.OCPDataSource;
 
 public class OCP2DataSource extends OCPDataSource {
 

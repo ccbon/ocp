@@ -10,7 +10,7 @@ import org.ocpteam.component.ContactMap;
 import org.ocpteam.component.NodeMap;
 import org.ocpteam.interfaces.IMapDataModel;
 import org.ocpteam.misc.JLG;
-import org.ocpteam.protocol.dht1.DHT1DataSource;
+import org.ocpteamx.protocol.dht1.DHT1DataSource;
 
 public class DHT1Test {
 

@@ -7,7 +7,7 @@ import java.util.Properties;
 import org.junit.Test;
 import org.ocpteam.component.ContactMap;
 import org.ocpteam.misc.JLG;
-import org.ocpteam.protocol.dht2.DHT2DataSource;
+import org.ocpteamx.protocol.dht2.DHT2DataSource;
 
 public class DHT2Test {
 

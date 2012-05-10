@@ -5,9 +5,9 @@ import java.util.Properties;
 import org.ocpteam.component.DSPDataSource;
 import org.ocpteam.entity.Context;
 import org.ocpteam.misc.JLG;
-import org.ocpteam.protocol.dht0.DHTDataModel;
-import org.ocpteam.protocol.dht0.DHTDataSource;
-import org.ocpteam.protocol.dht0.DHTModule;
+import org.ocpteamx.protocol.dht0.DHTDataModel;
+import org.ocpteamx.protocol.dht0.DHTDataSource;
+import org.ocpteamx.protocol.dht0.DHTModule;
 
 public class DHTPersistanceTest {
 	public static void main(String[] args) {

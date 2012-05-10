@@ -12,8 +12,8 @@ import org.ocpteam.component.DSPDataSource;
 import org.ocpteam.component.DataSource;
 import org.ocpteam.entity.Context;
 import org.ocpteam.misc.JLG;
-import org.ocpteam.protocol.dht0.DHTDataModel;
-import org.ocpteam.protocol.dht0.DHTDataSource;
+import org.ocpteamx.protocol.dht0.DHTDataModel;
+import org.ocpteamx.protocol.dht0.DHTDataSource;
 
 public class DHTSimpleTest {
 

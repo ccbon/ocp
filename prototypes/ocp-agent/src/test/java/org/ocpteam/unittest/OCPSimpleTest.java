@@ -6,9 +6,9 @@ import java.util.Properties;
 
 import org.ocpteam.component.Agent;
 import org.ocpteam.misc.JLG;
-import org.ocpteam.protocol.ocp.Captcha;
-import org.ocpteam.protocol.ocp.OCPAgent;
-import org.ocpteam.protocol.ocp.OCPDataSource;
+import org.ocpteamx.protocol.ocp.Captcha;
+import org.ocpteamx.protocol.ocp.OCPAgent;
+import org.ocpteamx.protocol.ocp.OCPDataSource;
 
 public class OCPSimpleTest {
 
