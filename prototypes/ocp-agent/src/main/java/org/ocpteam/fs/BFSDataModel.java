@@ -9,11 +9,12 @@ import org.ocpteam.component.AddressDataSource;
 import org.ocpteam.component.DSContainer;
 import org.ocpteam.entity.Address;
 import org.ocpteam.entity.AddressUser;
+import org.ocpteam.entity.SecureUser;
 import org.ocpteam.interfaces.IAddressMap;
 import org.ocpteam.interfaces.IFile;
 import org.ocpteam.interfaces.IFileSystem;
-import org.ocpteam.interfaces.IUserCreation;
-import org.ocpteam.interfaces.IUserManagement;
+import org.ocpteam.interfaces.ISecurity;
+import org.ocpteam.interfaces.IUser;
 import org.ocpteam.misc.JLG;
 
 /**
@@ -33,14 +34,13 @@ public class BFSDataModel extends DSContainer<AddressDataSource> implements
 
 	public Address getRootAddress() throws Exception {
 		String rootString = "";
-		if (ds().usesComponent(IUserManagement.class)) {
-			rootString = ds().getComponent(IUserManagement.class)
-					.getUsername();
-		}
-		if (ds().usesComponent(IUserCreation.class)) {
-			AddressUser user = (AddressUser) ds().getComponent(IUserCreation.class)
-					.getUser();
-			rootString = user.getRootString();
+		if (ds().getContext().hasUser()) {
+			IUser user = ds().getContext().getUser();
+			if (user instanceof AddressUser) {
+				return ((AddressUser) user).getRootAddress();
+			} else {
+				return new Address(ds().md.hash(user.getUsername().getBytes()));
+			}
 		}
 		return new Address(ds().md.hash(rootString.getBytes()));
 	}
@@ -58,7 +58,7 @@ public class BFSDataModel extends DSContainer<AddressDataSource> implements
 	}
 
 	private Pointer getRootPointer() throws Exception {
-		byte[] root = map.get(getRootAddress());
+		byte[] root = get(getRootAddress());
 		if (root == null) {
 			return null;
 		}
@@ -90,7 +90,7 @@ public class BFSDataModel extends DSContainer<AddressDataSource> implements
 			out = new FileOutputStream(file, false);
 
 			for (Address address : p.getAddresses()) {
-				byte[] content = map.get(address);
+				byte[] content = get(address);
 				out.write(content);
 				out.flush();
 			}
@@ -112,7 +112,7 @@ public class BFSDataModel extends DSContainer<AddressDataSource> implements
 	private void setRootPointer(Pointer p) throws Exception {
 		byte[] value = null;
 		value = ds().serializer.serialize(p);
-		map.put(getRootAddress(), value);
+		put(getRootAddress(), value);
 	}
 
 	private Pointer commit(File file) throws Exception {
@@ -152,7 +152,7 @@ public class BFSDataModel extends DSContainer<AddressDataSource> implements
 			int n = fis.read(buffer);
 			while (n >= 0) {
 				Address address = new Address(ds().md.hash(buffer));
-				map.put(address, buffer);
+				put(address, buffer);
 				pointer.add(address);
 				n = fis.read(buffer);
 			}
@@ -163,9 +163,19 @@ public class BFSDataModel extends DSContainer<AddressDataSource> implements
 		return pointer;
 	}
 
+	private void put(Address address, byte[] value) throws Exception {
+		if (ds().usesComponent(ISecurity.class)) {
+			ISecurity security = ds().getComponent(ISecurity.class);
+			SecureUser secureUser = (SecureUser) ds().getContext().getUser();
+			security.put(secureUser, address, value);
+		} else {
+			map.put(address, value);
+		}
+	}
+
 	private Pointer set(byte[] value) throws Exception {
 		Address address = new Address(ds().md.hash(value));
-		map.put(address, value);
+		put(address, value);
 		return new Pointer(address);
 	}
 
@@ -304,7 +314,17 @@ public class BFSDataModel extends DSContainer<AddressDataSource> implements
 	}
 
 	private byte[] get(Pointer p) throws Exception {
-		return map.get(p.getAddresses().get(0));
+		Address address = p.getAddresses().get(0);
+		return get(address);
+	}
+
+	private byte[] get(Address address) throws Exception {
+		if (ds().usesComponent(ISecurity.class)) {
+			ISecurity security = ds().getComponent(ISecurity.class);
+			SecureUser secureUser = (SecureUser) ds().getContext().getUser();
+			return security.get(secureUser, address);
+		}
+		return map.get(address);
 	}
 
 	private Tree[] getTreeStack(String[] dirnames) throws Exception {

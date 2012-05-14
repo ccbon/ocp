@@ -8,7 +8,8 @@ public class SFTPUser extends User {
 	private String dir;
 
 	public SFTPUser(String login, SSHChallenge challenge) {
-		super(login);
+		super();
+		setUsername(login);
 		dir = challenge.getDefaultLocalDir();
 	}
 

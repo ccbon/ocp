@@ -54,7 +54,8 @@ public class FTPClient extends DSContainer<FTPDataSource> implements IAuthentica
 		if (ftp.login(login, password)) {
 			JLG.debug("ftp logged in.");
 			IDataModel dm = new FTPFileSystem(this);
-			User user = new User(login);
+			User user = new User();
+			user.setUsername(login);
 			ds().setContext(new Context(user, dm, "/"));
 		} else {
 			throw new Exception("Cannot Login.");

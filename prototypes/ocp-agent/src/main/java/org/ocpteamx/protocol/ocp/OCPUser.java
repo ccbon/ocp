@@ -10,11 +10,11 @@ import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 
 import org.ocpteam.entity.Pointer;
-import org.ocpteam.interfaces.IUser;
+import org.ocpteam.entity.User;
 import org.ocpteam.misc.JLG;
 
 
-public class OCPUser implements IUser {
+public class OCPUser extends User {
 
 	private Key indexKey;
 	private Key rootKey;
@@ -25,7 +25,6 @@ public class OCPUser implements IUser {
 	private SecretKey secretKey;
 	private String cipherAlgo = "AES";
 	private int keySize = 128;
-	private String username;
 
 	/**
 	 * 
@@ -144,11 +143,6 @@ public class OCPUser implements IUser {
 		return "login=" + getUsername() + ";public_key="
 				+ keyPair.getPublic().getAlgorithm() + "-"
 				+ JLG.bytesToHex(keyPair.getPublic().getEncoded());
-	}
-
-	@Override
-	public String getUsername() {
-		return this.username;
 	}
 
 }

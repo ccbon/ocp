@@ -3,13 +3,13 @@ package org.ocpteam.entity;
 
 public class AddressUser extends User {
 	private static final long serialVersionUID = 1L;
+	private Address address;
 
-	public AddressUser(String username) {
-		super(username);
+	public Address getRootAddress() {
+		return address;
 	}
-
-	public String getRootString() {
-		return username + "string";
+	public void setRootAddress(Address address) {
+		this.address = address;
 	}
 	
 

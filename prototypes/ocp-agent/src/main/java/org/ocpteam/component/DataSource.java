@@ -49,6 +49,13 @@ public abstract class DataSource extends TopContainer implements IComponent,
 	}
 
 	public abstract String getProtocolName();
+	
+	/**
+	 * When information is stored under properties, this function read the properties.
+	 * @throws Exception 
+	 */
+	public void readConfig() throws Exception {
+	}
 
 	@Override
 	public void open(File file) throws Exception {

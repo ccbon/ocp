@@ -6,4 +6,6 @@ public interface IUser extends Serializable {
 
 	String getUsername();
 
+	void setUsername(String username);
+
 }

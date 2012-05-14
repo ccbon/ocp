@@ -34,4 +34,8 @@ public class Context {
 		return user;
 	}
 
+	public boolean hasUser() {
+		return user != null;
+	}
+
 }

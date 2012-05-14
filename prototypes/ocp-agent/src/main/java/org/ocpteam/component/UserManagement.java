@@ -3,6 +3,7 @@ package org.ocpteam.component;
 import java.net.URI;
 
 import org.ocpteam.entity.Context;
+import org.ocpteam.entity.User;
 import org.ocpteam.interfaces.IAuthenticable;
 import org.ocpteam.interfaces.IDataModel;
 import org.ocpteam.interfaces.IUserManagement;
@@ -65,7 +66,9 @@ public class UserManagement extends DSContainer<DataSource> implements
 			IAuthenticable auth = ds().getComponent(IAuthenticable.class);
 			auth.login();
 		} else {
-			Context c = new Context(ds().getComponent(IDataModel.class));
+			User user = new User();
+			user.setUsername(getUsername());
+			Context c = new Context(user, ds().getComponent(IDataModel.class));
 			ds().setContext(c);
 		}
 	}
