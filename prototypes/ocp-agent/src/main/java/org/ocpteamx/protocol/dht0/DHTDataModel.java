@@ -16,13 +16,13 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 
 import org.ocpteam.component.DSContainer;
-import org.ocpteam.entity.Contact;
-import org.ocpteam.entity.EOMObject;
-import org.ocpteam.entity.InputFlow;
-import org.ocpteam.entity.InputMessage;
 import org.ocpteam.exception.NotAvailableContactException;
 import org.ocpteam.interfaces.IMapDataModel;
 import org.ocpteam.misc.JLG;
+import org.ocpteam.serializable.Contact;
+import org.ocpteam.serializable.EOMObject;
+import org.ocpteam.serializable.InputFlow;
+import org.ocpteam.serializable.InputMessage;
 
 public class DHTDataModel extends DSContainer<DHTDataSource> implements IMapDataModel {
 

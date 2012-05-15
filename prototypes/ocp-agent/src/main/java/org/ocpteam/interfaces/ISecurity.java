@@ -1,8 +1,8 @@
 package org.ocpteam.interfaces;
 
-import org.ocpteam.entity.Address;
-import org.ocpteam.entity.SecureUser;
-import org.ocpteam.entity.UserPublicInfo;
+import org.ocpteam.serializable.Address;
+import org.ocpteam.serializable.SecureUser;
+import org.ocpteam.serializable.UserPublicInfo;
 
 public interface ISecurity {
 

@@ -9,13 +9,13 @@ import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
 
-import org.ocpteam.entity.Contact;
-import org.ocpteam.entity.InputMessage;
 import org.ocpteam.exception.NotAvailableContactException;
 import org.ocpteam.interfaces.INodeMap;
 import org.ocpteam.misc.JLG;
 import org.ocpteam.network.TCPClient;
 import org.ocpteam.network.UDPClient;
+import org.ocpteam.serializable.Contact;
+import org.ocpteam.serializable.InputMessage;
 
 public class ContactMap extends DSContainer<DSPDataSource> {
 

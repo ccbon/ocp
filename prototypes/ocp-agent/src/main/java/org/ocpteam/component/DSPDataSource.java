@@ -4,14 +4,14 @@ import java.lang.reflect.Method;
 import java.net.URI;
 import java.util.Properties;
 
-import org.ocpteam.entity.Contact;
 import org.ocpteam.entity.Context;
-import org.ocpteam.entity.Node;
 import org.ocpteam.interfaces.IDataModel;
 import org.ocpteam.interfaces.IProtocol;
 import org.ocpteam.interfaces.ISerializer;
 import org.ocpteam.interfaces.IUserManagement;
 import org.ocpteam.misc.JLG;
+import org.ocpteam.serializable.Contact;
+import org.ocpteam.serializable.Node;
 
 public abstract class DSPDataSource extends DataSource {
 

@@ -7,9 +7,9 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
-import org.ocpteam.entity.Address;
 import org.ocpteam.interfaces.IPersistentMap;
 import org.ocpteam.misc.JLG;
+import org.ocpteam.serializable.Address;
 
 public class PersistentFileMap implements Map<Address, byte[]>, IPersistentMap {
 

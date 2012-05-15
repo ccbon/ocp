@@ -16,15 +16,15 @@ import java.util.Set;
 
 import org.ocpteam.component.DSPDataSource;
 import org.ocpteam.component.NodeMap;
-import org.ocpteam.entity.Contact;
-import org.ocpteam.entity.EOMObject;
-import org.ocpteam.entity.InputFlow;
-import org.ocpteam.entity.Node;
 import org.ocpteam.exception.NotAvailableContactException;
 import org.ocpteam.interfaces.IDataModel;
 import org.ocpteam.interfaces.INodeMap;
 import org.ocpteam.misc.Id;
 import org.ocpteam.misc.JLG;
+import org.ocpteam.serializable.Contact;
+import org.ocpteam.serializable.EOMObject;
+import org.ocpteam.serializable.InputFlow;
+import org.ocpteam.serializable.Node;
 
 /**
  * DHT is a distributed hashtable, with no redundancy and no node detachment

@@ -1,9 +1,6 @@
 package org.ocpteam.component;
 
-import org.ocpteam.entity.Address;
-import org.ocpteam.entity.AddressUser;
 import org.ocpteam.entity.Context;
-import org.ocpteam.entity.SecureUser;
 import org.ocpteam.interfaces.IAddressMap;
 import org.ocpteam.interfaces.IAuthenticable;
 import org.ocpteam.interfaces.ICaptcha;
@@ -13,6 +10,9 @@ import org.ocpteam.interfaces.IUser;
 import org.ocpteam.interfaces.IUserCreation;
 import org.ocpteam.interfaces.IUserManagement;
 import org.ocpteam.misc.JLG;
+import org.ocpteam.serializable.Address;
+import org.ocpteam.serializable.AddressUser;
+import org.ocpteam.serializable.SecureUser;
 
 /**
  * Component for user creation.

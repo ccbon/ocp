@@ -7,6 +7,7 @@ import java.io.StreamCorruptedException;
 
 import org.ocpteam.interfaces.IStreamSerializer;
 import org.ocpteam.misc.JLG;
+import org.ocpteam.serializable.EOMObject;
 
 public class StreamSerializer implements IStreamSerializer {
 

@@ -11,13 +11,13 @@ import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.PBEParameterSpec;
 
-import org.ocpteam.entity.Address;
-import org.ocpteam.entity.Content;
-import org.ocpteam.entity.SecureUser;
-import org.ocpteam.entity.UserPublicInfo;
 import org.ocpteam.interfaces.IAddressMap;
 import org.ocpteam.interfaces.ISecurity;
 import org.ocpteam.misc.JLG;
+import org.ocpteam.serializable.Address;
+import org.ocpteam.serializable.Content;
+import org.ocpteam.serializable.SecureUser;
+import org.ocpteam.serializable.UserPublicInfo;
 
 public class Security extends DSContainer<AddressDataSource> implements
 		ISecurity {

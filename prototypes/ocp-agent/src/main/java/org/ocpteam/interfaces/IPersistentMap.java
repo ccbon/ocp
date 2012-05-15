@@ -2,7 +2,7 @@ package org.ocpteam.interfaces;
 
 import java.util.Map;
 
-import org.ocpteam.entity.Address;
+import org.ocpteam.serializable.Address;
 
 /**
  * A map which content stays on the hard drive when process completed or died.

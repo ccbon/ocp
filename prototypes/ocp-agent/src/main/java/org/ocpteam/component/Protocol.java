@@ -11,9 +11,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import org.ocpteam.entity.EOMObject;
-import org.ocpteam.entity.InputFlow;
-import org.ocpteam.entity.InputMessage;
 import org.ocpteam.entity.Session;
 import org.ocpteam.entity.StreamSerializer;
 import org.ocpteam.interfaces.IActivity;
@@ -21,6 +18,9 @@ import org.ocpteam.interfaces.IModule;
 import org.ocpteam.interfaces.IProtocol;
 import org.ocpteam.interfaces.ITransaction;
 import org.ocpteam.misc.JLG;
+import org.ocpteam.serializable.EOMObject;
+import org.ocpteam.serializable.InputFlow;
+import org.ocpteam.serializable.InputMessage;
 
 public class Protocol extends DSContainer<DataSource> implements IProtocol {
 

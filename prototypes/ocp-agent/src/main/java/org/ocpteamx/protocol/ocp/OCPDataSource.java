@@ -10,13 +10,13 @@ import org.ocpteam.component.PersistentFileMap;
 import org.ocpteam.component.Protocol;
 import org.ocpteam.component.Server;
 import org.ocpteam.component.UserManagement;
-import org.ocpteam.entity.Contact;
 import org.ocpteam.interfaces.IAuthenticable;
 import org.ocpteam.interfaces.IPersistentMap;
 import org.ocpteam.interfaces.IUserCreation;
 import org.ocpteam.interfaces.IUserManagement;
 import org.ocpteam.misc.Id;
 import org.ocpteam.misc.JLG;
+import org.ocpteam.serializable.Contact;
 
 public class OCPDataSource extends DSPDataSource {
 

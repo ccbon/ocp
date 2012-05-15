@@ -9,12 +9,12 @@ import java.util.ResourceBundle;
 import org.ocpteam.core.IComponent;
 import org.ocpteam.core.IContainer;
 import org.ocpteam.core.TopContainer;
-import org.ocpteam.entity.Contact;
 import org.ocpteam.entity.Context;
 import org.ocpteam.interfaces.IConnect;
 import org.ocpteam.interfaces.IDocument;
 import org.ocpteam.interfaces.IListener;
 import org.ocpteam.misc.JLG;
+import org.ocpteam.serializable.Contact;
 
 public abstract class DataSource extends TopContainer implements IComponent,
 		IDocument, IConnect {

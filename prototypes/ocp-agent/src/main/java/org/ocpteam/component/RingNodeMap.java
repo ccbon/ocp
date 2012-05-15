@@ -3,12 +3,12 @@ package org.ocpteam.component;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.ocpteam.entity.Address;
-import org.ocpteam.entity.Contact;
-import org.ocpteam.entity.Node;
 import org.ocpteam.interfaces.INodeMap;
 import org.ocpteam.misc.Id;
 import org.ocpteam.misc.JLG;
+import org.ocpteam.serializable.Address;
+import org.ocpteam.serializable.Contact;
+import org.ocpteam.serializable.Node;
 
 /**
  * A node map with many rings. A ring is instanciated by a nodeMap.

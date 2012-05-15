@@ -3,11 +3,11 @@ package org.ocpteam.component;
 import java.io.Serializable;
 import java.net.InetAddress;
 
-import org.ocpteam.entity.Contact;
 import org.ocpteam.entity.Session;
 import org.ocpteam.interfaces.IModule;
 import org.ocpteam.interfaces.ITransaction;
 import org.ocpteam.misc.JLG;
+import org.ocpteam.serializable.Contact;
 
 public class DSPModule implements IModule {
 

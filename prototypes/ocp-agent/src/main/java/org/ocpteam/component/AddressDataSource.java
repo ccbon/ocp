@@ -10,15 +10,15 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.ocpteam.entity.Address;
-import org.ocpteam.entity.Contact;
-import org.ocpteam.entity.EOMObject;
-import org.ocpteam.entity.InputFlow;
 import org.ocpteam.exception.NotAvailableContactException;
 import org.ocpteam.interfaces.IAddressMap;
 import org.ocpteam.interfaces.INodeMap;
 import org.ocpteam.interfaces.IPersistentMap;
 import org.ocpteam.misc.JLG;
+import org.ocpteam.serializable.Address;
+import org.ocpteam.serializable.Contact;
+import org.ocpteam.serializable.EOMObject;
+import org.ocpteam.serializable.InputFlow;
 
 public abstract class AddressDataSource extends DSPDataSource {
 

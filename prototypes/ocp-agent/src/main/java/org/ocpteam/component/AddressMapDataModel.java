@@ -3,10 +3,10 @@ package org.ocpteam.component;
 import java.util.HashMap;
 import java.util.Set;
 
-import org.ocpteam.entity.Address;
 import org.ocpteam.interfaces.IAddressMap;
 import org.ocpteam.interfaces.IMapDataModel;
 import org.ocpteam.misc.JLG;
+import org.ocpteam.serializable.Address;
 
 public class AddressMapDataModel extends DSContainer<DSPDataSource> implements
 		IMapDataModel {

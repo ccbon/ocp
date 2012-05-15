@@ -1,6 +1,6 @@
 package org.ocpteamx.protocol.sftp;
 
-import org.ocpteam.entity.User;
+import org.ocpteam.serializable.User;
 
 public class SFTPUser extends User {
 

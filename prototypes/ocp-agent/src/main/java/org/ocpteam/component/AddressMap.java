@@ -10,17 +10,17 @@ import java.net.SocketTimeoutException;
 import java.util.Map;
 import java.util.Queue;
 
-import org.ocpteam.entity.Address;
-import org.ocpteam.entity.Contact;
-import org.ocpteam.entity.EOMObject;
-import org.ocpteam.entity.InputFlow;
-import org.ocpteam.entity.InputMessage;
-import org.ocpteam.entity.Node;
 import org.ocpteam.entity.Response;
 import org.ocpteam.exception.NotAvailableContactException;
 import org.ocpteam.interfaces.IAddressMap;
 import org.ocpteam.interfaces.INodeMap;
 import org.ocpteam.misc.JLG;
+import org.ocpteam.serializable.Address;
+import org.ocpteam.serializable.Contact;
+import org.ocpteam.serializable.EOMObject;
+import org.ocpteam.serializable.InputFlow;
+import org.ocpteam.serializable.InputMessage;
+import org.ocpteam.serializable.Node;
 
 public class AddressMap extends DSContainer<AddressDataSource> implements IAddressMap {
 

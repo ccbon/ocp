@@ -10,8 +10,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import org.ocpteam.entity.Address;
-import org.ocpteam.entity.EOMObject;
 import org.ocpteam.entity.Session;
 import org.ocpteam.interfaces.IActivity;
 import org.ocpteam.interfaces.IAddressMap;
@@ -19,6 +17,8 @@ import org.ocpteam.interfaces.IModule;
 import org.ocpteam.interfaces.ITransaction;
 import org.ocpteam.misc.Id;
 import org.ocpteam.misc.JLG;
+import org.ocpteam.serializable.Address;
+import org.ocpteam.serializable.EOMObject;
 
 public class MapModule implements IModule {
 

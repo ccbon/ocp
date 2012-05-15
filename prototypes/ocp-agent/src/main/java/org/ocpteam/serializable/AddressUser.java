@@ -1,4 +1,4 @@
-package org.ocpteam.entity;
+package org.ocpteam.serializable;
 
 
 public class AddressUser extends User {

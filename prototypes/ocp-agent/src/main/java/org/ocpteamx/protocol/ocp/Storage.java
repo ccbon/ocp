@@ -5,10 +5,10 @@ import java.util.Map;
 import java.util.NavigableSet;
 import java.util.TreeSet;
 
-import org.ocpteam.entity.Address;
 import org.ocpteam.interfaces.IPersistentMap;
 import org.ocpteam.misc.Id;
 import org.ocpteam.misc.JLG;
+import org.ocpteam.serializable.Address;
 
 public class Storage {
 

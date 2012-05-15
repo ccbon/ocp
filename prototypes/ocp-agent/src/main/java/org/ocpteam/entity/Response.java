@@ -2,6 +2,8 @@ package org.ocpteam.entity;
 
 import java.io.Serializable;
 
+import org.ocpteam.serializable.Contact;
+
 public class Response {
 
 	private Contact contact;

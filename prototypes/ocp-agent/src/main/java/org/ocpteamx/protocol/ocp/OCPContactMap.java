@@ -4,9 +4,9 @@ import java.util.Iterator;
 
 import org.ocpteam.component.Agent;
 import org.ocpteam.component.ContactMap;
-import org.ocpteam.entity.Contact;
 import org.ocpteam.misc.Id;
 import org.ocpteam.misc.JLG;
+import org.ocpteam.serializable.Contact;
 
 public class OCPContactMap extends ContactMap {
 	

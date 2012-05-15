@@ -5,12 +5,12 @@ import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.util.Iterator;
 
-import org.ocpteam.entity.Pointer;
-import org.ocpteam.entity.Tree;
-import org.ocpteam.entity.TreeEntry;
 import org.ocpteam.interfaces.IFile;
 import org.ocpteam.interfaces.IFileSystem;
 import org.ocpteam.misc.JLG;
+import org.ocpteam.serializable.Pointer;
+import org.ocpteam.serializable.Tree;
+import org.ocpteam.serializable.TreeEntry;
 
 
 public class OCPFileSystem implements IFileSystem {

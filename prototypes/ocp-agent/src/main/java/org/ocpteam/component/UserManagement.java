@@ -3,11 +3,11 @@ package org.ocpteam.component;
 import java.net.URI;
 
 import org.ocpteam.entity.Context;
-import org.ocpteam.entity.User;
 import org.ocpteam.interfaces.IAuthenticable;
 import org.ocpteam.interfaces.IDataModel;
 import org.ocpteam.interfaces.IUserManagement;
 import org.ocpteam.misc.JLG;
+import org.ocpteam.serializable.User;
 
 public class UserManagement extends DSContainer<DataSource> implements
 		IUserManagement {

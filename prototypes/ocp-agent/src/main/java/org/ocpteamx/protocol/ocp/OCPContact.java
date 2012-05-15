@@ -4,8 +4,8 @@ import java.util.Collections;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import org.ocpteam.entity.Contact;
 import org.ocpteam.misc.Id;
+import org.ocpteam.serializable.Contact;
 
 
 public class OCPContact extends Contact {

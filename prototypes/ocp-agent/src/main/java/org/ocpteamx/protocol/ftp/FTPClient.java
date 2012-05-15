@@ -4,12 +4,12 @@ import java.io.IOException;
 
 import org.ocpteam.component.DSContainer;
 import org.ocpteam.entity.Context;
-import org.ocpteam.entity.User;
 import org.ocpteam.interfaces.IAuthenticable;
 import org.ocpteam.interfaces.IConnect;
 import org.ocpteam.interfaces.IDataModel;
 import org.ocpteam.interfaces.IUserManagement;
 import org.ocpteam.misc.JLG;
+import org.ocpteam.serializable.User;
 
 public class FTPClient extends DSContainer<FTPDataSource> implements IAuthenticable, IConnect {
 

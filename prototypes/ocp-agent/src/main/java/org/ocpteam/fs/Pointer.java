@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.ocpteam.entity.Address;
+import org.ocpteam.serializable.Address;
 
 /**
  * Pointer is an Id used in a TreeEntry. It specifies the location of the given

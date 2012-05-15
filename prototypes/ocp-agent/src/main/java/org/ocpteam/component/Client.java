@@ -18,8 +18,6 @@ import java.util.concurrent.Executors;
 
 import org.apache.xmlrpc.client.XmlRpcClient;
 import org.apache.xmlrpc.client.XmlRpcClientConfigImpl;
-import org.ocpteam.entity.Contact;
-import org.ocpteam.entity.InputMessage;
 import org.ocpteam.entity.Response;
 import org.ocpteam.exception.NoNetworkException;
 import org.ocpteam.exception.NotAvailableContactException;
@@ -29,6 +27,8 @@ import org.ocpteam.interfaces.IStartable;
 import org.ocpteam.misc.JLG;
 import org.ocpteam.network.TCPClient;
 import org.ocpteam.network.UDPClient;
+import org.ocpteam.serializable.Contact;
+import org.ocpteam.serializable.InputMessage;
 import org.ocpteamx.protocol.ocp.OCPAgent;
 
 public class Client extends DSContainer<DSPDataSource> implements IClient, IStartable {

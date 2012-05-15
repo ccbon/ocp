@@ -6,16 +6,16 @@ import org.apache.xmlrpc.client.XmlRpcClient;
 import org.apache.xmlrpc.client.XmlRpcClientConfigImpl;
 import org.ocpteam.component.Agent;
 import org.ocpteam.component.Client;
-import org.ocpteam.entity.Address;
-import org.ocpteam.entity.Contact;
 import org.ocpteam.entity.Context;
-import org.ocpteam.entity.InputMessage;
 import org.ocpteam.entity.Response;
 import org.ocpteam.interfaces.IAuthenticable;
 import org.ocpteam.interfaces.IDataModel;
 import org.ocpteam.interfaces.IUserManagement;
 import org.ocpteam.misc.Id;
 import org.ocpteam.misc.JLG;
+import org.ocpteam.serializable.Address;
+import org.ocpteam.serializable.Contact;
+import org.ocpteam.serializable.InputMessage;
 
 public class OCPClient extends Client implements IAuthenticable {
 

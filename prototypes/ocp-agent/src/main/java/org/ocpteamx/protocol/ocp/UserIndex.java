@@ -5,7 +5,7 @@ import java.util.Iterator;
 import java.util.NavigableSet;
 import java.util.TreeSet;
 
-import org.ocpteam.entity.Pointer;
+import org.ocpteam.serializable.Pointer;
 
 public class UserIndex implements Serializable {
 

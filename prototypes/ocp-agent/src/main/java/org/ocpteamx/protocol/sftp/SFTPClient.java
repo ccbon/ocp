@@ -2,12 +2,12 @@ package org.ocpteamx.protocol.sftp;
 
 import org.ocpteam.component.DSContainer;
 import org.ocpteam.entity.Context;
-import org.ocpteam.entity.User;
 import org.ocpteam.interfaces.IAuthenticable;
 import org.ocpteam.interfaces.IClient;
 import org.ocpteam.interfaces.IDataModel;
 import org.ocpteam.interfaces.IUserManagement;
 import org.ocpteam.misc.JLG;
+import org.ocpteam.serializable.User;
 
 import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.JSch;

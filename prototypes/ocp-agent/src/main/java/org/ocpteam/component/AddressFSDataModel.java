@@ -2,14 +2,14 @@ package org.ocpteam.component;
 
 import java.io.File;
 
-import org.ocpteam.entity.Address;
-import org.ocpteam.entity.Pointer;
-import org.ocpteam.entity.Tree;
-import org.ocpteam.entity.TreeEntry;
 import org.ocpteam.interfaces.IAddressMap;
 import org.ocpteam.interfaces.IFile;
 import org.ocpteam.interfaces.IFileSystem;
 import org.ocpteam.misc.JLG;
+import org.ocpteam.serializable.Address;
+import org.ocpteam.serializable.Pointer;
+import org.ocpteam.serializable.Tree;
+import org.ocpteam.serializable.TreeEntry;
 
 public class AddressFSDataModel extends DSContainer<AddressDataSource> implements IFileSystem {
 

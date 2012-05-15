@@ -7,15 +7,15 @@ import java.io.OutputStream;
 
 import org.ocpteam.component.AddressDataSource;
 import org.ocpteam.component.DSContainer;
-import org.ocpteam.entity.Address;
-import org.ocpteam.entity.AddressUser;
-import org.ocpteam.entity.SecureUser;
 import org.ocpteam.interfaces.IAddressMap;
 import org.ocpteam.interfaces.IFile;
 import org.ocpteam.interfaces.IFileSystem;
 import org.ocpteam.interfaces.ISecurity;
 import org.ocpteam.interfaces.IUser;
 import org.ocpteam.misc.JLG;
+import org.ocpteam.serializable.Address;
+import org.ocpteam.serializable.AddressUser;
+import org.ocpteam.serializable.SecureUser;
 
 /**
  * File System Data Model with big file support.

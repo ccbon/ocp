@@ -1,9 +1,9 @@
 package org.ocpteam.interfaces;
 
 import org.ocpteam.core.IComponent;
-import org.ocpteam.entity.Address;
-import org.ocpteam.entity.Contact;
-import org.ocpteam.entity.Node;
+import org.ocpteam.serializable.Address;
+import org.ocpteam.serializable.Contact;
+import org.ocpteam.serializable.Node;
 
 
 public interface INodeMap extends IComponent {

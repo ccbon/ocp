@@ -4,7 +4,6 @@ import org.ocpteam.component.AddressDataSource;
 import org.ocpteam.component.AddressUserCreation;
 import org.ocpteam.component.PersistentFileMap;
 import org.ocpteam.component.UserManagement;
-import org.ocpteam.entity.AddressUser;
 import org.ocpteam.fs.BFSDataModel;
 import org.ocpteam.interfaces.IAuthenticable;
 import org.ocpteam.interfaces.IDataModel;
@@ -12,6 +11,7 @@ import org.ocpteam.interfaces.IPersistentMap;
 import org.ocpteam.interfaces.IUser;
 import org.ocpteam.interfaces.IUserCreation;
 import org.ocpteam.interfaces.IUserManagement;
+import org.ocpteam.serializable.AddressUser;
 
 /**
  * DHT5 is a distributed hashtable based on AddressDataSource. The data model is

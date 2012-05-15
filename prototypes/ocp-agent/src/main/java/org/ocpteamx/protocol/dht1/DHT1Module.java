@@ -9,12 +9,12 @@ import java.net.SocketTimeoutException;
 import java.util.Set;
 
 import org.ocpteam.component.Protocol;
-import org.ocpteam.entity.EOMObject;
 import org.ocpteam.entity.Session;
 import org.ocpteam.interfaces.IActivity;
 import org.ocpteam.interfaces.IModule;
 import org.ocpteam.interfaces.ITransaction;
 import org.ocpteam.misc.JLG;
+import org.ocpteam.serializable.EOMObject;
 
 public class DHT1Module implements IModule {
 

@@ -2,7 +2,7 @@ package org.ocpteam.interfaces;
 
 import java.util.Map;
 
-import org.ocpteam.entity.Address;
+import org.ocpteam.serializable.Address;
 
 public interface IAddressMap {
 

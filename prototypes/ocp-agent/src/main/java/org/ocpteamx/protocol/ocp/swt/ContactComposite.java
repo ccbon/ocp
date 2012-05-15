@@ -14,7 +14,7 @@ import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.swt.widgets.TreeItem;
 import org.ocpteam.component.Agent;
 import org.ocpteam.component.ContactMap;
-import org.ocpteam.entity.Contact;
+import org.ocpteam.serializable.Contact;
 
 public class ContactComposite extends Composite {
 
