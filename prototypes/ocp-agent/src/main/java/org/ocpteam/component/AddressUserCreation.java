@@ -108,6 +108,9 @@ public class AddressUserCreation extends DSContainer<AddressDataSource>
 		if (ds().usesComponent(ISecurity.class)) {
 			ISecurity security = ds().getComponent(ISecurity.class);
 			this.user = security.getUser(username, password);
+			if (user == null) {
+				throw new Exception("Bad login/password");
+			}
 		} else {
 			Address address = getUserAddress(username, password);
 			byte[] value = map.get(address);
