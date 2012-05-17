@@ -442,6 +442,7 @@ public class DataSourceWindow extends ApplicationWindow implements IComponent {
 		try {
 			JLG.debug("datasource=" + ds);
 			this.ds = ds;
+			ds.readConfig();
 			ds.connect();
 			addProtocolMenu();
 			agent = ds.getComponent(Agent.class);
