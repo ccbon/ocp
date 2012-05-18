@@ -5,6 +5,6 @@ import org.ocpteam.serializable.SecureUser;
 
 public interface IUserBackup {
 
-	Address[] getAddresses(SecureUser secureUser, Address address);
+	Address[] getAddresses(SecureUser secureUser, Address address) throws Exception;
 
 }
