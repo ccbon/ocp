@@ -8,7 +8,7 @@ import org.ocpteam.misc.JLG;
 
 public class TopContainer implements IContainer {
 
-	protected Properties p = new Properties();
+	private Properties p = new Properties();
 
 	private Designer designer;
 
@@ -59,7 +59,7 @@ public class TopContainer implements IContainer {
 	}
 
 	@Override
-	public void setConfig(Properties p) {
+	public void setConfig(Properties p) throws Exception {
 		this.p = p;
 	}
 

@@ -55,6 +55,15 @@ public abstract class DataSource extends TopContainer implements IComponent,
 	 * @throws Exception 
 	 */
 	public void readConfig() throws Exception {
+		if (getConfig().containsKey("name")) {
+			setName(getProperty("name"));
+		}
+	}
+	
+	@Override
+	public void setConfig(Properties p) throws Exception {
+		super.setConfig(p);
+		readConfig();
 	}
 
 	@Override
@@ -64,14 +73,14 @@ public abstract class DataSource extends TopContainer implements IComponent,
 		try {
 			// try to load properties if the format is ok...
 			Properties p = JLG.loadConfig(this.getFile().getAbsolutePath());
-			this.p = p;
+			setConfig(p);
 		} catch (Exception e) {
 		}
 	}
 
 	@Override
 	public void newTemp() throws Exception {
-		p = new Properties();
+		setConfig(new Properties());
 		bIsNew = true;
 
 		file = File.createTempFile("temp" + System.currentTimeMillis(), "tmp");
@@ -92,7 +101,7 @@ public abstract class DataSource extends TopContainer implements IComponent,
 		}
 
 		if (this.getFile() != null) {
-			JLG.storeConfig(this.p, this.getFile().getAbsolutePath());
+			JLG.storeConfig(this.getConfig(), this.getFile().getAbsolutePath());
 		} else {
 			throw new Exception("cannot save: file not set.");
 		}
@@ -125,7 +134,7 @@ public abstract class DataSource extends TopContainer implements IComponent,
 
 	public void setURI(URI uri) {
 		this.uri = uri;
-		p.setProperty("uri", uri.toString());
+		setProperty("uri", uri.toString());
 	}
 
 	public void setContext(Context context) {

@@ -136,6 +136,9 @@ public class RingAddressMap extends DSContainer<AddressDataSource> implements
 			if (ds().agent.isFirstAgent()) {
 				JLG.debug("first agent: ds=" + ds().getName());
 				return;
+			} else {
+				// copy all data on a new ring.
+				return;
 			}
 		}
 		MapModule m = ds().getComponent(MapModule.class);
