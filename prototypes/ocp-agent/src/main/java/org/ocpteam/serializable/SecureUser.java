@@ -38,7 +38,6 @@ public class SecureUser extends AddressUser {
 	}
 	public String getSecretKeyAlgo() {
 		return secretKeyAlgo ;
-	}
-	
+	}	
 	
 }

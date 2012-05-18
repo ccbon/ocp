@@ -8,4 +8,8 @@ public interface IUser extends Serializable {
 
 	void setUsername(String username);
 
+	String getProperty(String key, String defaultValue);
+
+	void setProperty(String key, String value);
+
 }

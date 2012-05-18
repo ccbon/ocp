@@ -13,6 +13,7 @@ import javax.crypto.spec.PBEParameterSpec;
 
 import org.ocpteam.interfaces.IAddressMap;
 import org.ocpteam.interfaces.ISecurity;
+import org.ocpteam.interfaces.IUserBackup;
 import org.ocpteam.misc.JLG;
 import org.ocpteam.serializable.Address;
 import org.ocpteam.serializable.Content;
@@ -165,12 +166,35 @@ public class Security extends DSContainer<AddressDataSource> implements
 		byte[] signature = sign(secureUser, crypted);
 		Content content = new Content(secureUser.getUsername(), crypted,
 				signature);
-		map.put(address, ds().serializer.serialize(content));
+		byte[] s = ds().serializer.serialize(content);
+		if (ds().usesComponent(IUserBackup.class)) {
+			IUserBackup userBackup = ds().getComponent(IUserBackup.class);
+			Address[] addresses = userBackup.getAddresses(secureUser, address);
+			for (Address a : addresses) {
+				map.put(a, s);
+			}
+		} else {
+			map.put(address, s);
+		}
 	}
 
 	@Override
 	public byte[] get(SecureUser secureUser, Address address) throws Exception {
-		byte[] value = map.get(address);
+		byte[] value = null;
+		
+		if (ds().usesComponent(IUserBackup.class)) {
+			IUserBackup userBackup = ds().getComponent(IUserBackup.class);
+			Address[] addresses = userBackup.getAddresses(secureUser, address);
+			for (Address a : addresses) {
+				value = map.get(a);
+				if (value != null) {
+					break;
+				}
+			}
+		} else {
+			value = map.get(address);
+		}
+		
 		if (value == null) {
 			return null;
 		}
