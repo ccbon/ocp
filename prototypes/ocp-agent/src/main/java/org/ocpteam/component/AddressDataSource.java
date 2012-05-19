@@ -1,6 +1,7 @@
 package org.ocpteam.component;
 
 import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.EOFException;
 import java.io.Serializable;
 import java.net.Socket;
@@ -109,6 +110,8 @@ public abstract class AddressDataSource extends DSPDataSource {
 
 			socket = contactMap.getTcpClient(c).borrowSocket(message);
 			DataInputStream in = new DataInputStream(socket.getInputStream());
+			DataOutputStream out = new DataOutputStream(socket.getOutputStream());
+			int i = 0;
 			while (true) {
 				Serializable serializable = protocol.getStreamSerializer()
 						.readObject(in);
@@ -120,6 +123,10 @@ public abstract class AddressDataSource extends DSPDataSource {
 						.readObject(in);
 
 				localmap.put(key, value);
+				// write ack
+				JLG.debug("about to write ack " + i);
+				protocol.getStreamSerializer().writeObject(out, i);
+				i++;
 			}
 			contactMap.getTcpClient(c).returnSocket(socket);
 		} catch (SocketException e) {

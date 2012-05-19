@@ -116,6 +116,9 @@ public class MapModule implements IModule {
 					protocol.getStreamSerializer().writeObject(out, address);
 					protocol.getStreamSerializer().writeObject(out,
 							map.get(address));
+					// wait for ACK (null object)
+					int i = (Integer) protocol.getStreamSerializer().readObject(in);
+					JLG.debug("ack received: " + i);		
 				}
 			}
 
