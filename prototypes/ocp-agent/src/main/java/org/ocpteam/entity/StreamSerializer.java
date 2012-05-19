@@ -20,7 +20,7 @@ public class StreamSerializer implements IStreamSerializer {
 		if (length == 0) {
 			return null;
 		}
-		if (length > 1000000) {
+		if (length > 1000000 || length < 0) {
 			throw new StreamCorruptedException("Message length = " + length + ". Too big object for allocating space.");
 		}
 		byte[] input = new byte[length];

@@ -89,7 +89,7 @@ public abstract class AddressDataSource extends DSPDataSource {
 	@Override
 	public synchronized void disconnectHard() throws Exception {
 		super.disconnectHard();
-		localMap.clear();
+		//localMap.clear();
 	}
 
 	public void networkPicture() throws Exception {

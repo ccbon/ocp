@@ -137,7 +137,7 @@ public class RingAddressMap extends DSContainer<AddressDataSource> implements
 				JLG.debug("first agent: ds=" + ds().getName());
 				return;
 			} else {
-				// copy all data on a new ring.
+				copyRing();
 				return;
 			}
 		}
@@ -174,6 +174,23 @@ public class RingAddressMap extends DSContainer<AddressDataSource> implements
 			}
 		}
 
+	}
+
+	private void copyRing() throws Exception {
+		// copy all data from an existing ring to this new ring.
+		// find an existing ring (in the contact map, take a contact
+		// with a ring different from our ring.
+		Contact firstContact = ds().contactMap.getOtherContacts()[0];
+		Contact contact = firstContact;
+		while (true) {
+			Map<Address, byte[]> map = ds().localMap(firstContact);
+			getLocalMap().putAll(map);
+			contact = ds().nodeMap.getSuccessor(contact.getNode());
+			if (contact == firstContact) {
+				JLG.debug("break copyRing");
+				break;
+			}
+		}
 	}
 
 	@Override
@@ -231,7 +248,7 @@ public class RingAddressMap extends DSContainer<AddressDataSource> implements
 				JLG.println("  Map: " + localMap);
 			}
 		}
-		
+
 	}
 
 }
