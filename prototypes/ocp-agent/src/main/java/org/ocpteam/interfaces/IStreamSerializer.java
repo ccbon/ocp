@@ -1,8 +1,7 @@
 package org.ocpteam.interfaces;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.Serializable;
+import java.net.Socket;
 
 /**
  * A Stream serializer allow to extract a complete message from a stream.
@@ -14,11 +13,15 @@ import java.io.Serializable;
  */
 public interface IStreamSerializer {
 
-	Serializable readObject(DataInputStream in) throws Exception;
+	Serializable readObject(Socket socket) throws Exception;
 	
-	void writeObject(DataOutputStream out, Serializable o) throws Exception;
-	void writeEOM(DataOutputStream out) throws Exception;
+	void writeObject(Socket socket, Serializable o) throws Exception;
+	void writeEOM(Socket socket) throws Exception;
 	
 	byte[] serialize(Serializable o) throws Exception;
+
+	void writeAck(Socket socket) throws Exception;
+
+	void readAck(Socket socket) throws Exception;
 
 }

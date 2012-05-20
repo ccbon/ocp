@@ -1,6 +1,5 @@
 package org.ocpteamx.protocol.dht0;
 
-import java.io.DataInputStream;
 import java.io.EOFException;
 import java.io.Serializable;
 import java.io.StreamCorruptedException;
@@ -102,11 +101,9 @@ public class DHTDataModel extends DSContainer<DHTDataSource> implements IMapData
 					try {
 						socket = ds().contactMap.getTcpClient(c).borrowSocket(
 								message);
-						DataInputStream in = new DataInputStream(
-								socket.getInputStream());
 						while (true) {
 							Serializable serializable = ds().protocol
-									.getStreamSerializer().readObject(in);
+									.getStreamSerializer().readObject(socket);
 							if (serializable instanceof EOMObject) {
 								break;
 							}

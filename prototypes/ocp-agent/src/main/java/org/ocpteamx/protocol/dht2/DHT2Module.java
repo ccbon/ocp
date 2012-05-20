@@ -1,9 +1,8 @@
 package org.ocpteamx.protocol.dht2;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.EOFException;
 import java.io.Serializable;
+import java.net.Socket;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.util.Set;
@@ -116,7 +115,7 @@ public class DHT2Module implements IModule {
 
 			@Override
 			public void run(Session session, Serializable[] objects,
-					DataInputStream in, DataOutputStream out, Protocol protocol)
+					Socket socket, Protocol protocol)
 					throws Exception {
 				JLG.debug("keyset...");
 				DHT2DataSource ds = (DHT2DataSource) session.ds();
@@ -124,7 +123,7 @@ public class DHT2Module implements IModule {
 				JLG.debug("set=" + set);
 				for (String s : set) {
 					JLG.debug("write " + s);
-					protocol.getStreamSerializer().writeObject(out, s);
+					protocol.getStreamSerializer().writeObject(socket, s);
 				}
 			}
 
@@ -140,7 +139,7 @@ public class DHT2Module implements IModule {
 
 			@Override
 			public void run(Session session, Serializable[] objects,
-					DataInputStream in, DataOutputStream out, Protocol protocol)
+					Socket socket, Protocol protocol)
 					throws Exception {
 				JLG.debug("transfer submap...");
 				// normally we should filter the key where hash(key) >= given
@@ -153,8 +152,8 @@ public class DHT2Module implements IModule {
 					Id address = ds.getAddress(s);
 					if (address.compareTo(nodeId) > 0) {
 						JLG.debug("write " + s);
-						protocol.getStreamSerializer().writeObject(out, s);
-						protocol.getStreamSerializer().writeObject(out,
+						protocol.getStreamSerializer().writeObject(socket, s);
+						protocol.getStreamSerializer().writeObject(socket,
 								ds.retrieve(s));
 						ds.destroy(s);
 					}
@@ -173,7 +172,7 @@ public class DHT2Module implements IModule {
 
 			@Override
 			public void run(Session session, Serializable[] objects,
-					DataInputStream in, DataOutputStream out, Protocol protocol)
+					Socket socket, Protocol protocol)
 					throws Exception {
 				JLG.debug("setMap...");
 				// normally we should filter the key where hash(key) >= given
@@ -182,15 +181,15 @@ public class DHT2Module implements IModule {
 				try {
 					while (true) {
 						Serializable serializable = protocol
-								.getStreamSerializer().readObject(in);
+								.getStreamSerializer().readObject(socket);
 						if (serializable instanceof EOMObject) {
 							break;
 						}
 						String key = (String) serializable;
 						String value = (String) protocol.getStreamSerializer()
-								.readObject(in);
+								.readObject(socket);
 						ds.store(key, value);
-						protocol.getStreamSerializer().writeObject(out, null);
+						protocol.getStreamSerializer().writeObject(socket, null);
 					}
 
 				} catch (SocketException e) {
@@ -213,7 +212,7 @@ public class DHT2Module implements IModule {
 
 			@Override
 			public void run(Session session, Serializable[] objects,
-					DataInputStream in, DataOutputStream out, Protocol protocol)
+					Socket socket, Protocol protocol)
 					throws Exception {
 				JLG.debug("localmap...");
 				DHT2DataSource ds = (DHT2DataSource) session.ds();
@@ -221,8 +220,8 @@ public class DHT2Module implements IModule {
 				JLG.debug("set=" + set);
 				for (String s : set) {
 					JLG.debug("write " + s);
-					protocol.getStreamSerializer().writeObject(out, s);
-					protocol.getStreamSerializer().writeObject(out,
+					protocol.getStreamSerializer().writeObject(socket, s);
+					protocol.getStreamSerializer().writeObject(socket,
 							ds.retrieve(s));
 				}
 

@@ -2,8 +2,11 @@ package org.ocpteamx.protocol.dht5;
 
 import org.ocpteam.component.AddressDataSource;
 import org.ocpteam.component.AddressUserCreation;
+import org.ocpteam.component.NATTraversal;
 import org.ocpteam.component.PersistentFileMap;
 import org.ocpteam.component.Security;
+import org.ocpteam.component.TCPListener;
+import org.ocpteam.component.UDPListener;
 import org.ocpteam.component.UserBackup;
 import org.ocpteam.component.UserManagement;
 import org.ocpteam.fs.BFSDataModel;
@@ -38,8 +41,8 @@ public class DHT5v2DataSource extends AddressDataSource {
 		addComponent(ISecurity.class, new Security());
 		addComponent(IUserBackup.class, new UserBackup());
 		
-		//getComponent(TCPListener.class).addComponent(NATTraversal.class);
-		//getComponent(UDPListener.class).addComponent(NATTraversal.class);
+		getComponent(TCPListener.class).addComponent(NATTraversal.class);
+		getComponent(UDPListener.class).addComponent(NATTraversal.class);
 	}
 
 	@Override

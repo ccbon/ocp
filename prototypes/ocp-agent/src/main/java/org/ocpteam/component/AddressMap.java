@@ -1,7 +1,5 @@
 package org.ocpteam.component;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.EOFException;
 import java.io.Serializable;
 import java.net.Socket;
@@ -91,16 +89,15 @@ public class AddressMap extends DSContainer<AddressDataSource> implements IAddre
 		try {
 
 			socket = ds().contactMap.getTcpClient(predecessor).borrowSocket(message);
-			DataInputStream in = new DataInputStream(socket.getInputStream());
 			while (true) {
 				Serializable serializable = ds().protocol.getStreamSerializer()
-						.readObject(in);
+						.readObject(socket);
 				if (serializable instanceof EOMObject) {
 					break;
 				}
 				Address address = (Address) serializable;
 				byte[] value = (byte[]) ds().protocol.getStreamSerializer()
-						.readObject(in);
+						.readObject(socket);
 				localMap.put(address, value);
 			}
 			ds().contactMap.getTcpClient(predecessor).returnSocket(socket);
@@ -132,20 +129,16 @@ public class AddressMap extends DSContainer<AddressDataSource> implements IAddre
 		InputFlow message = new InputFlow(m.setMap());
 		Socket socket = null;
 		try {
-
 			socket = ds().contactMap.getTcpClient(predecessor).borrowSocket(message);
-			DataOutputStream out = new DataOutputStream(
-					socket.getOutputStream());
-			DataInputStream in = new DataInputStream(socket.getInputStream());
 			for (Address address : localMap.keySet()) {
-				ds().protocol.getStreamSerializer().writeObject(out, address);
-				ds().protocol.getStreamSerializer().writeObject(out,
+				ds().protocol.getStreamSerializer().writeObject(socket, address);
+				ds().protocol.getStreamSerializer().writeObject(socket,
 						localMap.get(address));
 				// read an acknowledgement for avoiding to sent to much on the
 				// stream.
-				ds().protocol.getStreamSerializer().readObject(in);
+				ds().protocol.getStreamSerializer().readObject(socket);
 			}
-			ds().protocol.getStreamSerializer().writeEOM(out);
+			ds().protocol.getStreamSerializer().writeEOM(socket);
 			ds().contactMap.getTcpClient(predecessor).returnSocket(socket);
 			socket = null;
 		} catch (SocketException e) {

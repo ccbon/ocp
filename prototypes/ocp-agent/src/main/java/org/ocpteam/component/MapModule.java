@@ -1,9 +1,8 @@
 package org.ocpteam.component;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.EOFException;
 import java.io.Serializable;
+import java.net.Socket;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.util.HashSet;
@@ -105,20 +104,26 @@ public class MapModule implements IModule {
 		return new IActivity() {
 
 			@Override
-			public void run(Session session, Serializable[] objects,
-					DataInputStream in, DataOutputStream out, Protocol protocol)
+			public void run(Session session, Serializable[] objects, Socket socket, Protocol protocol)
 					throws Exception {
+				try {
 				JLG.debug("localmap...");
 				Map<Address, byte[]> map = session.ds().getComponent(IAddressMap.class).getLocalMap();
 				Set<Address> set = map.keySet();
 				for (Address address : set) {
 					JLG.debug("write " + address);
-					protocol.getStreamSerializer().writeObject(out, address);
-					protocol.getStreamSerializer().writeObject(out,
+					protocol.getStreamSerializer().writeObject(socket, address);
+					protocol.getStreamSerializer().readAck(socket);
+					JLG.debug("sha1(value)=" + JLG.sha1(map.get(address)));
+					protocol.getStreamSerializer().writeObject(socket,
 							map.get(address));
 					// wait for ACK (null object)
-					int i = (Integer) protocol.getStreamSerializer().readObject(in);
+					int i = (Integer) protocol.getStreamSerializer().readObject(socket);
 					JLG.debug("ack received: " + i);		
+				}
+				} catch (Exception e) {
+					e.printStackTrace();
+					throw e;
 				}
 			}
 
@@ -126,6 +131,7 @@ public class MapModule implements IModule {
 			public int getId() {
 				return GETLOCALMAP;
 			}
+
 		};
 	}
 	
@@ -134,21 +140,21 @@ public class MapModule implements IModule {
 
 			@Override
 			public void run(Session session, Serializable[] objects,
-					DataInputStream in, DataOutputStream out, Protocol protocol)
+					Socket socket, Protocol protocol)
 					throws Exception {
 				JLG.debug("setMap...");
 				try {
 					while (true) {
 						Serializable serializable = protocol
-								.getStreamSerializer().readObject(in);
+								.getStreamSerializer().readObject(socket);
 						if (serializable instanceof EOMObject) {
 							break;
 						}
 						Address address = (Address) serializable;
 						byte[] value = (byte[]) protocol.getStreamSerializer()
-								.readObject(in);
+								.readObject(socket);
 						session.ds().getComponent(IAddressMap.class).getLocalMap().put(address, value);
-						protocol.getStreamSerializer().writeObject(out, null);
+						protocol.getStreamSerializer().writeObject(socket, null);
 					}
 
 				} catch (SocketException e) {
@@ -171,7 +177,7 @@ public class MapModule implements IModule {
 
 			@Override
 			public void run(Session session, Serializable[] objects,
-					DataInputStream in, DataOutputStream out, Protocol protocol)
+					Socket socket, Protocol protocol)
 					throws Exception {
 				JLG.debug("transfer submap...");
 				Id nodeId = (Id) objects[0];
@@ -180,8 +186,8 @@ public class MapModule implements IModule {
 				for (Address address : set) {
 					if (address.compareTo(nodeId) > 0) {
 						JLG.debug("write " + address);
-						protocol.getStreamSerializer().writeObject(out, address);
-						protocol.getStreamSerializer().writeObject(out,
+						protocol.getStreamSerializer().writeObject(socket, address);
+						protocol.getStreamSerializer().writeObject(socket,
 								localMap.get(address));
 						localMap.remove(address);
 					}

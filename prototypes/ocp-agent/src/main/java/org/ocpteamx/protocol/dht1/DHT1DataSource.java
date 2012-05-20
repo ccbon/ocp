@@ -1,7 +1,5 @@
 package org.ocpteamx.protocol.dht1;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.EOFException;
 import java.io.Serializable;
 import java.net.Socket;
@@ -97,16 +95,15 @@ public class DHT1DataSource extends DSPDataSource {
 		try {
 
 			socket = contactMap.getTcpClient(predecessor).borrowSocket(message);
-			DataInputStream in = new DataInputStream(socket.getInputStream());
 			while (true) {
 				Serializable serializable = protocol.getStreamSerializer()
-						.readObject(in);
+						.readObject(socket);
 				if (serializable instanceof EOMObject) {
 					break;
 				}
 				String key = (String) serializable;
 				String value = (String) protocol.getStreamSerializer()
-						.readObject(in);
+						.readObject(socket);
 				store(key, value);
 			}
 			contactMap.getTcpClient(predecessor).returnSocket(socket);
@@ -138,21 +135,18 @@ public class DHT1DataSource extends DSPDataSource {
 		try {
 
 			socket = contactMap.getTcpClient(predecessor).borrowSocket(message);
-			DataOutputStream out = new DataOutputStream(
-					socket.getOutputStream());
-			DataInputStream in = new DataInputStream(socket.getInputStream());
 			for (String key : map.keySet()) {
-				protocol.getStreamSerializer().writeObject(out, key);
-				protocol.getStreamSerializer().writeObject(out, map.get(key));
+				protocol.getStreamSerializer().writeObject(socket, key);
+				protocol.getStreamSerializer().writeObject(socket, map.get(key));
 				// read an acknowledgement for avoiding to sent to much on the
 				// stream.
 				Serializable serializable = protocol.getStreamSerializer()
-						.readObject(in);
+						.readObject(socket);
 				if (serializable instanceof EOMObject) {
 					break;
 				}
 			}
-			protocol.getStreamSerializer().writeEOM(out);
+			protocol.getStreamSerializer().writeEOM(socket);
 			contactMap.getTcpClient(predecessor).returnSocket(socket);
 			socket = null;
 		} catch (SocketException e) {

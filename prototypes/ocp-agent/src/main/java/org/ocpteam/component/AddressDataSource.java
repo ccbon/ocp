@@ -1,7 +1,5 @@
 package org.ocpteam.component;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.EOFException;
 import java.io.Serializable;
 import java.net.Socket;
@@ -109,32 +107,34 @@ public abstract class AddressDataSource extends DSPDataSource {
 		try {
 
 			socket = contactMap.getTcpClient(c).borrowSocket(message);
-			DataInputStream in = new DataInputStream(socket.getInputStream());
-			DataOutputStream out = new DataOutputStream(socket.getOutputStream());
 			int i = 0;
 			while (true) {
 				Serializable serializable = protocol.getStreamSerializer()
-						.readObject(in);
+						.readObject(socket);
+				protocol.getStreamSerializer().writeAck(socket);
 				if (serializable instanceof EOMObject) {
 					break;
 				}
 				Address key = (Address) serializable;
+				JLG.debug("address=" + key);
 				byte[] value = (byte[]) protocol.getStreamSerializer()
-						.readObject(in);
-
+						.readObject(socket);
+				JLG.debug("sha1(value)=" + JLG.sha1(value));
 				localmap.put(key, value);
 				// write ack
 				JLG.debug("about to write ack " + i);
-				protocol.getStreamSerializer().writeObject(out, i);
+				protocol.getStreamSerializer().writeObject(socket, i);
 				i++;
 			}
 			contactMap.getTcpClient(c).returnSocket(socket);
+			socket = null;
 		} catch (SocketException e) {
 		} catch (EOFException e) {
 		} catch (SocketTimeoutException e) {
 		} catch (NotAvailableContactException e) {
 		} finally {
 			if (socket != null) {
+				JLG.debug("about to close the socket. For info socket buffer size:" + socket.getReceiveBufferSize());
 				socket.close();
 				socket = null;
 			}

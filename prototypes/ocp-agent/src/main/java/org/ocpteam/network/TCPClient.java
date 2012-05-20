@@ -1,7 +1,5 @@
 package org.ocpteam.network;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.EOFException;
 import java.io.Serializable;
 import java.net.InetSocketAddress;
@@ -88,11 +86,9 @@ public class TCPClient {
 
 	private Serializable request0(Serializable input, Socket socket) throws Exception {
 		JLG.debug("about to write input on the socket. input=" + input);
-		DataOutputStream out = new DataOutputStream(socket.getOutputStream());
-		DataInputStream in = new DataInputStream(socket.getInputStream());
-		protocol.getStreamSerializer().writeObject(out, input);
+		protocol.getStreamSerializer().writeObject(socket, input);
 		JLG.debug("input flush");
-		Serializable output = protocol.getStreamSerializer().readObject(in);
+		Serializable output = protocol.getStreamSerializer().readObject(socket);
 		JLG.debug("output received");
 		return output;
 	}
@@ -130,14 +126,13 @@ public class TCPClient {
 		}
 	}
 
-	private void send0(Serializable input, Socket socket) throws Exception {
+	public void send0(Serializable input, Socket socket) throws Exception {
 		JLG.debug("about to write input on the socket. input=" + input);
-		DataOutputStream out = new DataOutputStream(socket.getOutputStream());
-		protocol.getStreamSerializer().writeObject(out, input);
+		protocol.getStreamSerializer().writeObject(socket, input);
 		JLG.debug("input flush");
 	}
 
-	private Socket createNewSocket() throws Exception {
+	public Socket createNewSocket() throws Exception {
 		JLG.debug("start new socket on " + hostname + ":" + port);
 		Socket socket = new Socket();
 		// socket.setSoTimeout(1000);

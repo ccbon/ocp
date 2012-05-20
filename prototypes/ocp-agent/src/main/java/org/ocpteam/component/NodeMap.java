@@ -8,7 +8,6 @@ import java.util.TreeMap;
 
 import org.ocpteam.interfaces.INodeMap;
 import org.ocpteam.misc.Id;
-import org.ocpteam.misc.JLG;
 import org.ocpteam.serializable.Address;
 import org.ocpteam.serializable.Contact;
 import org.ocpteam.serializable.Node;
@@ -70,8 +69,8 @@ public class NodeMap extends DSContainer<DSPDataSource> implements INodeMap {
 				}
 			}
 		}
-		JLG.debug("nodeId=" + nodeId);
-		JLG.debug("agent=" + nodeMap.get(nodeId));
+		//JLG.debug("nodeId=" + nodeId);
+		//JLG.debug("agent=" + nodeMap.get(nodeId));
 		return nodeId;
 	}
 

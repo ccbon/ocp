@@ -55,10 +55,8 @@ public class OCPProtocol extends Protocol {
 	
 	@Override
 	public void process(Socket clientSocket) throws Exception {
-		DataInputStream in = new DataInputStream(clientSocket.getInputStream());
-		DataOutputStream out = new DataOutputStream(clientSocket.getOutputStream());
 		JLG.debug("about to read object");
-		Serializable o = getStreamSerializer().readObject(in);
+		Serializable o = getStreamSerializer().readObject(clientSocket);
 		if (o instanceof InputMessage) {
 			InputMessage inputMessage = (InputMessage) o;
 			Session session = new Session(ds(), clientSocket);
@@ -69,12 +67,12 @@ public class OCPProtocol extends Protocol {
 			}
 			Serializable s = inputMessage.transaction.run(session,
 					inputMessage.objects);
-			getStreamSerializer().writeObject(out, s);
+			getStreamSerializer().writeObject(clientSocket, s);
 		}
 		if (o instanceof byte[]) {
 			byte[] input = (byte[]) o;
 			byte[] output = oldprocess(input, clientSocket);
-			getStreamSerializer().writeObject(out, output);
+			getStreamSerializer().writeObject(clientSocket, output);
 		}
 	}
 

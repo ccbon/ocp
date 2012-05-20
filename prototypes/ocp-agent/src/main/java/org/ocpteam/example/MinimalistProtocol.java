@@ -1,7 +1,5 @@
 package org.ocpteam.example;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.net.Socket;
 
 import org.ocpteam.component.Protocol;
@@ -12,12 +10,10 @@ public class MinimalistProtocol extends Protocol implements IProtocol {
 
 	@Override
 	public void process(Socket clientSocket) throws Exception {
-		DataInputStream in = new DataInputStream(clientSocket.getInputStream());
-		DataOutputStream out = new DataOutputStream(clientSocket.getOutputStream());
-		String input = (String) getStreamSerializer().readObject(in);
+		String input = (String) getStreamSerializer().readObject(clientSocket);
 		JLG.debug("input = " + input);
 		JLG.debug("return ok");
-		getStreamSerializer().writeObject(out, "ok");
+		getStreamSerializer().writeObject(clientSocket, "ok");
 	}
 
 }

@@ -1,7 +1,5 @@
 package org.ocpteam.component;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.net.DatagramPacket;
@@ -73,16 +71,14 @@ public class Protocol extends DSContainer<DataSource> implements IProtocol {
 	public void process(Socket clientSocket) throws Exception {
 		// read the first object
 		JLG.debug("about to read object");
-		DataInputStream in = new DataInputStream(clientSocket.getInputStream());
-		DataOutputStream out = new DataOutputStream(clientSocket.getOutputStream());
-		Serializable o = getStreamSerializer().readObject(in);
+		Serializable o = getStreamSerializer().readObject(clientSocket);
 		if (o instanceof InputMessage) {
 			InputMessage inputMessage = (InputMessage) o;
 			Session session = new Session(ds(), clientSocket);
 			inputMessage.transaction = getMap().get(inputMessage.transid);
 			Serializable s = inputMessage.transaction.run(session,
 					inputMessage.objects);
-			getStreamSerializer().writeObject(out, s);
+			getStreamSerializer().writeObject(clientSocket, s);
 		}
 		if (o instanceof InputFlow) {
 			InputFlow inputFlow = (InputFlow) o;
@@ -91,8 +87,8 @@ public class Protocol extends DSContainer<DataSource> implements IProtocol {
 			if (inputFlow.activity == null) {
 				throw new Exception("activity not found. inputFlow.activityid=" + inputFlow.activityid);
 			}
-			inputFlow.activity.run(session, inputFlow.objects, in, out, this);
-			getStreamSerializer().writeObject(out, new EOMObject());
+			inputFlow.activity.run(session, inputFlow.objects, clientSocket, this);
+			getStreamSerializer().writeObject(clientSocket, new EOMObject());
 		}
 		JLG.debug("end process");
 	}

@@ -1,8 +1,7 @@
 package org.ocpteamx.protocol.dht0;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.Serializable;
+import java.net.Socket;
 import java.util.Set;
 
 import org.ocpteam.component.Protocol;
@@ -99,14 +98,14 @@ public class DHTModule implements IModule {
 			
 			@Override
 			public void run(Session session, Serializable[] objects,
-					DataInputStream in, DataOutputStream out, Protocol protocol) throws Exception {
+					Socket socket, Protocol protocol) throws Exception {
 				JLG.debug("keyset...");
 				DHTDataSource ds = (DHTDataSource) session.ds();
 				Set<String> set = ds.keySet();
 				JLG.debug("set=" + set);
 				for (String s : set) {
 					JLG.debug("write " + s);
-					protocol.getStreamSerializer().writeObject(out, s);
+					protocol.getStreamSerializer().writeObject(socket, s);
 				}
 			}
 
