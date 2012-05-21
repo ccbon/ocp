@@ -48,11 +48,13 @@ public class TCPServer {
 						}
 					}
 					serverSocket = new ServerSocket();
+					serverSocket.setReceiveBufferSize(32768);
 					serverSocket.setReuseAddress(true);
 					serverSocket.bind(new InetSocketAddress(port));
 					while (true) {
 						JLG.debug("waiting for a client connection");
 						final Socket socket = serverSocket.accept();
+						socket.setSendBufferSize(32768);
 						pool.execute(new Runnable() {
 
 							@Override

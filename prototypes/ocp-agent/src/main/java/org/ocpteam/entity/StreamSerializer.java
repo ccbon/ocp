@@ -26,19 +26,28 @@ public class StreamSerializer implements IStreamSerializer {
 			throw new StreamCorruptedException("Message length = " + length + ". Too big object for allocating space.");
 		}
 		byte[] input = new byte[length];
-		int so_rcvbuf = 2048; //socket.getReceiveBufferSize() - 1192;
+		int so_rcvbuf = 32768; //socket.getReceiveBufferSize() - 1192;
 		int remaining = length;
 		int start = 0;
 		while (remaining > so_rcvbuf) {
 			JLG.debug("reading " + so_rcvbuf + " byte. start=" + start);
-			in.read(input, start, so_rcvbuf);
+			read(in, input, start, so_rcvbuf);
 			remaining -= so_rcvbuf;
 			start += so_rcvbuf;
 			writeAck(socket);
 		}
 		JLG.debug("reading " + remaining + " byte. start=" + start);
-		in.read(input, start, remaining);
+		read(in, input, start, remaining);
 		return JLG.deserialize(input);
+	}
+
+	private void read(DataInputStream in, byte[] input, int start, int length) throws Exception {
+		int total_readed = 0;
+		while (total_readed < length) {
+			int readed = in.read(input, start + total_readed, length - total_readed);
+			total_readed += readed;
+			JLG.debug("total_readed " + total_readed);
+		}
 	}
 
 	@Override
@@ -70,8 +79,9 @@ public class StreamSerializer implements IStreamSerializer {
 			out.writeInt(input.length);
 			out.flush();
 			JLG.debug("about to write the content");
+			JLG.debug("SO_RCVBUF=" + socket.getReceiveBufferSize() + " and SO_SNDBUF=" + socket.getSendBufferSize());
 			
-			int so_rcvbuf = 2048; //socket.getReceiveBufferSize() - 1192;
+			int so_rcvbuf = 32768; //socket.getReceiveBufferSize() - 1192;
 			int remaining = input.length;
 			int start = 0;
 			while (remaining > so_rcvbuf) {

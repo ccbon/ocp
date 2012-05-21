@@ -135,6 +135,8 @@ public class TCPClient {
 	public Socket createNewSocket() throws Exception {
 		JLG.debug("start new socket on " + hostname + ":" + port);
 		Socket socket = new Socket();
+		socket.setSendBufferSize(32768);
+		socket.setReceiveBufferSize(32768);
 		// socket.setSoTimeout(1000);
 		// socket.setReuseAddress(true);
 		socket.connect(new InetSocketAddress(hostname, port));
