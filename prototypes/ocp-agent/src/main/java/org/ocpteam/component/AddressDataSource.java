@@ -111,7 +111,6 @@ public abstract class AddressDataSource extends DSPDataSource {
 			while (true) {
 				Serializable serializable = protocol.getStreamSerializer()
 						.readObject(socket);
-				protocol.getStreamSerializer().writeAck(socket);
 				if (serializable instanceof EOMObject) {
 					break;
 				}

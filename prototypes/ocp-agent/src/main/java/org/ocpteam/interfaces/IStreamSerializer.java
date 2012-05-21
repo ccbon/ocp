@@ -20,8 +20,4 @@ public interface IStreamSerializer {
 	
 	byte[] serialize(Serializable o) throws Exception;
 
-	void writeAck(Socket socket) throws Exception;
-
-	void readAck(Socket socket) throws Exception;
-
 }

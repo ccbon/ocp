@@ -113,7 +113,6 @@ public class MapModule implements IModule {
 				for (Address address : set) {
 					JLG.debug("write " + address);
 					protocol.getStreamSerializer().writeObject(socket, address);
-					protocol.getStreamSerializer().readAck(socket);
 					JLG.debug("sha1(value)=" + JLG.sha1(map.get(address)));
 					protocol.getStreamSerializer().writeObject(socket,
 							map.get(address));

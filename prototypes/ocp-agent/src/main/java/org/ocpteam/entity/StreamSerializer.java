@@ -34,7 +34,6 @@ public class StreamSerializer implements IStreamSerializer {
 			read(in, input, start, so_rcvbuf);
 			remaining -= so_rcvbuf;
 			start += so_rcvbuf;
-			writeAck(socket);
 		}
 		JLG.debug("reading " + remaining + " byte. start=" + start);
 		read(in, input, start, remaining);
@@ -50,19 +49,6 @@ public class StreamSerializer implements IStreamSerializer {
 		}
 	}
 
-	@Override
-	public void writeAck(Socket socket) throws Exception {
-		socket.getOutputStream().write(0);
-		socket.getOutputStream().flush();
-	}
-
-	@Override
-	public void readAck(Socket socket) throws Exception {
-		int ack = socket.getInputStream().read();
-		if (ack != 0) {
-			throw new Exception("ack should be 0. it is " + ack);
-		}
-	}
 
 	@Override
 	public void writeObject(Socket socket, Serializable o) throws Exception {
@@ -90,7 +76,6 @@ public class StreamSerializer implements IStreamSerializer {
 				out.flush();
 				remaining -= so_rcvbuf;
 				start += so_rcvbuf;
-				readAck(socket);
 			}
 			JLG.debug("reading " + remaining + " byte. start=" + start);
 			out.write(input, start, remaining);
