@@ -135,7 +135,19 @@ public class RingAddressMap extends DSContainer<AddressDataSource> implements
 				JLG.debug("first agent: ds=" + ds().getName());
 				return;
 			} else {
-				copyRing();
+				ds().client.getExecutor().execute(new Runnable() {
+					
+					@Override
+					public void run() {
+						try {
+							copyRing();
+						} catch (Exception e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
+				});
+				
 				return;
 			}
 		}
