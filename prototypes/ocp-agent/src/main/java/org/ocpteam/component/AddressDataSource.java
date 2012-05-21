@@ -107,7 +107,6 @@ public abstract class AddressDataSource extends DSPDataSource {
 		try {
 
 			socket = contactMap.getTcpClient(c).borrowSocket(message);
-			int i = 0;
 			while (true) {
 				Serializable serializable = protocol.getStreamSerializer()
 						.readObject(socket);
@@ -120,10 +119,6 @@ public abstract class AddressDataSource extends DSPDataSource {
 						.readObject(socket);
 				JLG.debug("sha1(value)=" + JLG.sha1(value));
 				localmap.put(key, value);
-				// write ack
-				JLG.debug("about to write ack " + i);
-				protocol.getStreamSerializer().writeObject(socket, i);
-				i++;
 			}
 			contactMap.getTcpClient(c).returnSocket(socket);
 			socket = null;
