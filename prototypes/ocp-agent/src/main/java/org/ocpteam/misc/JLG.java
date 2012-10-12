@@ -389,6 +389,10 @@ public class JLG {
 		}
 	}
 
+	public static String dirname(String dir) {
+		return dir.substring(0, dir.lastIndexOf('/'));
+	}
+
 
 
 }

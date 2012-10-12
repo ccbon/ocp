@@ -10,6 +10,7 @@ import org.ocpteamx.protocol.dht4.DHT4DataSource;
 import org.ocpteamx.protocol.dht5.DHT5DataSource;
 import org.ocpteamx.protocol.dht5.DHT5v2DataSource;
 import org.ocpteamx.protocol.ftp.FTPDataSource;
+import org.ocpteamx.protocol.gdrive.GDriveDataSource;
 import org.ocpteamx.protocol.map.MapDataSource;
 import org.ocpteamx.protocol.ocp.OCPDataSource;
 import org.ocpteamx.protocol.sftp.SFTPDataSource;
@@ -40,6 +41,7 @@ public class DefaultApplication extends TopContainer {
 		dsf.addComponent(DHT4DataSource.class);
 		dsf.addComponent(DHT5DataSource.class);
 		dsf.addComponent(DHT5v2DataSource.class);
+		dsf.addComponent(GDriveDataSource.class);
 		
 		addComponent(DataSourceWindow.class);
 	}

@@ -5,7 +5,7 @@ import java.io.File;
 import org.eclipse.jface.action.Action;
 import org.eclipse.swt.widgets.TableItem;
 import org.ocpteam.misc.JLG;
-
+import org.ocpteam.misc.swt.QuickMessage;
 
 public class CheckOutAction extends Action {
 
@@ -22,7 +22,7 @@ public class CheckOutAction extends Action {
 	public void run() {
 		JLG.debug("Check Out");
 		if (!(w.explorerComposite instanceof ExplorerComposite)) {
-			return;			
+			return;
 		}
 
 		ExplorerComposite composite = (ExplorerComposite) w.explorerComposite;
@@ -36,8 +36,8 @@ public class CheckOutAction extends Action {
 				String remoteDir = composite.currentRemoteDirString;
 				composite.fs.checkout(remoteDir, name, localDir);
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
+				QuickMessage.exception(w.getShell(), "Checkout failed.", e);
 			}
 			composite.reloadLocalDirectoryTable();
 		}
@@ -46,7 +46,7 @@ public class CheckOutAction extends Action {
 
 	public boolean canRun() {
 		if (!(w.explorerComposite instanceof ExplorerComposite)) {
-			return false;			
+			return false;
 		}
 		ExplorerComposite composite = (ExplorerComposite) w.explorerComposite;
 		if (composite == null) {

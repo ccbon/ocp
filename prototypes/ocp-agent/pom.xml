@@ -205,7 +205,18 @@
 			<artifactId>javassist</artifactId>
 			<version>3.12.1.GA</version>
 		</dependency>
+		
+		<dependency>
+			<groupId>com.google.apis</groupId>
+			<artifactId>google-api-services-drive</artifactId>
+			<version>v2-rev5-1.7.2-beta</version>
+		</dependency>
 
+		<dependency>
+			<groupId>com.google.api-client</groupId>
+			<artifactId>google-api-client</artifactId>
+			<version>1.10.3-beta</version>
+		</dependency>
 
 	</dependencies>
 
@@ -245,6 +256,21 @@
 			<name>JCraft JSch Repository</name>
 			<layout>default</layout>
 			<url>http://jsch.sourceforge.net/maven2</url>
+		</repository>
+		
+		<!-- Google Drive Repositories -->
+		<repository>
+			<id>googleapis</id>
+			<url>http://mavenrepo.google-api-java-client.googlecode.com/hg/</url>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</repository>
+		
+		<repository>
+			<id>google-releases</id>
+			<name>Google Releases</name>
+			<url>https://oss.sonatype.org/content/repositories/google-releases</url>
 		</repository>
 
 	</repositories>
