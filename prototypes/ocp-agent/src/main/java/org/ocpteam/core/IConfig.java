@@ -1,4 +1,4 @@
-package org.ocpteam.interfaces;
+package org.ocpteam.core;
 
 import java.util.Iterator;
 import java.util.Properties;

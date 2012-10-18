@@ -5,9 +5,11 @@ import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
+import java.nio.file.attribute.DosFileAttributes;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.HashSet;
 
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
@@ -47,6 +49,9 @@ import org.ocpteam.interfaces.IFile;
 import org.ocpteam.interfaces.IFileSystem;
 import org.ocpteam.misc.JLG;
 import org.ocpteam.misc.swt.QuickMessage;
+import org.ocpteam.win32.WindowsKernel32;
+
+import com.sun.jna.Platform;
 
 public class ExplorerComposite extends Composite {
 	private static final String DIRECTORY_SIZE = "";
@@ -134,7 +139,8 @@ public class ExplorerComposite extends Composite {
 			public void menuDetected(MenuDetectEvent arg0) {
 				JLG.debug("opening context menu");
 				final MenuManager myMenu = new MenuManager("xxx");
-				final Menu menu = myMenu.createContextMenu(ExplorerComposite.this.w.getShell());
+				final Menu menu = myMenu
+						.createContextMenu(ExplorerComposite.this.w.getShell());
 
 				int sel = localDirectoryTable.getSelection().length;
 				if (sel > 0) {
@@ -156,8 +162,7 @@ public class ExplorerComposite extends Composite {
 					}
 				}
 				if (sel == 0) {
-					myMenu.add(new CreateNewDirAction(
-							ExplorerComposite.this));
+					myMenu.add(new CreateNewDirAction(ExplorerComposite.this));
 				}
 				menu.setEnabled(true);
 				myMenu.setVisible(true);
@@ -232,19 +237,16 @@ public class ExplorerComposite extends Composite {
 				switch (e.keyCode) {
 				case SWT.KEYPAD_CR:
 				case '\r':
-					(new OpenRemoteFileAction(ExplorerComposite.this))
-							.run();
+					(new OpenRemoteFileAction(ExplorerComposite.this)).run();
 					break;
 				case SWT.F2:
-					(new RenameRemoteFileAction(ExplorerComposite.this))
-							.run();
+					(new RenameRemoteFileAction(ExplorerComposite.this)).run();
 					break;
 				case SWT.F5:
 					reloadRemoteDirectoryTable();
 					break;
 				case SWT.DEL:
-					(new RemoveRemoteFileAction(ExplorerComposite.this))
-							.run();
+					(new RemoveRemoteFileAction(ExplorerComposite.this)).run();
 				case SWT.ESC:
 					remoteDirectoryTable.deselectAll();
 				default:
@@ -261,7 +263,8 @@ public class ExplorerComposite extends Composite {
 			public void menuDetected(MenuDetectEvent e) {
 				JLG.debug("opening context menu");
 				final MenuManager myMenu = new MenuManager("xxx");
-				final Menu menu = myMenu.createContextMenu(ExplorerComposite.this.w.getShell());
+				final Menu menu = myMenu
+						.createContextMenu(ExplorerComposite.this.w.getShell());
 
 				int sel = remoteDirectoryTable.getSelection().length;
 				if (sel > 0) {
@@ -477,8 +480,7 @@ public class ExplorerComposite extends Composite {
 			}
 			Collection<? extends IFile> set = currentDir.listFiles();
 			// Create an array containing the elements in a set
-			IFile[] array = set
-					.toArray(new IFile[set.size()]);
+			IFile[] array = set.toArray(new IFile[set.size()]);
 			// Order
 			Arrays.sort(array, new Comparator<IFile>() {
 				@Override
@@ -557,6 +559,9 @@ public class ExplorerComposite extends Composite {
 		File[] children = null;
 		if (currentLocalDirectory != null) {
 			children = currentLocalDirectory.listFiles();
+			if (Platform.isWindows()) {
+				children = windowsFilter(children);
+			}
 		} else {
 			children = File.listRoots();
 		}
@@ -603,6 +608,28 @@ public class ExplorerComposite extends Composite {
 			tableItem.setImage(image);
 		}
 
+	}
+
+	private File[] windowsFilter(File[] children) {
+		try {
+			Collection<File> c = new HashSet<File>();
+			for (File f : children) {
+				Path path = f.toPath();
+				DosFileAttributes attr = Files.readAttributes(path,
+						DosFileAttributes.class);
+				if (attr.isHidden() || attr.isSystem()) {
+					continue;
+				}
+				if (WindowsKernel32.isJunctionOrSymlink(f)) {
+					continue;
+				}
+				c.add(f);
+			}
+			File[] result = c.toArray(new File[c.size()]);
+			return result;
+		} catch (Exception e) {
+			return children;
+		}
 	}
 
 	@Override

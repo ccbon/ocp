@@ -218,6 +218,11 @@
 			<version>1.10.3-beta</version>
 		</dependency>
 
+		<dependency>
+			<groupId>net.java.dev.jna</groupId>
+			<artifactId>jna</artifactId>
+			<version>3.4.0</version>
+		</dependency>
 	</dependencies>
 
 	<!-- Repositories -->

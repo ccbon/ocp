@@ -12,45 +12,78 @@ public class TopContainer implements IContainer {
 
 	private Designer designer;
 
+	public TopContainer() {
+		designer = new Designer(this);
+	}
+
 	@Override
 	public <T> boolean usesComponent(Class<T> c) {
-		return designer.uses(c);
+		return designer.uses("", c);
+	}
+
+	@Override
+	public <T> boolean usesComponent(String name, Class<T> c) {
+		return designer.uses(name, c);
 	}
 
 	@Override
 	public <T> T getComponent(Class<T> c) {
-		return designer.get(c);
+		return designer.get("", c);
+	}
+
+	@Override
+	public <T> T getComponent(String name, Class<T> c) {
+		return designer.get(name, c);
 	}
 
 	@Override
 	public <T> T addComponent(Class<T> c) throws Exception {
-		return designer.add(c);
+		return designer.add("", c);
+	}
+
+	@Override
+	public <T> T addComponent(String name, Class<T> c) throws Exception {
+		return designer.add(name, c);
 	}
 
 	@Override
 	public <T> T addComponent(Class<T> c, T instance)
 			throws Exception {
-		return designer.add(c, instance);
+		return designer.add("", c, instance);
+	}
+
+	@Override
+	public <T> T addComponent(String name, Class<T> c, T instance)
+			throws Exception {
+		return designer.add(name, c, instance);
 	}
 
 	@Override
 	public <T> void replaceComponent(Class<T> c, T instance)
 			throws Exception {
-		designer.replace(c, instance);
+		designer.replace("", c, instance);
+	}
+
+	@Override
+	public <T> void replaceComponent(String name, Class<T> c, T instance)
+			throws Exception {
+		designer.replace(name, c, instance);
+		
 	}
 
 	@Override
 	public <T> T removeComponent(Class<T> c) {
-		return designer.remove(c);
+		return designer.remove("", c);
+	}
+
+	@Override
+	public <T> T removeComponent(String name, Class<T> c) {
+		return designer.remove(name, c);
 	}
 
 	@Override
 	public Iterator<Object> iteratorComponent() {
 		return designer.iterator();
-	}
-
-	public TopContainer() {
-		designer = new Designer(this);
 	}
 
 	@Override
@@ -108,7 +141,6 @@ public class TopContainer implements IContainer {
 
 	@Override
 	public Collection<Object> components() {
-		return designer.getMap().values();
+		return designer.components();
 	}
-
 }
