@@ -24,7 +24,7 @@ public class Storage {
 								+ agent.getName());
 		IPersistentMap persistentMap = agent.ds().getComponent(
 				IPersistentMap.class);
-		persistentMap.setRoot(root);
+		persistentMap.setURI(root);
 		contentMap = persistentMap;
 		this.agent = agent;
 	}

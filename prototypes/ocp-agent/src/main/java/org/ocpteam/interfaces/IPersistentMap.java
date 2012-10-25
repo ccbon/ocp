@@ -11,8 +11,8 @@ import org.ocpteam.serializable.Address;
 public interface IPersistentMap extends Map<Address, byte[]> {
 	/**
 	 * Set the root directory on the hard drive file system.
-	 * @param root
+	 * @param uri
 	 * @throws Exception
 	 */
-	public void setRoot(String root) throws Exception;
+	public void setURI(String uri) throws Exception;
 }

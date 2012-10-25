@@ -118,6 +118,7 @@ public abstract class DataSource extends TopContainer implements IComponent,
 
 	@Override
 	public void close() throws Exception {
+		
 	}
 
 	public File getFile() {

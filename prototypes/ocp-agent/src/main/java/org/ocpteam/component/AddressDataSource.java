@@ -60,10 +60,10 @@ public abstract class AddressDataSource extends DSPDataSource {
 	public void readConfig() throws Exception {
 		super.readConfig();
 		if (usesComponent(IPersistentMap.class)) {
-			String dir = getProperty("localmap.dir", System.getenv("TEMP")
+			String dir = getProperty("uri", System.getenv("TEMP")
 					+ "/" + getProtocolName() + "/" + getName());
 			JLG.debug("dir=" + dir);
-			getComponent(IPersistentMap.class).setRoot(dir);
+			getComponent(IPersistentMap.class).setURI(dir);
 		}
 	}
 

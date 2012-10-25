@@ -11,7 +11,7 @@ import org.ocpteam.interfaces.IPersistentMap;
 import org.ocpteam.misc.JLG;
 import org.ocpteam.serializable.Address;
 
-public class PersistentFileMap implements Map<Address, byte[]>, IPersistentMap {
+public class PersistentFileMap implements IPersistentMap {
 
 	private File dir;
 
@@ -46,7 +46,7 @@ public class PersistentFileMap implements Map<Address, byte[]>, IPersistentMap {
 	public PersistentFileMap() {
 	}
 
-	public void setRoot(String root) throws Exception {
+	public void setURI(String root) throws Exception {
 		dir = new File(root);
 		JLG.mkdir(dir);
 	}
