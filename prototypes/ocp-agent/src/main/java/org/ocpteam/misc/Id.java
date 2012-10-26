@@ -11,6 +11,11 @@ public class Id implements Serializable, Comparable<Id> {
 	 */
 	private static final long serialVersionUID = 1L;
 	private byte[] value;
+	
+	public Id() {
+		
+	}
+	
 	public Id(byte[] val) {
 		value = val;
 	}
@@ -50,6 +55,8 @@ public class Id implements Serializable, Comparable<Id> {
 	public byte[] getBytes() {
 		return value;
 	}
-	
 
+	public void setValue(byte[] value) {
+		this.value = value;
+	}
 }

@@ -5,7 +5,7 @@ import java.io.Serializable;
 import org.ocpteam.interfaces.ISerializer;
 import org.ocpteam.misc.JLG;
 
-public class Serializer implements ISerializer {
+public class JavaSerializer implements ISerializer {
 
 	@Override
 	public byte[] serialize(Serializable s) throws Exception {
