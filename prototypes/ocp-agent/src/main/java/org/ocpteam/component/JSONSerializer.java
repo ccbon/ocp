@@ -105,7 +105,7 @@ public class JSONSerializer implements ISerializer {
 				byte[] i = Base64.decodeBase64(value);
 				f.set(result, i);
 			} else if (jarray.get(1) instanceof JSONArray) {
-				List<Serializable> list = new ArrayList<>();
+				List<Serializable> list = new ArrayList<Serializable>();
 				JSONArray a = jarray.getJSONArray(1);
 				for (int i = 0; i < a.length(); i++) {
 					JSONObject jo = a.getJSONObject(i);

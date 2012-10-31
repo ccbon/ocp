@@ -1,5 +1,8 @@
 package org.ocpteam.serializable;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.ocpteam.interfaces.IStructurable;
 import org.ocpteam.misc.Structure;
 
@@ -7,8 +10,17 @@ public class Test implements IStructurable {
 
 	@Override
 	public Structure toStructure() throws Exception {
-		Structure result = new Structure("Test");
-		result.setField("tt", "int", 1);
+		Structure result = new Structure(getClass());
+		result.setField("a", "int", 1);
+		result.setField("b", "bytes", new byte[]{0,1,2,3});
+		result.setField("c", "substruct", new Address("0123").toStructure());
+		List<Structure> list = new ArrayList<Structure>();
+		list.add(new Address("0123").toStructure());
+		list.add(new Address("2345").toStructure());
+	
+		result.setField("d", "list", list);
+		result.setField("e", "string", "hello\\world");
+		result.setField("f", "decimal", 12345.1234567);
 		return result;
 	}
 

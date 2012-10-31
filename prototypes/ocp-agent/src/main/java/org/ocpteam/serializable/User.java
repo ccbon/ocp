@@ -2,9 +2,11 @@ package org.ocpteam.serializable;
 
 import java.util.Properties;
 
+import org.ocpteam.interfaces.IStructurable;
 import org.ocpteam.interfaces.IUser;
+import org.ocpteam.misc.Structure;
 
-public class User implements IUser {
+public class User implements IUser, IStructurable {
 
 	/**
 	 * 
@@ -22,7 +24,7 @@ public class User implements IUser {
 	public void setUsername(String username) {
 		this.username = username;
 	}
-	
+
 	@Override
 	public String getProperty(String key, String defaultValue) {
 		return properties.getProperty(key, defaultValue);
@@ -30,7 +32,20 @@ public class User implements IUser {
 
 	@Override
 	public void setProperty(String key, String value) {
-		properties.setProperty(key, value);		
+		properties.setProperty(key, value);
 	}
 
+	@Override
+	public Structure toStructure() throws Exception {
+		Structure result = new Structure(getClass());
+		result.setField("username", "string", username);
+		result.setField("properties", properties);
+		return result;
+	}
+
+	@Override
+	public void fromStructure(Structure s) throws Exception {
+		username = s.getString("username");
+		properties = s.getProperties("properties");
+	}
 }

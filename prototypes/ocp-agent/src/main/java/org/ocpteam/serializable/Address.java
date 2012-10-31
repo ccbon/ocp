@@ -37,14 +37,14 @@ public class Address extends Id implements IStructurable {
 
 	@Override
 	public Structure toStructure() throws Exception {
-		Structure result = new Structure("Address");
+		Structure result = new Structure(Address.class);
 		result.setField("id", "bytes", getBytes());
 		return result;
 	}
 
 	@Override
 	public void fromStructure(Structure s) throws Exception {
-		setValue((byte[]) s.getField("id"));
+		setValue((byte[]) s.getFieldValue("id"));
 	}
 
 }

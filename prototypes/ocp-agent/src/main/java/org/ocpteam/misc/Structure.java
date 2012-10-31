@@ -1,21 +1,31 @@
 package org.ocpteam.misc;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import org.ocpteam.component.JSONMarshaler;
 import org.ocpteam.interfaces.IStructurable;
-import org.ocpteam.serializable.Address;
 
 public class Structure {
 	private String name;
-	public Map<String, SField> fields = new HashMap<>();
+	private Map<String, SField> fields = new HashMap<String, SField>();
+
+	public Structure(Class<? extends IStructurable> c) throws Exception {
+		String name = StructureMap.getFromClass(c);
+		setName(name);
+	}
 
 	public Structure(String name) {
 		setName(name);
+	}
+
+	public Structure(Properties properties) {
+		setName("Properties");
+		for (Object o : properties.keySet()) {
+			String key = (String) o;
+			setField(name, "string", properties.getProperty(key));
+		}
 	}
 
 	public void setName(String name) {
@@ -29,65 +39,60 @@ public class Structure {
 	public void setField(String name, String type, Object value) {
 		fields.put(name, new SField(type, value));
 	}
+	
+	public void setField(String name, Properties properties) {
+		Structure s = new Structure(properties);
+		fields.put(name, new SField("substruct", s));
+	}
 
-	private JSONObject toJson() {
+	@Override
+	public String toString() {
 		try {
-			JSONObject result = new JSONObject();
-			result.put("name", name);
-			JSONObject map = new JSONObject();
-			for (String name : fields.keySet()) {
-				JSONArray field = new JSONArray();
-				String type = fields.get(name).getType();
-				field.put(type);
-				if (type.equals("list")) {
-					JSONArray list = new JSONArray();
-					@SuppressWarnings("unchecked")
-					List<IStructurable> value = (List<IStructurable>) fields
-							.get(name).getValue();
-					for (IStructurable o : value) {
-						Structure s = o.toStructure();
-						JSONObject json = s.toJson();
-						list.put(json);
-					}
-					field.put(list);
-				} else if (type.equals("substruct")) {
-					IStructurable value = (IStructurable) fields.get(name).getValue();
-					field.put(value.toStructure().toJson());
-				} else {
-					field.put(fields.get(name).getValue());
-				}
-				map.put(name, field);
-			}
-			result.put("fields", map);
-			return result;
+			return new String(new JSONMarshaler().marshal(this));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return null;
 	}
 
-	@Override
-	public String toString() {
-		try {
-			return toJson().toString(4);
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
-
-	public Object getField(String name) {
+	public Object getFieldValue(String name) {
 		return fields.get(name).getValue();
 	}
 
-	public Object toObject() throws Exception {
-		String classname = getClassFromName();
-		IStructurable result = (IStructurable) Class.forName(classname).newInstance();
+	public IStructurable toObject() throws Exception {
+		IStructurable result = getClassFromName().newInstance();
 		result.fromStructure(this);
 		return result;
 	}
 
-	private String getClassFromName() {
-		return Address.class.getName();
+	private Class<? extends IStructurable> getClassFromName() throws Exception {
+		return StructureMap.get(name);
 	}
+
+	public Map<String, SField> getFields() {
+		return fields;
+	}
+
+	public void rename(Class<? extends IStructurable> c) throws Exception {
+		setName(StructureMap.getFromClass(c));
+	}
+
+	public Structure getSubstruct(String name) {
+		return (Structure) fields.get(name).getValue();
+	}
+
+	public String getString(String name) {
+		return (String) fields.get(name).getValue();
+	}
+
+	public Properties getProperties(String name) {
+		Structure s = getSubstruct(name);
+		Properties p = new Properties();
+		for (String fname : s.getFields().keySet()) {
+			p.setProperty(fname, s.getString(fname));
+		}
+		return p;
+	}
+
+	
 }

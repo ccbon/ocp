@@ -17,15 +17,16 @@ public class AddressUser extends User implements IStructurable {
 	
 	@Override
 	public Structure toStructure() throws Exception {
-		Structure result = new Structure("AdresseUser");
-		result.setField("address", "substruct", address);
-		return null;
+		Structure result = super.toStructure();
+		result.rename(this.getClass());
+		result.setField("address", "substruct", address.toStructure());
+		return result;
 	}
 	
 	@Override
 	public void fromStructure(Structure s) throws Exception {
-		// TODO Auto-generated method stub
-		
+		super.fromStructure(s);
+		address = (Address) s.getSubstruct("address").toObject();
 	}
 	
 
