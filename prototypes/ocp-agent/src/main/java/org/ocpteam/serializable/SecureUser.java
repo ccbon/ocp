@@ -4,8 +4,11 @@ import java.security.KeyPair;
 
 import javax.crypto.SecretKey;
 
+import org.ocpteam.interfaces.IStructurable;
+import org.ocpteam.misc.Structure;
 
-public class SecureUser extends AddressUser {
+
+public class SecureUser extends AddressUser implements IStructurable {
 
 	private static final long serialVersionUID = 1L;
 	private KeyPair keyPair;
@@ -38,6 +41,26 @@ public class SecureUser extends AddressUser {
 	}
 	public String getSecretKeyAlgo() {
 		return secretKeyAlgo ;
-	}	
+	}
+	
+	@Override
+	public Structure toStructure() throws Exception {
+		Structure result = super.toStructure();
+		result.rename(this.getClass());
+		result.setField("keyPair", "substruct", keyPair);
+		result.setField("keyPairAlgo", "string", keyPairAlgo);
+		result.setField("signatureAlgo", "string", signatureAlgo);
+		result.setField("secretKeyAlgo", "string", secretKeyAlgo);
+		return result;
+	}
+	
+	@Override
+	public void fromStructure(Structure s) throws Exception {
+		super.fromStructure(s);
+		//setKeyPair(s.getSubstruct("keyPair").toObject());
+		keyPairAlgo = s.getString("keyPairAlgo");
+		signatureAlgo = s.getString("signatureAlgo");
+		secretKeyAlgo = s.getString("secretKeyAlgo");
+	}
 	
 }

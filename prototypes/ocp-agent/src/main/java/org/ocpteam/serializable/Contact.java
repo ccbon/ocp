@@ -2,13 +2,16 @@ package org.ocpteam.serializable;
 
 import java.io.Serializable;
 
+import org.ocpteam.interfaces.IStructurable;
+import org.ocpteam.misc.Structure;
+
 
 /**
  * A Contact reflects the public information that an agent can gives to the
  * others members of the distributed network.
  *
  */
-public class Contact implements Serializable {
+public class Contact implements Serializable, IStructurable {
 
 	private static final long serialVersionUID = 1L;
 	
@@ -89,6 +92,26 @@ public class Contact implements Serializable {
 
 	public void setNode(Node node) {
 		this.node = node;
+	}
+
+	@Override
+	public Structure toStructure() throws Exception {
+		Structure result = new Structure(Contact.class);
+		result.setField("name", "string", getName());
+		result.setField("host", "string", getHost());
+		result.setField("tcpPort", "int", getTcpPort());
+		result.setField("udpPort", "int", getUdpPort());
+		result.setField("node", "substruct", getNode().toStructure());
+		return result;
+	}
+
+	@Override
+	public void fromStructure(Structure s) throws Exception {
+		setName(s.getString("name"));
+		setHost(s.getString("host"));
+		setTcpPort(s.getInt("tcpPort"));
+		setUdpPort(s.getInt("udpPort"));
+		setNode((Node) s.getSubstruct("node").toObject());
 	}
 
 

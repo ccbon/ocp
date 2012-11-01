@@ -2,7 +2,10 @@ package org.ocpteam.serializable;
 
 import java.io.Serializable;
 
-public class Content implements Serializable {
+import org.ocpteam.interfaces.IStructurable;
+import org.ocpteam.misc.Structure;
+
+public class Content implements Serializable, IStructurable {
 
 	/**
 	 * 
@@ -11,6 +14,9 @@ public class Content implements Serializable {
 	private String username;
 	private byte[] value;
 	private byte[] signature;
+	
+	public Content() {
+	}
 
 	public Content(String username, byte[] value, byte[] signature) {
 		this.username = username;
@@ -28,6 +34,22 @@ public class Content implements Serializable {
 
 	public String getUsername() {
 		return username;
+	}
+
+	@Override
+	public Structure toStructure() throws Exception {
+		Structure result = new Structure(Content.class);
+		result.setField("username", "string", getUsername());
+		result.setField("value", "bytes", getValue());
+		result.setField("signature", "bytes", getSignature());
+		return result;
+	}
+
+	@Override
+	public void fromStructure(Structure s) throws Exception {
+		username = s.getString("username");
+		signature = s.getByteArray("signature");
+		value = s.getByteArray("value");
 	}
 
 }

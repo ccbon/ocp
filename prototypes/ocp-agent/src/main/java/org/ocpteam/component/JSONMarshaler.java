@@ -1,8 +1,10 @@
 package org.ocpteam.component;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.codec.binary.Base64;
 import org.json.JSONArray;
@@ -56,6 +58,17 @@ public class JSONMarshaler implements IMarshaler {
 				} else if (type.equals("string")) {
 					String value = jsonArray.getString(1);
 					result.setField(key, type, value);
+				} else if (type.equals("map")) {
+					JSONObject jo = jsonArray.getJSONObject(1);
+					Map<String, Structure> map = new HashMap<String, Structure>();
+					Iterator<?> it2 = jo.keys();
+					while (it2.hasNext()) {
+						String s = (String) it2.next();
+						JSONObject j = jo.getJSONObject(s);
+						Structure struct = fromJson(j);
+						map.put(s, struct);
+					}
+					result.setField(key, type, map);
 				}
 
 			}
@@ -70,34 +83,43 @@ public class JSONMarshaler implements IMarshaler {
 		try {
 			JSONObject result = new JSONObject();
 			result.put("name", s.getName());
-			JSONObject map = new JSONObject();
+			JSONObject obj = new JSONObject();
 			for (String name : s.getFields().keySet()) {
 				JSONArray field = new JSONArray();
-				String type = s.getFields().get(name).getType();
+				String type = s.getField(name).getType();
 				field.put(type);
 				if (type.equals("list")) {
 					JSONArray list = new JSONArray();
 					@SuppressWarnings("unchecked")
-					List<Structure> value = (List<Structure>) s
-							.getFields().get(name).getValue();
+					List<Structure> value = (List<Structure>) s.getField(name)
+							.getValue();
 					for (Structure o : value) {
 						JSONObject json = toJson(o);
 						list.put(json);
 					}
 					field.put(list);
 				} else if (type.equals("substruct")) {
-					Structure value = (Structure) s.getFields()
-							.get(name).getValue();
+					Structure value = (Structure) s.getField(name).getValue();
 					field.put(toJson(value));
 				} else if (type.equals("bytes")) {
 					byte[] array = (byte[]) s.getFields().get(name).getValue();
 					field.put(Base64.encodeBase64URLSafeString(array));
+				} else if (type.equals("map")) {
+					JSONObject map = new JSONObject();
+					@SuppressWarnings("unchecked")
+					Map<String, Structure> value = (Map<String, Structure>) s
+							.getField(name).getValue();
+					for (String key : value.keySet()) {
+						JSONObject json = toJson(value.get(key));
+						map.put(key, json);
+					}
+					field.put(map);
 				} else {
-					field.put(s.getFields().get(name).getValue());
+					field.put(s.getField(name).getValue());
 				}
-				map.put(name, field);
+				obj.put(name, field);
 			}
-			result.put("fields", map);
+			result.put("fields", obj);
 			return result;
 		} catch (Exception e) {
 			e.printStackTrace();

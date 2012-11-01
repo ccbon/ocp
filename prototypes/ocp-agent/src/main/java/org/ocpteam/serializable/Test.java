@@ -8,6 +8,11 @@ import org.ocpteam.misc.Structure;
 
 public class Test implements IStructurable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	@Override
 	public Structure toStructure() throws Exception {
 		Structure result = new Structure(getClass());

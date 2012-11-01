@@ -4,10 +4,10 @@ import org.ocpteam.component.JSONMarshaler;
 import org.ocpteam.core.TopContainer;
 import org.ocpteam.interfaces.IMarshaler;
 import org.ocpteam.interfaces.IStructurable;
+import org.ocpteam.misc.Id;
 import org.ocpteam.misc.JLG;
 import org.ocpteam.misc.Structure;
-import org.ocpteam.serializable.Address;
-import org.ocpteam.serializable.AddressUser;
+import org.ocpteam.serializable.Node;
 
 public class JSONTest extends TopContainer {
 
@@ -27,11 +27,7 @@ public class JSONTest extends TopContainer {
 
 	private void start() throws Exception {
 		JLG.debug_on();
-		AddressUser a = new AddressUser();
-		a.setProperty("coucou", "kiki");
-		a.setProperty("Hello", "World");
-		a.setUsername("Yannis");
-		a.setRootAddress(new Address("0123"));
+		Node a = new Node(new Id("0123"), 3);
 		Structure s = a.toStructure();
 		JLG.debug("s=" + s);
 		byte[] array = getComponent(IMarshaler.class).marshal(s);

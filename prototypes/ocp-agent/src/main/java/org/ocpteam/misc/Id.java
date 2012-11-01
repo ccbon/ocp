@@ -1,10 +1,12 @@
 package org.ocpteam.misc;
 
-import java.io.Serializable;
 import java.math.BigInteger;
 
+import org.ocpteam.interfaces.IStructurable;
+import org.ocpteam.serializable.Address;
 
-public class Id implements Serializable, Comparable<Id> {
+
+public class Id implements IStructurable, Comparable<Id> {
 	
 	/**
 	 * 
@@ -13,7 +15,6 @@ public class Id implements Serializable, Comparable<Id> {
 	private byte[] value;
 	
 	public Id() {
-		
 	}
 	
 	public Id(byte[] val) {
@@ -58,5 +59,17 @@ public class Id implements Serializable, Comparable<Id> {
 
 	public void setValue(byte[] value) {
 		this.value = value;
+	}
+
+	@Override
+	public Structure toStructure() throws Exception {
+		Structure result = new Structure(Address.class);
+		result.setField("value", "bytes", getBytes());
+		return result;
+	}
+
+	@Override
+	public void fromStructure(Structure s) throws Exception {
+		setValue((byte[]) s.getFieldValue("value"));
 	}
 }

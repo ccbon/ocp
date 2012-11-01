@@ -1,6 +1,8 @@
 package org.ocpteam.misc;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
@@ -39,7 +41,7 @@ public class Structure {
 	public void setField(String name, String type, Object value) {
 		fields.put(name, new SField(type, value));
 	}
-	
+
 	public void setField(String name, Properties properties) {
 		Structure s = new Structure(properties);
 		fields.put(name, new SField("substruct", s));
@@ -57,6 +59,10 @@ public class Structure {
 
 	public Object getFieldValue(String name) {
 		return fields.get(name).getValue();
+	}
+
+	public SField getField(String name) {
+		return fields.get(name);
 	}
 
 	public IStructurable toObject() throws Exception {
@@ -85,6 +91,14 @@ public class Structure {
 		return (String) fields.get(name).getValue();
 	}
 
+	public int getInt(String name) {
+		return (Integer) fields.get(name).getValue();
+	}
+
+	public byte[] getByteArray(String name) {
+		return (byte[]) fields.get(name).getValue();
+	}
+
 	public Properties getProperties(String name) {
 		Structure s = getSubstruct(name);
 		Properties p = new Properties();
@@ -94,5 +108,43 @@ public class Structure {
 		return p;
 	}
 
-	
+	public void setMapField(String name,
+			Map<String, ? extends IStructurable> map) throws Exception {
+		Map<String, Structure> m = new HashMap<String, Structure>();
+		for (String key : map.keySet()) {
+			m.put(key, map.get(key).toStructure());
+		}
+		fields.put(name, new SField("map", m));
+	}
+
+	@SuppressWarnings("unchecked")
+	public <T extends IStructurable> Map<String, T> getMap(String name,
+			Class<T> c) throws Exception {
+		Map<String, Structure> m = (Map<String, Structure>) getField(name)
+				.getValue();
+		Map<String, T> result = new HashMap<String, T>();
+		for (String key : m.keySet()) {
+			result.put(key, (T) m.get(key).toObject());
+		}
+		return result;
+	}
+
+	public void setArray(String string, IStructurable[] objects) throws Exception {
+		List<Structure> list = new ArrayList<Structure>();
+		for (IStructurable o : objects) {
+			list.add(o.toStructure());
+		}
+		setField(string, "list", list);
+	}
+
+	public IStructurable[] getArray(String name) throws Exception {
+		@SuppressWarnings("unchecked")
+		List<Structure> value = (List<Structure>) getField(name).getValue();
+		IStructurable[] result = new IStructurable[value.size()];
+		for (int i = 0; i < value.size(); i++) {
+			result[i] = value.get(i).toObject();
+		}
+		return result;
+	}
+
 }
