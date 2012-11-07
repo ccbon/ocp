@@ -19,7 +19,7 @@ public class AddressUser extends User implements IStructurable {
 	public Structure toStructure() throws Exception {
 		Structure result = super.toStructure();
 		result.rename(this.getClass());
-		result.setField("address", "substruct", address.toStructure());
+		result.setSubstructField("address", address.toStructure());
 		return result;
 	}
 	

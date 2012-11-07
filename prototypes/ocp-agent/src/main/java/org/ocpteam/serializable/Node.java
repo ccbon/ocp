@@ -53,8 +53,8 @@ public class Node implements Serializable, IStructurable {
 	@Override
 	public Structure toStructure() throws Exception {
 		Structure result = new Structure(getClass());
-		result.setField("nodeId", "bytes", nodeId.getBytes());
-		result.setField("ring", "int", getRing());
+		result.setBytesField("nodeId", nodeId.getBytes());
+		result.setIntField("ring", getRing());
 		return result;
 	}
 

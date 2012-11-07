@@ -60,9 +60,9 @@ public class TreeEntry implements Serializable, IFile, IStructurable {
 	@Override
 	public Structure toStructure() throws Exception {
 		Structure result = new Structure(getClass());
-		result.setField("name", "string", name);
-		result.setField("type", "int", type);
-		result.setField("p", "substruct", p.toStructure());
+		result.setStringField("name", name);
+		result.setIntField("type", type);
+		result.setSubstructField("p", p.toStructure());
 		return result;
 	}
 	@Override

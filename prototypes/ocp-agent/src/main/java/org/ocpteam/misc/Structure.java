@@ -1,5 +1,6 @@
 package org.ocpteam.misc;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -38,11 +39,11 @@ public class Structure {
 		return name;
 	}
 
-	public void setField(String name, String type, Object value) {
+	private void setField(String name, String type, Object value) {
 		fields.put(name, new SField(type, value));
 	}
 
-	public void setField(String name, Properties properties) {
+	private void setField(String name, Properties properties) {
 		Structure s = new Structure(properties);
 		fields.put(name, new SField("substruct", s));
 	}
@@ -66,8 +67,19 @@ public class Structure {
 	}
 
 	public IStructurable toObject() throws Exception {
-		IStructurable result = getClassFromName().newInstance();
-		result.fromStructure(this);
+		IStructurable result = null;
+		if (name.equals("simple")) {
+			// SField field = getField("field");
+			// String type = field.getType();
+			// if (type.equals("string")) {
+			// result = new StructString((String) getFieldValue("field"));
+			// } else if (type.equals("bytes")) {
+			// result = new StructByteArray((byte[]) getFieldValue("field"));
+			// }
+		} else {
+			result = getClassFromName().newInstance();
+			result.fromStructure(this);
+		}
 		return result;
 	}
 
@@ -117,6 +129,10 @@ public class Structure {
 		fields.put(name, new SField("map", m));
 	}
 
+	public void setStructureMapField(String name, Map<String, Structure> map) {
+		setField(name, "map", map);
+	}
+
 	@SuppressWarnings("unchecked")
 	public <T extends IStructurable> Map<String, T> getMap(String name,
 			Class<T> c) throws Exception {
@@ -129,22 +145,129 @@ public class Structure {
 		return result;
 	}
 
-	public void setArray(String string, IStructurable[] objects) throws Exception {
+	@SuppressWarnings("unchecked")
+	public void setArray(String string, Serializable[] objects)
+			throws Exception {
 		List<Structure> list = new ArrayList<Structure>();
-		for (IStructurable o : objects) {
-			list.add(o.toStructure());
+		for (Serializable o : objects) {
+			if (o instanceof IStructurable) {
+				IStructurable s = (IStructurable) o;
+				list.add(s.toStructure());
+			} else {
+				Structure s = new Structure("simple");
+				if (o instanceof Integer) {
+					s.setIntField("field", (Integer) o);
+				} else if (o instanceof String) {
+					s.setStringField("field", (String) o);
+				} else if (o instanceof byte[]) {
+					s.setBytesField("field", (byte[]) o);
+				} else if (o instanceof Double) {
+					s.setDecimalField("field", (Double) o);
+				} else if (o instanceof List<?>) {
+					s.setListField("field", (List<Structure>) o);
+				} else if (o instanceof Map<?, ?>) {
+					s.setStructureMapField("field", (Map<String, Structure>) o);
+				}
+				list.add(s);
+			}
 		}
 		setField(string, "list", list);
 	}
 
-	public IStructurable[] getArray(String name) throws Exception {
+	public Serializable[] getArray(String name) throws Exception {
 		@SuppressWarnings("unchecked")
 		List<Structure> value = (List<Structure>) getField(name).getValue();
-		IStructurable[] result = new IStructurable[value.size()];
+		Serializable[] result = new Serializable[value.size()];
 		for (int i = 0; i < value.size(); i++) {
-			result[i] = value.get(i).toObject();
+			Structure s = value.get(i);
+			if (s.getName().equals("simple")) {
+				SField f = value.get(i).getField("field");
+				JLG.debug("field=" + f);
+				String type = f.getType();
+				if (type.equals("string")) {
+					result[i] = (Serializable) f.getValue();
+				} else {
+					result[i] = (Serializable) f.getValue();
+				}
+
+			} else {
+				Object o = value.get(i).toObject();
+				result[i] = (IStructurable) o;
+			}
+
 		}
 		return result;
 	}
 
+	@Override
+	public boolean equals(Object obj) {
+		if (!(obj instanceof Structure)) {
+			JLG.debug("Not a Structure");
+			return false;
+		}
+		Structure s = (Structure) obj;
+		if (!this.getName().equals(s.getName())) {
+			JLG.debug("Not same Name");
+			return false;
+		}
+		return this.contains(s) && s.contains(this);
+	}
+
+	public boolean contains(Structure s) {
+		if (s == null) {
+			JLG.debug("Not a Structure");
+			return false;
+		}
+		if (!this.getName().equals(s.getName())) {
+			JLG.debug("Not same Name");
+			return false;
+		}
+		for (String fname : s.getFields().keySet()) {
+			JLG.debug("Testing the field " + this.getField(fname));
+			SField f1 = this.getField(fname);
+			if (f1 == null) {
+				JLG.debug("Field is empty");
+				return false;
+			}
+			SField f2 = s.getField(fname);
+			if (!f2.equals(f1)) {
+				JLG.debug("Fields are not equal");
+				return false;
+			}
+		}
+		return true;
+	}
+
+	public void setBytesField(String name, byte[] bytes) {
+		setField(name, "bytes", bytes);
+	}
+
+	public void setIntField(String name, int value) {
+		setField(name, "int", value);
+	}
+
+	public void setSubstructField(String name, Structure value) {
+		setField(name, "substruct", value);
+	}
+
+	public void setListField(String name, List<Structure> l) {
+		setField(name, "list", l);
+	}
+
+	public void setDecimalField(String name, double value) {
+		setField(name, "decimal", value);
+	}
+
+	public void setStringField(String name, String value) {
+		setField(name, "string", value);
+
+	}
+
+	public void setFieldField(String name, Structure fromJson) {
+		setField(name, "field", fromJson);
+	}
+
+	public void setProprietiesField(Properties properties) {
+		setField("proprieties", properties);
+	}
 }

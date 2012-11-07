@@ -27,7 +27,7 @@ public class InputFlow implements IStructurable {
 	@Override
 	public Structure toStructure() throws Exception {
 		Structure result = new Structure(getClass());
-		result.setField("activityid", "int", activityid);
+		result.setIntField("activityid", activityid);
 		result.setArray("objects", objects);
 		return result;
 	}
@@ -35,7 +35,7 @@ public class InputFlow implements IStructurable {
 	@Override
 	public void fromStructure(Structure s) throws Exception {
 		activityid = s.getInt("activityid");
-		objects = s.getArray("objects");
+		objects = (IStructurable[]) s.getArray("objects");
 	}
 
 }

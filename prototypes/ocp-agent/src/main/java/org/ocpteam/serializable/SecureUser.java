@@ -47,10 +47,10 @@ public class SecureUser extends AddressUser implements IStructurable {
 	public Structure toStructure() throws Exception {
 		Structure result = super.toStructure();
 		result.rename(this.getClass());
-		result.setField("keyPair", "substruct", keyPair);
-		result.setField("keyPairAlgo", "string", keyPairAlgo);
-		result.setField("signatureAlgo", "string", signatureAlgo);
-		result.setField("secretKeyAlgo", "string", secretKeyAlgo);
+//		result.setField("keyPair", "substruct", keyPair);
+		result.setStringField("keyPairAlgo", keyPairAlgo);
+		result.setStringField("signatureAlgo", signatureAlgo);
+		result.setStringField("secretKeyAlgo", secretKeyAlgo);
 		return result;
 	}
 	

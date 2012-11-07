@@ -34,7 +34,7 @@ public class Pointer extends Id implements IStructurable {
 	@Override
 	public Structure toStructure() throws Exception {
 		Structure result = new Structure(getClass());
-		result.setField("value", "bytes", super.getBytes());
+		result.setBytesField("value", super.getBytes());
 		return result;
 	}
 

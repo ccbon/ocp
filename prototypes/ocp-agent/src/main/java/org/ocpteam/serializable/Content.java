@@ -39,9 +39,9 @@ public class Content implements Serializable, IStructurable {
 	@Override
 	public Structure toStructure() throws Exception {
 		Structure result = new Structure(Content.class);
-		result.setField("username", "string", getUsername());
-		result.setField("value", "bytes", getValue());
-		result.setField("signature", "bytes", getSignature());
+		result.setStringField("username", getUsername());
+		result.setBytesField("value", getValue());
+		result.setBytesField("signature", getSignature());
 		return result;
 	}
 

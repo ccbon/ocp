@@ -17,6 +17,10 @@ public class InputMessage implements IStructurable {
 	transient public ITransaction transaction;
 	public int transid;
 	public Serializable[] objects;
+	
+	public InputMessage() {
+		
+	}
 
 	public InputMessage(ITransaction transaction, Serializable... objects) {
 		this.transaction = transaction;
@@ -27,8 +31,8 @@ public class InputMessage implements IStructurable {
 	@Override
 	public Structure toStructure() throws Exception {
 		Structure result = new Structure(getClass());
-		result.setField("transid", "int", transid);
-		//result.setArray("objects", objects);
+		result.setIntField("transid", transid);
+		result.setArray("objects", objects);
 		return result;
 	}
 
@@ -37,5 +41,4 @@ public class InputMessage implements IStructurable {
 		transid = s.getInt("transid");
 		objects = s.getArray("objects");
 	}
-	
 }

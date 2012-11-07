@@ -15,7 +15,6 @@ public class StructureMap {
 		if (mapAB == null) {
 			loadMap();
 		}
-	
 		Class<? extends IStructurable> result = mapAB.get(name);
 		if (result == null) {
 			throw new Exception("Class not found in structures.properties for name=" + name);

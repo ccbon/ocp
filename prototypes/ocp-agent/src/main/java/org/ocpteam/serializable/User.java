@@ -38,8 +38,8 @@ public class User implements IUser, IStructurable {
 	@Override
 	public Structure toStructure() throws Exception {
 		Structure result = new Structure(getClass());
-		result.setField("username", "string", username);
-		result.setField("properties", properties);
+		result.setStringField("username", username);
+		result.setProprietiesField(properties);
 		return result;
 	}
 

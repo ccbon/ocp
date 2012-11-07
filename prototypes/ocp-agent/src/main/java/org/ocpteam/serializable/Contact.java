@@ -97,11 +97,11 @@ public class Contact implements Serializable, IStructurable {
 	@Override
 	public Structure toStructure() throws Exception {
 		Structure result = new Structure(Contact.class);
-		result.setField("name", "string", getName());
-		result.setField("host", "string", getHost());
-		result.setField("tcpPort", "int", getTcpPort());
-		result.setField("udpPort", "int", getUdpPort());
-		result.setField("node", "substruct", getNode().toStructure());
+		result.setStringField("name", getName());
+		result.setStringField("host",  getHost());
+		result.setIntField("tcpPort", getTcpPort());
+		result.setIntField("udpPort", getUdpPort());
+		result.setSubstructField("node", getNode().toStructure());
 		return result;
 	}
 
