@@ -10,6 +10,7 @@ import org.apache.commons.codec.binary.Base64;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.ocpteam.interfaces.IMarshaler;
+import org.ocpteam.misc.JLG;
 import org.ocpteam.misc.Structure;
 
 public class JSONMarshaler implements IMarshaler {
@@ -34,16 +35,20 @@ public class JSONMarshaler implements IMarshaler {
 				String key = (String) it.next();
 				JSONArray jsonArray = jsonFields.getJSONArray(key);
 				String type = jsonArray.getString(0);
-				if (type.equals("bytes")) {
+				
+				if (jsonArray.get(1) == JSONObject.NULL) {
+					JLG.debug("JSONObject.NULL");
+					result.setNullField(key, type);
+				} else if (type.equals(Structure.TYPE_BYTES)) {
 					byte[] value = Base64.decodeBase64(jsonArray.getString(1));
-					result.setBytesField(key, value);
-				} else if (type.equals("int")) {
+					result.setByteArrayField(key, value);
+				} else if (type.equals(Structure.TYPE_INT)) {
 					int value = jsonArray.getInt(1);
 					result.setIntField(key, value);
-				} else if (type.equals("substruct")) {
+				} else if (type.equals(Structure.TYPE_SUBSTRUCT)) {
 					Structure value = fromJson(jsonArray.getJSONObject(1));
-					result.setSubstructField(key, value);
-				} else if (type.equals("list")) {
+					result.setStructureSubstructField(key, value);
+				} else if (type.equals(Structure.TYPE_LIST)) {
 					JSONArray ja = jsonArray.getJSONArray(1);
 					List<Structure> l = new ArrayList<Structure>();
 					for (int i = 0; i < ja.length(); i++) {
@@ -51,14 +56,14 @@ public class JSONMarshaler implements IMarshaler {
 						Structure s = fromJson(j);
 						l.add(s);
 					}
-					result.setListField(key, l);
-				} else if (type.equals("decimal")) {
+					result.setStructureListField(key, l);
+				} else if (type.equals(Structure.TYPE_DECIMAL)) {
 					double value = jsonArray.getDouble(1);
 					result.setDecimalField(key, value);
-				} else if (type.equals("string")) {
+				} else if (type.equals(Structure.TYPE_STRING)) {
 					String value = jsonArray.getString(1);
 					result.setStringField(key, value);
-				} else if (type.equals("map")) {
+				} else if (type.equals(Structure.TYPE_MAP)) {
 					JSONObject jo = jsonArray.getJSONObject(1);
 					Map<String, Structure> map = new HashMap<String, Structure>();
 					Iterator<?> it2 = jo.keys();
@@ -88,7 +93,8 @@ public class JSONMarshaler implements IMarshaler {
 				JSONArray field = new JSONArray();
 				String type = s.getField(name).getType();
 				field.put(type);
-				if (type.equals("list")) {
+				
+				if (type.equals(Structure.TYPE_LIST)) {
 					JSONArray list = new JSONArray();
 					@SuppressWarnings("unchecked")
 					List<Structure> value = (List<Structure>) s.getField(name)
@@ -98,13 +104,13 @@ public class JSONMarshaler implements IMarshaler {
 						list.put(json);
 					}
 					field.put(list);
-				} else if (type.equals("substruct")) {
+				} else if (type.equals(Structure.TYPE_SUBSTRUCT)) {
 					Structure value = (Structure) s.getField(name).getValue();
 					field.put(toJson(value));
-				} else if (type.equals("bytes")) {
+				} else if (type.equals(Structure.TYPE_BYTES)) {
 					byte[] array = (byte[]) s.getFields().get(name).getValue();
 					field.put(Base64.encodeBase64URLSafeString(array));
-				} else if (type.equals("map")) {
+				} else if (type.equals(Structure.TYPE_MAP)) {
 					JSONObject map = new JSONObject();
 					@SuppressWarnings("unchecked")
 					Map<String, Structure> value = (Map<String, Structure>) s

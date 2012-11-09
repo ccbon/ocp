@@ -64,7 +64,7 @@ public class Id implements IStructurable, Comparable<Id> {
 	@Override
 	public Structure toStructure() throws Exception {
 		Structure result = new Structure(Address.class);
-		result.setBytesField("value", getBytes());
+		result.setByteArrayField("value", getBytes());
 		return result;
 	}
 

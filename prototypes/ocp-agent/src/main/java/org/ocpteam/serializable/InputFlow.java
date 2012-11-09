@@ -28,7 +28,7 @@ public class InputFlow implements IStructurable {
 	public Structure toStructure() throws Exception {
 		Structure result = new Structure(getClass());
 		result.setIntField("activityid", activityid);
-		result.setArray("objects", objects);
+		result.setListField("objects", objects);
 		return result;
 	}
 

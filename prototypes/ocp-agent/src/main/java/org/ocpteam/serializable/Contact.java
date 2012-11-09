@@ -101,7 +101,7 @@ public class Contact implements Serializable, IStructurable {
 		result.setStringField("host",  getHost());
 		result.setIntField("tcpPort", getTcpPort());
 		result.setIntField("udpPort", getUdpPort());
-		result.setSubstructField("node", getNode().toStructure());
+		result.setStructureSubstructField("node", getNode().toStructure());
 		return result;
 	}
 

@@ -2,15 +2,18 @@ package org.ocpteam.unittest;
 
 import java.io.Serializable;
 import java.net.Socket;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.crypto.SecretKey;
 
 import org.junit.Test;
-import org.ocpteam.component.JSONMarshaler;
+import org.ocpteam.component.FListMarshaler;
 import org.ocpteam.component.Protocol;
 import org.ocpteam.core.TopContainer;
 import org.ocpteam.entity.Session;
 import org.ocpteam.interfaces.IActivity;
+import org.ocpteam.interfaces.IMarshaler;
 import org.ocpteam.interfaces.IStructurable;
 import org.ocpteam.interfaces.ITransaction;
 import org.ocpteam.misc.Id;
@@ -34,32 +37,50 @@ public class StructTest extends TopContainer {
 		JLG.debug_on();
 		try {
 			// testEqual();
-//			 testFields();
-			testStructure();
-			// testNode();
-			// testContact();
-			// testContent();
-			// testEOMObject();
-			// testPointer();
-			// testSecureUser(); // TODO : ERRORS
-			// testTreeEntry();
-			// testTree();
-			// testInputFlow();
-//			testInputMessage();
+			// testFields();
+//			testStructure();
+//			 testNode();
+//			 testContact(); // TODO: Multilevel Errors
+//			 testContent();
+//			 testEOMObject();
+//			 testPointer();
+//			 testSecureUser(); // TODO : Cannot stock the keyPair
+//			 testTreeEntry(); // TODO: Multilevel Errors
+//			 testTree(); // TODO: Multilevel Errors
+//			 testInputFlow(); // TODO: getArray
+//			 testInputMessage(); // TODO: getArray
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
-	private void testStructure() {
+	public void testStructure() throws Exception {
 		Structure s1 = new Structure("Test");
 		s1.setIntField("int", 12345);
 		s1.setStringField("string", "Hello World");
-		s1.setBytesField("byte[]", new byte[] {12,34,56});
+		s1.setByteArrayField("byte[]", new byte[] { 12, 34, 56 });
+		Structure substruct1 = new Structure("Sub");
+		substruct1.setIntField("int", 12);
+		s1.setStructureSubstructField("substruct", substruct1);
+		s1.setListField("array1", new String[] { "Hello", "World" });
+		Map<String, String> map1 = new HashMap<String, String>();
+		map1.put("hello", "world");
+		map1.put("Yannis", "Thomias");
+		s1.setMapField("map1", map1);
+
 		Structure s2 = new Structure("Test");
 		s2.setIntField("int", 12345);
 		s2.setStringField("string", "Hello World");
-		s2.setBytesField("byte[]", new byte[] {12,34,56});
+		s2.setByteArrayField("byte[]", new byte[] { 12, 34, 56 });
+		Structure substruct2 = new Structure("Sub");
+		substruct2.setIntField("int", 12);
+		s2.setStructureSubstructField("substruct", substruct2);
+		s2.setListField("array1", new String[] { "Hello", "World" });
+		Map<String, String> map2 = new HashMap<String, String>();
+		map2.put("hello", "world");
+		map2.put("Yannis", "Thomias");
+		s2.setMapField("map1", map2);
+
 		JLG.debug("Same? " + s1.equals(s2));
 	}
 
@@ -81,7 +102,7 @@ public class StructTest extends TopContainer {
 	}
 
 	public void testEqual() throws Exception {
-		JSONMarshaler marshaler = new JSONMarshaler();
+		IMarshaler marshaler = new FListMarshaler();
 		org.ocpteam.serializable.Test t = new org.ocpteam.serializable.Test();
 		Structure s = t.toStructure();
 		JLG.debug("s=" + s);
@@ -94,7 +115,7 @@ public class StructTest extends TopContainer {
 	}
 
 	public void testInputMessage() throws Exception {
-		JSONMarshaler marshaler = new JSONMarshaler();
+		IMarshaler marshaler = new FListMarshaler();
 		InputMessage t = new InputMessage(new ITransaction() {
 
 			@Override
@@ -112,7 +133,7 @@ public class StructTest extends TopContainer {
 			public int getId() {
 				return 14;
 			}
-		}, "hello world", new byte[] {12,34,56});
+		}, "hello world", new byte[] { 12, 34, 56 });
 		Structure s = t.toStructure();
 		JLG.debug("s=" + s);
 		byte[] array = marshaler.marshal(s);
@@ -124,7 +145,7 @@ public class StructTest extends TopContainer {
 	}
 
 	public void testInputFlow() throws Exception {
-		JSONMarshaler marshaler = new JSONMarshaler();
+		IMarshaler marshaler = new FListMarshaler();
 		InputFlow t = new InputFlow(new IActivity() {
 
 			@Override
@@ -148,7 +169,7 @@ public class StructTest extends TopContainer {
 	}
 
 	public void testTree() throws Exception {
-		JSONMarshaler marshaler = new JSONMarshaler();
+		IMarshaler marshaler = new FListMarshaler();
 		Tree t = new Tree();
 		t.addFile("file1", new Pointer("0123"));
 		t.addFile("file2", new Pointer("4567"));
@@ -163,7 +184,7 @@ public class StructTest extends TopContainer {
 	}
 
 	public void testTreeEntry() throws Exception {
-		JSONMarshaler marshaler = new JSONMarshaler();
+		IMarshaler marshaler = new FListMarshaler();
 		TreeEntry t = new TreeEntry("file", new Pointer("0123"), TreeEntry.FILE);
 		Structure s = t.toStructure();
 		JLG.debug("s=" + s);
@@ -176,10 +197,12 @@ public class StructTest extends TopContainer {
 	}
 
 	public void testSecureUser() throws Exception {
+		IMarshaler marshaler = new FListMarshaler();
 		SecretKey secretKey = null;
-		JSONMarshaler marshaler = new JSONMarshaler();
 		SecureUser su = new SecureUser();
 		su.setSecretKey(secretKey);
+//		su.setRootAddress(new Address("0123"));
+//		su.setProperty("key", "value");
 		Structure s = su.toStructure();
 		JLG.debug("s=" + s);
 		byte[] array = marshaler.marshal(s);
@@ -191,7 +214,7 @@ public class StructTest extends TopContainer {
 	}
 
 	public void testPointer() throws Exception {
-		JSONMarshaler marshaler = new JSONMarshaler();
+		IMarshaler marshaler = new FListMarshaler();
 		Pointer p = new Pointer(new Id("0123"));
 		Structure s = p.toStructure();
 		JLG.debug("s=" + s);
@@ -204,7 +227,7 @@ public class StructTest extends TopContainer {
 	}
 
 	public void testEOMObject() throws Exception {
-		JSONMarshaler marshaler = new JSONMarshaler();
+		IMarshaler marshaler = new FListMarshaler();
 		EOMObject eom = new EOMObject();
 		Structure s = eom.toStructure();
 		JLG.debug("s=" + s);
@@ -217,7 +240,7 @@ public class StructTest extends TopContainer {
 	}
 
 	public void testContent() throws Exception {
-		JSONMarshaler marshaler = new JSONMarshaler();
+		IMarshaler marshaler = new FListMarshaler();
 		Content c = new Content("Yannis", new byte[] { 01, 23 }, new byte[] {
 				98, 76 });
 		Structure s = c.toStructure();
@@ -231,7 +254,7 @@ public class StructTest extends TopContainer {
 	}
 
 	public void testContact() throws Exception {
-		JSONMarshaler marshaler = new JSONMarshaler();
+		IMarshaler marshaler = new FListMarshaler();
 		Node n = new Node(new Id("0123"), 3);
 		Contact c = new Contact();
 		c.setHost("localhost");
@@ -239,6 +262,7 @@ public class StructTest extends TopContainer {
 		c.setNode(n);
 		c.setTcpPort(12345);
 		c.setUdpPort(67890);
+		JLG.debug("contact=" + c.toString());
 		Structure s = c.toStructure();
 		JLG.debug("s=" + s);
 		byte[] array = marshaler.marshal(s);
@@ -250,7 +274,7 @@ public class StructTest extends TopContainer {
 	}
 
 	public void testNode() throws Exception {
-		JSONMarshaler marshaler = new JSONMarshaler();
+		IMarshaler marshaler = new FListMarshaler();
 		Node n = new Node(new Id("0123"), 3);
 		Structure s = n.toStructure();
 		JLG.debug("s=" + s);

@@ -62,7 +62,7 @@ public class TreeEntry implements Serializable, IFile, IStructurable {
 		Structure result = new Structure(getClass());
 		result.setStringField("name", name);
 		result.setIntField("type", type);
-		result.setSubstructField("p", p.toStructure());
+		result.setStructureSubstructField("p", p.toStructure());
 		return result;
 	}
 	@Override

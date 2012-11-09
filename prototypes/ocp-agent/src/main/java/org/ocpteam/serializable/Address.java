@@ -38,7 +38,7 @@ public class Address extends Id implements IStructurable {
 	@Override
 	public Structure toStructure() throws Exception {
 		Structure result = new Structure(Address.class);
-		result.setBytesField("id", getBytes());
+		result.setByteArrayField("id", getBytes());
 		return result;
 	}
 

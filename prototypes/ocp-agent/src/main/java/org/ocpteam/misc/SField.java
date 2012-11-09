@@ -41,10 +41,16 @@ public class SField {
 			return false;
 		}
 		JLG.debug("Type OK: Type=" + type);
-		if (type.equals("bytes")) {
+		if (value == null && f.getValue() != null) {
+			JLG.debug("f1.value=null | f2.value!=null");
+			JLG.debug("f2.value=" + f.getValue());
+			return false;
+		}
+		if (type.equals(Structure.TYPE_BYTES)) {
 			return Arrays.equals((byte[]) this.value, (byte[]) f.value);
 		}
-		if (!value.equals(f.getValue())) {
+		
+		if (value != null && (!value.equals(f.getValue()))) {
 			JLG.debug("Not same value of Field");
 			JLG.debug("This=" + value);
 			JLG.debug("Given=" + f.getValue());

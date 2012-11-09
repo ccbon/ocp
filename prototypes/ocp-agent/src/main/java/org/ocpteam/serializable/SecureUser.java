@@ -5,6 +5,7 @@ import java.security.KeyPair;
 import javax.crypto.SecretKey;
 
 import org.ocpteam.interfaces.IStructurable;
+import org.ocpteam.misc.JLG;
 import org.ocpteam.misc.Structure;
 
 
@@ -47,7 +48,7 @@ public class SecureUser extends AddressUser implements IStructurable {
 	public Structure toStructure() throws Exception {
 		Structure result = super.toStructure();
 		result.rename(this.getClass());
-//		result.setField("keyPair", "substruct", keyPair);
+		result.setStructureSubstructField("keyPair", new Structure("keyPair", keyPair));
 		result.setStringField("keyPairAlgo", keyPairAlgo);
 		result.setStringField("signatureAlgo", signatureAlgo);
 		result.setStringField("secretKeyAlgo", secretKeyAlgo);
@@ -57,10 +58,14 @@ public class SecureUser extends AddressUser implements IStructurable {
 	@Override
 	public void fromStructure(Structure s) throws Exception {
 		super.fromStructure(s);
-		//setKeyPair(s.getSubstruct("keyPair").toObject());
+		setKeyPair(s.getSubstruct("keyPair"));
 		keyPairAlgo = s.getString("keyPairAlgo");
 		signatureAlgo = s.getString("signatureAlgo");
 		secretKeyAlgo = s.getString("secretKeyAlgo");
+	}
+	
+	private void setKeyPair(Structure substruct) {
+		JLG.debug("subtruct=" + substruct);
 	}
 	
 }

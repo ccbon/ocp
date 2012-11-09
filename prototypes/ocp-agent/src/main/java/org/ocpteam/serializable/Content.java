@@ -40,8 +40,8 @@ public class Content implements Serializable, IStructurable {
 	public Structure toStructure() throws Exception {
 		Structure result = new Structure(Content.class);
 		result.setStringField("username", getUsername());
-		result.setBytesField("value", getValue());
-		result.setBytesField("signature", getSignature());
+		result.setByteArrayField("value", getValue());
+		result.setByteArrayField("signature", getSignature());
 		return result;
 	}
 
