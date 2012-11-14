@@ -122,7 +122,7 @@ public class Structure {
 	}
 
 	@SuppressWarnings("unchecked")
-	public Map<String, Structure> getStructureMap(String name2) {
+	public Map<String, Structure> getStructureMap(String name) {
 		SField f = getField(name);
 		if (f == null) {
 			return null;
@@ -352,6 +352,18 @@ public class Structure {
 		}
 		
 		list.add(eltid, substr);
+	}
+
+	public void addStructureMapField(String name, Structure substr,
+			String key) {
+		Map<String, Structure> map = getStructureMap(name); 
+		if (map == null) {
+			JLG.debug("map is null");
+			map = new HashMap<String, Structure>();
+			setStructureMapField(name, map);
+		}
+		
+		map.put(key, substr);		
 	}
 
 }

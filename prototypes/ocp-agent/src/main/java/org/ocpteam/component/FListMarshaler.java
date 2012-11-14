@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.lang.StringEscapeUtils;
 import org.ocpteam.interfaces.IMarshaler;
 import org.ocpteam.misc.JLG;
 import org.ocpteam.misc.Structure;
@@ -101,6 +102,7 @@ public class FListMarshaler implements IMarshaler {
 		public String fieldeltid;
 
 		public FListLine(String buffer) {
+			JLG.debug("buffer=" + buffer);
 			String[] sa = buffer.split("\\s+", 5);
 			level = Integer.parseInt(sa[0]);
 			fieldname = sa[1];
@@ -120,10 +122,22 @@ public class FListMarshaler implements IMarshaler {
 			return fieldvalue != null && fieldvalue.equals(VALUE_NULL);
 		}
 
+		public boolean hasMapNullValue() {
+			return fieldvalue != null && fieldvalue.equals(MAP_NULL);
+		}
+
+		public boolean hasListNullValue() {
+			return fieldvalue != null && fieldvalue.equals(LIST_NULL);
+		}
+
 	}
 
 	public static final String NL = System.getProperty("line.separator");
 	private static final String VALUE_NULL = "<NULL>";
+	private static final String MAP_NULL = "<MAP_NULL>";
+	private static final String LIST_NULL = "<LIST_NULL>";
+	private static final int FILE_WIDTH = 80;
+	private static final String BIN_PREFIX = " ";
 
 	@Override
 	public byte[] marshal(Structure s) throws Exception {
@@ -170,12 +184,36 @@ public class FListMarshaler implements IMarshaler {
 			nextLine = null;
 			FListLine fl = new FListLine(currentLine);
 			if (fl.fieldtype.equals(Structure.TYPE_STRING)) {
-				String value = fl.fieldvalue.substring(1,
-						fl.fieldvalue.length() - 1);
+				String value = "";
+				if (fl.fieldvalue.startsWith("<<EOF")) {
+					String fieldvalue = "";
+					String line = br.readLine();
+					while (!line.equals("EOF")) {
+						line = line.substring(1, line.length() - 1);
+						fieldvalue += line;
+						line = br.readLine();
+					}
+					value = fieldvalue;
+				} else {
+					value = fl.fieldvalue.substring(1,
+							fl.fieldvalue.length() - 1);
+				}
 				JLG.debug("fieldvalue=" + value);
-				s.setStringField(fl.fieldname, value);
+				s.setStringField(fl.fieldname, unescape(value));
 			} else if (fl.fieldtype.equals(Structure.TYPE_BYTES)) {
-				byte[] value = Base64.decodeBase64(fl.fieldvalue);
+				byte[] value = null;
+				if (fl.fieldvalue.startsWith("<<EOF")) {
+					String fieldvalue = "";
+					String line = br.readLine();
+					while (!line.equals("EOF")) {
+						fieldvalue += line.substring(BIN_PREFIX.length());
+						line = br.readLine();
+					}
+					value = Base64.decodeBase64(fieldvalue);
+				} else {
+					value = Base64.decodeBase64(fl.fieldvalue);
+				}
+
 				s.setByteArrayField(fl.fieldname, value);
 			} else if (fl.fieldtype.equals(Structure.TYPE_DECIMAL)) {
 				double value = Double.parseDouble(fl.fieldvalue);
@@ -192,8 +230,11 @@ public class FListMarshaler implements IMarshaler {
 					s.setStructureSubstructField(fl.fieldname, substr);
 				}
 			} else if (fl.fieldtype.equals(Structure.TYPE_LIST)) {
-				if (fl.hasNullValue()) {
+				if (fl.hasListNullValue()) {
 					s.setStructureListField(fl.fieldname, null);
+				} else if (fl.hasNullValue()) {
+					int eltid = Integer.parseInt(fl.fieldeltid);
+					s.addStructureListField(fl.fieldname, null, eltid);
 				} else {
 					Structure substr = new Structure();
 					nextLine = fromFList(substr, br, level + 1);
@@ -201,7 +242,16 @@ public class FListMarshaler implements IMarshaler {
 					s.addStructureListField(fl.fieldname, substr, eltid);
 				}
 			} else if (fl.fieldtype.equals(Structure.TYPE_MAP)) {
-
+				if (fl.hasMapNullValue()) {
+					s.setStructureMapField(fl.fieldname, null);
+				} else if (fl.hasNullValue()) {
+					s.addStructureMapField(fl.fieldname, null, fl.fieldeltid);
+				} else {
+					Structure substr = new Structure();
+					nextLine = fromFList(substr, br, level + 1);
+					String key = fl.fieldeltid;
+					s.addStructureMapField(fl.fieldname, substr, key);
+				}
 			} else if (fl.fieldtype.equals(Structure.TYPE_PROPERTIES)) {
 
 			}
@@ -219,6 +269,10 @@ public class FListMarshaler implements IMarshaler {
 		}
 		return nextLine;
 
+	}
+
+	private String unescape(String value) {
+		return StringEscapeUtils.unescapeJava(value);
 	}
 
 	private String toFList(Structure s, int level, TabInfo tabInfo) {
@@ -245,8 +299,7 @@ public class FListMarshaler implements IMarshaler {
 					result += format(level, name, type, 0, value, tabInfo);
 				} else if (type.equals(Structure.TYPE_STRING)) {
 					String value = (String) s.getFields().get(name).getValue();
-					result += format(level, name, type, 0, "\"" + value + "\"",
-							tabInfo);
+					result += format(level, name, type, 0, value, tabInfo);
 				} else if (type.equals(Structure.TYPE_SUBSTRUCT)) {
 					Structure value = (Structure) s.getField(name).getValue();
 					JLG.debug("Field=" + name + " | type=" + type + " | value="
@@ -263,7 +316,7 @@ public class FListMarshaler implements IMarshaler {
 					List<Structure> list = (List<Structure>) s.getField(name)
 							.getValue();
 					if (list == null) {
-						result += format(level, name, type, 0, VALUE_NULL,
+						result += format(level, name, type, 0, LIST_NULL,
 								tabInfo);
 					} else {
 						int i = 0;
@@ -281,7 +334,32 @@ public class FListMarshaler implements IMarshaler {
 					}
 
 				} else if (type.equals(Structure.TYPE_MAP)) {
+					Map<String, Structure> map = s.getStructureMap(name);
+					if (map == null) {
+						result += format(level, name, type, 0, MAP_NULL,
+								tabInfo);
+					} else {
+						String[] keys = (String[]) map.keySet().toArray(
+								new String[0]);
+						Arrays.sort(keys, new Comparator<String>() {
 
+							@Override
+							public int compare(String o1, String o2) {
+								return o1.compareTo(o2);
+							}
+						});
+						for (String key : keys) {
+							Structure ss = map.get(key);
+							if (ss == null) {
+								result += format(level, name, type, key,
+										VALUE_NULL, tabInfo);
+							} else {
+								result += format(level, name, type, key, "",
+										tabInfo);
+								result += toFList(ss, level + 1, tabInfo);
+							}
+						}
+					}
 				} else {
 					Object value = s.getField(name).getValue();
 					String str = VALUE_NULL;
@@ -300,14 +378,71 @@ public class FListMarshaler implements IMarshaler {
 
 	private String format(int level, String name, String type, int eltid,
 			String value, TabInfo tabInfo) {
+		return format(level, name, type, "" + eltid, value, tabInfo);
+	}
+
+	private String format(int level, String name, String type, String eltid,
+			String value, TabInfo tabInfo) {
 		String sLevel = "" + level;
 		String s = sLevel + space(tabInfo.maxLevel - sLevel.length()) + " "
 				+ space(TabInfo.TABLENGTH * level) + name;
+		String type2 = type;
 		if (!type.equals("")) {
-			type += " ";
+			type2 += " ";
 		}
-		return s + space(tabInfo.tabeltid - 1 - type.length() - s.length())
-				+ " " + type + "[" + eltid + "] " + value + NL;
+		String str = s
+				+ space(tabInfo.tabeltid - 1 - type2.length() - s.length())
+				+ " " + type2 + "[" + eltid + "] ";
+		int maxLength = 80 - str.length();
+		if (type.equals(Structure.TYPE_STRING)) {
+			value = escape(value);
+		}
+		String val = value;
+		JLG.debug("type=" + type);
+		if (value.length() > maxLength) {
+
+			if (type.equals(Structure.TYPE_BYTES)) {
+				JLG.debug("multiLineBin");
+				val = multiLineBin(value);
+			} else {
+				JLG.debug("multiLineString");
+				val = multiLineString(value);
+			}
+		} else {
+			if (type.equals(Structure.TYPE_STRING)) {
+				JLG.debug("String");
+				val = "\"" + value + "\"";
+			}
+		}
+		return str + val + NL;
+	}
+
+	private String escape(String value) {
+		return StringEscapeUtils.escapeJava(value);
+	}
+
+	private String multiLineString(String value) {
+		String result = "<<EOF" + NL;
+		int i = 0;
+		int width = FILE_WIDTH - 2;
+		for (i = 0; i < value.length() - width; i += width) {
+			result += "\"" + value.substring(i, i + width) + "\"" + NL;
+		}
+
+		result += "\"" + value.substring(i) + "\"" + NL + "EOF";
+		return result;
+	}
+
+	private String multiLineBin(String value) {
+		String result = "<<EOF" + NL;
+		int i = 0;
+		int width = FILE_WIDTH - BIN_PREFIX.length();
+		for (i = 0; i < value.length() - width; i += width) {
+			result += BIN_PREFIX + value.substring(i, i + width) + NL;
+		}
+
+		result += BIN_PREFIX + value.substring(i) + NL + "EOF";
+		return result;
 	}
 
 	private String space(int n) {

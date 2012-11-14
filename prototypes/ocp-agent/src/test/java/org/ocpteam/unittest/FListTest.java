@@ -7,10 +7,13 @@ import org.ocpteam.misc.JLG;
 import org.ocpteam.misc.Structure;
 
 public class FListTest {
-	
+
 	@Test
 	public void mytest() {
 		JLG.debug_on();
+		JLG.bUseSet = true;
+		JLG.set.add(FListTest.class.getName());
+//		JLG.set.add(FListMarshaler.class.getName());
 		try {
 			testFList();
 		} catch (Exception e) {
@@ -27,8 +30,7 @@ public class FListTest {
 		JLG.debug("array=" + new String(array));
 		Structure s2 = marshaler.unmarshal(array);
 		JLG.debug("s2=" + s2);
-//		IStructurable b = s2.toObject();
-//		JLG.debug("b=" + b.toStructure().equals(a.toStructure()));
+		JLG.debug("b=" + s.equals(s2));
 	}
 
 }
