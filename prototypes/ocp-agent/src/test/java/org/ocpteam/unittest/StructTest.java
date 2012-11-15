@@ -2,9 +2,12 @@ package org.ocpteam.unittest;
 
 import java.io.Serializable;
 import java.net.Socket;
+import java.security.KeyPair;
+import java.security.KeyPairGenerator;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 
 import org.junit.Test;
@@ -20,6 +23,7 @@ import org.ocpteam.misc.Id;
 import org.ocpteam.misc.JLG;
 import org.ocpteam.misc.SField;
 import org.ocpteam.misc.Structure;
+import org.ocpteam.serializable.Address;
 import org.ocpteam.serializable.Contact;
 import org.ocpteam.serializable.Content;
 import org.ocpteam.serializable.EOMObject;
@@ -35,23 +39,55 @@ public class StructTest extends TopContainer {
 	@Test
 	public void mytest() {
 		JLG.debug_on();
+		JLG.bUseSet = true;
+		JLG.set.add(StructTest.class.getName());
+		// JLG.set.add(FListMarshaler.class.getName());
 		try {
-			// testEqual();
-			// testFields();
-//			testStructure();
-//			 testNode();
-//			 testContact(); // TODO: Multilevel Errors
-//			 testContent();
-//			 testEOMObject();
-//			 testPointer();
-//			 testSecureUser(); // TODO : Cannot stock the keyPair
-//			 testTreeEntry(); // TODO: Multilevel Errors
-//			 testTree(); // TODO: Multilevel Errors
-//			 testInputFlow(); // TODO: getArray
-//			 testInputMessage(); // TODO: getArray
+			testEqual();
+			testFields();
+			testStructure();
+			testNode();
+			testContact();
+			testContent();
+			testEOMObject();
+			testPointer();
+			testEmptySecureUser();
+			testTreeEntry();
+			testTree();
+			testInputFlow();
+			testInputMessage();
+			testSecureUser();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	public void testSecureUser() throws Exception {
+		IMarshaler marshaler = new FListMarshaler();
+		SecureUser su = new SecureUser();
+
+		KeyGenerator kg = KeyGenerator.getInstance(su.getSecretKeyAlgo());
+		SecretKey secretKey = kg.generateKey();
+		su.setSecretKey(secretKey);
+
+		KeyPairGenerator kpg = KeyPairGenerator
+				.getInstance(su.getKeyPairAlgo());
+		KeyPair keyPair = kpg.generateKeyPair();
+		su.setKeyPair(keyPair);
+
+		su.setRootAddress(new Address("0123"));
+		su.setProperty("key1", "value1");
+		su.setProperty("key2", "value2");
+		su.setProperty("key3", "");
+
+		Structure s = su.toStructure();
+		JLG.debug("s=" + s);
+		byte[] array = marshaler.marshal(s);
+		JLG.debug("array=" + JLG.NL + new String(array));
+		Structure s2 = marshaler.unmarshal(array);
+		JLG.debug("s2=" + s2);
+		IStructurable b = s2.toObject();
+		JLG.debug("b=" + b.toStructure().equals(su.toStructure()));
 	}
 
 	public void testStructure() throws Exception {
@@ -103,7 +139,7 @@ public class StructTest extends TopContainer {
 
 	public void testEqual() throws Exception {
 		IMarshaler marshaler = new FListMarshaler();
-		org.ocpteam.serializable.Test t = new org.ocpteam.serializable.Test();
+		org.ocpteam.serializable.TestObject t = new org.ocpteam.serializable.TestObject();
 		Structure s = t.toStructure();
 		JLG.debug("s=" + s);
 		byte[] array = marshaler.marshal(s);
@@ -196,21 +232,18 @@ public class StructTest extends TopContainer {
 		JLG.debug("b=" + b.toStructure().equals(t.toStructure()));
 	}
 
-	public void testSecureUser() throws Exception {
+	public void testEmptySecureUser() throws Exception {
 		IMarshaler marshaler = new FListMarshaler();
 		SecretKey secretKey = null;
 		SecureUser su = new SecureUser();
 		su.setSecretKey(secretKey);
-//		su.setRootAddress(new Address("0123"));
-//		su.setProperty("key", "value");
 		Structure s = su.toStructure();
 		JLG.debug("s=" + s);
 		byte[] array = marshaler.marshal(s);
 		JLG.debug("array=" + new String(array));
 		Structure s2 = marshaler.unmarshal(array);
 		JLG.debug("s2=" + s2);
-		IStructurable b = s2.toObject();
-		JLG.debug("b=" + b.toStructure().equals(su.toStructure()));
+		JLG.debug("b=" + s.equals(s2));
 	}
 
 	public void testPointer() throws Exception {

@@ -40,7 +40,7 @@ public class Pointer extends Id implements IStructurable {
 
 	@Override
 	public void fromStructure(Structure s) throws Exception {
-		super.setValue(s.getByteArray("value"));
+		super.setValue(s.getBin("value"));
 	}
 
 }

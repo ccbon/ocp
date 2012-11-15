@@ -1,6 +1,8 @@
 package org.ocpteam.component;
 
+import java.io.Serializable;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 import org.ocpteam.interfaces.IAddressMap;
@@ -14,11 +16,12 @@ public class AddressMapDataModel extends DSContainer<DSPDataSource> implements
 	IAddressMap getMap() {
 		return ds().getComponent(IAddressMap.class);
 	}
-	
+
 	public Address getAddress(String key) throws Exception {
-		return new Address(ds().getComponent(MessageDigest.class).hash(key.getBytes()));
+		return new Address(ds().getComponent(MessageDigest.class).hash(
+				key.getBytes()));
 	}
-	
+
 	@Override
 	public void set(String key, String value) throws Exception {
 		Address address = getAddress(key);
@@ -28,9 +31,10 @@ public class AddressMapDataModel extends DSContainer<DSPDataSource> implements
 	}
 
 	private void setRootContent(String key, Address address) throws Exception {
-		HashMap<String, Address> directory = getRootContent();
+		Map<String, Address> directory = getRootContent();
 		directory.put(key, address);
-		getMap().put(getRootAddress(), ds().serializer.serialize(directory));
+		getMap().put(getRootAddress(),
+				ds().serializer.serialize((Serializable) directory));
 	}
 
 	private Address getRootAddress() throws Exception {
@@ -38,18 +42,18 @@ public class AddressMapDataModel extends DSContainer<DSPDataSource> implements
 	}
 
 	@SuppressWarnings("unchecked")
-	private HashMap<String, Address> getRootContent() throws Exception {
+	private Map<String, Address> getRootContent() throws Exception {
 		byte[] root = getMap().get(getRootAddress());
 		if (root == null) {
 			return new HashMap<String, Address>();
 		} else {
-			return (HashMap<String, Address>) ds().serializer.deserialize(root);
+			return (Map<String, Address>) ds().serializer.deserialize(root);
 		}
 	}
 
 	@Override
 	public String get(String key) throws Exception {
-		HashMap<String, Address> directory = getRootContent();
+		Map<String, Address> directory = getRootContent();
 		Address address = directory.get(key);
 		if (address == null) {
 			return null;
@@ -72,14 +76,15 @@ public class AddressMapDataModel extends DSContainer<DSPDataSource> implements
 
 	private void removeRootContent(String key, Address address)
 			throws Exception {
-		HashMap<String, Address> directory = getRootContent();
+		Map<String, Address> directory = getRootContent();
 		directory.remove(key);
-		getMap().put(getRootAddress(), ds().serializer.serialize(directory));
+		getMap().put(getRootAddress(),
+				ds().serializer.serialize((Serializable) directory));
 	}
 
 	@Override
 	public Set<String> keySet() throws Exception {
-		HashMap<String, Address> directory = getRootContent();
+		Map<String, Address> directory = getRootContent();
 		return directory.keySet();
 	}
 

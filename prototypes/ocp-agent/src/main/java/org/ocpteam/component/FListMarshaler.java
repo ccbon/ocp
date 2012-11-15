@@ -173,7 +173,7 @@ public class FListMarshaler implements IMarshaler {
 		boolean bContinue = true;
 		nextLine = br.readLine();
 		if (nextLine == null) {
-			bContinue = false;
+			return nextLine;
 		}
 		int level = Integer.parseInt(nextLine.split("\\s+")[0]);
 		if (level != expectedLevel) {
@@ -194,6 +194,8 @@ public class FListMarshaler implements IMarshaler {
 						line = br.readLine();
 					}
 					value = fieldvalue;
+				} else if (fl.fieldvalue.equals(VALUE_NULL)) {
+					value = null;
 				} else {
 					value = fl.fieldvalue.substring(1,
 							fl.fieldvalue.length() - 1);
@@ -210,6 +212,8 @@ public class FListMarshaler implements IMarshaler {
 						line = br.readLine();
 					}
 					value = Base64.decodeBase64(fieldvalue);
+				} else if (fl.fieldvalue.equals(VALUE_NULL)) {
+					value = null;
 				} else {
 					value = Base64.decodeBase64(fl.fieldvalue);
 				}
@@ -252,8 +256,6 @@ public class FListMarshaler implements IMarshaler {
 					String key = fl.fieldeltid;
 					s.addStructureMapField(fl.fieldname, substr, key);
 				}
-			} else if (fl.fieldtype.equals(Structure.TYPE_PROPERTIES)) {
-
 			}
 			if (nextLine == null) {
 				nextLine = br.readLine();
@@ -297,6 +299,7 @@ public class FListMarshaler implements IMarshaler {
 					byte[] array = (byte[]) s.getFields().get(name).getValue();
 					String value = Base64.encodeBase64URLSafeString(array);
 					result += format(level, name, type, 0, value, tabInfo);
+
 				} else if (type.equals(Structure.TYPE_STRING)) {
 					String value = (String) s.getFields().get(name).getValue();
 					result += format(level, name, type, 0, value, tabInfo);
@@ -393,25 +396,32 @@ public class FListMarshaler implements IMarshaler {
 		String str = s
 				+ space(tabInfo.tabeltid - 1 - type2.length() - s.length())
 				+ " " + type2 + "[" + eltid + "] ";
-		int maxLength = 80 - str.length();
-		if (type.equals(Structure.TYPE_STRING)) {
-			value = escape(value);
-		}
+		int maxLength = FILE_WIDTH - str.length();
 		String val = value;
+		if (value == null) {
+			val = VALUE_NULL;
+		}
+		if (type.equals(Structure.TYPE_STRING)) {
+			if (value != null) {
+				JLG.debug("Escaping");
+				val = escape(value);
+			}
+		}
 		JLG.debug("type=" + type);
-		if (value.length() > maxLength) {
-
+		if (value != null && value.length() > maxLength) {
 			if (type.equals(Structure.TYPE_BYTES)) {
 				JLG.debug("multiLineBin");
-				val = multiLineBin(value);
+				val = multiLineBin(val);
 			} else {
 				JLG.debug("multiLineString");
-				val = multiLineString(value);
+				val = multiLineString(val);
 			}
 		} else {
 			if (type.equals(Structure.TYPE_STRING)) {
 				JLG.debug("String");
-				val = "\"" + value + "\"";
+				if (value != null) {
+					val = "\"" + val + "\"";
+				}
 			}
 		}
 		return str + val + NL;

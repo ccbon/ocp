@@ -1,16 +1,22 @@
 package org.ocpteam.fs;
 
-import java.io.Serializable;
 import java.util.Collection;
 
 import org.ocpteam.interfaces.IFile;
+import org.ocpteam.interfaces.IStructurable;
+import org.ocpteam.misc.Structure;
 
 
-public class TreeEntry implements Serializable, IFile {
+public class TreeEntry implements IStructurable, IFile {
 
 	private Pointer p;
 	private int type;
 	private String name;
+	
+	public TreeEntry() {
+		
+	}
+	
 	public TreeEntry(String name, Pointer p, int type) {
 		this.setName(name);
 		this.p = p;
@@ -49,6 +55,20 @@ public class TreeEntry implements Serializable, IFile {
 	@Override
 	public boolean isDirectory() {
 		return isTree();
+	}
+	@Override
+	public Structure toStructure() throws Exception {
+		Structure result = new Structure("FSTreeEntry");
+		result.setStringField("name", name);
+		result.setIntField("type", type);
+		result.setStructureSubstructField("p", p.toStructure());
+		return result;
+	}
+	@Override
+	public void fromStructure(Structure s) throws Exception {
+		setName(s.getString("name"));
+		type = s.getInt("type");
+		p = (Pointer) s.getSubstruct("p").toObject();
 	}
 
 }

@@ -3,11 +3,12 @@ package org.ocpteam.misc;
 import java.io.Serializable;
 import java.util.Arrays;
 
-public class SField {
+public class SField implements Serializable {
+	private static final long serialVersionUID = 1L;
 	private String type;
-	private Object value;
+	private Serializable value;
 
-	public SField(String type, Object value) {
+	public SField(String type, Serializable value) {
 		this.type = type;
 		this.value = value;
 	}
@@ -20,7 +21,7 @@ public class SField {
 		this.type = type;
 	}
 
-	public Object getValue() {
+	public Serializable getValue() {
 		return value;
 	}
 

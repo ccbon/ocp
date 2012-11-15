@@ -1,11 +1,12 @@
 package org.ocpteam.fs;
 
-import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.ocpteam.interfaces.IFile;
+import org.ocpteam.interfaces.IStructurable;
+import org.ocpteam.misc.Structure;
 
 /**
  * A Tree is a map<filename, TreeEntry> structure. It is used to form a file
@@ -13,7 +14,7 @@ import org.ocpteam.interfaces.IFile;
  * system.
  * 
  */
-public class Tree implements Serializable, IFile {
+public class Tree implements IStructurable, IFile {
 
 	/**
 	 * 
@@ -70,6 +71,19 @@ public class Tree implements Serializable, IFile {
 	@Override
 	public String getName() {
 		return null;
+	}
+
+	@Override
+	public Structure toStructure() throws Exception {
+		Structure result = new Structure("FSTree");
+		result.setMapField("entryMap", entryMap);
+		return result;
+	}
+
+	@Override
+	public void fromStructure(Structure s) throws Exception {
+		entryMap = (Map<String, TreeEntry>) s.getMap("entryMap",
+				TreeEntry.class);
 	}
 
 }

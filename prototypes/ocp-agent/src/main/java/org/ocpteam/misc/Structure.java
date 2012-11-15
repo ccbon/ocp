@@ -10,15 +10,22 @@ import java.util.Properties;
 import org.ocpteam.component.FListMarshaler;
 import org.ocpteam.interfaces.IStructurable;
 
-public class Structure {
+public class Structure implements Serializable {
+	private static final long serialVersionUID = 1L;
 	public static final String TYPE_INT = "int";
 	public static final String TYPE_SUBSTRUCT = "substr";
 	public static final String TYPE_LIST = "list";
 	public static final String TYPE_DECIMAL = "dec";
 	public static final String TYPE_STRING = "str";
-	public static final String TYPE_PROPERTIES = "properties";
 	public static final String TYPE_MAP = "map";
 	public static final String TYPE_BYTES = "bin";
+	public static final String NAME_SIMPLE = "simple";
+	public static final String NAME_MAP = "map";
+	public static final String FIELDNAME_MAPENTRY = "map_entry";
+	public static final String NAME_MAPENTRY = "map_entry";
+	public static final String FIELDNAME_SIMPLE = "field";
+	public static final String FIELDNAME_MAPSIGNATURE = "map_signature";
+	public static final String NAME_MAPSIGNATURE = "map_signature";
 	private String name;
 	private Map<String, SField> fields = new HashMap<String, SField>();
 
@@ -57,13 +64,8 @@ public class Structure {
 		return name;
 	}
 
-	private void setField(String name, String type, Object value) {
+	private void setField(String name, String type, Serializable value) {
 		fields.put(name, new SField(type, value));
-	}
-
-	private void setField(String name, Properties properties) {
-		Structure s = new Structure(properties);
-		fields.put(name, new SField(TYPE_SUBSTRUCT, s));
 	}
 
 	@Override
@@ -77,8 +79,12 @@ public class Structure {
 		return null;
 	}
 
-	public Object getFieldValue(String name) {
-		return fields.get(name).getValue();
+	public Serializable getFieldValue(String name) {
+		SField f = getField(name);
+		if (f == null) {
+			return null;
+		}
+		return f.getValue();
 	}
 
 	public SField getField(String name) {
@@ -131,15 +137,24 @@ public class Structure {
 	}
 
 	public String getString(String name) {
-		return (String) fields.get(name).getValue();
+		if (getField(name) == null) {
+			return null;
+		}
+		return (String) getField(name).getValue();
 	}
 
 	public int getInt(String name) {
-		return (Integer) fields.get(name).getValue();
+		if (getField(name) == null) {
+			return 0;
+		}
+		return (Integer) getField(name).getValue();
 	}
 
-	public byte[] getByteArray(String name) {
-		return (byte[]) fields.get(name).getValue();
+	public byte[] getBin(String name) {
+		if (getField(name) == null) {
+			return null;
+		}
+		return (byte[]) getField(name).getValue();
 	}
 
 	public Properties getProperties(String name) {
@@ -176,12 +191,12 @@ public class Structure {
 				m.put(key, s);
 			}
 		}
-		fields.put(name, new SField(TYPE_MAP, m));
+		fields.put(name, new SField(TYPE_MAP, (Serializable) m));
 
 	}
 
 	public void setStructureMapField(String name, Map<String, Structure> map) {
-		setField(name, TYPE_MAP, map);
+		setField(name, TYPE_MAP, (Serializable) map);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -222,7 +237,7 @@ public class Structure {
 				list.add(s);
 			}
 		}
-		setField(string, TYPE_LIST, list);
+		setField(string, TYPE_LIST, (Serializable) list);
 	}
 
 	public Serializable[] getArray(String name) throws Exception {
@@ -302,8 +317,7 @@ public class Structure {
 	public void setSubstructField(String name, Serializable o) throws Exception {
 		if (o == null) {
 			setField(name, TYPE_SUBSTRUCT, null);
-		}
-		if (o instanceof IStructurable) {
+		} else if (o instanceof IStructurable) {
 			IStructurable value = (IStructurable) o;
 			setField(name, TYPE_SUBSTRUCT, value.toStructure());
 		} else {
@@ -322,7 +336,7 @@ public class Structure {
 	}
 
 	public void setStructureListField(String name, List<Structure> l) {
-		setField(name, TYPE_LIST, l);
+		setField(name, TYPE_LIST, (Serializable) l);
 	}
 
 	public void setDecimalField(String name, double value) {
@@ -334,36 +348,43 @@ public class Structure {
 
 	}
 
-	public void setProprietiesField(Properties properties) {
-		setField(TYPE_PROPERTIES, properties);
+	public void setProprietiesField(String name, Properties properties) {
+		if (properties == null) {
+			setStructureSubstructField(name, null);
+			return;
+		}
+		Structure s = new Structure("properties");
+		for (Object o : properties.keySet()) {
+			String key = (String) o;
+			s.setStringField(key, properties.getProperty(key));
+		}
+		setStructureSubstructField(name, s);
 	}
 
 	public void setNullField(String name, String type) {
 		setField(name, type, null);
 	}
 
-	public void addStructureListField(String name, Structure substr,
-			int eltid) {
+	public void addStructureListField(String name, Structure substr, int eltid) {
 		List<Structure> list = getStructureList(name);
 		if (list == null) {
 			JLG.debug("List is null");
 			list = new ArrayList<Structure>();
 			setStructureListField(name, list);
 		}
-		
+
 		list.add(eltid, substr);
 	}
 
-	public void addStructureMapField(String name, Structure substr,
-			String key) {
-		Map<String, Structure> map = getStructureMap(name); 
+	public void addStructureMapField(String name, Structure substr, String key) {
+		Map<String, Structure> map = getStructureMap(name);
 		if (map == null) {
 			JLG.debug("map is null");
 			map = new HashMap<String, Structure>();
 			setStructureMapField(name, map);
 		}
-		
-		map.put(key, substr);		
+
+		map.put(key, substr);
 	}
 
 }

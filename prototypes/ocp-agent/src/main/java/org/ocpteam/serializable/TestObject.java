@@ -9,7 +9,7 @@ import org.ocpteam.component.FListMarshaler;
 import org.ocpteam.interfaces.IStructurable;
 import org.ocpteam.misc.Structure;
 
-public class Test implements IStructurable {
+public class TestObject implements IStructurable {
 
 	/**
 	 * 

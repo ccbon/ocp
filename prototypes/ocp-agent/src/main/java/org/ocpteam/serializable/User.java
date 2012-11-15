@@ -39,13 +39,13 @@ public class User implements IUser, IStructurable {
 	public Structure toStructure() throws Exception {
 		Structure result = new Structure(getClass());
 		result.setStringField("username", username);
-		result.setProprietiesField(properties);
+		result.setProprietiesField("props", properties);
 		return result;
 	}
 
 	@Override
 	public void fromStructure(Structure s) throws Exception {
 		username = s.getString("username");
-		properties = s.getProperties("properties");
+		properties = s.getProperties("props");
 	}
 }
