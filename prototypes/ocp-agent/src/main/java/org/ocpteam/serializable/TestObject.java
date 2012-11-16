@@ -23,9 +23,9 @@ public class TestObject implements IStructurable {
 	public Structure toStructure() throws Exception {
 		Structure result = new Structure(getClass());
 		result.setIntField("a", 1);
-		result.setByteArrayField("b", new byte[] { 23, 45 });
+		result.setBinField("b", new byte[] { 23, 45 });
 
-		result.setByteArrayField("bb", generateBin());
+		result.setBinField("bb", generateBin());
 		result.setStringField("e", "hello world");
 		result.setStringField("eee", generateString());
 

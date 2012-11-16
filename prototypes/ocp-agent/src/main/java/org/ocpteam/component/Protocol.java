@@ -14,6 +14,7 @@ import org.ocpteam.entity.StreamSerializer;
 import org.ocpteam.interfaces.IActivity;
 import org.ocpteam.interfaces.IModule;
 import org.ocpteam.interfaces.IProtocol;
+import org.ocpteam.interfaces.ISerializer;
 import org.ocpteam.interfaces.ITransaction;
 import org.ocpteam.misc.JLG;
 import org.ocpteam.serializable.EOMObject;
@@ -35,6 +36,7 @@ public class Protocol extends DSContainer<DataSource> implements IProtocol {
 	@Override
 	public void init() throws Exception {
 		super.init();
+		streamSerializer.setSerializer(ds().getComponent(ISerializer.class));
 		// load all module
 		JLG.debug("components: " + this.getDesigner().getMap());
 		Iterator<Object> it = getRoot().iteratorComponent();

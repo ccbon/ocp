@@ -109,7 +109,7 @@ public class ContactMap extends DSContainer<DSPDataSource> {
 			result = new Contact[map.size()];
 		}
 		int i = 0;
-		for (Contact c : map.values().toArray(new Contact[map.size()])) {
+		for (Contact c : map.values()) {
 			if (c.isMyself()) {
 				continue;
 			}

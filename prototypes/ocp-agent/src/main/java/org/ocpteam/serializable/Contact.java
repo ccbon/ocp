@@ -5,16 +5,15 @@ import java.io.Serializable;
 import org.ocpteam.interfaces.IStructurable;
 import org.ocpteam.misc.Structure;
 
-
 /**
  * A Contact reflects the public information that an agent can gives to the
  * others members of the distributed network.
- *
+ * 
  */
 public class Contact implements Serializable, IStructurable {
 
 	private static final long serialVersionUID = 1L;
-	
+
 	private String name;
 	private String host;
 	private int tcpPort;
@@ -22,7 +21,7 @@ public class Contact implements Serializable, IStructurable {
 	private Node node;
 
 	private boolean bIsMyself = false;
-	
+
 	public Contact() {
 	}
 
@@ -31,28 +30,28 @@ public class Contact implements Serializable, IStructurable {
 	}
 
 	public void setName(String name) {
-		this.name = name;	
+		this.name = name;
 	}
-	
+
 	public boolean isMyself() {
 		return bIsMyself;
 	}
-	
+
 	public void setMyself(boolean b) {
 		this.bIsMyself = b;
 	}
-	
+
 	public void setHost(String host) {
 		this.host = host;
 	}
-	
+
 	public String getHost() throws Exception {
 		if (host == null) {
 			throw new Exception("host is null !");
 		}
 		return host;
 	}
-	
+
 	@Override
 	public String toString() {
 		String result = getName();
@@ -61,7 +60,7 @@ public class Contact implements Serializable, IStructurable {
 		}
 		return result;
 	}
-	
+
 	@Override
 	public boolean equals(Object obj) {
 		if (obj != null && obj.getClass().equals(this.getClass())) {
@@ -96,12 +95,14 @@ public class Contact implements Serializable, IStructurable {
 
 	@Override
 	public Structure toStructure() throws Exception {
-		Structure result = new Structure(Contact.class);
+		Structure result = new Structure(getClass());
 		result.setStringField("name", getName());
-		result.setStringField("host",  getHost());
+		result.setStringField("host", getHost());
 		result.setIntField("tcpPort", getTcpPort());
 		result.setIntField("udpPort", getUdpPort());
-		result.setStructureSubstructField("node", getNode().toStructure());
+		if (getNode() != null) {
+			result.setSubstructField("node", getNode());
+		}
 		return result;
 	}
 
@@ -111,8 +112,10 @@ public class Contact implements Serializable, IStructurable {
 		setHost(s.getString("host"));
 		setTcpPort(s.getInt("tcpPort"));
 		setUdpPort(s.getInt("udpPort"));
-		setNode((Node) s.getSubstruct("node").toObject());
+		Structure substr = s.getSubstruct("node");
+		if (substr != null) {
+			setNode((Node) substr.toObject());
+		}
 	}
-
 
 }

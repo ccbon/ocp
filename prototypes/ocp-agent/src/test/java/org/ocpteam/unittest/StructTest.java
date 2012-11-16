@@ -41,22 +41,22 @@ public class StructTest extends TopContainer {
 		JLG.debug_on();
 		JLG.bUseSet = true;
 		JLG.set.add(StructTest.class.getName());
-		// JLG.set.add(FListMarshaler.class.getName());
+		JLG.set.add(InputMessage.class.getName());
 		try {
-			testEqual();
-			testFields();
-			testStructure();
-			testNode();
-			testContact();
-			testContent();
-			testEOMObject();
-			testPointer();
-			testEmptySecureUser();
-			testTreeEntry();
-			testTree();
-			testInputFlow();
-			testInputMessage();
-			testSecureUser();
+			// testEqual();
+			// testFields();
+			// testStructure();
+			// testNode();
+			// testContact();
+			// testContent();
+			// testEOMObject();
+			// testPointer();
+			// testEmptySecureUser();
+			// testTreeEntry();
+			// testTree();
+			// testInputFlow();
+//			testInputMessage();
+			// testSecureUser();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -94,7 +94,7 @@ public class StructTest extends TopContainer {
 		Structure s1 = new Structure("Test");
 		s1.setIntField("int", 12345);
 		s1.setStringField("string", "Hello World");
-		s1.setByteArrayField("byte[]", new byte[] { 12, 34, 56 });
+		s1.setBinField("byte[]", new byte[] { 12, 34, 56 });
 		Structure substruct1 = new Structure("Sub");
 		substruct1.setIntField("int", 12);
 		s1.setStructureSubstructField("substruct", substruct1);
@@ -107,7 +107,7 @@ public class StructTest extends TopContainer {
 		Structure s2 = new Structure("Test");
 		s2.setIntField("int", 12345);
 		s2.setStringField("string", "Hello World");
-		s2.setByteArrayField("byte[]", new byte[] { 12, 34, 56 });
+		s2.setBinField("byte[]", new byte[] { 12, 34, 56 });
 		Structure substruct2 = new Structure("Sub");
 		substruct2.setIntField("int", 12);
 		s2.setStructureSubstructField("substruct", substruct2);
@@ -169,7 +169,7 @@ public class StructTest extends TopContainer {
 			public int getId() {
 				return 14;
 			}
-		}, "hello world", new byte[] { 12, 34, 56 });
+		});
 		Structure s = t.toStructure();
 		JLG.debug("s=" + s);
 		byte[] array = marshaler.marshal(s);

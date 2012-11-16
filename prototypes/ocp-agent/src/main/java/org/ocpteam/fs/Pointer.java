@@ -1,5 +1,6 @@
 package org.ocpteam.fs;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -46,8 +47,15 @@ public class Pointer implements IStructurable {
 
 	@Override
 	public void fromStructure(Structure s) throws Exception {
-		if (s.getArray("addressList") != null) {
-			addressList = Arrays.asList((Address[]) s.getArray("addressList"));
+		Serializable[] list = s.getArray("addressList");
+		if (list != null) {
+			Address[] addresses = new Address[list.length];
+			int i = 0;
+			for (Serializable ser : list) {
+				addresses[i] = (Address) ser;
+				i++;
+			}
+			addressList = Arrays.asList(addresses);
 		}
 	}
 

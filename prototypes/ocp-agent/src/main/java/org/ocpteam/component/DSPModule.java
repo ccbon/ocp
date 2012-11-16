@@ -75,7 +75,7 @@ public class DSPModule implements IModule {
 			@Override
 			public Serializable run(Session session, Serializable[] objects)
 					throws Exception {
-				JLG.debug("get contact: ");
+				JLG.debug("get contact: " + session.ds().toContact());
 				return session.ds().toContact();
 			}
 

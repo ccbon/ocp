@@ -63,18 +63,18 @@ public class SecureUser extends AddressUser implements IStructurable {
 		result.setStringField("signatureAlgo", signatureAlgo);
 		result.setStringField("secretKeyAlgo", secretKeyAlgo);
 		if (secretKey != null) {
-			result.setByteArrayField("secretKey", secretKey.getEncoded());
+			result.setBinField("secretKey", secretKey.getEncoded());
 		} else {
 			result.setNullField("secretKey", Structure.TYPE_BYTES);
 		}
 		if (keyPair != null) {
 			PKCS8EncodedKeySpec pkcs8EncodedKeySpec = new PKCS8EncodedKeySpec(
 					keyPair.getPrivate().getEncoded());
-			result.setByteArrayField("privateKey",
+			result.setBinField("privateKey",
 					pkcs8EncodedKeySpec.getEncoded());
 			X509EncodedKeySpec x509EncodedKeySpec = new X509EncodedKeySpec(
 					keyPair.getPublic().getEncoded());
-			result.setByteArrayField("publicKey",
+			result.setBinField("publicKey",
 					x509EncodedKeySpec.getEncoded());
 		} else {
 			result.setNullField("publicKey", Structure.TYPE_BYTES);

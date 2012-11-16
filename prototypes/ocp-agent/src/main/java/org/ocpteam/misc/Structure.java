@@ -26,6 +26,12 @@ public class Structure implements Serializable {
 	public static final String FIELDNAME_SIMPLE = "field";
 	public static final String FIELDNAME_MAPSIGNATURE = "map_signature";
 	public static final String NAME_MAPSIGNATURE = "map_signature";
+	public static final String NAME_PROPERTIES = "properties";
+	public static final String NAME_PROPENTRY = "prop_entry";
+	public static final String FIELDNAME_PROPENTRY = "prop_entry";
+	public static final String NAME_LIST = "list";
+	public static final String FIELDNAME_LISTENTRY = "list_entry";
+	public static final String FIELDNAME_TYPE = "field_type";
 	private String name;
 	private Map<String, SField> fields = new HashMap<String, SField>();
 
@@ -92,13 +98,21 @@ public class Structure implements Serializable {
 	}
 
 	public IStructurable toObject() throws Exception {
-		IStructurable result = null;
-		result = getClassFromName().newInstance();
-		result.fromStructure(this);
-		return result;
+		try {
+			IStructurable result = null;
+			result = getClassFromName().newInstance();
+			result.fromStructure(this);
+			JLG.debug("result=" + result);
+			return result;
+		} catch (Exception e) {
+			JLG.debug("ERROR=" + e);
+			e.printStackTrace();
+			throw e;
+		}
 	}
 
 	private Class<? extends IStructurable> getClassFromName() throws Exception {
+		JLG.debug("class=" + StructureMap.get(name));
 		return StructureMap.get(name);
 	}
 
@@ -184,7 +198,7 @@ public class Structure implements Serializable {
 				} else if (o instanceof String) {
 					s.setStringField("field", (String) o);
 				} else if (o instanceof byte[]) {
-					s.setByteArrayField("field", (byte[]) o);
+					s.setBinField("field", (byte[]) o);
 				} else if (o instanceof Double) {
 					s.setDecimalField("field", (Double) o);
 				}
@@ -214,6 +228,10 @@ public class Structure implements Serializable {
 	@SuppressWarnings("unchecked")
 	public void setListField(String string, Serializable[] objects)
 			throws Exception {
+		if (objects == null || objects.length == 0) {
+			setField(string, TYPE_LIST, null);
+			return;
+		}
 		List<Structure> list = new ArrayList<Structure>();
 		for (Serializable o : objects) {
 			if (o instanceof IStructurable) {
@@ -226,7 +244,7 @@ public class Structure implements Serializable {
 				} else if (o instanceof String) {
 					s.setStringField("field", (String) o);
 				} else if (o instanceof byte[]) {
-					s.setByteArrayField("field", (byte[]) o);
+					s.setBinField("field", (byte[]) o);
 				} else if (o instanceof Double) {
 					s.setDecimalField("field", (Double) o);
 				} else if (o instanceof List<?>) {
@@ -241,8 +259,12 @@ public class Structure implements Serializable {
 	}
 
 	public Serializable[] getArray(String name) throws Exception {
+		JLG.debug("this=" + this);
 		@SuppressWarnings("unchecked")
 		List<Structure> value = (List<Structure>) getField(name).getValue();
+		if (value == null) {
+			return null;
+		}
 		Serializable[] result = new Serializable[value.size()];
 		for (int i = 0; i < value.size(); i++) {
 			Structure s = value.get(i);
@@ -302,7 +324,7 @@ public class Structure implements Serializable {
 		return true;
 	}
 
-	public void setByteArrayField(String name, byte[] bytearray) {
+	public void setBinField(String name, byte[] bytearray) {
 		setField(name, TYPE_BYTES, bytearray);
 	}
 
@@ -327,7 +349,7 @@ public class Structure implements Serializable {
 			} else if (o instanceof String) {
 				s.setStringField("field", (String) o);
 			} else if (o instanceof byte[]) {
-				s.setByteArrayField("field", (byte[]) o);
+				s.setBinField("field", (byte[]) o);
 			} else if (o instanceof Double) {
 				s.setDecimalField("field", (Double) o);
 			}
@@ -385,6 +407,13 @@ public class Structure implements Serializable {
 		}
 
 		map.put(key, substr);
+	}
+
+	public long getDecimal(String name) {
+		if (getField(name) == null) {
+			return 0;
+		}
+		return (Long) getField(name).getValue();
 	}
 
 }

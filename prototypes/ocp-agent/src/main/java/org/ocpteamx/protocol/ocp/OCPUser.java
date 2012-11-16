@@ -1,8 +1,13 @@
 package org.ocpteamx.protocol.ocp;
 
 import java.io.File;
+import java.security.KeyFactory;
 import java.security.KeyPair;
+import java.security.PrivateKey;
+import java.security.PublicKey;
 import java.security.Signature;
+import java.security.spec.PKCS8EncodedKeySpec;
+import java.security.spec.X509EncodedKeySpec;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
@@ -10,9 +15,9 @@ import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 
 import org.ocpteam.misc.JLG;
+import org.ocpteam.misc.Structure;
 import org.ocpteam.serializable.Pointer;
 import org.ocpteam.serializable.User;
-
 
 public class OCPUser extends User {
 
@@ -143,6 +148,74 @@ public class OCPUser extends User {
 		return "login=" + getUsername() + ";public_key="
 				+ keyPair.getPublic().getAlgorithm() + "-"
 				+ JLG.bytesToHex(keyPair.getPublic().getEncoded());
+	}
+
+	@Override
+	public Structure toStructure() throws Exception {
+		Structure result = super.toStructure();
+		result.rename(getClass());
+		result.setIntField("backupNbr", backupNbr);
+		result.setIntField("keySize", keySize);
+		result.setStringField("cipherAlgo", cipherAlgo);
+
+		if (indexKey != null) {
+			result.setBinField("indexKey", indexKey.getBytes());
+		} else {
+			result.setNullField("indexKey", Structure.TYPE_BYTES);
+		}
+
+		if (rootKey != null) {
+			result.setBinField("rootKey", rootKey.getBytes());
+		} else {
+			result.setNullField("rootKey", Structure.TYPE_BYTES);
+		}
+
+		if (secretKey != null) {
+			result.setBinField("secretKey", secretKey.getEncoded());
+		} else {
+			result.setNullField("secretKey", Structure.TYPE_BYTES);
+		}
+
+		if (keyPair != null) {
+			PKCS8EncodedKeySpec pkcs8EncodedKeySpec = new PKCS8EncodedKeySpec(
+					keyPair.getPrivate().getEncoded());
+			result.setBinField("privateKey", pkcs8EncodedKeySpec.getEncoded());
+			X509EncodedKeySpec x509EncodedKeySpec = new X509EncodedKeySpec(
+					keyPair.getPublic().getEncoded());
+			result.setBinField("publicKey", x509EncodedKeySpec.getEncoded());
+		} else {
+			result.setNullField("publicKey", Structure.TYPE_BYTES);
+			result.setNullField("privateKey", Structure.TYPE_BYTES);
+		}
+		return result;
+	}
+
+	@Override
+	public void fromStructure(Structure s) throws Exception {
+		super.fromStructure(s);
+		backupNbr = s.getInt("backupNbr");
+		keySize = s.getInt("keySize");
+		cipherAlgo = s.getString("cipherAlgo");
+		
+		KeyGenerator keyGen = KeyGenerator.getInstance(cipherAlgo);
+		keyGen.init(keySize);
+		secretKey = keyGen.generateKey();
+		
+		indexKey = new Key(s.getBin("indexKey"));
+		rootKey = new Key(s.getBin("rootKey"));
+
+		byte[] publicKeyEncoded = s.getBin("publicKey");
+		byte[] privateKeyEncoded = s.getBin("privateKey");
+		if (publicKeyEncoded != null && privateKeyEncoded != null) {
+			KeyFactory keyFactory = KeyFactory.getInstance(cipherAlgo);
+			X509EncodedKeySpec publicKeySpec = new X509EncodedKeySpec(
+					s.getBin("publicKey"));
+			PublicKey publicKey = keyFactory.generatePublic(publicKeySpec);
+			PKCS8EncodedKeySpec privateKeySpec = new PKCS8EncodedKeySpec(
+					s.getBin("privateKey"));
+			PrivateKey privateKey = keyFactory.generatePrivate(privateKeySpec);
+			keyPair = new KeyPair(publicKey, privateKey);
+		}
 	}
 
 }

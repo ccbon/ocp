@@ -14,15 +14,27 @@ public class FListSerializerTest {
 	@Test
 	public void mytest() {
 		JLG.debug_on();
-		JLG.bUseSet = true;
-		JLG.set.add(getClass().getName());
+//		JLG.bUseSet = true;
+//		JLG.set.add(getClass().getName());
 		JLG.set.add(FListSerializer.class.getName());
 		try {
 			// test();
-			testMap();
+//			testMap();
+			testArray();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+	
+
+
+	public void testArray() throws Exception {
+		FListSerializer ser = new FListSerializer();
+		int[] array = new int[] {1,2,3,4};
+		byte[] serrialized = ser.serialize(array);
+		JLG.debug("serialized=" + new String(serrialized));
+		Integer[] deserrialized = (Integer[]) ser.deserialize(serrialized);
+		JLG.debug("deserialized=" + deserrialized);
 	}
 
 	public void test() throws Exception {

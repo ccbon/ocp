@@ -41,7 +41,7 @@ public class JSONMarshaler implements IMarshaler {
 					result.setNullField(key, type);
 				} else if (type.equals(Structure.TYPE_BYTES)) {
 					byte[] value = Base64.decodeBase64(jsonArray.getString(1));
-					result.setByteArrayField(key, value);
+					result.setBinField(key, value);
 				} else if (type.equals(Structure.TYPE_INT)) {
 					int value = jsonArray.getInt(1);
 					result.setIntField(key, value);

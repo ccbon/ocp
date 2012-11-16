@@ -1,6 +1,7 @@
 package org.ocpteamx.protocol.ocp;
 
 import org.ocpteam.misc.JLG;
+import org.ocpteam.misc.Structure;
 
 public class Data extends Content {
 
@@ -32,6 +33,22 @@ public class Data extends Content {
 	@Override
 	public Key getKey(OCPAgent agent) throws Exception {
 		return new Key(agent.hash(content));
+	}
+
+	@Override
+	public Structure toStructure() throws Exception {
+		Structure result = new Structure(getClass());
+		result.setBinField("content", getContent());
+		result.setBinField("signature", signature);
+		result.setBinField("username", username);
+		return result;
+	}
+
+	@Override
+	public void fromStructure(Structure s) throws Exception {
+		content = s.getBin("content");
+		signature = s.getBin("signature");
+		username = s.getBin("username");
 	}
 
 }

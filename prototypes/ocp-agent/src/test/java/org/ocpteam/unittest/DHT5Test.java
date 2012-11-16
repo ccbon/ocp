@@ -31,7 +31,7 @@ public class DHT5Test {
 			int n = 2;
 			int port = 40000;
 			JLG.debug_on();
-			//JLG.bUseSet = true;
+			JLG.bUseSet = true;
 			JLG.set.add(DHT5Test.class.getName());
 			DHT5v2DataSource[] ds = new DHT5v2DataSource[n];
 			for (int i = 0; i < n; i++) {

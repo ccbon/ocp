@@ -5,7 +5,7 @@ import java.security.Signature;
 
 import org.ocpteam.interfaces.ICaptcha;
 import org.ocpteam.misc.JLG;
-
+import org.ocpteam.misc.Structure;
 
 public class Captcha implements ICaptcha {
 
@@ -20,12 +20,16 @@ public class Captcha implements ICaptcha {
 	public String signatureAlgo;
 	public byte[] signature;
 
+	public Captcha() {
+	}
+
 	public Captcha(OCPAgent agent) throws Exception {
 		this.challengeObject = "the answer is :didounette";
 		this.created = System.currentTimeMillis();
 		cryptedAnswer = agent.crypt("didounette".getBytes());
 		JLG.debug("cryptedAnswer = " + cryptedAnswer);
-		JLG.debug("decryptedAnswer = " + new String(agent.decrypt(cryptedAnswer)));
+		JLG.debug("decryptedAnswer = "
+				+ new String(agent.decrypt(cryptedAnswer)));
 		contactId = agent.id.toString();
 		JLG.debug("contactId = " + contactId);
 		signatureAlgo = agent.signatureAlgorithm;
@@ -64,7 +68,30 @@ public class Captcha implements ICaptcha {
 		}
 		String clearAnswer = new String(agent.decrypt(this.cryptedAnswer));
 		if (!answer.equals(clearAnswer)) {
-			throw new Exception("bad answer (" + answer + "!=" + clearAnswer + ")");
+			throw new Exception("bad answer (" + answer + "!=" + clearAnswer
+					+ ")");
 		}
+	}
+
+	@Override
+	public Structure toStructure() throws Exception {
+		Structure result = new Structure(getClass());
+		result.setStringField("challengeObject", challengeObject);
+		result.setStringField("contactId", contactId);
+		result.setStringField("signatureAlgo", signatureAlgo);
+		result.setDecimalField("created", created);
+		result.setBinField("cryptedAnswer", cryptedAnswer);
+		result.setBinField("signature", signature);
+		return result;
+	}
+
+	@Override
+	public void fromStructure(Structure s) throws Exception {
+		challengeObject = s.getString("challengeObject");
+		contactId = s.getString("contactId");
+		signatureAlgo = s.getString("signatureAlgo");
+		created = s.getDecimal("created");
+		cryptedAnswer = s.getBin("cryptedAnswer");
+		signature = s.getBin("signature");
 	}
 }

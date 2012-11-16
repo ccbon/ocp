@@ -1,11 +1,16 @@
 package org.ocpteam.component;
 
 import java.io.Serializable;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
 import org.ocpteam.interfaces.ISerializer;
 import org.ocpteam.interfaces.IStructurable;
+import org.ocpteam.misc.JLG;
 import org.ocpteam.misc.Structure;
 
 public class FListSerializer implements ISerializer {
@@ -33,12 +38,27 @@ public class FListSerializer implements ISerializer {
 		}
 		if (s instanceof byte[]) {
 			Structure struct = new Structure(Structure.NAME_SIMPLE);
-			struct.setByteArrayField(Structure.FIELDNAME_SIMPLE, (byte[]) s);
+			struct.setBinField(Structure.FIELDNAME_SIMPLE, (byte[]) s);
 			return struct;
 		}
 		if (s instanceof Double) {
 			Structure struct = new Structure(Structure.NAME_SIMPLE);
 			struct.setDecimalField(Structure.FIELDNAME_SIMPLE, (Double) s);
+			return struct;
+		}
+		if (s instanceof Properties) {
+			Structure struct = new Structure(Structure.NAME_PROPERTIES);
+			Properties props = (Properties) s;
+			int i = 0;
+			for (Object o : props.keySet()) {
+				Structure substr = new Structure(Structure.NAME_PROPENTRY);
+				String key = (String) o;
+				substr.setStringField("key", key);
+				substr.setStringField("value", props.getProperty(key));
+				struct.addStructureListField(Structure.FIELDNAME_PROPENTRY,
+						substr, i);
+				i++;
+			}
 			return struct;
 		}
 		if (s instanceof Map<?, ?>) {
@@ -58,12 +78,26 @@ public class FListSerializer implements ISerializer {
 			}
 			return struct;
 		}
+		if (s.getClass().isArray()) {
+			JLG.debug("s.getClass()=" + s.getClass());
+			Structure struct = new Structure(Structure.NAME_LIST);
+			for (int i = 0; i < Array.getLength(s); i++) {
+				Structure substr = toStructure((Serializable) Array.get(s, i));
+				struct.addStructureListField(Structure.FIELDNAME_LISTENTRY,
+						substr, i);
+			}
+			return struct;
+		}
 		throw new Exception(
-				"Serializable object not convertible into Structure. s=" + s.getClass());
+				"Serializable object not convertible into Structure. s="
+						+ s.getClass());
 	}
 
 	@Override
 	public Serializable deserialize(byte[] input) throws Exception {
+		if (input == null) {
+			JLG.debug("Want to dezerialize null input");
+		}
 		Structure s = new FListMarshaler().unmarshal(input);
 		return toSerializable(s);
 	}
@@ -84,9 +118,38 @@ public class FListSerializer implements ISerializer {
 				}
 			}
 			return (Serializable) map;
+		} else if (s.getName().equals(Structure.NAME_PROPERTIES)) {
+			Properties p = new Properties();
+			if (s.getStructureList(Structure.FIELDNAME_PROPENTRY) != null) {
+				for (Structure substr : s
+						.getStructureList(Structure.FIELDNAME_PROPENTRY)) {
+					String key = substr.getString("key");
+					String value = substr.getString("value");
+					p.setProperty(key, value);
+				}
+			}
+			return p;
+		} else if (s.getName().equals(Structure.NAME_LIST)) {
+			List<Serializable> list = new ArrayList<Serializable>();
+			Class<?> c = null;
+			if (s.getStructureList(Structure.FIELDNAME_LISTENTRY) != null) {
+				for (Structure substr : s
+						.getStructureList(Structure.FIELDNAME_LISTENTRY)) {
+					Serializable item = toSerializable(substr);
+					JLG.debug("item.class=" + item.getClass());
+					c = item.getClass();
+					list.add(item);
+				}
+			}
+			Serializable result = (Serializable) Array.newInstance(c,
+					list.size());
+			for (int i = 0; i < list.size(); i++) {
+				Array.set(result, i, list.get(i));
+			}
+			return result;
 		} else {
+			JLG.debug("s is Structurable");
 			return s.toObject();
 		}
 	}
-
 }

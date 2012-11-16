@@ -22,15 +22,15 @@ public class FListMarshaler implements IMarshaler {
 		public int maxLevel = 0;
 		private int maxField = 0;
 
-		public TabInfo(Structure s) {
-			JLG.debug("Call TabInfo with s=" + s.getName());
+		public TabInfo(Structure s) throws Exception {
+			JLG.debug("Call TabInfo with s.name=" + s.getName());
 			initMaxLevel(s, 0);
 			init(s, 0);
 			JLG.debug("maxlevel=" + maxLevel);
 			tabeltid = maxLevel + 1 + maxField + 2;
 		}
 
-		private void initMaxLevel(Structure s, int level) {
+		private void initMaxLevel(Structure s, int level) throws Exception {
 			if (s == null) {
 				return;
 			}
@@ -59,9 +59,13 @@ public class FListMarshaler implements IMarshaler {
 			}
 		}
 
-		private void init(Structure s, int level) {
+		private void init(Structure s, int level) throws Exception {
 			if (s == null) {
 				return;
+			}
+			JLG.debug("structure name = " + s.getName());
+			if (s.getName() == null) {
+				throw new Exception("Struture without name.");
 			}
 			maxField = Math.max((TABLENGTH * level) + s.getName().length() + 2,
 					maxField);
@@ -147,6 +151,7 @@ public class FListMarshaler implements IMarshaler {
 
 	@Override
 	public Structure unmarshal(byte[] array) throws Exception {
+		JLG.debug("array=" + new String(array));
 		return fromFList(new String(array));
 	}
 
@@ -156,6 +161,7 @@ public class FListMarshaler implements IMarshaler {
 		BufferedReader br = new BufferedReader(new StringReader(string));
 		fromFList(s, br, 0);
 		br.close();
+		JLG.debug("structure=" + s);
 		return s;
 
 	}
@@ -169,6 +175,7 @@ public class FListMarshaler implements IMarshaler {
 		String name = nextLine.substring(nextLine.indexOf('[') + 1,
 				nextLine.indexOf(']'));
 		s.setName(name);
+		JLG.debug("s=" + s);
 
 		boolean bContinue = true;
 		nextLine = br.readLine();
@@ -218,7 +225,7 @@ public class FListMarshaler implements IMarshaler {
 					value = Base64.decodeBase64(fl.fieldvalue);
 				}
 
-				s.setByteArrayField(fl.fieldname, value);
+				s.setBinField(fl.fieldname, value);
 			} else if (fl.fieldtype.equals(Structure.TYPE_DECIMAL)) {
 				double value = Double.parseDouble(fl.fieldvalue);
 				s.setDecimalField(fl.fieldname, value);

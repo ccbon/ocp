@@ -38,6 +38,7 @@ public abstract class DSPDataSource extends DataSource {
 		addComponent(UDPListener.class);
 		addComponent(ContactMap.class);
 		addComponent(DSPModule.class);
+//		addComponent(ISerializer.class, new FListSerializer());
 		addComponent(ISerializer.class, new JavaSerializer());
 	}
 

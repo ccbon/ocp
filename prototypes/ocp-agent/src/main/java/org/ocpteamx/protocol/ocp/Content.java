@@ -1,8 +1,8 @@
 package org.ocpteamx.protocol.ocp;
 
-import java.io.Serializable;
+import org.ocpteam.interfaces.IStructurable;
 
-public abstract class Content implements Serializable {
+public abstract class Content implements IStructurable {
 	/**
 	 * 
 	 */

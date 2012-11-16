@@ -3,7 +3,6 @@ package org.ocpteam.misc;
 import java.math.BigInteger;
 
 import org.ocpteam.interfaces.IStructurable;
-import org.ocpteam.serializable.Address;
 
 
 public class Id implements IStructurable, Comparable<Id> {
@@ -63,8 +62,8 @@ public class Id implements IStructurable, Comparable<Id> {
 
 	@Override
 	public Structure toStructure() throws Exception {
-		Structure result = new Structure(Address.class);
-		result.setByteArrayField("value", getBytes());
+		Structure result = new Structure(getClass());
+		result.setBinField("value", getBytes());
 		return result;
 	}
 

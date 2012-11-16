@@ -26,7 +26,7 @@ public class UserPublicInfo extends User implements IStructurable {
 		result.rename(getClass());
 		X509EncodedKeySpec x509EncodedKeySpec = new X509EncodedKeySpec(
 				publicKey.getEncoded());
-		result.setByteArrayField("publicKey", x509EncodedKeySpec.getEncoded());
+		result.setBinField("publicKey", x509EncodedKeySpec.getEncoded());
 		return result;
 	}
 
