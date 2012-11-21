@@ -175,14 +175,15 @@ public class FListMarshaler implements IMarshaler {
 		String name = nextLine.substring(nextLine.indexOf('[') + 1,
 				nextLine.indexOf(']'));
 		s.setName(name);
-		JLG.debug("s=" + s);
+		// JLG.debug("s=" + s);
 
 		boolean bContinue = true;
 		nextLine = br.readLine();
 		if (nextLine == null) {
 			return nextLine;
 		}
-		int level = Integer.parseInt(nextLine.split("\\s+")[0]);
+		int level = Integer.parseInt(nextLine.substring(0,
+				nextLine.indexOf(' ')));
 		if (level != expectedLevel) {
 			bContinue = false;
 		}
@@ -193,32 +194,36 @@ public class FListMarshaler implements IMarshaler {
 			if (fl.fieldtype.equals(Structure.TYPE_STRING)) {
 				String value = "";
 				if (fl.fieldvalue.startsWith("<<EOF")) {
-					String fieldvalue = "";
+					int lineNbr = Integer.parseInt(fl.fieldvalue
+							.substring(fl.fieldvalue.indexOf(' ') + 1));
+					StringBuilder fieldvalue = new StringBuilder(lineNbr*FILE_WIDTH);
 					String line = br.readLine();
 					while (!line.equals("EOF")) {
 						line = line.substring(1, line.length() - 1);
-						fieldvalue += line;
+						fieldvalue.append(line);
 						line = br.readLine();
 					}
-					value = fieldvalue;
+					value = fieldvalue.toString();
 				} else if (fl.fieldvalue.equals(VALUE_NULL)) {
 					value = null;
 				} else {
 					value = fl.fieldvalue.substring(1,
 							fl.fieldvalue.length() - 1);
 				}
-				JLG.debug("fieldvalue=" + value);
+				// JLG.debug("fieldvalue=" + value);
 				s.setStringField(fl.fieldname, unescape(value));
 			} else if (fl.fieldtype.equals(Structure.TYPE_BYTES)) {
 				byte[] value = null;
 				if (fl.fieldvalue.startsWith("<<EOF")) {
-					String fieldvalue = "";
+					int lineNbr = Integer.parseInt(fl.fieldvalue
+							.substring(fl.fieldvalue.indexOf(' ') + 1));
+					StringBuilder fieldvalue = new StringBuilder(lineNbr*FILE_WIDTH);
 					String line = br.readLine();
 					while (!line.equals("EOF")) {
-						fieldvalue += line.substring(BIN_PREFIX.length());
+						fieldvalue.append(line.substring(BIN_PREFIX.length()));
 						line = br.readLine();
 					}
-					value = Base64.decodeBase64(fieldvalue);
+					value = Base64.decodeBase64(fieldvalue.toString());
 				} else if (fl.fieldvalue.equals(VALUE_NULL)) {
 					value = null;
 				} else {
@@ -438,24 +443,27 @@ public class FListMarshaler implements IMarshaler {
 	private String escape(String value) {
 		return StringEscapeUtils.escapeJava(value);
 	}
-
+	
 	private String multiLineString(String value) {
-		String result = "<<EOF" + NL;
+		StringBuilder result = new StringBuilder(value.length());
 		int i = 0;
 		int width = FILE_WIDTH - 2;
+		int lineNbr = ((value.length() / width) + 1);
+		result.append("<<EOF " + lineNbr + NL);
 		for (i = 0; i < value.length() - width; i += width) {
-			result += "\"" + value.substring(i, i + width) + "\"" + NL;
+			result.append("\"" + value.substring(i, i + width) + "\"" + NL);
 		}
 
-		result += "\"" + value.substring(i) + "\"" + NL + "EOF";
-		return result;
+		result.append("\"" + value.substring(i) + "\"" + NL + "EOF");
+		return result.toString();
 	}
 	
 	private String multiLineBin(String value) {
-		StringBuffer result = new StringBuffer(value.length());
-		result.append("<<EOF" + NL);
+		StringBuilder result = new StringBuilder(value.length());
 		int i = 0;
 		int width = FILE_WIDTH - BIN_PREFIX.length();
+		int lineNbr = ((value.length() / width) + 1);
+		result.append("<<EOF " + lineNbr + NL);
 		for (i = 0; i < value.length() - width; i += width) {
 			result.append(BIN_PREFIX + value.substring(i, i + width) + NL);
 		}
@@ -464,9 +472,8 @@ public class FListMarshaler implements IMarshaler {
 		return result.toString();
 	}
 
-	
 	private String space(int n) {
-		StringBuffer space = new StringBuffer(Math.max(0, n));
+		StringBuilder space = new StringBuilder(Math.max(0, n));
 		for (int i = 0; i < n; i++) {
 			space.append(' ');
 		}
