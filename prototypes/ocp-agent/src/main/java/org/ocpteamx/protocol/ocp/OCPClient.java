@@ -6,6 +6,7 @@ import org.apache.xmlrpc.client.XmlRpcClient;
 import org.apache.xmlrpc.client.XmlRpcClientConfigImpl;
 import org.ocpteam.component.Agent;
 import org.ocpteam.component.Client;
+import org.ocpteam.component.Protocol;
 import org.ocpteam.entity.Context;
 import org.ocpteam.entity.Response;
 import org.ocpteam.interfaces.IAuthenticable;
@@ -27,6 +28,7 @@ public class OCPClient extends Client implements IAuthenticable {
 	public void init() throws Exception {
 		super.init();
 		agent = (OCPAgent) ds().getComponent(Agent.class);
+		protocol = (OCPProtocol) ds().getComponent(Protocol.class);
 	}
 	
 	@Override
@@ -35,6 +37,7 @@ public class OCPClient extends Client implements IAuthenticable {
 	}
 
 	private OCPAgent agent;
+	private OCPProtocol protocol;
 
 	public Id[] requestNodeId() throws Exception {
 		Id[] nodeIds = null;
@@ -59,9 +62,9 @@ public class OCPClient extends Client implements IAuthenticable {
 		return captcha;
 	}
 
-	public void createUser(Contact contact, ObjectData data, Link link,
+	public void createUser(Contact contact, Data data, Link link,
 			Captcha captcha, String answer) throws Exception {
-		byte[] request = OCPProtocol.message(OCPProtocol.CREATE_USER, data, link,
+		byte[] request = protocol.message(OCPProtocol.CREATE_USER, data, link,
 				captcha, answer);
 		request(contact, request);
 	}
@@ -69,7 +72,7 @@ public class OCPClient extends Client implements IAuthenticable {
 	public void store(Queue<Contact> contactQueue, Address address,
 			Content content) throws Exception {
 		// store an object at given address and put the content.
-		byte[] request = OCPProtocol.message(OCPProtocol.CREATE_OBJECT,
+		byte[] request = protocol.message(OCPProtocol.CREATE_OBJECT,
 				address.getBytes(), content);
 		Response response = requestByPriority(contactQueue, request);
 		response.checkForError();
@@ -77,14 +80,14 @@ public class OCPClient extends Client implements IAuthenticable {
 
 	public byte[] getUser(Id key) throws Exception {
 		Response r = requestByPriority(agent.makeContactQueue(key),
-				OCPProtocol.message(OCPProtocol.GET_USER, key.getBytes()));
+				protocol.message(OCPProtocol.GET_USER, key.getBytes()));
 		r.checkForError();
 		return (byte[]) r.getObject();
 	}
 
 	public Content getFromAddress(Address address) throws Exception {
 		Response r = requestByPriority(agent.makeContactQueue(address),
-				OCPProtocol.message(OCPProtocol.GET_ADDRESS, address.getBytes()));
+				protocol.message(OCPProtocol.GET_ADDRESS, address.getBytes()));
 		r.checkForError();
 		if (new String((byte[]) r.getObject()).equals(new String(
 				OCPProtocol.ADDRESS_NOT_FOUND))) {
@@ -95,7 +98,7 @@ public class OCPClient extends Client implements IAuthenticable {
 
 	public void remove(Address address, byte[] addressSignature)
 			throws Exception {
-		Response r = requestByPriority(agent.makeContactQueue(address), OCPProtocol.message(
+		Response r = requestByPriority(agent.makeContactQueue(address), protocol.message(
 				OCPProtocol.REMOVE_ADDRESS, address, addressSignature));
 		r.checkForError();
 	}

@@ -496,12 +496,12 @@ public class OCPAgent extends Agent {
 			return upi;
 		}
 		Key key = UserPublicInfo.getKey(this, sUsername);
-		ObjectData data = (ObjectData) get(key);
+		Data data = (Data) get(key);
 		if (data == null) {
 			throw new Exception("Cannot get the user public info for "
 					+ sUsername);
 		}
-		upi = (UserPublicInfo) data.getObject();
+		upi = (UserPublicInfo) ds().serializer.deserialize(data.getContent());
 		cache.put(UserPublicInfo.class, sUsername, upi);
 		return upi;
 	}
@@ -518,7 +518,7 @@ public class OCPAgent extends Agent {
 
 		// 1) create the public part of the user.
 		// catpcha is required in order to avoid massive fake user creation
-		ObjectData publicUserData = new ObjectData(this, user, upi);
+		Data publicUserData = new Data(this, user, ds().serializer.serialize(upi));
 		Link publicUserDataLink = new Link(user, this, UserPublicInfo.getKey(
 				this, login), publicUserData.getKey(this));
 

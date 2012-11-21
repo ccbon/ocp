@@ -126,7 +126,7 @@ public class OCPProtocol extends Protocol {
 			try {
 				Captcha captcha = new Captcha(agent);
 				// serialize it.
-				return JLG.serialize(captcha);
+				return ds().serializer.serialize(captcha);
 			} catch (Exception e) {
 				return ERROR;
 			}
@@ -141,7 +141,7 @@ public class OCPProtocol extends Protocol {
 
 				// TODO handle when user already exists.
 
-				ObjectData data = (ObjectData) ds().serializer.deserialize(it.next());
+				Data data = (Data) ds().serializer.deserialize(it.next());
 				Link link = (Link) ds().serializer.deserialize(it.next());
 				Captcha captcha = (Captcha) ds().serializer.deserialize(it.next());
 				String answer = new String(it.next());
@@ -168,7 +168,7 @@ public class OCPProtocol extends Protocol {
 		if (request.startsWith(CREATE_OBJECT)) {
 			try {
 				// String request = Protocol.CREATE_OBJECT + ":" + address + ":"
-				// + JLG.serialize(content);
+				// + serialize(content);
 
 				Address address = new Address(it.next());
 				Content content = (Content) JLG.deserialize(it.next());
@@ -230,7 +230,7 @@ public class OCPProtocol extends Protocol {
 		return ("INFORM_DETACH:" + contact.getName()).getBytes();
 	}
 
-	public static byte[] message(String function, Object... objects)
+	public byte[] message(String function, Object... objects)
 			throws Exception {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		DataOutputStream dos = new DataOutputStream(baos);
@@ -246,7 +246,7 @@ public class OCPProtocol extends Protocol {
 			} else if (objects[i].getClass() == String.class) {
 				serialized = ((String) objects[i]).getBytes();
 			} else {
-				serialized = JLG.serialize((Serializable) objects[i]);
+				serialized = ds().serializer.serialize((Serializable) objects[i]);
 			}
 			dos.writeInt(serialized.length);
 			dos.write(serialized);

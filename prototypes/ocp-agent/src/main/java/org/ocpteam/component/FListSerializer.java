@@ -102,7 +102,8 @@ public class FListSerializer implements ISerializer {
 		return toSerializable(s);
 	}
 
-	private Serializable toSerializable(Structure s) throws Exception {
+	private Serializable toSerializable(Structure s)
+			throws Exception {
 		if (s.getName().equals(Structure.NAME_SIMPLE)) {
 			return s.getFieldValue(Structure.FIELDNAME_SIMPLE);
 		} else if (s.getName().equals(Structure.NAME_MAP)) {
@@ -140,6 +141,11 @@ public class FListSerializer implements ISerializer {
 					c = item.getClass();
 					list.add(item);
 				}
+			} else {
+				if (c == null) {
+					throw new Exception(
+							"Cannot guess the cast for a null list.");
+				}
 			}
 			Serializable result = (Serializable) Array.newInstance(c,
 					list.size());
@@ -148,7 +154,6 @@ public class FListSerializer implements ISerializer {
 			}
 			return result;
 		} else {
-			JLG.debug("s is Structurable");
 			return s.toObject();
 		}
 	}

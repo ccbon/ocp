@@ -79,7 +79,7 @@ public class Captcha implements ICaptcha {
 		result.setStringField("challengeObject", challengeObject);
 		result.setStringField("contactId", contactId);
 		result.setStringField("signatureAlgo", signatureAlgo);
-		result.setDecimalField("created", created);
+		result.setStringField("created", "" + created);
 		result.setBinField("cryptedAnswer", cryptedAnswer);
 		result.setBinField("signature", signature);
 		return result;
@@ -90,7 +90,7 @@ public class Captcha implements ICaptcha {
 		challengeObject = s.getString("challengeObject");
 		contactId = s.getString("contactId");
 		signatureAlgo = s.getString("signatureAlgo");
-		created = s.getDecimal("created");
+		created = Long.parseLong(s.getString("created"));
 		cryptedAnswer = s.getBin("cryptedAnswer");
 		signature = s.getBin("signature");
 	}

@@ -156,7 +156,7 @@ public class FListMarshaler implements IMarshaler {
 	}
 
 	private Structure fromFList(String string) throws Exception {
-		JLG.debug("string=" + string);
+		JLG.debug("string=" + JLG.NL + string);
 		Structure s = new Structure();
 		BufferedReader br = new BufferedReader(new StringReader(string));
 		fromFList(s, br, 0);
@@ -230,8 +230,7 @@ public class FListMarshaler implements IMarshaler {
 				double value = Double.parseDouble(fl.fieldvalue);
 				s.setDecimalField(fl.fieldname, value);
 			} else if (fl.fieldtype.equals(Structure.TYPE_INT)) {
-				int value = Integer.parseInt(fl.fieldvalue);
-				s.setIntField(fl.fieldname, value);
+				s.setIntField(fl.fieldname, Integer.parseInt(fl.fieldvalue));
 			} else if (fl.fieldtype.equals(Structure.TYPE_SUBSTRUCT)) {
 				if (fl.hasNullValue()) {
 					s.setStructureSubstructField(fl.fieldname, null);
@@ -394,15 +393,17 @@ public class FListMarshaler implements IMarshaler {
 	private String format(int level, String name, String type, String eltid,
 			String value, TabInfo tabInfo) {
 		String sLevel = "" + level;
-		String s = sLevel + space(tabInfo.maxLevel - sLevel.length()) + " "
-				+ space(TabInfo.TABLENGTH * level) + name;
+		String s = sLevel
+				+ space(Math.max(0, tabInfo.maxLevel - sLevel.length()) + 1
+						+ (TabInfo.TABLENGTH * level)) + name;
 		String type2 = type;
 		if (!type.equals("")) {
 			type2 += " ";
 		}
 		String str = s
-				+ space(tabInfo.tabeltid - 1 - type2.length() - s.length())
-				+ " " + type2 + "[" + eltid + "] ";
+				+ space(Math.max(1,
+						tabInfo.tabeltid - type2.length() - s.length()))
+				+ type2 + "[" + eltid + "] ";
 		int maxLength = FILE_WIDTH - str.length();
 		String val = value;
 		if (value == null) {
@@ -449,24 +450,26 @@ public class FListMarshaler implements IMarshaler {
 		result += "\"" + value.substring(i) + "\"" + NL + "EOF";
 		return result;
 	}
-
+	
 	private String multiLineBin(String value) {
-		String result = "<<EOF" + NL;
+		StringBuffer result = new StringBuffer(value.length());
+		result.append("<<EOF" + NL);
 		int i = 0;
 		int width = FILE_WIDTH - BIN_PREFIX.length();
 		for (i = 0; i < value.length() - width; i += width) {
-			result += BIN_PREFIX + value.substring(i, i + width) + NL;
+			result.append(BIN_PREFIX + value.substring(i, i + width) + NL);
 		}
 
-		result += BIN_PREFIX + value.substring(i) + NL + "EOF";
-		return result;
+		result.append(BIN_PREFIX + value.substring(i) + NL + "EOF");
+		return result.toString();
 	}
 
+	
 	private String space(int n) {
-		String space = "";
+		StringBuffer space = new StringBuffer(Math.max(0, n));
 		for (int i = 0; i < n; i++) {
-			space += " ";
+			space.append(' ');
 		}
-		return space;
+		return space.toString();
 	}
 }

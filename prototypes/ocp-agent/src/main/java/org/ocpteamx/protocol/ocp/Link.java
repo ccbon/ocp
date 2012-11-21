@@ -13,6 +13,9 @@ public class Link extends Content {
 	private Key key;
 	private Key targetKey;
 
+	public Link() {
+	}
+
 	public Link(OCPUser user, OCPAgent agent, Key key, Key targetKey)
 			throws Exception {
 		this.setKey(key);

@@ -7,6 +7,9 @@ public class Data extends Content {
 
 	protected byte[] content = null;
 	
+	public Data() {
+	}
+	
 	public Data(OCPAgent agent, OCPUser user, byte[] content) throws Exception {
 		this.content = content;
 		this.username = user.getUsername().getBytes();

@@ -16,5 +16,4 @@ public class JavaSerializer implements ISerializer {
 	public Serializable deserialize(byte[] input) throws Exception {
 		return JLG.deserialize(input);
 	}
-
 }

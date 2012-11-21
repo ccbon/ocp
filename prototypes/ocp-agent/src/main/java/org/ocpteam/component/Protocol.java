@@ -39,7 +39,7 @@ public class Protocol extends DSContainer<DataSource> implements IProtocol {
 		streamSerializer.setSerializer(ds().getComponent(ISerializer.class));
 		// load all module
 		JLG.debug("components: " + this.getDesigner().getMap());
-		Iterator<Object> it = getRoot().iteratorComponent();
+		Iterator<Object> it = ds().iteratorComponent();
 		while (it.hasNext()) {
 			Object o = it.next();
 			if (o instanceof IModule) {

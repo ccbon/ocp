@@ -31,9 +31,9 @@ public class FListTest {
 		JLG.debug_on();
 		JLG.bUseSet = true;
 		JLG.set.add(FListTest.class.getName());
-		// JLG.set.add(FListMarshaler.class.getName());
+//		 JLG.set.add(FListMarshaler.class.getName());
 		try {
-			// testFList();
+			 testFList();
 //			testEmptyClass();
 		} catch (Exception e) {
 			e.printStackTrace();

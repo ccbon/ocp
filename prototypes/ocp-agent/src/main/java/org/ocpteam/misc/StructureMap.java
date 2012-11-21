@@ -1,6 +1,5 @@
 package org.ocpteam.misc;
 
-import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -39,22 +38,19 @@ public class StructureMap {
 		}
 	}
 
-	public static String getFromClass(Class<? extends Serializable> c)
+	public static String getFromClass(Class<? extends IStructurable> c)
 			throws Exception {
 		if (mapBA == null) {
 			loadMap();
 		}
-		if (c.isAssignableFrom(IStructurable.class)) {
-			String result = mapBA.get(c);
-			if (result == null) {
-				throw new Exception(
-						"Class not found in structures.properties for class="
-								+ c);
-			}
-			return result;
-		} else {
-			return Structure.NAME_SIMPLE;
+
+		String result = mapBA.get(c);
+		if (result == null) {
+			throw new Exception(
+					"Class not found in structures.properties for class=" + c);
 		}
+		return result;
+
 	}
 
 }

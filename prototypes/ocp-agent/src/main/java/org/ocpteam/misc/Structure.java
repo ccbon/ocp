@@ -32,6 +32,9 @@ public class Structure implements Serializable {
 	public static final String NAME_LIST = "list";
 	public static final String FIELDNAME_LISTENTRY = "list_entry";
 	public static final String FIELDNAME_TYPE = "field_type";
+	public static final String NAME_INT = "int";
+	public static final String NAME_LONG = "long";
+
 	private String name;
 	private Map<String, SField> fields = new HashMap<String, SField>();
 
@@ -72,17 +75,6 @@ public class Structure implements Serializable {
 
 	private void setField(String name, String type, Serializable value) {
 		fields.put(name, new SField(type, value));
-	}
-
-	@Override
-	public String toString() {
-		try {
-			return FListMarshaler.NL
-					+ new String(new FListMarshaler().marshal(this));
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return null;
 	}
 
 	public Serializable getFieldValue(String name) {
@@ -226,36 +218,40 @@ public class Structure implements Serializable {
 	}
 
 	@SuppressWarnings("unchecked")
-	public void setListField(String string, Serializable[] objects)
+	public void setListField(String name, Serializable[] objects)
 			throws Exception {
 		if (objects == null || objects.length == 0) {
-			setField(string, TYPE_LIST, null);
+			setField(name, TYPE_LIST, null);
 			return;
 		}
 		List<Structure> list = new ArrayList<Structure>();
 		for (Serializable o : objects) {
-			if (o instanceof IStructurable) {
+			if (o == null) {
+				list.add(null);
+			} else if (o instanceof IStructurable) {
 				IStructurable s = (IStructurable) o;
 				list.add(s.toStructure());
 			} else {
-				Structure s = new Structure("simple");
+				Structure s = new Structure(NAME_SIMPLE);
 				if (o instanceof Integer) {
-					s.setIntField("field", (Integer) o);
+					s.setIntField(FIELDNAME_SIMPLE, (Integer) o);
 				} else if (o instanceof String) {
-					s.setStringField("field", (String) o);
+					s.setStringField(FIELDNAME_SIMPLE, (String) o);
 				} else if (o instanceof byte[]) {
-					s.setBinField("field", (byte[]) o);
+					s.setBinField(FIELDNAME_SIMPLE, (byte[]) o);
 				} else if (o instanceof Double) {
-					s.setDecimalField("field", (Double) o);
+					s.setDecimalField(FIELDNAME_SIMPLE, (Double) o);
 				} else if (o instanceof List<?>) {
-					s.setStructureListField("field", (List<Structure>) o);
+					s.setStructureListField(FIELDNAME_SIMPLE,
+							(List<Structure>) o);
 				} else if (o instanceof Map<?, ?>) {
-					s.setStructureMapField("field", (Map<String, Structure>) o);
+					s.setStructureMapField(FIELDNAME_SIMPLE,
+							(Map<String, Structure>) o);
 				}
 				list.add(s);
 			}
 		}
-		setField(string, TYPE_LIST, (Serializable) list);
+		setField(name, TYPE_LIST, (Serializable) list);
 	}
 
 	public Serializable[] getArray(String name) throws Exception {
@@ -268,8 +264,10 @@ public class Structure implements Serializable {
 		Serializable[] result = new Serializable[value.size()];
 		for (int i = 0; i < value.size(); i++) {
 			Structure s = value.get(i);
-			if (s.getName().equals("simple")) {
-				SField f = value.get(i).getField("field");
+			if (s == null) {
+				result[i] = null;
+			} else if (s.getName().equals(NAME_SIMPLE)) {
+				SField f = value.get(i).getField(FIELDNAME_SIMPLE);
 				JLG.debug("field=" + f);
 				String type = f.getType();
 				if (type.equals(TYPE_STRING)) {
@@ -343,15 +341,15 @@ public class Structure implements Serializable {
 			IStructurable value = (IStructurable) o;
 			setField(name, TYPE_SUBSTRUCT, value.toStructure());
 		} else {
-			Structure s = new Structure("simple");
+			Structure s = new Structure(NAME_SIMPLE);
 			if (o instanceof Integer) {
-				s.setIntField("field", (Integer) o);
+				s.setIntField(FIELDNAME_SIMPLE, (Integer) o);
 			} else if (o instanceof String) {
-				s.setStringField("field", (String) o);
+				s.setStringField(FIELDNAME_SIMPLE, (String) o);
 			} else if (o instanceof byte[]) {
-				s.setBinField("field", (byte[]) o);
+				s.setBinField(FIELDNAME_SIMPLE, (byte[]) o);
 			} else if (o instanceof Double) {
-				s.setDecimalField("field", (Double) o);
+				s.setDecimalField(FIELDNAME_SIMPLE, (Double) o);
 			}
 			setField(name, TYPE_SUBSTRUCT, s);
 		}
@@ -415,5 +413,17 @@ public class Structure implements Serializable {
 		}
 		return (Long) getField(name).getValue();
 	}
+	
+	@Override
+	public String toString() {
+		try {
+			return FListMarshaler.NL
+					+ new String(new FListMarshaler().marshal(this));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
 
 }

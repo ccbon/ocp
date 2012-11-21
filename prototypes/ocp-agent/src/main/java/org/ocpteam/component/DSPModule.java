@@ -8,6 +8,7 @@ import org.ocpteam.interfaces.IModule;
 import org.ocpteam.interfaces.ITransaction;
 import org.ocpteam.misc.JLG;
 import org.ocpteam.serializable.Contact;
+import org.ocpteam.serializable.ContactList;
 
 public class DSPModule implements IModule {
 
@@ -143,7 +144,7 @@ public class DSPModule implements IModule {
 			@Override
 			public Serializable run(Session session, Serializable[] objects)
 					throws Exception {
-				return session.ds().getComponent(ContactMap.class).getOtherContacts();
+				return new ContactList(session.ds().getComponent(ContactMap.class).getOtherContacts());
 			}
 			
 			@Override

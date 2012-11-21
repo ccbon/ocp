@@ -28,6 +28,7 @@ import org.ocpteam.misc.JLG;
 import org.ocpteam.network.TCPClient;
 import org.ocpteam.network.UDPClient;
 import org.ocpteam.serializable.Contact;
+import org.ocpteam.serializable.ContactList;
 import org.ocpteam.serializable.InputMessage;
 import org.ocpteamx.protocol.ocp.OCPAgent;
 
@@ -329,11 +330,12 @@ public class Client extends DSContainer<DSPDataSource> implements IClient, IStar
 		for (Contact c : contactMap.getOtherContacts()) {
 			try {
 				JLG.debug(ds().getName() + " requests askForContact");
-				Contact[] contactsOfContact = (Contact[]) request(c, new InputMessage(m.askForContact()));
+				ContactList contactsOfContact = (ContactList) request(c,
+						new InputMessage(m.askForContact()));
 				// strategy : friends of my friends are my friends.
 				JLG.debug(ds().getName() + " received "
-						+ contactsOfContact.length + " contact(s).");
-				for (Contact nc : contactsOfContact) {
+						+ contactsOfContact.getList().size() + " contact(s).");
+				for (Contact nc : contactsOfContact.getList()) {
 					JLG.debug("nc: " + nc);
 					if (nc.getName().equals(ds().getName())) {
 						JLG.debug("skipping");

@@ -26,7 +26,6 @@ public abstract class DSPDataSource extends DataSource {
 	public TCPListener tcplistener;
 	public UDPListener udplistener;
 	public ContactMap contactMap;
-
 	public ISerializer serializer;
 
 	public DSPDataSource() throws Exception {
@@ -38,8 +37,8 @@ public abstract class DSPDataSource extends DataSource {
 		addComponent(UDPListener.class);
 		addComponent(ContactMap.class);
 		addComponent(DSPModule.class);
-//		addComponent(ISerializer.class, new FListSerializer());
-		addComponent(ISerializer.class, new JavaSerializer());
+		addComponent(ISerializer.class, new FListSerializer());
+//		addComponent(ISerializer.class, new JavaSerializer());
 	}
 
 	@Override
