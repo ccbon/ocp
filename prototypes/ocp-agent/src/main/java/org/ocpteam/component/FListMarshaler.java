@@ -18,7 +18,7 @@ public class FListMarshaler implements IMarshaler {
 	public class TabInfo {
 
 		private static final int TABLENGTH = 3;
-		public int tabeltid = 25;
+		public int tabeltid = 0;
 		public int maxLevel = 0;
 		private int maxField = 0;
 
@@ -48,11 +48,12 @@ public class FListMarshaler implements IMarshaler {
 						}
 					}
 				} else if (type.equals(Structure.TYPE_MAP)) {
-					Map<String, Structure> map = s.getStructureFromMapField(name);
+					Map<String, Structure> map = s
+							.getStructureFromMapField(name);
 					if (map != null) {
 						for (String n : map.keySet()) {
 							Structure ss = map.get(n);
-							init(ss, level + 1);
+							init(ss, level + 2);
 						}
 					}
 				}
@@ -85,7 +86,8 @@ public class FListMarshaler implements IMarshaler {
 						}
 					}
 				} else if (type.equals(Structure.TYPE_MAP)) {
-					Map<String, Structure> map = s.getStructureFromMapField(name);
+					Map<String, Structure> map = s
+							.getStructureFromMapField(name);
 					if (map != null) {
 						for (String n : map.keySet()) {
 							Structure ss = map.get(n);
@@ -196,7 +198,8 @@ public class FListMarshaler implements IMarshaler {
 				if (fl.fieldvalue.startsWith("<<EOF")) {
 					int lineNbr = Integer.parseInt(fl.fieldvalue
 							.substring(fl.fieldvalue.indexOf(' ') + 1));
-					StringBuilder fieldvalue = new StringBuilder(lineNbr*FILE_WIDTH);
+					StringBuilder fieldvalue = new StringBuilder(lineNbr
+							* FILE_WIDTH);
 					String line = br.readLine();
 					while (!line.equals("EOF")) {
 						line = line.substring(1, line.length() - 1);
@@ -217,7 +220,8 @@ public class FListMarshaler implements IMarshaler {
 				if (fl.fieldvalue.startsWith("<<EOF")) {
 					int lineNbr = Integer.parseInt(fl.fieldvalue
 							.substring(fl.fieldvalue.indexOf(' ') + 1));
-					StringBuilder fieldvalue = new StringBuilder(lineNbr*FILE_WIDTH);
+					StringBuilder fieldvalue = new StringBuilder(lineNbr
+							* FILE_WIDTH);
 					String line = br.readLine();
 					while (!line.equals("EOF")) {
 						fieldvalue.append(line.substring(BIN_PREFIX.length()));
@@ -262,9 +266,12 @@ public class FListMarshaler implements IMarshaler {
 				} else if (fl.hasNullValue()) {
 					s.addStructureToMapField(fl.fieldname, null, fl.fieldeltid);
 				} else {
-					Structure substr = new Structure();
-					nextLine = fromFList(substr, br, level + 1);
-					String key = fl.fieldeltid;
+					Structure ss = new Structure();
+					nextLine = fromFList(ss, br, level + 1);
+
+					String key = ss.getStringField(Structure.FIELDNAME_KEY);
+					Structure substr = ss
+							.getStructureFromSubstructField(Structure.FIELDNAME_VALUE);
 					s.addStructureToMapField(fl.fieldname, substr, key);
 				}
 			}
@@ -348,7 +355,8 @@ public class FListMarshaler implements IMarshaler {
 					}
 
 				} else if (type.equals(Structure.TYPE_MAP)) {
-					Map<String, Structure> map = s.getStructureFromMapField(name);
+					Map<String, Structure> map = s
+							.getStructureFromMapField(name);
 					if (map == null) {
 						result += format(level, name, type, 0, MAP_NULL,
 								tabInfo);
@@ -362,16 +370,19 @@ public class FListMarshaler implements IMarshaler {
 								return o1.compareTo(o2);
 							}
 						});
+						// TODO: Review Map case to manage spaces in the keys.
+						int i = 0;
 						for (String key : keys) {
+							Structure substr = new Structure(
+									Structure.NAME_MAPENTRY);
+							substr.setStringField(Structure.FIELDNAME_KEY, key);
 							Structure ss = map.get(key);
-							if (ss == null) {
-								result += format(level, name, type, key,
-										VALUE_NULL, tabInfo);
-							} else {
-								result += format(level, name, type, key, "",
-										tabInfo);
-								result += toFList(ss, level + 1, tabInfo);
-							}
+							substr.setStructureToSubstructField(
+									Structure.FIELDNAME_VALUE, ss);
+
+							result += format(level, name, type, i, "", tabInfo);
+							result += toFList(substr, level + 1, tabInfo);
+							i++;
 						}
 					}
 				} else {
@@ -397,8 +408,8 @@ public class FListMarshaler implements IMarshaler {
 
 	private String format(int level, String name, String type, String eltid,
 			String value, TabInfo tabInfo) {
-		String sLevel = "" + level;
-		String s = sLevel
+		String sLevel = Integer.toString(level);
+		String s = level
 				+ space(Math.max(0, tabInfo.maxLevel - sLevel.length()) + 1
 						+ (TabInfo.TABLENGTH * level)) + name;
 		String type2 = type;
@@ -416,22 +427,17 @@ public class FListMarshaler implements IMarshaler {
 		}
 		if (type.equals(Structure.TYPE_STRING)) {
 			if (value != null) {
-				JLG.debug("Escaping");
 				val = escape(value);
 			}
 		}
-		JLG.debug("type=" + type);
 		if (value != null && value.length() > maxLength) {
 			if (type.equals(Structure.TYPE_BYTES)) {
-				JLG.debug("multiLineBin");
 				val = multiLineBin(val);
 			} else {
-				JLG.debug("multiLineString");
 				val = multiLineString(val);
 			}
 		} else {
 			if (type.equals(Structure.TYPE_STRING)) {
-				JLG.debug("String");
 				if (value != null) {
 					val = "\"" + val + "\"";
 				}
@@ -443,7 +449,7 @@ public class FListMarshaler implements IMarshaler {
 	private String escape(String value) {
 		return StringEscapeUtils.escapeJava(value);
 	}
-	
+
 	private String multiLineString(String value) {
 		StringBuilder result = new StringBuilder(value.length());
 		int i = 0;
@@ -457,7 +463,7 @@ public class FListMarshaler implements IMarshaler {
 		result.append("\"" + value.substring(i) + "\"" + NL + "EOF");
 		return result.toString();
 	}
-	
+
 	private String multiLineBin(String value) {
 		StringBuilder result = new StringBuilder(value.length());
 		int i = 0;

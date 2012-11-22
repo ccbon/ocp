@@ -33,6 +33,7 @@ import org.ocpteam.serializable.InputFlow;
 import org.ocpteam.serializable.InputMessage;
 import org.ocpteam.serializable.Node;
 import org.ocpteam.serializable.Pointer;
+import org.ocpteam.serializable.RootContent;
 import org.ocpteam.serializable.SecureUser;
 import org.ocpteam.serializable.Tree;
 import org.ocpteam.serializable.TreeEntry;
@@ -46,7 +47,8 @@ public class StructTest extends TopContainer {
 		JLG.set.add(StructTest.class.getName());
 		JLG.set.add(InputMessage.class.getName());
 		try {
-			testProperties();
+			testRootContent();
+//			testProperties();
 			// testEqual();
 			// testFields();
 			// testStructure();
@@ -67,7 +69,20 @@ public class StructTest extends TopContainer {
 		}
 	}
 
-	private void testProperties() throws Exception {
+	private void testRootContent() throws Exception {
+		RootContent rc = new RootContent();
+		Address addr1 = new Address("0123");
+		rc.getMap().put("key1", addr1 );
+		Address addr2 = new Address("1234");
+		rc.getMap().put("key2", addr2  );
+		byte[] array = new FListSerializer().serialize(rc);
+		JLG.debug("array=" + JLG.NL + new String(array));
+		RootContent rc2 = (RootContent) new FListSerializer().deserialize(array);
+		JLG.debug("rc2=" + rc2);
+		JLG.debug("b=" + rc2.getMap().equals(rc.getMap()));
+	}
+
+	public void testProperties() throws Exception {
 		Properties p = new Properties();
 		p.setProperty("hello", "world");
 		p.setProperty("key1", "value1");

@@ -77,6 +77,10 @@ public class Structure implements Serializable {
 
 	public static final String NAME_SIMPLE = "simple";
 	public static final String FIELDNAME_SIMPLE = "field";
+	public static final String NAME_MAPENTRY = "map_entry";
+	
+	public static final String FIELDNAME_KEY = "key";
+	public static final String FIELDNAME_VALUE = "value";
 
 	private String name;
 	private Map<String, SField> fields = new HashMap<String, SField>();
