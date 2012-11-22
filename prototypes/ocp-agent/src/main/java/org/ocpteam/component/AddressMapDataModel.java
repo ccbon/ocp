@@ -1,7 +1,6 @@
 package org.ocpteam.component;
 
 import java.io.Serializable;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -9,6 +8,7 @@ import org.ocpteam.interfaces.IAddressMap;
 import org.ocpteam.interfaces.IMapDataModel;
 import org.ocpteam.misc.JLG;
 import org.ocpteam.serializable.Address;
+import org.ocpteam.serializable.RootContent;
 
 public class AddressMapDataModel extends DSContainer<DSPDataSource> implements
 		IMapDataModel {
@@ -31,29 +31,29 @@ public class AddressMapDataModel extends DSContainer<DSPDataSource> implements
 	}
 
 	private void setRootContent(String key, Address address) throws Exception {
-		Map<String, Address> directory = getRootContent();
+		RootContent rootContent = getRootContent();
+		Map<String, Address> directory = rootContent.getMap();
 		directory.put(key, address);
 		getMap().put(getRootAddress(),
-				ds().serializer.serialize((Serializable) directory));
+				ds().serializer.serialize((Serializable) rootContent));
 	}
 
 	private Address getRootAddress() throws Exception {
 		return getAddress("qwerasdf!@#$1234");
 	}
 
-	@SuppressWarnings("unchecked")
-	private Map<String, Address> getRootContent() throws Exception {
+	private RootContent getRootContent() throws Exception {
 		byte[] root = getMap().get(getRootAddress());
 		if (root == null) {
-			return new HashMap<String, Address>();
+			return new RootContent();
 		} else {
-			return (Map<String, Address>) ds().serializer.deserialize(root);
+			return (RootContent) ds().serializer.deserialize(root);
 		}
 	}
 
 	@Override
 	public String get(String key) throws Exception {
-		Map<String, Address> directory = getRootContent();
+		Map<String, Address> directory = getRootContent().getMap();
 		Address address = directory.get(key);
 		if (address == null) {
 			return null;
@@ -76,7 +76,7 @@ public class AddressMapDataModel extends DSContainer<DSPDataSource> implements
 
 	private void removeRootContent(String key, Address address)
 			throws Exception {
-		Map<String, Address> directory = getRootContent();
+		Map<String, Address> directory = getRootContent().getMap();
 		directory.remove(key);
 		getMap().put(getRootAddress(),
 				ds().serializer.serialize((Serializable) directory));
@@ -84,7 +84,7 @@ public class AddressMapDataModel extends DSContainer<DSPDataSource> implements
 
 	@Override
 	public Set<String> keySet() throws Exception {
-		Map<String, Address> directory = getRootContent();
+		Map<String, Address> directory = getRootContent().getMap();
 		return directory.keySet();
 	}
 

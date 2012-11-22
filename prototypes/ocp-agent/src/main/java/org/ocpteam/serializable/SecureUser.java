@@ -58,14 +58,14 @@ public class SecureUser extends AddressUser implements IStructurable {
 	@Override
 	public Structure toStructure() throws Exception {
 		Structure result = super.toStructure();
-		result.rename(this.getClass());
+		result.setName(this.getClass());
 		result.setStringField("keyPairAlgo", keyPairAlgo);
 		result.setStringField("signatureAlgo", signatureAlgo);
 		result.setStringField("secretKeyAlgo", secretKeyAlgo);
 		if (secretKey != null) {
 			result.setBinField("secretKey", secretKey.getEncoded());
 		} else {
-			result.setNullField("secretKey", Structure.TYPE_BYTES);
+			result.setBinField("secretKey", null);
 		}
 		if (keyPair != null) {
 			PKCS8EncodedKeySpec pkcs8EncodedKeySpec = new PKCS8EncodedKeySpec(
@@ -77,8 +77,8 @@ public class SecureUser extends AddressUser implements IStructurable {
 			result.setBinField("publicKey",
 					x509EncodedKeySpec.getEncoded());
 		} else {
-			result.setNullField("publicKey", Structure.TYPE_BYTES);
-			result.setNullField("privateKey", Structure.TYPE_BYTES);
+			result.setBinField("publicKey", null);
+			result.setBinField("privateKey", null);
 		}
 		return result;
 	}
@@ -86,26 +86,26 @@ public class SecureUser extends AddressUser implements IStructurable {
 	@Override
 	public void fromStructure(Structure s) throws Exception {
 		super.fromStructure(s);
-		keyPairAlgo = s.getString("keyPairAlgo");
-		signatureAlgo = s.getString("signatureAlgo");
-		secretKeyAlgo = s.getString("secretKeyAlgo");
+		keyPairAlgo = s.getStringField("keyPairAlgo");
+		signatureAlgo = s.getStringField("signatureAlgo");
+		secretKeyAlgo = s.getStringField("secretKeyAlgo");
 
-		byte[] secretKetEncoded = s.getBin("secretKey");
+		byte[] secretKetEncoded = s.getBinField("secretKey");
 		if (secretKetEncoded != null) {
 			SecretKey secretKey = new SecretKeySpec(secretKetEncoded,
 					secretKeyAlgo);
 			setSecretKey(secretKey);
 		}
 
-		byte[] publicKeyEncoded = s.getBin("publicKey");
-		byte[] privateKeyEncoded = s.getBin("privateKey");
+		byte[] publicKeyEncoded = s.getBinField("publicKey");
+		byte[] privateKeyEncoded = s.getBinField("privateKey");
 		if (publicKeyEncoded != null && privateKeyEncoded != null) {
 			KeyFactory keyFactory = KeyFactory.getInstance(keyPairAlgo);
 			X509EncodedKeySpec publicKeySpec = new X509EncodedKeySpec(
-					s.getBin("publicKey"));
+					s.getBinField("publicKey"));
 			PublicKey publicKey = keyFactory.generatePublic(publicKeySpec);
 			PKCS8EncodedKeySpec privateKeySpec = new PKCS8EncodedKeySpec(
-					s.getBin("privateKey"));
+					s.getBinField("privateKey"));
 			PrivateKey privateKey = keyFactory.generatePrivate(privateKeySpec);
 			KeyPair keyPair = new KeyPair(publicKey, privateKey);
 			setKeyPair(keyPair);

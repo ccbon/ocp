@@ -32,20 +32,20 @@ public class OCPContact extends Contact {
 		for (Id id : nodeIdSet) {
 			list.add(id.toStructure());
 		}
-		result.setStructureListField("nodeIdSet", list);
+		result.setStructureToListField("nodeIdSet", list);
 		return result;
 	}
 
 	@Override
 	public void fromStructure(Structure s) throws Exception {
 		super.fromStructure(s);
-		List<Structure> list = s.getStructureList("nodeIdSet");
+		List<Structure> list = s.getStructureFromListField("nodeIdSet");
 		if (list != null) {
 			for (Structure struct : list) {
-				nodeIdSet.add((Id) struct.toObject());
+				nodeIdSet.add((Id) struct.toStructurable());
 			}
 		}
-		publicKey = s.getBin("publicKey");
+		publicKey = s.getBinField("publicKey");
 	}
 
 }

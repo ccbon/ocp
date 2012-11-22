@@ -47,9 +47,9 @@ public class Content implements Serializable, IStructurable {
 
 	@Override
 	public void fromStructure(Structure s) throws Exception {
-		username = s.getString("username");
-		signature = s.getBin("signature");
-		value = s.getBin("value");
+		username = s.getStringField("username");
+		signature = s.getBinField("signature");
+		value = s.getBinField("value");
 	}
 
 }

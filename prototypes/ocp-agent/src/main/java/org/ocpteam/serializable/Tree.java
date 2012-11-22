@@ -83,7 +83,7 @@ public class Tree implements Serializable, IFile, IStructurable {
 
 	@Override
 	public void fromStructure(Structure s) throws Exception {
-		entryMap = (Map<String, TreeEntry>) s.getMap("entryMap", TreeEntry.class);
+		entryMap = (Map<String, TreeEntry>) s.getMapField("entryMap", TreeEntry.class);
 	}
 
 }

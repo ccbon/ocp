@@ -40,15 +40,15 @@ public class UserIndex implements IStructurable {
 		for (Pointer p : set) {
 			list.add(p.toStructure());
 		}
-		result.setStructureListField("set", list);
+		result.setStructureToListField("set", list);
 		return result;
 	}
 
 	@Override
 	public void fromStructure(Structure s) throws Exception {
-		List<Structure> list = s.getStructureList("set");
+		List<Structure> list = s.getStructureFromListField("set");
 		for (Structure struct : list) {
-			add((Pointer) struct.toObject());
+			add((Pointer) struct.toStructurable());
 		}
 	}
 }

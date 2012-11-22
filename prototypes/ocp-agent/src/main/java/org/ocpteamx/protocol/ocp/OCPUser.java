@@ -153,7 +153,7 @@ public class OCPUser extends User {
 	@Override
 	public Structure toStructure() throws Exception {
 		Structure result = super.toStructure();
-		result.rename(getClass());
+		result.setName(getClass());
 		result.setIntField("backupNbr", backupNbr);
 		result.setIntField("keySize", keySize);
 		result.setStringField("cipherAlgo", cipherAlgo);
@@ -161,19 +161,19 @@ public class OCPUser extends User {
 		if (indexKey != null) {
 			result.setBinField("indexKey", indexKey.getBytes());
 		} else {
-			result.setNullField("indexKey", Structure.TYPE_BYTES);
+			result.setBinField("indexKey", null);
 		}
 
 		if (rootKey != null) {
 			result.setBinField("rootKey", rootKey.getBytes());
 		} else {
-			result.setNullField("rootKey", Structure.TYPE_BYTES);
+			result.setBinField("rootKey", null);
 		}
 
 		if (secretKey != null) {
 			result.setBinField("secretKey", secretKey.getEncoded());
 		} else {
-			result.setNullField("secretKey", Structure.TYPE_BYTES);
+			result.setBinField("secretKey", null);
 		}
 
 		if (keyPair != null) {
@@ -184,8 +184,8 @@ public class OCPUser extends User {
 					keyPair.getPublic().getEncoded());
 			result.setBinField("publicKey", x509EncodedKeySpec.getEncoded());
 		} else {
-			result.setNullField("publicKey", Structure.TYPE_BYTES);
-			result.setNullField("privateKey", Structure.TYPE_BYTES);
+			result.setBinField("publicKey", null);
+			result.setBinField("privateKey", null);
 		}
 		return result;
 	}
@@ -193,26 +193,26 @@ public class OCPUser extends User {
 	@Override
 	public void fromStructure(Structure s) throws Exception {
 		super.fromStructure(s);
-		backupNbr = s.getInt("backupNbr");
-		keySize = s.getInt("keySize");
-		cipherAlgo = s.getString("cipherAlgo");
+		backupNbr = s.getIntField("backupNbr");
+		keySize = s.getIntField("keySize");
+		cipherAlgo = s.getStringField("cipherAlgo");
 		
 		KeyGenerator keyGen = KeyGenerator.getInstance(cipherAlgo);
 		keyGen.init(keySize);
 		secretKey = keyGen.generateKey();
 		
-		indexKey = new Key(s.getBin("indexKey"));
-		rootKey = new Key(s.getBin("rootKey"));
+		indexKey = new Key(s.getBinField("indexKey"));
+		rootKey = new Key(s.getBinField("rootKey"));
 
-		byte[] publicKeyEncoded = s.getBin("publicKey");
-		byte[] privateKeyEncoded = s.getBin("privateKey");
+		byte[] publicKeyEncoded = s.getBinField("publicKey");
+		byte[] privateKeyEncoded = s.getBinField("privateKey");
 		if (publicKeyEncoded != null && privateKeyEncoded != null) {
 			KeyFactory keyFactory = KeyFactory.getInstance(cipherAlgo);
 			X509EncodedKeySpec publicKeySpec = new X509EncodedKeySpec(
-					s.getBin("publicKey"));
+					s.getBinField("publicKey"));
 			PublicKey publicKey = keyFactory.generatePublic(publicKeySpec);
 			PKCS8EncodedKeySpec privateKeySpec = new PKCS8EncodedKeySpec(
-					s.getBin("privateKey"));
+					s.getBinField("privateKey"));
 			PrivateKey privateKey = keyFactory.generatePrivate(privateKeySpec);
 			keyPair = new KeyPair(publicKey, privateKey);
 		}

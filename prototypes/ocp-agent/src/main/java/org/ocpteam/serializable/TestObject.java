@@ -36,27 +36,27 @@ public class TestObject implements IStructurable {
 		Structure substruct2 = new Structure("coucou2");
 		substruct2.setDecimalField("XXX", 56.78);
 
-		substruct.setStructureSubstructField("DDDD", substruct2);
+		substruct.setStructureToSubstructField("DDDD", substruct2);
 
-		result.setStructureSubstructField("dd", substruct);
-		result.setStructureSubstructField("ee", null);
+		result.setStructureToSubstructField("dd", substruct);
+		result.setStructureToSubstructField("ee", null);
 
-		result.setStructureListField("F", null);
+		result.setStructureToListField("F", null);
 
 		List<Structure> list = new ArrayList<Structure>();
 		list.add(new Structure("kiki"));
 		list.add(null);
 		list.add(new Structure("keke"));
-		result.setStructureListField("G", list);
+		result.setStructureToListField("G", list);
 
-		result.setStructureMapField("ff", null);
+		result.setStructureToMapField("ff", null);
 
 		Map<String, Structure> map = new HashMap<String, Structure>();
 		map.put("key1", substruct);
 		map.put("key2", substruct2);
 		map.put("key3", null);
 		map.put("key4", null);
-		result.setStructureMapField("gg", map);
+		result.setStructureToMapField("gg", map);
 		return result;
 	}
 

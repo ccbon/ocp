@@ -34,7 +34,7 @@ public class JSONTest extends TopContainer {
 		JLG.debug("array=" + new String(array));
 		Structure s2 = getComponent(IMarshaler.class).unmarshal(array);
 		JLG.debug("s2=" + s2);
-		IStructurable b = s2.toObject();
+		IStructurable b = s2.toStructurable();
 		JLG.debug("b=" + b);
 	}
 

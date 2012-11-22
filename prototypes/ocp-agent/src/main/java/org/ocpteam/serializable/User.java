@@ -45,7 +45,7 @@ public class User implements IUser, IStructurable {
 
 	@Override
 	public void fromStructure(Structure s) throws Exception {
-		username = s.getString("username");
+		username = s.getStringField("username");
 		properties = s.getProperties("props");
 	}
 }

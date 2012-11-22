@@ -6,12 +6,14 @@ import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
 
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 
 import org.junit.Test;
 import org.ocpteam.component.FListMarshaler;
+import org.ocpteam.component.FListSerializer;
 import org.ocpteam.component.Protocol;
 import org.ocpteam.core.TopContainer;
 import org.ocpteam.entity.Session;
@@ -34,6 +36,7 @@ import org.ocpteam.serializable.Pointer;
 import org.ocpteam.serializable.SecureUser;
 import org.ocpteam.serializable.Tree;
 import org.ocpteam.serializable.TreeEntry;
+import org.ocpteam.serializable.User;
 
 public class StructTest extends TopContainer {
 	@Test
@@ -43,6 +46,7 @@ public class StructTest extends TopContainer {
 		JLG.set.add(StructTest.class.getName());
 		JLG.set.add(InputMessage.class.getName());
 		try {
+			testProperties();
 			// testEqual();
 			// testFields();
 			// testStructure();
@@ -56,10 +60,37 @@ public class StructTest extends TopContainer {
 			// testTree();
 			// testInputFlow();
 //			testInputMessage();
-			// testSecureUser();
+			// testSecureUser();/
+//			testUser();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	private void testProperties() throws Exception {
+		Properties p = new Properties();
+		p.setProperty("hello", "world");
+		p.setProperty("key1", "value1");
+		byte[] array = new FListSerializer().serialize(p);
+		JLG.debug("array=" + JLG.NL + new String(array));
+		Properties p2 = (Properties) new FListSerializer().deserialize(array);
+		JLG.debug("p2=" + p2);
+		JLG.debug("b=" + p2.equals(p));
+	}
+
+	public void testUser() throws Exception {
+		IMarshaler marshaler = new FListMarshaler();
+		User u = new User();
+		u.setProperty("hello", "world");
+		u.setProperty("key1", "value1");
+		Structure s = u .toStructure();
+		JLG.debug("s=" + s);
+		byte[] array = marshaler.marshal(s);
+		JLG.debug("array=" + JLG.NL + new String(array));
+		Structure s2 = marshaler.unmarshal(array);
+		JLG.debug("s2=" + s2);
+		IStructurable b = s2.toStructurable();
+		JLG.debug("b=" + b.toStructure().equals(u.toStructure()));
 	}
 
 	public void testSecureUser() throws Exception {
@@ -86,7 +117,7 @@ public class StructTest extends TopContainer {
 		JLG.debug("array=" + JLG.NL + new String(array));
 		Structure s2 = marshaler.unmarshal(array);
 		JLG.debug("s2=" + s2);
-		IStructurable b = s2.toObject();
+		IStructurable b = s2.toStructurable();
 		JLG.debug("b=" + b.toStructure().equals(su.toStructure()));
 	}
 
@@ -97,7 +128,7 @@ public class StructTest extends TopContainer {
 		s1.setBinField("byte[]", new byte[] { 12, 34, 56 });
 		Structure substruct1 = new Structure("Sub");
 		substruct1.setIntField("int", 12);
-		s1.setStructureSubstructField("substruct", substruct1);
+		s1.setStructureToSubstructField("substruct", substruct1);
 		s1.setListField("array1", new String[] { "Hello", "World" });
 		Map<String, String> map1 = new HashMap<String, String>();
 		map1.put("hello", "world");
@@ -110,7 +141,7 @@ public class StructTest extends TopContainer {
 		s2.setBinField("byte[]", new byte[] { 12, 34, 56 });
 		Structure substruct2 = new Structure("Sub");
 		substruct2.setIntField("int", 12);
-		s2.setStructureSubstructField("substruct", substruct2);
+		s2.setStructureToSubstructField("substruct", substruct2);
 		s2.setListField("array1", new String[] { "Hello", "World" });
 		Map<String, String> map2 = new HashMap<String, String>();
 		map2.put("hello", "world");
@@ -146,7 +177,7 @@ public class StructTest extends TopContainer {
 		JLG.debug("array=" + new String(array));
 		Structure s2 = marshaler.unmarshal(array);
 		JLG.debug("s2=" + s2);
-		IStructurable b = s2.toObject();
+		IStructurable b = s2.toStructurable();
 		JLG.debug("b=" + b.toStructure().equals(t.toStructure()));
 	}
 
@@ -176,7 +207,7 @@ public class StructTest extends TopContainer {
 		JLG.debug("array=" + new String(array));
 		Structure s2 = marshaler.unmarshal(array);
 		JLG.debug("s2=" + s2);
-		IStructurable b = s2.toObject();
+		IStructurable b = s2.toStructurable();
 		JLG.debug("b=" + b.toStructure().equals(t.toStructure()));
 	}
 
@@ -200,7 +231,7 @@ public class StructTest extends TopContainer {
 		JLG.debug("array=" + new String(array));
 		Structure s2 = marshaler.unmarshal(array);
 		JLG.debug("s2=" + s2);
-		IStructurable b = s2.toObject();
+		IStructurable b = s2.toStructurable();
 		JLG.debug("b=" + b.toStructure().equals(t.toStructure()));
 	}
 
@@ -215,7 +246,7 @@ public class StructTest extends TopContainer {
 		JLG.debug("array=" + new String(array));
 		Structure s2 = marshaler.unmarshal(array);
 		JLG.debug("s2=" + s2);
-		IStructurable b = s2.toObject();
+		IStructurable b = s2.toStructurable();
 		JLG.debug("b=" + b.toStructure().equals(t.toStructure()));
 	}
 
@@ -228,7 +259,7 @@ public class StructTest extends TopContainer {
 		JLG.debug("array=" + new String(array));
 		Structure s2 = marshaler.unmarshal(array);
 		JLG.debug("s2=" + s2);
-		IStructurable b = s2.toObject();
+		IStructurable b = s2.toStructurable();
 		JLG.debug("b=" + b.toStructure().equals(t.toStructure()));
 	}
 
@@ -255,7 +286,7 @@ public class StructTest extends TopContainer {
 		JLG.debug("array=" + new String(array));
 		Structure s2 = marshaler.unmarshal(array);
 		JLG.debug("s2=" + s2);
-		IStructurable b = s2.toObject();
+		IStructurable b = s2.toStructurable();
 		JLG.debug("b=" + b.toStructure().equals(p.toStructure()));
 	}
 
@@ -268,7 +299,7 @@ public class StructTest extends TopContainer {
 		JLG.debug("array=" + new String(array));
 		Structure s2 = marshaler.unmarshal(array);
 		JLG.debug("s2=" + s2);
-		IStructurable b = s2.toObject();
+		IStructurable b = s2.toStructurable();
 		JLG.debug("b=" + b.toStructure().equals(eom.toStructure()));
 	}
 
@@ -282,7 +313,7 @@ public class StructTest extends TopContainer {
 		JLG.debug("array=" + new String(array));
 		Structure s2 = marshaler.unmarshal(array);
 		JLG.debug("s2=" + s2);
-		IStructurable b = s2.toObject();
+		IStructurable b = s2.toStructurable();
 		JLG.debug("b=" + b.toStructure().equals(c.toStructure()));
 	}
 
@@ -302,7 +333,7 @@ public class StructTest extends TopContainer {
 		JLG.debug("array=" + new String(array));
 		Structure s2 = marshaler.unmarshal(array);
 		JLG.debug("s2=" + s2);
-		IStructurable b = s2.toObject();
+		IStructurable b = s2.toStructurable();
 		JLG.debug("b=" + b.toStructure().equals(c.toStructure()));
 	}
 
@@ -315,7 +346,7 @@ public class StructTest extends TopContainer {
 		JLG.debug("array=" + new String(array));
 		Structure s2 = marshaler.unmarshal(array);
 		JLG.debug("s2=" + s2);
-		IStructurable b = s2.toObject();
+		IStructurable b = s2.toStructurable();
 		JLG.debug("b=" + b.toStructure().equals(n.toStructure()));
 	}
 }

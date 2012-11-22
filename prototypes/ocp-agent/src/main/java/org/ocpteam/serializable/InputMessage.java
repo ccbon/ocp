@@ -40,7 +40,7 @@ public class InputMessage implements IStructurable {
 
 	@Override
 	public void fromStructure(Structure s) throws Exception {
-		transid = s.getInt("transid");
-		objects = s.getArray("objects");
+		transid = s.getIntField("transid");
+		objects = s.getListField("objects");
 	}
 }

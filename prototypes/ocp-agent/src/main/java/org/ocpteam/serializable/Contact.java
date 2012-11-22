@@ -108,13 +108,13 @@ public class Contact implements Serializable, IStructurable {
 
 	@Override
 	public void fromStructure(Structure s) throws Exception {
-		setName(s.getString("name"));
-		setHost(s.getString("host"));
-		setTcpPort(s.getInt("tcpPort"));
-		setUdpPort(s.getInt("udpPort"));
-		Structure substr = s.getSubstruct("node");
+		setName(s.getStringField("name"));
+		setHost(s.getStringField("host"));
+		setTcpPort(s.getIntField("tcpPort"));
+		setUdpPort(s.getIntField("udpPort"));
+		Structure substr = s.getStructureFromSubstructField("node");
 		if (substr != null) {
-			setNode((Node) substr.toObject());
+			setNode((Node) substr.toStructurable());
 		}
 	}
 

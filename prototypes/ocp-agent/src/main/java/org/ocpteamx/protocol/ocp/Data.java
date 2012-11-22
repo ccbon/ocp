@@ -49,9 +49,9 @@ public class Data extends Content {
 
 	@Override
 	public void fromStructure(Structure s) throws Exception {
-		content = s.getBin("content");
-		signature = s.getBin("signature");
-		username = s.getBin("username");
+		content = s.getBinField("content");
+		signature = s.getBinField("signature");
+		username = s.getBinField("username");
 	}
 
 }

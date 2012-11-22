@@ -82,7 +82,7 @@ public class Tree implements IStructurable, IFile {
 
 	@Override
 	public void fromStructure(Structure s) throws Exception {
-		entryMap = (Map<String, TreeEntry>) s.getMap("entryMap",
+		entryMap = (Map<String, TreeEntry>) s.getMapField("entryMap",
 				TreeEntry.class);
 	}
 

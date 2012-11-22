@@ -47,7 +47,7 @@ public class Pointer implements IStructurable {
 
 	@Override
 	public void fromStructure(Structure s) throws Exception {
-		Serializable[] list = s.getArray("addressList");
+		Serializable[] list = s.getListField("addressList");
 		if (list != null) {
 			Address[] addresses = new Address[list.length];
 			int i = 0;

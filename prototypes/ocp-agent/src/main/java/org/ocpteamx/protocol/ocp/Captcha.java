@@ -87,11 +87,11 @@ public class Captcha implements ICaptcha {
 
 	@Override
 	public void fromStructure(Structure s) throws Exception {
-		challengeObject = s.getString("challengeObject");
-		contactId = s.getString("contactId");
-		signatureAlgo = s.getString("signatureAlgo");
-		created = Long.parseLong(s.getString("created"));
-		cryptedAnswer = s.getBin("cryptedAnswer");
-		signature = s.getBin("signature");
+		challengeObject = s.getStringField("challengeObject");
+		contactId = s.getStringField("contactId");
+		signatureAlgo = s.getStringField("signatureAlgo");
+		created = Long.parseLong(s.getStringField("created"));
+		cryptedAnswer = s.getBinField("cryptedAnswer");
+		signature = s.getBinField("signature");
 	}
 }

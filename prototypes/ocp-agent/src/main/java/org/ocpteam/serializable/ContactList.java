@@ -40,7 +40,7 @@ public class ContactList implements IStructurable {
 	@Override
 	public void fromStructure(Structure s) throws Exception {
 		list = new ArrayList<Contact>();
-		Serializable[] array = s.getArray("list");
+		Serializable[] array = s.getListField("list");
 		if (array != null) {
 			for (Serializable ser : array) {
 				list.add((Contact) ser);

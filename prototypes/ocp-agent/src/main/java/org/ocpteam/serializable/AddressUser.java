@@ -18,7 +18,7 @@ public class AddressUser extends User implements IStructurable {
 	@Override
 	public Structure toStructure() throws Exception {
 		Structure result = super.toStructure();
-		result.rename(this.getClass());
+		result.setName(this.getClass());
 
 		result.setSubstructField("address", address);
 
@@ -28,8 +28,8 @@ public class AddressUser extends User implements IStructurable {
 	@Override
 	public void fromStructure(Structure s) throws Exception {
 		super.fromStructure(s);
-		if (s.getSubstruct("address") != null) {
-			address = (Address) s.getSubstruct("address").toObject();
+		if (s.getStructureFromSubstructField("address") != null) {
+			address = (Address) s.getStructureFromSubstructField("address").toStructurable();
 		}
 	}
 

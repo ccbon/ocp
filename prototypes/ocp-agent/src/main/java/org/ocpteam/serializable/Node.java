@@ -60,8 +60,8 @@ public class Node implements Serializable, IStructurable {
 
 	@Override
 	public void fromStructure(Structure s) throws Exception {
-		setRing(s.getInt("ring"));
-		setNodeId(new Id(s.getBin("nodeId")));
+		setRing(s.getIntField("ring"));
+		setNodeId(new Id(s.getBinField("nodeId")));
 	}
 
 }

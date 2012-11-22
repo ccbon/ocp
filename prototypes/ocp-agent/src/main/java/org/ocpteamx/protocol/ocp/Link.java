@@ -58,12 +58,12 @@ public class Link extends Content {
 		if (targetKey != null) {
 			result.setBinField("targetKey", targetKey.getBytes());
 		} else {
-			result.setNullField("targetKey", Structure.TYPE_BYTES);
+			result.setBinField("targetKey", null);
 		}
 		if (key != null) {
 			result.setBinField("key", key.getBytes());
 		} else {
-			result.setNullField("key", Structure.TYPE_BYTES);
+			result.setBinField("key", null);
 		}
 		result.setBinField("signature", signature);
 		result.setBinField("username", username);
@@ -72,9 +72,9 @@ public class Link extends Content {
 
 	@Override
 	public void fromStructure(Structure s) throws Exception {
-		targetKey = new Key(s.getBin("targetKey"));
-		setKey(new Key(s.getBin("key")));
-		username = s.getBin("username");
-		signature = s.getBin("signature");
+		targetKey = new Key(s.getBinField("targetKey"));
+		setKey(new Key(s.getBinField("key")));
+		username = s.getBinField("username");
+		signature = s.getBinField("signature");
 	}
 }

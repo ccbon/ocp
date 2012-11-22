@@ -68,7 +68,7 @@ public class UserPublicInfo implements IStructurable {
 		if (key != null) {
 			result.setBinField("key", key.getBytes());
 		} else {
-			result.setNullField("key", Structure.TYPE_BYTES);
+			result.setBinField("key", null);
 		}
 		result.setStringField("login", login);
 		if (publicKey != null) {
@@ -77,19 +77,19 @@ public class UserPublicInfo implements IStructurable {
 			result.setBinField("publicKey", x509EncodedKeySpec.getEncoded());
 			result.setStringField("publicKeyAlgo", publicKey.getAlgorithm());
 		} else {
-			result.setNullField("publicKey", Structure.TYPE_BYTES);
+			result.setBinField("publicKey", null);
 		}
 		return result;
 	}
 
 	@Override
 	public void fromStructure(Structure s) throws Exception {
-		setKey(new Key(s.getBin("key")));
-		setLogin(s.getString("login"));
-		if (s.getBin("publicKey") != null) {
-			String publicKeyAlgo = s.getString("publicKeyAlgo");
+		setKey(new Key(s.getBinField("key")));
+		setLogin(s.getStringField("login"));
+		if (s.getBinField("publicKey") != null) {
+			String publicKeyAlgo = s.getStringField("publicKeyAlgo");
 			KeyFactory kf = KeyFactory.getInstance(publicKeyAlgo);
-			byte[] publicKeySpec = s.getBin("publicKey");
+			byte[] publicKeySpec = s.getBinField("publicKey");
 			X509EncodedKeySpec x509EncodedKeySpec = new X509EncodedKeySpec(
 					publicKeySpec);
 			setPublicKey(kf.generatePublic(x509EncodedKeySpec));

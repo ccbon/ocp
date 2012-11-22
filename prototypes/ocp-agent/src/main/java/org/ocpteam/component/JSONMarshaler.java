@@ -38,16 +38,36 @@ public class JSONMarshaler implements IMarshaler {
 				
 				if (jsonArray.get(1) == JSONObject.NULL) {
 					JLG.debug("JSONObject.NULL");
-					result.setNullField(key, type);
-				} else if (type.equals(Structure.TYPE_BYTES)) {
-					byte[] value = Base64.decodeBase64(jsonArray.getString(1));
-					result.setBinField(key, value);
+					if (type.equals(Structure.TYPE_INT)) {
+						result.setIntField(key, (Integer) null);
+					} else if (type.equals(Structure.TYPE_DECIMAL)) {
+						result.setDecimalField(key, (Double) null);
+					} else if (type.equals(Structure.TYPE_STRING)) {
+						result.setStringField(key, null);
+					} else if (type.equals(Structure.TYPE_BYTES)) {
+						result.setBinField(key, null);
+					} else if (type.equals(Structure.TYPE_SUBSTRUCT)) {
+						result.setSubstructField(key, null);
+					} else if (type.equals(Structure.TYPE_LIST)) {
+						result.setListField(key, null);
+					} else if (type.equals(Structure.TYPE_MAP)) {
+						result.setMapField(key, null);
+					}
 				} else if (type.equals(Structure.TYPE_INT)) {
 					int value = jsonArray.getInt(1);
 					result.setIntField(key, value);
+				} else if (type.equals(Structure.TYPE_DECIMAL)) {
+					double value = jsonArray.getDouble(1);
+					result.setDecimalField(key, value);
+				} else if (type.equals(Structure.TYPE_STRING)) {
+					String value = jsonArray.getString(1);
+					result.setStringField(key, value);
+				} else if (type.equals(Structure.TYPE_BYTES)) {
+					byte[] value = Base64.decodeBase64(jsonArray.getString(1));
+					result.setBinField(key, value);
 				} else if (type.equals(Structure.TYPE_SUBSTRUCT)) {
 					Structure value = fromJson(jsonArray.getJSONObject(1));
-					result.setStructureSubstructField(key, value);
+					result.setStructureToSubstructField(key, value);
 				} else if (type.equals(Structure.TYPE_LIST)) {
 					JSONArray ja = jsonArray.getJSONArray(1);
 					List<Structure> l = new ArrayList<Structure>();
@@ -56,13 +76,7 @@ public class JSONMarshaler implements IMarshaler {
 						Structure s = fromJson(j);
 						l.add(s);
 					}
-					result.setStructureListField(key, l);
-				} else if (type.equals(Structure.TYPE_DECIMAL)) {
-					double value = jsonArray.getDouble(1);
-					result.setDecimalField(key, value);
-				} else if (type.equals(Structure.TYPE_STRING)) {
-					String value = jsonArray.getString(1);
-					result.setStringField(key, value);
+					result.setStructureToListField(key, l);
 				} else if (type.equals(Structure.TYPE_MAP)) {
 					JSONObject jo = jsonArray.getJSONObject(1);
 					Map<String, Structure> map = new HashMap<String, Structure>();
@@ -73,7 +87,7 @@ public class JSONMarshaler implements IMarshaler {
 						Structure struct = fromJson(j);
 						map.put(s, struct);
 					}
-					result.setStructureMapField(key, map);
+					result.setStructureToMapField(key, map);
 				}
 
 			}

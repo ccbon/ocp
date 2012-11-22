@@ -38,17 +38,17 @@ public class FListMarshaler implements IMarshaler {
 			for (String name : s.getFields().keySet()) {
 				String type = s.getField(name).getType();
 				if (type.equals(Structure.TYPE_SUBSTRUCT)) {
-					Structure substr = s.getSubstruct(name);
+					Structure substr = s.getStructureFromSubstructField(name);
 					init(substr, level + 1);
 				} else if (type.equals(Structure.TYPE_LIST)) {
-					List<Structure> list = s.getStructureList(name);
+					List<Structure> list = s.getStructureFromListField(name);
 					if (list != null) {
 						for (Structure ss : list) {
 							init(ss, level + 1);
 						}
 					}
 				} else if (type.equals(Structure.TYPE_MAP)) {
-					Map<String, Structure> map = s.getStructureMap(name);
+					Map<String, Structure> map = s.getStructureFromMapField(name);
 					if (map != null) {
 						for (String n : map.keySet()) {
 							Structure ss = map.get(n);
@@ -75,17 +75,17 @@ public class FListMarshaler implements IMarshaler {
 						+ type.length(), maxField);
 
 				if (type.equals(Structure.TYPE_SUBSTRUCT)) {
-					Structure substr = s.getSubstruct(name);
+					Structure substr = s.getStructureFromSubstructField(name);
 					init(substr, level + 1);
 				} else if (type.equals(Structure.TYPE_LIST)) {
-					List<Structure> list = s.getStructureList(name);
+					List<Structure> list = s.getStructureFromListField(name);
 					if (list != null) {
 						for (Structure ss : list) {
 							init(ss, level + 1);
 						}
 					}
 				} else if (type.equals(Structure.TYPE_MAP)) {
-					Map<String, Structure> map = s.getStructureMap(name);
+					Map<String, Structure> map = s.getStructureFromMapField(name);
 					if (map != null) {
 						for (String n : map.keySet()) {
 							Structure ss = map.get(n);
@@ -238,34 +238,34 @@ public class FListMarshaler implements IMarshaler {
 				s.setIntField(fl.fieldname, Integer.parseInt(fl.fieldvalue));
 			} else if (fl.fieldtype.equals(Structure.TYPE_SUBSTRUCT)) {
 				if (fl.hasNullValue()) {
-					s.setStructureSubstructField(fl.fieldname, null);
+					s.setStructureToSubstructField(fl.fieldname, null);
 				} else {
 					Structure substr = new Structure();
 					nextLine = fromFList(substr, br, level + 1);
-					s.setStructureSubstructField(fl.fieldname, substr);
+					s.setStructureToSubstructField(fl.fieldname, substr);
 				}
 			} else if (fl.fieldtype.equals(Structure.TYPE_LIST)) {
 				if (fl.hasListNullValue()) {
-					s.setStructureListField(fl.fieldname, null);
+					s.setStructureToListField(fl.fieldname, null);
 				} else if (fl.hasNullValue()) {
 					int eltid = Integer.parseInt(fl.fieldeltid);
-					s.addStructureListField(fl.fieldname, null, eltid);
+					s.addStructureToListField(fl.fieldname, null, eltid);
 				} else {
 					Structure substr = new Structure();
 					nextLine = fromFList(substr, br, level + 1);
 					int eltid = Integer.parseInt(fl.fieldeltid);
-					s.addStructureListField(fl.fieldname, substr, eltid);
+					s.addStructureToListField(fl.fieldname, substr, eltid);
 				}
 			} else if (fl.fieldtype.equals(Structure.TYPE_MAP)) {
 				if (fl.hasMapNullValue()) {
-					s.setStructureMapField(fl.fieldname, null);
+					s.setStructureToMapField(fl.fieldname, null);
 				} else if (fl.hasNullValue()) {
-					s.addStructureMapField(fl.fieldname, null, fl.fieldeltid);
+					s.addStructureToMapField(fl.fieldname, null, fl.fieldeltid);
 				} else {
 					Structure substr = new Structure();
 					nextLine = fromFList(substr, br, level + 1);
 					String key = fl.fieldeltid;
-					s.addStructureMapField(fl.fieldname, substr, key);
+					s.addStructureToMapField(fl.fieldname, substr, key);
 				}
 			}
 			if (nextLine == null) {
@@ -348,7 +348,7 @@ public class FListMarshaler implements IMarshaler {
 					}
 
 				} else if (type.equals(Structure.TYPE_MAP)) {
-					Map<String, Structure> map = s.getStructureMap(name);
+					Map<String, Structure> map = s.getStructureFromMapField(name);
 					if (map == null) {
 						result += format(level, name, type, 0, MAP_NULL,
 								tabInfo);
