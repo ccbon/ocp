@@ -113,8 +113,7 @@ public class DataSourceWindow extends ApplicationWindow implements IComponent {
 
 	void refresh() {
 		// action status
-		boolean bAuth = ds != null
-				&& ds.usesComponent(IUserManagement.class);
+		boolean bAuth = ds != null && ds.usesComponent(IUserManagement.class);
 		closeDataSourceAction.setEnabled(ds != null);
 		saveDataSourceAction.setEnabled(ds != null);
 		saveAsDataSourceAction.setEnabled(ds != null);
@@ -498,42 +497,42 @@ public class DataSourceWindow extends ApplicationWindow implements IComponent {
 		Display display = getShell().getDisplay();
 		Shell shell = new Shell(display);
 		Tray tray = display.getSystemTray();
-		if (tray != null) {
-			item = new TrayItem(tray, SWT.NONE);
-			Image image = new Image(display,
-					DataSourceWindow.class.getResourceAsStream("ocp_icon.png"));
-			item.setImage(image);
-			item.setToolTipText("OCP Agent");
-			final MenuManager myMenu = new MenuManager("xxx");
-			final Menu menu = myMenu.createContextMenu(shell);
-			myMenu.add(new ExitAction(this));
-			myMenu.add(new OpenConsoleAction(this));
-			menu.setEnabled(true);
-
-			item.addListener(SWT.MenuDetect, new Listener() {
-
-				@Override
-				public void handleEvent(Event arg0) {
-					JLG.debug("coucou");
-					myMenu.setVisible(true);
-					menu.setVisible(true);
-				}
-			});
-
-			item.addSelectionListener(new SelectionListener() {
-
-				@Override
-				public void widgetSelected(SelectionEvent arg0) {
-				}
-
-				@Override
-				public void widgetDefaultSelected(SelectionEvent arg0) {
-					JLG.debug("item default selected");
-					new OpenConsoleAction(DataSourceWindow.this).run();
-				}
-			});
-
+		if (tray == null) {
+			return;
 		}
+		item = new TrayItem(tray, SWT.NONE);
+		Image image = new Image(display,
+				DataSourceWindow.class.getResourceAsStream("ocp_icon.png"));
+		item.setImage(image);
+		item.setToolTipText("OCP Agent");
+		final MenuManager myMenu = new MenuManager("xxx");
+		final Menu menu = myMenu.createContextMenu(shell);
+		myMenu.add(new ExitAction(this));
+		myMenu.add(new OpenConsoleAction(this));
+		menu.setEnabled(true);
+
+		item.addListener(SWT.MenuDetect, new Listener() {
+
+			@Override
+			public void handleEvent(Event arg0) {
+				JLG.debug("coucou");
+				myMenu.setVisible(true);
+				menu.setVisible(true);
+			}
+		});
+
+		item.addSelectionListener(new SelectionListener() {
+
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+			}
+
+			@Override
+			public void widgetDefaultSelected(SelectionEvent arg0) {
+				JLG.debug("item default selected");
+				new OpenConsoleAction(DataSourceWindow.this).run();
+			}
+		});
 	}
 
 	public void addProtocolMenu() {
