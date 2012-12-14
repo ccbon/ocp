@@ -49,7 +49,7 @@ public class UserManagement extends DSContainer<DataSource> implements
 	}
 
 	@Override
-	public boolean canLogin() {
+	public boolean canAutomaticallyLogin() {
 		if (ds().usesComponent(IAuthenticable.class)) {
 			return !JLG.isNullOrEmpty(this.username) && this.challenge != null;
 		}
@@ -58,7 +58,7 @@ public class UserManagement extends DSContainer<DataSource> implements
 
 	@Override
 	public void login() throws Exception {
-		if (!canLogin()) {
+		if (!canAutomaticallyLogin()) {
 			throw new Exception("username not provided.");
 		}
 

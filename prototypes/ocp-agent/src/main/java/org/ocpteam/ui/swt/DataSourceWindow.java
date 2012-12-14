@@ -453,7 +453,7 @@ public class DataSourceWindow extends ApplicationWindow implements IComponent {
 				viewExplorerAction.run();
 			} else if (ds.usesComponent(IUserManagement.class)) {
 				ds.getComponent(IUserManagement.class).initFromURI();
-				if (ds.getComponent(IUserManagement.class).canLogin()) {
+				if (ds.getComponent(IUserManagement.class).canAutomaticallyLogin()) {
 					signIn();
 				} else {
 					signInAction.run();

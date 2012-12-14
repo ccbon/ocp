@@ -12,7 +12,7 @@ public interface IUserManagement {
 	
 	public void initFromURI();
 	
-	public boolean canLogin();
+	public boolean canAutomaticallyLogin();
 	
 	public void login() throws Exception;
 	
