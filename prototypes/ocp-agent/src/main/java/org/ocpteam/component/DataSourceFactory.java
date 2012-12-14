@@ -29,7 +29,9 @@ public class DataSourceFactory extends Container<IContainer> {
 	}
 	
 	public DataSource getInstance(File file) throws Exception {
-
+		if (!file.exists()) {
+			throw new Exception("File not found.");
+		}
 		if (file.isDirectory()) {
 			throw new Exception("Cannot accept directory.");
 		}

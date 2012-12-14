@@ -50,7 +50,7 @@ public class OpenDataSourceAction extends Action {
 				w.openDataSource(w.app.getComponent(DataSourceFactory.class).getInstance(new File(filename)));
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			QuickMessage.exception(w.getShell(), "Cannot open the file.", e);
 		} finally {
 			w.refresh();
 		}
