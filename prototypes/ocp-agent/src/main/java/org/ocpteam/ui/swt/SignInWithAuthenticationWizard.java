@@ -9,13 +9,13 @@ import org.ocpteam.misc.JLG;
 import org.ocpteam.misc.swt.QuickMessage;
 
 
-public class SignInWizard extends Wizard {
+public class SignInWithAuthenticationWizard extends Wizard {
 
 	public static void start(final DataSourceWindow window) {
 		final Shell shell = new Shell(window.getShell().getDisplay());
 		shell.setLayout(new FillLayout());
 
-		WizardDialog dialog = new WizardDialog(shell, new SignInWizard(window)) {
+		WizardDialog dialog = new WizardDialog(shell, new SignInWithAuthenticationWizard(window)) {
 			@Override
 			protected void finishPressed() {
 				// TODO Auto-generated method stub
@@ -28,17 +28,17 @@ public class SignInWizard extends Wizard {
 		shell.dispose();
 	}
 
-	private SignInWizardPage p1;
+	private SignInWithAuthenticationWizardPage p1;
 	private DataSourceWindow window;
 
-	public SignInWizard(DataSourceWindow window) {
+	public SignInWithAuthenticationWizard(DataSourceWindow window) {
 		this.window = window;
 		setWindowTitle("Sign In Wizard");
 	}
 
 	@Override
 	public void addPages() {
-		p1 = new SignInWizardPage(window);
+		p1 = new SignInWithAuthenticationWizardPage(window);
 		addPage(p1);
 	}
 
@@ -48,6 +48,7 @@ public class SignInWizard extends Wizard {
 		try {
 			IUserManagement a = window.ds.getComponent(IUserManagement.class);
 			a.setUsername(p1.usernameText.getText());
+			a.setChallenge(p1.passwordText.getText());
 			window.signIn();
 		} catch (Exception e) {
 			JLG.error(e);

@@ -37,7 +37,6 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Tray;
 import org.eclipse.swt.widgets.TrayItem;
 import org.eclipse.wb.swt.SWTResourceManager;
-import org.ocpteam.component.Agent;
 import org.ocpteam.component.DataSource;
 import org.ocpteam.component.DataSourceFactory;
 import org.ocpteam.component.Server;
@@ -80,7 +79,6 @@ public class DataSourceWindow extends ApplicationWindow implements IComponent {
 	HelpAction helpAction;
 
 	public DataSource ds;
-	public Agent agent;
 	public Context context;
 
 	public CTabFolder tabFolder;
@@ -187,9 +185,7 @@ public class DataSourceWindow extends ApplicationWindow implements IComponent {
 		openDataSourceAction = new OpenDataSourceAction(this);
 		closeDataSourceAction = new CloseDataSourceAction(this);
 		newDataSourceActionMap = new HashMap<String, NewDataSourceAction>();
-		Iterator<DataSource> it = dsf.getDataSourceIterator();
-		while (it.hasNext()) {
-			DataSource ds = it.next();
+		for (DataSource ds : dsf.getDataSourceList()) {
 			String protocol = ds.getProtocolName();
 			JLG.debug("ds=" + ds.getClass());
 			newDataSourceActionMap.put(protocol, new NewDataSourceAction(this,
@@ -444,7 +440,6 @@ public class DataSourceWindow extends ApplicationWindow implements IComponent {
 			ds.readConfig();
 			ds.connect();
 			addProtocolMenu();
-			agent = ds.getComponent(Agent.class);
 			if (isDaemon()) {
 				openTray();
 			}
@@ -453,7 +448,8 @@ public class DataSourceWindow extends ApplicationWindow implements IComponent {
 				viewExplorerAction.run();
 			} else if (ds.usesComponent(IUserManagement.class)) {
 				ds.getComponent(IUserManagement.class).initFromURI();
-				if (ds.getComponent(IUserManagement.class).canAutomaticallyLogin()) {
+				if (ds.getComponent(IUserManagement.class)
+						.canAutomaticallyLogin()) {
 					signIn();
 				} else {
 					signInAction.run();
@@ -472,7 +468,6 @@ public class DataSourceWindow extends ApplicationWindow implements IComponent {
 			closeTray();
 		}
 		ds = null;
-		agent = null;
 		context = null;
 		removeProtocolMenu();
 		Event event = new Event();

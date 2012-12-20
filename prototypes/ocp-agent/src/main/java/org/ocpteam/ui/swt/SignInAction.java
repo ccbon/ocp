@@ -14,7 +14,7 @@ public class SignInAction extends Action {
 	public SignInAction(DataSourceWindow w) {
 		window = w;
 		setText("&Sign in@Ctrl+L");
-		setToolTipText("User Authentication");
+		setToolTipText("Sign in");
 		try {
 			ImageDescriptor i = ImageDescriptor
 					.createFromImageData(new ImageData(ExitAction.class
@@ -28,10 +28,10 @@ public class SignInAction extends Action {
 	@Override
 	public void run() {
 		JLG.debug("Authentication User: display a wizard...");
-		Scenario scenario = null;
+		IScenario scenario = null;
 		try {
 			ResourceBundle swt = window.ds.getResource("swt");
-			scenario = (Scenario) swt.getObject("SignInScenario");
+			scenario = (IScenario) swt.getObject("SignInScenario");
 		} catch (Exception e) {
 		}
 		try {
@@ -42,9 +42,9 @@ public class SignInAction extends Action {
 			} else {
 
 				if (window.ds.usesComponent(IAuthenticable.class)) {
-					SignInWizard.start(window);
+					SignInWithAuthenticationWizard.start(window);
 				} else {
-					SignInUIWizard.start(window);
+					SignInWizard.start(window);
 				}
 
 			}

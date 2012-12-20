@@ -13,11 +13,11 @@ import org.ocpteam.interfaces.IUserManagement;
 import org.ocpteam.misc.JLG;
 import org.ocpteam.misc.swt.QuickMessage;
 import org.ocpteam.ui.swt.DataSourceWindow;
-import org.ocpteam.ui.swt.Scenario;
+import org.ocpteam.ui.swt.IScenario;
 import org.ocpteamx.protocol.gdrive.GDriveClient;
 import org.ocpteamx.protocol.gdrive.GDriveDataSource;
 
-public class GDRIVESignInWizard extends Wizard implements Scenario {
+public class GDRIVESignInWizard extends Wizard implements IScenario {
 
 	private GDRIVESignInWizardPage p1;
 	private DataSourceWindow w;

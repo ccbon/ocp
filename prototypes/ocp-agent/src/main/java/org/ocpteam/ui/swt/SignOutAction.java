@@ -11,7 +11,7 @@ public class SignOutAction extends Action {
 	public SignOutAction(DataSourceWindow window) {
 		this.window = window;
 		setText("S&ign out@Ctrl+D");
-		setToolTipText("Disconnect a user");
+		setToolTipText("Sign out");
 		try {
 			ImageDescriptor i = ImageDescriptor
 					.createFromImageData(new ImageData(ExitAction.class

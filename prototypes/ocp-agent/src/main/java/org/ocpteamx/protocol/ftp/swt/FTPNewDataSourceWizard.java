@@ -9,10 +9,10 @@ import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.ocpteam.ui.swt.DataSourceWindow;
-import org.ocpteam.ui.swt.Scenario;
+import org.ocpteam.ui.swt.IScenario;
 import org.ocpteamx.protocol.ftp.FTPDataSource;
 
-public class FTPNewDataSourceWizard extends Wizard implements Scenario {
+public class FTPNewDataSourceWizard extends Wizard implements IScenario {
 	FirstWizardPage p1;
 	private DataSourceWindow w;
 	public FTPNewDataSourceWizard() {

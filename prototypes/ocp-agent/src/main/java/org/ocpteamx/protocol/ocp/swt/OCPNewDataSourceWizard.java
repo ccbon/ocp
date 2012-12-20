@@ -11,10 +11,10 @@ import org.eclipse.swt.widgets.Shell;
 import org.ocpteam.misc.JLG;
 import org.ocpteam.misc.swt.QuickMessage;
 import org.ocpteam.ui.swt.DataSourceWindow;
-import org.ocpteam.ui.swt.Scenario;
+import org.ocpteam.ui.swt.IScenario;
 import org.ocpteamx.protocol.ocp.OCPDataSource;
 
-public class OCPNewDataSourceWizard extends Wizard implements Scenario {
+public class OCPNewDataSourceWizard extends Wizard implements IScenario {
 
 	public boolean bIsFirstAgent = false;
 	public String listenerPort = "22222";

@@ -1,9 +1,9 @@
 package org.ocpteamx.protocol.zip.swt;
 
 import org.ocpteam.ui.swt.DataSourceWindow;
-import org.ocpteam.ui.swt.Scenario;
+import org.ocpteam.ui.swt.IScenario;
 
-public class ZIPNewDataSourceScenario implements Scenario {
+public class ZIPNewDataSourceScenario implements IScenario {
 
 	private DataSourceWindow w;
 

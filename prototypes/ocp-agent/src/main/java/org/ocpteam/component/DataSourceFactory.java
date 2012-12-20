@@ -15,19 +15,11 @@ import org.ocpteam.misc.JLG;
 public class DataSourceFactory extends Container<IContainer> {
 	public static ResourceBundle extensionResource = ResourceBundle
 			.getBundle("extensions");
-	
+
 	public Iterator<DataSource> getDataSourceIterator() {
-		List<DataSource> l = new LinkedList<DataSource>();
-		Iterator<Object> it = iteratorComponent();
-		while (it.hasNext()) {
-			Object functionality = it.next();
-			if (functionality instanceof DataSource) {
-				l.add((DataSource) functionality);
-			}
-		}
-		return l.iterator();
+		return getDataSourceList().iterator();
 	}
-	
+
 	public DataSource getInstance(File file) throws Exception {
 		if (!file.exists()) {
 			throw new Exception("File not found.");
@@ -46,8 +38,7 @@ public class DataSourceFactory extends Container<IContainer> {
 			uri = new URI(p.getProperty("uri"));
 			protocol = uri.getScheme();
 		} else {
-			protocol = extensionResource.getString(extension
-					.toLowerCase());
+			protocol = extensionResource.getString(extension.toLowerCase());
 		}
 		DataSource ds = getInstance(protocol);
 		ds.open(file);
@@ -56,7 +47,7 @@ public class DataSourceFactory extends Container<IContainer> {
 		}
 		return ds;
 	}
-	
+
 	public DataSource getInstance(String protocol) throws Exception {
 		Iterator<DataSource> it = getDataSourceIterator();
 		while (it.hasNext()) {
@@ -71,16 +62,27 @@ public class DataSourceFactory extends Container<IContainer> {
 		throw new Exception("protocol not understood: " + protocol);
 	}
 
-	public ResourceBundle getResource(String protocol, String string) throws Exception {
-		Iterator<DataSource> it = getDataSourceIterator();
-		while (it.hasNext()) {
-			DataSource ds = it.next();
+	public ResourceBundle getResource(String protocol, String string)
+			throws Exception {
+		for (DataSource ds : getDataSourceList()) {
 			String p = ds.getProtocolName();
 			if (p.equalsIgnoreCase(protocol)) {
 				return ds.getResource(string);
 			}
 		}
 		throw new Exception("protocol not understood: " + protocol);
+	}
+
+	public List<DataSource> getDataSourceList() {
+		List<DataSource> l = new LinkedList<DataSource>();
+		Iterator<Object> it = iteratorComponent();
+		while (it.hasNext()) {
+			Object functionality = it.next();
+			if (functionality instanceof DataSource) {
+				l.add((DataSource) functionality);
+			}
+		}
+		return l;
 	}
 
 }
