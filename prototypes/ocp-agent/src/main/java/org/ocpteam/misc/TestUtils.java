@@ -12,7 +12,6 @@ public class TestUtils {
 		FileWriter fw = new FileWriter(filename);
 		for (int i = 0; i < 1000000; i++) {
 			fw.write("truc bidule a ecrire\n");
-			fw.flush();
 		}
 		fw.close();	
 	}
@@ -21,7 +20,7 @@ public class TestUtils {
 		MessageDigest md = MessageDigest.getInstance("SHA-1");
 		md.reset();
 		FileInputStream fis = new FileInputStream(new File(filename));
-		byte[] input = new byte[1024];
+		byte[] input = new byte[1024*32];
 		while (fis.read(input) < 0) {
 			md.update(input);
 		}
