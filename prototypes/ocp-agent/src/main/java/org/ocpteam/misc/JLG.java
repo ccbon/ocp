@@ -229,6 +229,7 @@ public class JLG {
 				rm(child);
 			}
 		}
+		JLG.debug("About to delete " + file.getAbsolutePath());
 		file.delete();
 	}
 

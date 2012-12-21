@@ -59,7 +59,7 @@ public class UserManagement extends DSContainer<DataSource> implements
 	@Override
 	public void login() throws Exception {
 		if (!canAutomaticallyLogin()) {
-			throw new Exception("username not provided.");
+			throw new Exception("Not enought information for log in.");
 		}
 
 		if (ds().usesComponent(IAuthenticable.class)) {

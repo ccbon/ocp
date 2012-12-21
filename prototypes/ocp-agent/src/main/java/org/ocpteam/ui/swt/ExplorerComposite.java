@@ -495,14 +495,14 @@ public class ExplorerComposite extends Composite {
 				}
 			});
 
-			for (IFile te : array) {
+			for (IFile ifile : array) {
 
 				TableItem tableItem = new TableItem(remoteDirectoryTable,
 						SWT.NONE);
 				String type = null;
 				String size = null;
 				Image image = null;
-				if (te.isDirectory()) {
+				if (ifile.isDirectory()) {
 					type = DIRECTORY_TYPE;
 					size = "";
 					image = DIRECTORY_ICON;
@@ -511,7 +511,7 @@ public class ExplorerComposite extends Composite {
 					size = ""; // not implemented yet
 					image = FILE_ICON;
 				}
-				tableItem.setText(new String[] { te.getName(), type, size });
+				tableItem.setText(new String[] { ifile.getName(), type, size });
 				tableItem.setImage(image);
 
 			}
