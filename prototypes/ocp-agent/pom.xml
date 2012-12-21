@@ -240,6 +240,12 @@
 			<version>2.6</version>
 		</dependency>
 
+		<dependency>
+			<groupId>org.ocpteam.dependencies</groupId>
+			<artifactId>dropbox</artifactId>
+			<version>0.0.1</version>
+		</dependency>
+
 	</dependencies>
 
 	<!-- Repositories -->
