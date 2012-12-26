@@ -99,9 +99,10 @@ public class AddressUserCreation extends DSContainer<AddressDataSource>
 	}
 
 	@Override
-	public void login() throws Exception {
-		IUserManagement a = ds().getComponent(IUserManagement.class);
-		String username = a.getUsername();
+	public void authenticate() throws Exception {
+		IUserManagement um = ds().getComponent(IUserManagement.class);
+		String username = um.getUsername();
+		IAuthenticable a = ds().getComponent(IAuthenticable.class);
 		String password = (String) a.getChallenge();
 		JLG.debug("username=" + username);
 		JLG.debug("password=" + password);
@@ -127,8 +128,18 @@ public class AddressUserCreation extends DSContainer<AddressDataSource>
 	}
 
 	@Override
-	public void logout() throws Exception {
-		ds().setContext(null);
+	public void setChallenge(Object challenge) {
+		this.password = (String) challenge;
+	}
+
+	@Override
+	public Object getChallenge() {
+		return password;
+	}
+
+	@Override
+	public void unauthenticate() throws Exception {
+		setChallenge(null);
 	}
 
 }

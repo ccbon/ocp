@@ -9,6 +9,7 @@ import org.junit.Test;
 import org.ocpteam.component.ContactMap;
 import org.ocpteam.component.DataSource;
 import org.ocpteam.entity.Context;
+import org.ocpteam.interfaces.IAuthenticable;
 import org.ocpteam.interfaces.IFileSystem;
 import org.ocpteam.interfaces.IPersistentMap;
 import org.ocpteam.interfaces.IUserCreation;
@@ -60,7 +61,7 @@ public class DHT5Test {
 			uc.createUser();
 			IUserManagement um = dts.getComponent(IUserManagement.class);
 			um.setUsername(username);
-			um.setChallenge(password);
+			dts.getComponent(IAuthenticable.class).setChallenge(password);
 			um.login();
 			
 			TestUtils.createBigFile(filename);
@@ -94,7 +95,7 @@ public class DHT5Test {
 			dts = ds[1];
 			um = dts.getComponent(IUserManagement.class);
 			um.setUsername(username);
-			um.setChallenge(password);
+			dts.getComponent(IAuthenticable.class).setChallenge(password);
 			um.login();
 
 			ctx = dts.getContext();

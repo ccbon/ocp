@@ -40,9 +40,9 @@ public class GDRIVESignInWizard extends Wizard implements IScenario {
 			String code = p1.codeText.getText();
 			URI uri = new URI("gdrive://" + code);
 			w.ds.setURI(uri);
-			IUserManagement auth = w.ds.getComponent(IUserManagement.class);
-			auth.setUsername("not used");
-			auth.setChallenge(code);
+			IUserManagement um = w.ds.getComponent(IUserManagement.class);
+			um.setUsername("not used");
+			w.ds.getComponent(IAuthenticable.class).setChallenge(code);
 		} catch (Exception e) {
 			e.printStackTrace();
 			QuickMessage.error(getShell(), "Cannot connect");

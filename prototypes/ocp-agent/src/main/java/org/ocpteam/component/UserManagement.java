@@ -13,8 +13,7 @@ public class UserManagement extends DSContainer<DataSource> implements
 		IUserManagement {
 
 	protected String username;
-	private Object challenge;
-
+	
 	@Override
 	public void setUsername(String username) {
 		this.username = username;
@@ -42,7 +41,7 @@ public class UserManagement extends DSContainer<DataSource> implements
 			this.username = array[0];
 			if (ds().usesComponent(IAuthenticable.class)) {
 				if (array.length > 1) {
-					this.setChallenge(array[1]);
+					ds().getComponent(IAuthenticable.class).setChallenge(array[1]);
 				}
 			}
 		}
@@ -51,7 +50,8 @@ public class UserManagement extends DSContainer<DataSource> implements
 	@Override
 	public boolean canAutomaticallyLogin() {
 		if (ds().usesComponent(IAuthenticable.class)) {
-			return !JLG.isNullOrEmpty(this.username) && this.challenge != null;
+			IAuthenticable a = ds().getComponent(IAuthenticable.class);
+			return !JLG.isNullOrEmpty(this.username) && a.getChallenge() != null;
 		}
 		return !JLG.isNullOrEmpty(this.username);
 	}
@@ -64,7 +64,7 @@ public class UserManagement extends DSContainer<DataSource> implements
 
 		if (ds().usesComponent(IAuthenticable.class)) {
 			IAuthenticable auth = ds().getComponent(IAuthenticable.class);
-			auth.login();
+			auth.authenticate();
 		} else {
 			User user = new User();
 			user.setUsername(getUsername());
@@ -77,20 +77,11 @@ public class UserManagement extends DSContainer<DataSource> implements
 	public void logout() throws Exception {
 		if (ds().usesComponent(IAuthenticable.class)) {
 			IAuthenticable auth = ds().getComponent(IAuthenticable.class);
-			auth.logout();
+			auth.setChallenge(null);
+			auth.unauthenticate();
 		}
 		this.username = null;
-		this.challenge = null;
-	}
-
-	@Override
-	public void setChallenge(Object challenge) {
-		this.challenge = challenge;
-	}
-
-	@Override
-	public Object getChallenge() {
-		return challenge;
+		ds().setContext(null);
 	}
 
 }

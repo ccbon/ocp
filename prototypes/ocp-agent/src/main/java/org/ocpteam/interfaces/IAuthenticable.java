@@ -8,8 +8,11 @@ package org.ocpteam.interfaces;
  */
 public interface IAuthenticable {
 
-	void login() throws Exception;
-
-	void logout() throws Exception;
-
+	void authenticate() throws Exception;
+	
+	void unauthenticate() throws Exception;
+	
+	public void setChallenge(Object challenge);
+	
+	public Object getChallenge();
 }

@@ -6,10 +6,6 @@ public interface IUserManagement {
 	
 	public String getUsername() throws Exception;
 	
-	public void setChallenge(Object challenge);
-	
-	public Object getChallenge();
-	
 	public void initFromURI();
 	
 	public boolean canAutomaticallyLogin();

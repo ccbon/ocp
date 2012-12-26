@@ -18,6 +18,6 @@ public class DropboxUserManagement extends UserManagement {
 	public void login() throws Exception {
 		DropboxClient c = (DropboxClient) ds().getComponent(
 				IAuthenticable.class);
-		c.login();
+		c.authenticate();
 	}
 }

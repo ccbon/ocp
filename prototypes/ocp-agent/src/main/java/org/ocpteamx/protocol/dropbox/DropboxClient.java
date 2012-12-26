@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.PrintWriter;
 import java.util.Scanner;
-import java.util.concurrent.TimeUnit;
 
 import org.ocpteam.component.DSContainer;
 import org.ocpteam.entity.Context;
@@ -23,7 +22,8 @@ import com.dropbox.client2.session.WebAuthSession;
 
 public class DropboxClient extends DSContainer<DropboxDataSource> implements
 		IAuthenticable {
-	public static final String TOKEN_FILE = System.getProperty("user.home") + "/.dropbox_tokens";
+	public static final String TOKEN_FILE = System.getProperty("user.home")
+			+ "/.dropbox_tokens";
 	final static private String APP_KEY = "1s2uo2miptnr9sq";
 	final static private String APP_SECRET = "tk88gf7o4gi8bxx";
 
@@ -43,7 +43,7 @@ public class DropboxClient extends DSContainer<DropboxDataSource> implements
 	}
 
 	@Override
-	public void login() throws Exception {
+	public void authenticate() throws Exception {
 		File file = new File(TOKEN_FILE);
 		if (file.exists()) {
 			reAuth(file);
@@ -93,13 +93,6 @@ public class DropboxClient extends DSContainer<DropboxDataSource> implements
 		tokenWriter.close();
 	}
 
-	@Override
-	public void logout() throws Exception {
-		mDBApi.getSession().getHttpClient().getConnectionManager()
-				.closeIdleConnections(0, TimeUnit.SECONDS);
-		mDBApi.getSession().getHttpClient().getConnectionManager().shutdown();
-	}
-
 	public boolean isLogged() {
 		try {
 			mDBApi.accountInfo();
@@ -107,6 +100,22 @@ public class DropboxClient extends DSContainer<DropboxDataSource> implements
 			return false;
 		}
 		return true;
+	}
+
+	@Override
+	public void setChallenge(Object challenge) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public Object getChallenge() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void unauthenticate() throws Exception {
 	}
 
 }

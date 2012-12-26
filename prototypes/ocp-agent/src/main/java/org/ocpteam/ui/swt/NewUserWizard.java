@@ -6,6 +6,7 @@ import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
+import org.ocpteam.interfaces.IAuthenticable;
 import org.ocpteam.interfaces.ICaptcha;
 import org.ocpteam.interfaces.IUser;
 import org.ocpteam.interfaces.IUserCreation;
@@ -101,7 +102,8 @@ public class NewUserWizard extends Wizard {
 				IUserManagement ui = window.ds
 						.getComponent(IUserManagement.class);
 				ui.setUsername(uc.getUser().getUsername());
-				ui.setChallenge(uc.getPassword());
+				IAuthenticable auth = window.ds.getComponent(IAuthenticable.class);
+				auth.setChallenge(uc.getPassword());
 				window.signIn();
 			}
 		} catch (Exception e) {

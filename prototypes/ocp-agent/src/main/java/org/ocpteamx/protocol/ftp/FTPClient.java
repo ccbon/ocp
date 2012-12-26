@@ -11,10 +11,12 @@ import org.ocpteam.interfaces.IUserManagement;
 import org.ocpteam.misc.JLG;
 import org.ocpteam.serializable.User;
 
-public class FTPClient extends DSContainer<FTPDataSource> implements IAuthenticable, IConnect {
+public class FTPClient extends DSContainer<FTPDataSource> implements
+		IAuthenticable, IConnect {
 
 	private String hostname;
 	org.apache.commons.net.ftp.FTPClient ftp;
+	private String password;
 
 	public FTPClient() throws Exception {
 		ftp = new org.apache.commons.net.ftp.FTPClient();
@@ -42,15 +44,14 @@ public class FTPClient extends DSContainer<FTPDataSource> implements IAuthentica
 	}
 
 	@Override
-	public void login() throws Exception {
-		logout();
+	public void authenticate() throws Exception {
 		try {
 			ftp.connect(hostname);
 		} catch (Exception e) {
 		}
 		IUserManagement a = ds().um;
 		String login = a.getUsername();
-		String password = (String) a.getChallenge();
+		String password = (String) getChallenge();
 		if (ftp.login(login, password)) {
 			JLG.debug("ftp logged in.");
 			IDataModel dm = new FTPFileSystem(this);
@@ -63,10 +64,22 @@ public class FTPClient extends DSContainer<FTPDataSource> implements IAuthentica
 	}
 
 	@Override
-	public void logout() throws Exception {
+	public void setChallenge(Object challenge) {
+		this.password = (String) challenge;
+
+	}
+
+	@Override
+	public Object getChallenge() {
+		return password;
+	}
+	
+	@Override
+	public void unauthenticate() throws Exception {
 		try {
 			ftp.logout();
-		} catch (Exception e) {
+		} catch (IOException e) {
+			// e.printStackTrace();
 		}
 	}
 

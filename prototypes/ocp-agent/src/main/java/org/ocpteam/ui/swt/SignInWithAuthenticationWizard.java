@@ -4,6 +4,7 @@ import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Shell;
+import org.ocpteam.interfaces.IAuthenticable;
 import org.ocpteam.interfaces.IUserManagement;
 import org.ocpteam.misc.JLG;
 import org.ocpteam.misc.swt.QuickMessage;
@@ -46,9 +47,10 @@ public class SignInWithAuthenticationWizard extends Wizard {
 	public boolean performFinish() {
 		JLG.debug("sign in user");
 		try {
-			IUserManagement a = window.ds.getComponent(IUserManagement.class);
-			a.setUsername(p1.usernameText.getText());
-			a.setChallenge(p1.passwordText.getText());
+			IUserManagement um = window.ds.getComponent(IUserManagement.class);
+			um.setUsername(p1.usernameText.getText());
+			IAuthenticable auth = window.ds.getComponent(IAuthenticable.class);
+			auth.setChallenge(p1.passwordText.getText());
 			window.signIn();
 		} catch (Exception e) {
 			JLG.error(e);

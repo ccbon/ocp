@@ -4,6 +4,7 @@ import java.util.Iterator;
 import java.util.Properties;
 
 import org.ocpteam.component.Agent;
+import org.ocpteam.interfaces.IAuthenticable;
 import org.ocpteam.interfaces.IUserManagement;
 import org.ocpteam.misc.JLG;
 import org.ocpteam.serializable.Pointer;
@@ -78,10 +79,11 @@ public class TestAgent {
 			JLG.debug(decryptedMessage);
 			//System.exit(0);
 			
-			IUserManagement auth = ds2.getComponent(IUserManagement.class);
-			auth.setUsername(username);
+			IUserManagement um = ds2.getComponent(IUserManagement.class);
+			um.setUsername(username);
+			IAuthenticable auth = ds2.getComponent(IAuthenticable.class);
 			auth.setChallenge(password);
-			auth.login();
+			um.login();
 			OCPUser user = (OCPUser) ds2.getContext().getUser();
 			JLG.debug(user.toString());
 			

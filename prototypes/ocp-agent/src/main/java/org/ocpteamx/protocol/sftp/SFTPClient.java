@@ -13,7 +13,8 @@ import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.Session;
 
-public class SFTPClient extends DSContainer<SFTPDataSource> implements IAuthenticable, IClient {
+public class SFTPClient extends DSContainer<SFTPDataSource> implements
+		IAuthenticable, IClient {
 
 	public SFTPClient() throws Exception {
 		super();
@@ -22,14 +23,15 @@ public class SFTPClient extends DSContainer<SFTPDataSource> implements IAuthenti
 	private JSch jsch;
 	Session session;
 	public ChannelSftp channel;
+	private Object challenge;
 
 	@Override
-	public void login() throws Exception {
+	public void authenticate() throws Exception {
 		try {
 			jsch = new JSch();
 			IUserManagement a = ds().getComponent(IUserManagement.class);
 			String login = a.getUsername();
-			Object challenge = a.getChallenge();
+			Object challenge = getChallenge();
 			String[] array = login.split("@");
 			String username = array[0];
 			String hostname = ds().getURI().getHost();
@@ -70,12 +72,23 @@ public class SFTPClient extends DSContainer<SFTPDataSource> implements IAuthenti
 			throw new Exception("Cannot login");
 		}
 	}
-
+	
 	@Override
-	public void logout() throws Exception {
+	public void unauthenticate() throws Exception {
 		channel.exit();
 		session.disconnect();
 		jsch = null;
+	}
+
+	@Override
+	public void setChallenge(Object challenge) {
+		this.challenge = challenge;
+		
+	}
+
+	@Override
+	public Object getChallenge() {
+		return challenge;
 	}
 
 }

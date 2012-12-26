@@ -38,6 +38,7 @@ public class OCPClient extends Client implements IAuthenticable {
 
 	private OCPAgent agent;
 	private OCPProtocol protocol;
+	private String password;
 
 	public Id[] requestNodeId() throws Exception {
 		Id[] nodeIds = null;
@@ -127,10 +128,10 @@ public class OCPClient extends Client implements IAuthenticable {
 	}
 
 	@Override
-	public void login() throws Exception {
+	public void authenticate() throws Exception {
 		try {
 			IUserManagement a = ds().um;
-			String password = (String) a.getChallenge();
+			String password = (String) getChallenge();
 			String login = a.getUsername();
 			Id key = agent.hash(agent.ucrypt(password,
 					(login + password).getBytes()));
@@ -155,14 +156,22 @@ public class OCPClient extends Client implements IAuthenticable {
 		}
 	}
 
-	@Override
-	public void logout() throws Exception {
-		JLG.debug("ocp logout (nothing to do).");
-	}
-
 	public void setAgent(OCPAgent agent) {
 		this.agent = agent;
 	}
 
-	
+	@Override
+	public void setChallenge(Object challenge) {
+		this.password = (String) challenge;		
+	}
+
+	@Override
+	public Object getChallenge() {
+		return password;
+	}
+
+	@Override
+	public void unauthenticate() throws Exception {
+		setChallenge(null);
+	}	
 }

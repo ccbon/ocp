@@ -7,6 +7,7 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.graphics.ImageData;
 import org.ocpteam.interfaces.IAuthenticable;
 import org.ocpteam.misc.JLG;
+import org.ocpteam.misc.swt.QuickMessage;
 
 public class SignInAction extends Action {
 	private DataSourceWindow window;
@@ -50,6 +51,7 @@ public class SignInAction extends Action {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
+			QuickMessage.error(window.getShell(), "Cannot connect.");
 		}
 
 	}
