@@ -15,7 +15,8 @@ public class PersistentFileMap implements IPersistentMap {
 
 	private File dir;
 
-	public static class PersistentMapEntry implements Map.Entry<Address, byte[]> {
+	public static class PersistentMapEntry implements
+			Map.Entry<Address, byte[]> {
 
 		private Address address;
 		private byte[] content;
@@ -46,8 +47,8 @@ public class PersistentFileMap implements IPersistentMap {
 	public PersistentFileMap() {
 	}
 
-	public void setURI(String root) throws Exception {
-		dir = new File(root);
+	public void setURI(String uri) throws Exception {
+		dir = new File(uri);
 		JLG.mkdir(dir);
 	}
 
@@ -116,7 +117,8 @@ public class PersistentFileMap implements IPersistentMap {
 	@Override
 	public byte[] get(Object key) {
 		try {
-			File file = new File(dir, JLG.bytesToHex(((Address) key).getBytes()));
+			File file = new File(dir,
+					JLG.bytesToHex(((Address) key).getBytes()));
 			if (file.exists()) {
 				byte[] content = JLG.getBinaryFile(file);
 				return content;
@@ -171,7 +173,8 @@ public class PersistentFileMap implements IPersistentMap {
 	@Override
 	public byte[] remove(Object key) {
 		try {
-			File file = new File(dir, JLG.bytesToHex(((Address) key).getBytes()));
+			File file = new File(dir,
+					JLG.bytesToHex(((Address) key).getBytes()));
 			if (file.exists()) {
 				byte[] content = JLG.getBinaryFile(file);
 				file.delete();

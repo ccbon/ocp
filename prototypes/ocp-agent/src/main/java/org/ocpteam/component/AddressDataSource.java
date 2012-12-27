@@ -60,10 +60,12 @@ public abstract class AddressDataSource extends DSPDataSource {
 	public void readConfig() throws Exception {
 		super.readConfig();
 		if (usesComponent(IPersistentMap.class)) {
-			String dir = getProperty("uri", System.getenv("TEMP")
-					+ "/" + getProtocolName() + "/" + getName());
+			String dir = getProperty("uri", System.getenv("TEMP") + "/"
+					+ getProtocolName() + "/" + getName());
 			JLG.debug("dir=" + dir);
-			getComponent(IPersistentMap.class).setURI(dir);
+			String uri = getProperty("datastore.uri", dir);
+			
+			getComponent(IPersistentMap.class).setURI(uri);
 		}
 	}
 
@@ -88,7 +90,7 @@ public abstract class AddressDataSource extends DSPDataSource {
 	@Override
 	public synchronized void disconnectHard() throws Exception {
 		super.disconnectHard();
-		//localMap.clear();
+		// localMap.clear();
 	}
 
 	public void networkPicture() throws Exception {
@@ -128,7 +130,8 @@ public abstract class AddressDataSource extends DSPDataSource {
 		} catch (NotAvailableContactException e) {
 		} finally {
 			if (socket != null) {
-				JLG.debug("about to close the socket. For info socket buffer size:" + socket.getReceiveBufferSize());
+				JLG.debug("about to close the socket. For info socket buffer size:"
+						+ socket.getReceiveBufferSize());
 				socket.close();
 				socket = null;
 			}

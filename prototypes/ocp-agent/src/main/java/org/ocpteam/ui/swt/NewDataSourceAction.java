@@ -25,6 +25,7 @@ public class NewDataSourceAction extends Action {
 			}
 			w.ds = w.dsf.getInstance(protocol);
 			ResourceBundle swt = w.dsf.getResource(protocol, "swt");
+			JLG.debug("bundle=" + swt);
 			if (swt != null && swt.containsKey("NewDataSourceScenario")) {
 				IScenario scenario = (IScenario) swt
 						.getObject("NewDataSourceScenario");
