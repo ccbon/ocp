@@ -4,6 +4,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 
 import org.ocpteam.component.DSContainer;
+import org.ocpteam.interfaces.IAuthenticable;
 import org.ocpteam.interfaces.IFile;
 import org.ocpteam.interfaces.IFileSystem;
 import org.ocpteam.misc.JLG;
@@ -12,6 +13,10 @@ import com.dropbox.client2.DropboxAPI.Entry;
 
 public class DropboxFileSystem extends DSContainer<DropboxDataSource> implements
 		IFileSystem {
+	
+	public DropboxClient getClient() {
+		return (DropboxClient) ds().getComponent(IAuthenticable.class);
+	}
 
 	@Override
 	public void checkoutAll(String localDir) throws Exception {
@@ -28,7 +33,7 @@ public class DropboxFileSystem extends DSContainer<DropboxDataSource> implements
 	@Override
 	public IFile getFile(String dir) throws Exception {
 		JLG.debug("About to get: " + dir);
-		Entry entries = DropboxClient.mDBApi.metadata(dir, 100, null, true,
+		Entry entries = getClient().mDBApi.metadata(dir, 100, null, true,
 				null);
 
 		DropboxFileImpl fi = new DropboxFileImpl();
@@ -47,7 +52,7 @@ public class DropboxFileSystem extends DSContainer<DropboxDataSource> implements
 		if (!existingParentDir.endsWith("/")) {
 			existingParentDir += "/";
 		}
-		DropboxClient.mDBApi.createFolder(existingParentDir + newDir);
+		getClient().mDBApi.createFolder(existingParentDir + newDir);
 	}
 
 	@Override
@@ -55,7 +60,7 @@ public class DropboxFileSystem extends DSContainer<DropboxDataSource> implements
 		if (!existingParentDir.endsWith("/")) {
 			existingParentDir += "/";
 		}
-		DropboxClient.mDBApi.delete(existingParentDir + name);
+		getClient().mDBApi.delete(existingParentDir + name);
 	}
 
 	@Override
@@ -64,7 +69,7 @@ public class DropboxFileSystem extends DSContainer<DropboxDataSource> implements
 		if (!existingParentDir.endsWith("/")) {
 			existingParentDir += "/";
 		}
-		DropboxClient.mDBApi.move(existingParentDir + oldName,
+		getClient().mDBApi.move(existingParentDir + oldName,
 				existingParentDir + newName);
 	}
 
@@ -85,7 +90,7 @@ public class DropboxFileSystem extends DSContainer<DropboxDataSource> implements
 		if (!path.endsWith("/")) {
 			path += "/";
 		}
-		DropboxClient.mDBApi.getFile(remoteDir + remoteFilename, null,
+		getClient().mDBApi.getFile(remoteDir + remoteFilename, null,
 				new FileOutputStream(path + remoteFilename), null);
 	}
 
@@ -102,7 +107,7 @@ public class DropboxFileSystem extends DSContainer<DropboxDataSource> implements
 				commit(remoteDir + file.getName(), child);
 			}
 		} else {
-			DropboxClient.mDBApi.putFile(remoteDir + file.getName(),
+			getClient().mDBApi.putFile(remoteDir + file.getName(),
 					new FileInputStream(file), file.length(), null, null);
 		}
 	}

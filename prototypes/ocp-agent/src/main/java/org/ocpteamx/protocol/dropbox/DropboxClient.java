@@ -1,9 +1,6 @@
 package org.ocpteamx.protocol.dropbox;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.PrintWriter;
-import java.util.Scanner;
+import java.util.Properties;
 
 import org.ocpteam.component.DSContainer;
 import org.ocpteam.entity.Context;
@@ -13,7 +10,6 @@ import org.ocpteam.misc.JLG;
 
 import com.dropbox.client2.DropboxAPI;
 import com.dropbox.client2.exception.DropboxException;
-import com.dropbox.client2.session.AbstractSession;
 import com.dropbox.client2.session.AccessTokenPair;
 import com.dropbox.client2.session.AppKeyPair;
 import com.dropbox.client2.session.RequestTokenPair;
@@ -22,75 +18,119 @@ import com.dropbox.client2.session.WebAuthSession;
 
 public class DropboxClient extends DSContainer<DropboxDataSource> implements
 		IAuthenticable {
-	public static final String TOKEN_FILE = System.getProperty("user.home")
-			+ "/.dropbox_tokens";
+	public static final String TOKEN_FILENAME = System.getProperty("user.home")
+			+ "/dropbox_tokens.properties";
 	final static private String APP_KEY = "1s2uo2miptnr9sq";
 	final static private String APP_SECRET = "tk88gf7o4gi8bxx";
 
 	final static private AccessType ACCESS_TYPE = AccessType.DROPBOX;
-	public static DropboxAPI<WebAuthSession> mDBApi;
-	private WebAuthSession session;
+	public DropboxAPI<WebAuthSession> mDBApi;
+	public Properties properties;
+	public String username;
+	private String tokenSecret;
+	private String tokenKey;
+	private boolean bRememberMe;
 
 	public DropboxClient() {
-		AppKeyPair appKeys = new AppKeyPair(APP_KEY, APP_SECRET);
-		session = new WebAuthSession(appKeys, ACCESS_TYPE);
+		setup();
+	}
+	
+	private void setup() {
+		loadTokens();
 
-		mDBApi = new DropboxAPI<WebAuthSession>(session);
+		AppKeyPair appKeys = new AppKeyPair(APP_KEY, APP_SECRET);
+		mDBApi = new DropboxAPI<WebAuthSession>(new WebAuthSession(appKeys,
+				ACCESS_TYPE));
 	}
 
 	public String getURL() throws Exception {
-		return ((WebAuthSession) mDBApi.getSession()).getAuthInfo().url;
+		return getSession().getAuthInfo().url;
 	}
 
 	@Override
 	public void authenticate() throws Exception {
-		File file = new File(TOKEN_FILE);
-		if (file.exists()) {
-			reAuth(file);
+		if (isLogged()) {
+			return;
+		}
+
+		if (!bRememberMe) {
+			properties.remove(username);
+		}
+
+		JLG.debug("username=" + username);
+		if (properties.containsKey(username)) {
+			reAuth();
 		} else {
-			newAuth(file);
+			newAuth();
 		}
 
 		if (!isLogged()) {
+			properties.remove(username);
+			JLG.storeConfig(properties, TOKEN_FILENAME);
+			setup();
+
 			throw new Exception("Problem while log in.");
 		}
+
+		if (bRememberMe) {
+			properties.setProperty(username, format(tokenKey, tokenSecret));
+		}
+
+		JLG.storeConfig(properties, TOKEN_FILENAME);
 
 		IDataModel dm = ds().getComponent(IDataModel.class);
 		ds().setContext(new Context(dm, "/"));
 	}
 
-	public void reAuth(File file) throws Exception {
-		FileInputStream fis = null;
+	private String format(String tokenKey, String tokenSecret) {
+		return tokenKey + ":" + tokenSecret;
+	}
+
+	private void loadTokens() {
 		try {
-			Scanner tokenScanner = new Scanner(file);
-			String token_key = tokenScanner.nextLine();
-			String token_secret = tokenScanner.nextLine();
-			tokenScanner.close();
+			properties = JLG.loadConfig(TOKEN_FILENAME);
+		} catch (Exception e) {
+			properties = new Properties();
+		}
 
-			JLG.debug("token_key=" + token_key);
-			JLG.debug("token_secret=|" + token_secret + "|");
-			AccessTokenPair reAuthTokens = new AccessTokenPair(token_key,
-					token_secret);
-
-			((AbstractSession) mDBApi.getSession())
-					.setAccessTokenPair(reAuthTokens);
-
-		} finally {
-			if (fis != null) {
-				fis.close();
-			}
+		for (Object key : properties.keySet()) {
+			JLG.debug(key + "=" + properties.get(key));
 		}
 	}
 
-	public void newAuth(File file) throws Exception {
+	public void reAuth() {
+		String value = properties.getProperty(username);
+		String[] array = value.split(":");
+		tokenKey = array[0];
+		tokenSecret = array[1];
+
+		JLG.debug("token_key=" + tokenKey);
+		JLG.debug("token_secret=" + tokenSecret);
+		AccessTokenPair reAuthTokens = new AccessTokenPair(tokenKey,
+				tokenSecret);
+
+		getSession().setAccessTokenPair(reAuthTokens);
+	}
+
+	public void newAuth() throws Exception {
 		AccessTokenPair tokenPair = mDBApi.getSession().getAccessTokenPair();
+		if (tokenPair == null) {
+			throw new Exception("Tokens are null");
+		}
 		RequestTokenPair tokens = new RequestTokenPair(tokenPair.key,
 				tokenPair.secret);
-		((WebAuthSession) mDBApi.getSession()).retrieveWebAccessToken(tokens);
-		PrintWriter tokenWriter = new PrintWriter(file);
-		tokenWriter.println(session.getAccessTokenPair().key);
-		tokenWriter.println(session.getAccessTokenPair().secret);
-		tokenWriter.close();
+		getSession().retrieveWebAccessToken(tokens);
+
+		tokenKey = getSession().getAccessTokenPair().key;
+		tokenSecret = getSession().getAccessTokenPair().secret;
+
+		JLG.debug("tokenKey=" + tokenKey);
+		JLG.debug("tokenSecret=" + tokenSecret);
+		username = mDBApi.accountInfo().displayName;
+	}
+
+	private WebAuthSession getSession() {
+		return mDBApi.getSession();
 	}
 
 	public boolean isLogged() {
@@ -101,6 +141,7 @@ public class DropboxClient extends DSContainer<DropboxDataSource> implements
 		}
 		return true;
 	}
+
 
 	@Override
 	public void setChallenge(Object challenge) {
@@ -116,6 +157,11 @@ public class DropboxClient extends DSContainer<DropboxDataSource> implements
 
 	@Override
 	public void unauthenticate() throws Exception {
+		setup();
+	}
+
+	public void setRememberMe(boolean bRememberMe) {
+		this.bRememberMe = bRememberMe;
 	}
 
 }

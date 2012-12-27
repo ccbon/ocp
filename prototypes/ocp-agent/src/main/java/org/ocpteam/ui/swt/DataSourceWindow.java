@@ -136,7 +136,16 @@ public class DataSourceWindow extends ApplicationWindow implements IComponent {
 		// status line
 		String status = "";
 		if (ds != null) {
-			status = "Protocol: " + ds.getProtocolName();
+			String username = "";
+			if (ds.usesComponent(IUserManagement.class) && context != null) {
+				IUserManagement um = ds.getComponent(IUserManagement.class);
+				try {
+					username = " | User: " + um.getUsername();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+			status = "Protocol: " + ds.getProtocolName() + username;
 		}
 		setStatus(status);
 	}
