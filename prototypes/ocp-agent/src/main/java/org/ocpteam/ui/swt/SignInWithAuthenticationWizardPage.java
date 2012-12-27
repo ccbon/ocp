@@ -47,7 +47,7 @@ public class SignInWithAuthenticationWizardPage extends WizardPage {
 		}
 
 		Label lblUsername = new Label(container, SWT.NONE);
-		lblUsername.setBounds(10, 52, 49, 13);
+		lblUsername.setBounds(10, 52, 75, 13);
 		lblUsername.setText("Username");
 
 		usernameText = new Text(container, SWT.BORDER);
@@ -62,7 +62,7 @@ public class SignInWithAuthenticationWizardPage extends WizardPage {
 		usernameText.setBounds(10, 71, 187, 19);
 
 		Label lblPassword = new Label(container, SWT.NONE);
-		lblPassword.setBounds(10, 96, 49, 13);
+		lblPassword.setBounds(10, 96, 75, 13);
 		lblPassword.setText("Password");
 
 		passwordText = new Text(container, SWT.BORDER | SWT.PASSWORD);

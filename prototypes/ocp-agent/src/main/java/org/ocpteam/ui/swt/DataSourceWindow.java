@@ -448,6 +448,7 @@ public class DataSourceWindow extends ApplicationWindow implements IComponent {
 			this.ds = ds;
 			ds.readConfig();
 			ds.connect();
+			refresh();
 			addProtocolMenu();
 			if (isDaemon()) {
 				openTray();
