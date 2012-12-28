@@ -42,7 +42,7 @@ public class ConfigPreference implements IScenario {
 
 		// Set the preference store
 		PreferenceStore ps = new PreferenceStore();
-		ps.setDefault(URI, "ftp://toto:titi@localhost:21/datastore");
+		ps.setDefault(URI, "ftp://k:k@localhost:21/datastore");
 		try {
 			ps.load();
 		} catch (IOException e) {

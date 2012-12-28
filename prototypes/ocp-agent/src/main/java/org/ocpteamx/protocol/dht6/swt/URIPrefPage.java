@@ -45,5 +45,11 @@ public class URIPrefPage extends PreferencePage {
 		uriText.setText(getPreferenceStore().getDefaultString(
 				ConfigPreference.URI));
 	}
+	
+	@Override
+	public boolean performOk() {
+		getPreferenceStore().setValue(ConfigPreference.URI, uriText.getText());
+		return super.performOk();
+	}
 
 }

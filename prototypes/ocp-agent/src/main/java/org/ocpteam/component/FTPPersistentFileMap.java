@@ -5,7 +5,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.net.URI;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.net.ftp.FTP;
@@ -26,38 +25,6 @@ public class FTPPersistentFileMap extends DSContainer<DataSource> implements
 	private String password;
 	private String pathname;
 	private URI uri;
-
-	public static class PersistentMapEntry implements
-			Map.Entry<Address, byte[]> {
-
-		private Address address;
-		private byte[] content;
-
-		public PersistentMapEntry(Address address, byte[] content) {
-			this.address = address;
-			this.content = content;
-		}
-
-		@Override
-		public Address getKey() {
-			return address;
-		}
-
-		@Override
-		public byte[] getValue() {
-			return content;
-		}
-
-		@Override
-		public byte[] setValue(byte[] value) {
-			content = value;
-			return content;
-		}
-
-	}
-
-	public FTPPersistentFileMap() {
-	}
 
 	public void setURI(String uri) throws Exception {
 		this.uri = new URI(uri);
@@ -99,7 +66,8 @@ public class FTPPersistentFileMap extends DSContainer<DataSource> implements
 			b = ftp.changeWorkingDirectory(pathname);
 			JLG.debug("b=" + b);
 		}
-
+		ftp.enterLocalPassiveMode();
+		JLG.debug("check connection passed.");
 	}
 
 	@Override
@@ -188,17 +156,17 @@ public class FTPPersistentFileMap extends DSContainer<DataSource> implements
 	}
 
 	@Override
-	public void put(Address key, byte[] value) {
-		try {
-			checkConnection();
-			byte[] a = value;
-			ByteArrayInputStream bais = new ByteArrayInputStream(a);
-			ftp.setFileType(FTP.BINARY_FILE_TYPE);
-			ftp.storeFile(key.toString(), bais);
-			bais.close();
-		} catch (Exception e) {
-			JLG.error(e);
+	public void put(Address address, byte[] value) throws Exception {
+		JLG.debug("Start put");
+		JLG.debug("Address=" + address);
+		checkConnection();
+		ByteArrayInputStream bais = new ByteArrayInputStream(value);
+		ftp.setFileType(FTP.BINARY_FILE_TYPE);
+		if (!ftp.storeFile(address.toString(), bais)) {
+			throw new Exception("Cannot store file");
 		}
+		bais.close();
+		JLG.debug("End put");
 	}
 
 	@Override
