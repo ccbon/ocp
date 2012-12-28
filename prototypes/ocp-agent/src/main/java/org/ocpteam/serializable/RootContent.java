@@ -23,7 +23,9 @@ public class RootContent implements IStructurable {
 
 	@Override
 	public void fromStructure(Structure s) throws Exception {
-		map = s.getMapField("map", Address.class);
+		if (s.hasField("map")) {
+			map = s.getMapField("map", Address.class);
+		}
 	}
 
 	public Map<String, Address> getMap() {

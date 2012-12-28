@@ -76,10 +76,11 @@ public class AddressMapDataModel extends DSContainer<DSPDataSource> implements
 
 	private void removeRootContent(String key, Address address)
 			throws Exception {
-		Map<String, Address> directory = getRootContent().getMap();
+		RootContent rootContent = getRootContent();
+		Map<String, Address> directory = rootContent.getMap();
 		directory.remove(key);
 		getMap().put(getRootAddress(),
-				ds().serializer.serialize((Serializable) directory));
+				ds().serializer.serialize(rootContent));
 	}
 
 	@Override

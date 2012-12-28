@@ -149,16 +149,27 @@ public class ExplorerComposite extends Composite {
 					myMenu.add(openFileAction);
 
 					myMenu.add(new Separator());
-					myMenu.add(new CommitAction(ExplorerComposite.this.w));
+					CommitAction commitAction = new CommitAction(ExplorerComposite.this.w);
+					myMenu.add(commitAction);
 					myMenu.add(new Separator());
-					myMenu.add(new RemoveFileAction(ExplorerComposite.this));
+					RemoveFileAction removeAction = new RemoveFileAction(ExplorerComposite.this);
+					myMenu.add(removeAction);
 					RenameFileAction renameFileAction = new RenameFileAction(
 							ExplorerComposite.this);
 					myMenu.add(renameFileAction);
-
+					JLG.debug("array.lenght=" + sel);
 					if (sel > 1) {
 						openFileAction.setEnabled(false);
 						renameFileAction.setEnabled(false);
+					}
+					if (sel == 1) {
+						String name = localDirectoryTable.getSelection()[0]
+								.getText(0);
+						if (name.equals(DIRECTORY_PARENT)) {
+							renameFileAction.setEnabled(false);
+							commitAction.setEnabled(false);
+							removeAction.setEnabled(false);
+						}
 					}
 				}
 				if (sel == 0) {
@@ -273,10 +284,13 @@ public class ExplorerComposite extends Composite {
 					myMenu.add(openRemoteFileAction);
 
 					myMenu.add(new Separator());
-					myMenu.add(new CheckOutAction(ExplorerComposite.this.w));
+					CheckOutAction checkoutAction = new CheckOutAction(
+							ExplorerComposite.this.w);
+					myMenu.add(checkoutAction);
 					myMenu.add(new Separator());
-					myMenu.add(new RemoveRemoteFileAction(
-							ExplorerComposite.this));
+					RemoveRemoteFileAction removeAction = new RemoveRemoteFileAction(
+							ExplorerComposite.this);
+					myMenu.add(removeAction);
 					RenameRemoteFileAction renameremoteFileAction = new RenameRemoteFileAction(
 							ExplorerComposite.this);
 					myMenu.add(renameremoteFileAction);
@@ -284,6 +298,15 @@ public class ExplorerComposite extends Composite {
 					if (sel > 1) {
 						openRemoteFileAction.setEnabled(false);
 						renameremoteFileAction.setEnabled(false);
+					}
+					if (sel == 1) {
+						String name = remoteDirectoryTable.getSelection()[0]
+								.getText(0);
+						if (name.equals(DIRECTORY_PARENT)) {
+							renameremoteFileAction.setEnabled(false);
+							checkoutAction.setEnabled(false);
+							removeAction.setEnabled(false);
+						}
 					}
 				}
 				if (sel == 0) {

@@ -5,11 +5,8 @@ import org.ocpteam.component.AddressMapDataModel;
 import org.ocpteam.interfaces.IDataModel;
 
 /**
- * DHT3 is a distributed hashtable based on DHT1. The storage is now the
- * IAddressMap component.
- * 
- * Strategies:
- * 
+ * DHT4 address topology is a single ring address topology.
+ * DHT4 data model is a map.
  * 
  */
 public class DHT4DataSource extends AddressDataSource {

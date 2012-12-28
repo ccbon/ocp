@@ -11,7 +11,7 @@ public class SetKeyAction extends Action {
 
 	public SetKeyAction(DataSourceWindow w) {
 		this.w = w;
-		setText("&Set Key@CTRL+ALT+S");
+		setText("&Set Key@Insert");
 		setToolTipText("Set Key");
 	}
 
