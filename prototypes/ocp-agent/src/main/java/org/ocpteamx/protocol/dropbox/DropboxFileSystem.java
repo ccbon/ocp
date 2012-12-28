@@ -10,10 +10,11 @@ import org.ocpteam.interfaces.IFileSystem;
 import org.ocpteam.misc.JLG;
 
 import com.dropbox.client2.DropboxAPI.Entry;
+import com.dropbox.client2.exception.DropboxServerException;
 
 public class DropboxFileSystem extends DSContainer<DropboxDataSource> implements
 		IFileSystem {
-	
+
 	public DropboxClient getClient() {
 		return (DropboxClient) ds().getComponent(IAuthenticable.class);
 	}
@@ -33,8 +34,7 @@ public class DropboxFileSystem extends DSContainer<DropboxDataSource> implements
 	@Override
 	public IFile getFile(String dir) throws Exception {
 		JLG.debug("About to get: " + dir);
-		Entry entries = getClient().mDBApi.metadata(dir, 100, null, true,
-				null);
+		Entry entries = getClient().mDBApi.metadata(dir, 100, null, true, null);
 
 		DropboxFileImpl fi = new DropboxFileImpl();
 		for (Entry e : entries.contents) {
@@ -69,8 +69,8 @@ public class DropboxFileSystem extends DSContainer<DropboxDataSource> implements
 		if (!existingParentDir.endsWith("/")) {
 			existingParentDir += "/";
 		}
-		getClient().mDBApi.move(existingParentDir + oldName,
-				existingParentDir + newName);
+		getClient().mDBApi.move(existingParentDir + oldName, existingParentDir
+				+ newName);
 	}
 
 	@Override
@@ -107,8 +107,17 @@ public class DropboxFileSystem extends DSContainer<DropboxDataSource> implements
 				commit(remoteDir + file.getName(), child);
 			}
 		} else {
-			getClient().mDBApi.putFile(remoteDir + file.getName(),
-					new FileInputStream(file), file.length(), null, null);
+			try {
+				getClient().mDBApi.putFile(remoteDir + file.getName(),
+						new FileInputStream(file), file.length(), null, null);
+			} catch (DropboxServerException e) {
+				JLG.debug("message=" + e.toString());
+				int i = e.toString().indexOf("ignored file list");
+				JLG.debug("i=" + i);
+				if (i == -1) {
+					throw e;
+				}
+			}
 		}
 	}
 }
