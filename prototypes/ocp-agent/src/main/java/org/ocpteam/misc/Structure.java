@@ -78,7 +78,7 @@ public class Structure implements Serializable {
 	public static final String NAME_SIMPLE = "simple";
 	public static final String FIELDNAME_SIMPLE = "field";
 	public static final String NAME_MAPENTRY = "map_entry";
-	
+
 	public static final String FIELDNAME_KEY = "key";
 	public static final String FIELDNAME_VALUE = "value";
 
@@ -339,15 +339,18 @@ public class Structure implements Serializable {
 	@SuppressWarnings("unchecked")
 	public <T extends IStructurable> Map<String, T> getMapField(String name,
 			Class<T> c) throws Exception {
-		Map<String, Structure> m = (Map<String, Structure>) getField(name)
-				.getValue();
+		SField f = getField(name);
+		if (f == null) {
+			return null;
+		}
+		Map<String, Structure> m = (Map<String, Structure>) f.getValue();
 		Map<String, T> result = new HashMap<String, T>();
 		for (String key : m.keySet()) {
 			result.put(key, (T) m.get(key).toStructurable());
 		}
 		return result;
 	}
-	
+
 	public Properties getProperties(String name) {
 		Structure s = getStructureFromSubstructField(name);
 		if (s == null) {
@@ -401,7 +404,7 @@ public class Structure implements Serializable {
 			throw e;
 		}
 	}
-	
+
 	@Override
 	public String toString() {
 		try {
@@ -448,5 +451,9 @@ public class Structure implements Serializable {
 			}
 		}
 		return true;
+	}
+
+	public boolean hasField(String name) {
+		return fields.containsKey(name);
 	}
 }

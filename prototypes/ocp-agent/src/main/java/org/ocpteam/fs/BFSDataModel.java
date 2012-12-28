@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
+import java.util.Arrays;
 
 import org.ocpteam.component.AddressDataSource;
 import org.ocpteam.component.DSContainer;
@@ -152,7 +153,7 @@ public class BFSDataModel extends DSContainer<AddressDataSource> implements
 			int n = fis.read(buffer);
 			while (n >= 0) {
 				Address address = new Address(ds().md.hash(buffer));
-				put(address, buffer);
+				put(address, Arrays.copyOf(buffer, n));
 				pointer.add(address);
 				n = fis.read(buffer);
 			}
