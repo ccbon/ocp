@@ -6,12 +6,12 @@ import java.net.Socket;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 import org.ocpteam.entity.Session;
 import org.ocpteam.interfaces.IActivity;
 import org.ocpteam.interfaces.IAddressMap;
+import org.ocpteam.interfaces.IDataStore;
 import org.ocpteam.interfaces.IModule;
 import org.ocpteam.interfaces.ITransaction;
 import org.ocpteam.misc.Id;
@@ -110,7 +110,7 @@ public class MapModule implements IModule {
 					Socket socket, Protocol protocol) throws Exception {
 				try {
 					JLG.debug("localmap...");
-					Map<Address, byte[]> map = session.ds()
+					IDataStore map = session.ds()
 							.getComponent(IAddressMap.class).getLocalMap();
 					Set<Address> set = map.keySet();
 					for (Address address : set) {
@@ -181,7 +181,7 @@ public class MapModule implements IModule {
 					Socket socket, Protocol protocol) throws Exception {
 				JLG.debug("transfer submap...");
 				Id nodeId = (Id) objects[0];
-				Map<Address, byte[]> localMap = session.ds()
+				IDataStore localMap = session.ds()
 						.getComponent(IAddressMap.class).getLocalMap();
 				Set<Address> set = new HashSet<Address>(localMap.keySet());
 				for (Address address : set) {

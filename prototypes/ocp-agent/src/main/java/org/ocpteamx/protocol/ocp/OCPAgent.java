@@ -680,7 +680,7 @@ public class OCPAgent extends Agent {
 		return cipher.doFinal(ciphertext);
 	}
 
-	public void removeStorage() {
+	public void removeStorage() throws Exception {
 		storage.removeAll();
 	}
 

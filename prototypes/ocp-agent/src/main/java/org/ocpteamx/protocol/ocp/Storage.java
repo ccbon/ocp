@@ -1,10 +1,10 @@
 package org.ocpteamx.protocol.ocp;
 
 import java.util.Iterator;
-import java.util.Map;
 import java.util.NavigableSet;
 import java.util.TreeSet;
 
+import org.ocpteam.interfaces.IDataStore;
 import org.ocpteam.interfaces.IPersistentMap;
 import org.ocpteam.misc.Id;
 import org.ocpteam.misc.JLG;
@@ -13,19 +13,20 @@ import org.ocpteam.serializable.Address;
 public class Storage {
 
 	public NavigableSet<Id> nodeSet; // set of node referenced by their id
-	private Map<Address, byte[]> contentMap;
+	private IDataStore datastore;
 	public OCPAgent agent;
 
 	public Storage(OCPAgent agent) throws Exception {
 		nodeSet = new TreeSet<Id>();
 		String root = agent.ds()
-				.getProperty("storage.dir",
+				.getProperty(
+						"storage.dir",
 						System.getenv("TEMP") + "/ocp_agent_storage/"
 								+ agent.getName());
 		IPersistentMap persistentMap = agent.ds().getComponent(
 				IPersistentMap.class);
 		persistentMap.setURI(root);
-		contentMap = persistentMap;
+		datastore = persistentMap;
 		this.agent = agent;
 	}
 
@@ -49,7 +50,7 @@ public class Storage {
 	}
 
 	public void put(Address address, Content content) throws Exception {
-		contentMap.put(address, agent.ds().serializer.serialize(content));
+		datastore.put(address, agent.ds().serializer.serialize(content));
 		// Rude detachment: now tell to your agent backuper what you have
 		// stored.
 		// declare(ADD, address, data.getKey(agent));
@@ -57,7 +58,7 @@ public class Storage {
 
 	public Content get(Address address) {
 		try {
-			byte[] array = contentMap.get(address);
+			byte[] array = datastore.get(address);
 			if (array == null) {
 				return null;
 			} else {
@@ -71,29 +72,35 @@ public class Storage {
 
 	@Override
 	public String toString() {
-		String result = "nodeMap=" + JLG.NL;
-		Iterator<Id> it = nodeSet.iterator();
-		while (it.hasNext()) {
-			Id id = it.next();
-			result += id + JLG.NL;
-		}
-		result += "Content=" + JLG.NL;
-		Iterator<Address> itc = contentMap.keySet().iterator();
-		while (itc.hasNext()) {
-			Address address = itc.next();
-			Content content = null;
-			try {
-				content = (Content) agent.ds().serializer.deserialize(contentMap.get(address));
-			} catch (Exception e) {
-				JLG.error(e);
+		try {
+			String result = "nodeMap=" + JLG.NL;
+			Iterator<Id> it = nodeSet.iterator();
+			while (it.hasNext()) {
+				Id id = it.next();
+				result += id + JLG.NL;
 			}
-			result += address + "->" + content + JLG.NL;
+			result += "Content=" + JLG.NL;
+			Iterator<Address> itc = datastore.keySet().iterator();
+			while (itc.hasNext()) {
+				Address address = itc.next();
+				Content content = null;
+				try {
+					content = (Content) agent.ds().serializer
+							.deserialize(datastore.get(address));
+				} catch (Exception e) {
+					JLG.error(e);
+				}
+				result += address + "->" + content + JLG.NL;
+			}
+			return result;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return super.toString();
 		}
-		return result;
 	}
 
-	public boolean contains(Address address) {
-		return contentMap.containsKey(address.getBytes());
+	public boolean contains(Address address) throws Exception {
+		return datastore.containsKey(address);
 	}
 
 	public void remove(Address address, byte[] addressSignature)
@@ -110,11 +117,11 @@ public class Storage {
 					"Cannot remove data. Verifying signature failed.");
 		}
 		// JLG.debug("signature ok");
-		contentMap.remove(address);
+		datastore.remove(address);
 	}
 
-	public void removeAll() {
-		contentMap.clear();
+	public void removeAll() throws Exception {
+		datastore.clear();
 	}
 
 }

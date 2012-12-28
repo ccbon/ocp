@@ -5,12 +5,12 @@ import java.io.Serializable;
 import java.net.Socket;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
-import java.util.Map;
 import java.util.Queue;
 
 import org.ocpteam.entity.Response;
 import org.ocpteam.exception.NotAvailableContactException;
 import org.ocpteam.interfaces.IAddressMap;
+import org.ocpteam.interfaces.IDataStore;
 import org.ocpteam.interfaces.INodeMap;
 import org.ocpteam.misc.JLG;
 import org.ocpteam.serializable.Address;
@@ -24,7 +24,7 @@ public class RingAddressMap extends DSContainer<AddressDataSource> implements
 		IAddressMap {
 
 	private RingNodeMap ringNodeMap;
-	private Map<Address, byte[]> localMap;
+	private IDataStore localMap;
 
 	@Override
 	public byte[] get(Address address) throws Exception {
@@ -110,12 +110,12 @@ public class RingAddressMap extends DSContainer<AddressDataSource> implements
 	}
 
 	@Override
-	public Map<Address, byte[]> getLocalMap() {
+	public IDataStore getLocalMap() {
 		return localMap;
 	}
 
 	@Override
-	public void setLocalMap(Map<Address, byte[]> localMap) {
+	public void setLocalMap(IDataStore localMap) {
 		this.localMap = localMap;
 
 	}
@@ -192,7 +192,7 @@ public class RingAddressMap extends DSContainer<AddressDataSource> implements
 		Contact firstContact = ds().contactMap.getOtherContacts()[0];
 		Contact contact = firstContact;
 		while (true) {
-			Map<Address, byte[]> map = ds().localMap(firstContact);
+			IDataStore map = ds().localMap(firstContact);
 			getLocalMap().putAll(map);
 			contact = ds().nodeMap.getSuccessor(contact.getNode());
 			if (contact == firstContact) {
@@ -250,7 +250,7 @@ public class RingAddressMap extends DSContainer<AddressDataSource> implements
 				JLG.println("Contact: " + c);
 				Node n = c.getNode();
 				JLG.println("  Node: " + n);
-				Map<Address, byte[]> localMap = ds().localMap(c);
+				IDataStore localMap = ds().localMap(c);
 				JLG.println("  Map: " + localMap);
 			}
 		}

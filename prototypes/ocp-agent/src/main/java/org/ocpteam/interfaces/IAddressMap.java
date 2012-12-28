@@ -1,7 +1,5 @@
 package org.ocpteam.interfaces;
 
-import java.util.Map;
-
 import org.ocpteam.serializable.Address;
 
 public interface IAddressMap {
@@ -12,11 +10,11 @@ public interface IAddressMap {
 
 	void remove(Address address) throws Exception;
 
-	Map<Address, byte[]> getLocalMap();
+	IDataStore getLocalMap();
 
 	void setNodeMap(INodeMap nodeMap);
 
-	void setLocalMap(Map<Address, byte[]> synchronizedMap);
+	void setLocalMap(IDataStore datastore);
 
 	void onNodeArrival() throws Exception;
 

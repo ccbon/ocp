@@ -2,12 +2,9 @@ package org.ocpteam.component;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
-import java.util.Collection;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
@@ -15,11 +12,13 @@ import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPFile;
 import org.apache.commons.net.ftp.FTPReply;
+import org.ocpteam.interfaces.IDataStore;
 import org.ocpteam.interfaces.IPersistentMap;
 import org.ocpteam.misc.JLG;
 import org.ocpteam.serializable.Address;
 
-public class FTPPersistentFileMap extends DSContainer<DataSource> implements IPersistentMap {
+public class FTPPersistentFileMap extends DSContainer<DataSource> implements
+		IPersistentMap {
 
 	private FTPClient ftp;
 	private String hostname;
@@ -62,6 +61,7 @@ public class FTPPersistentFileMap extends DSContainer<DataSource> implements IPe
 
 	public void setURI(String uri) throws Exception {
 		this.uri = new URI(uri);
+		JLG.debug("uri = " + uri);
 		this.ftp = new FTPClient();
 		this.hostname = this.uri.getHost();
 		String[] a = this.uri.getUserInfo().split(":");
@@ -74,40 +74,36 @@ public class FTPPersistentFileMap extends DSContainer<DataSource> implements IPe
 		checkConnection();
 	}
 
-	private void checkConnection() {
-		try {
-			if (ftp.isConnected() == false) {
+	private void checkConnection() throws Exception {
+		if (ftp.isConnected() == false) {
 
-				JLG.debug("Reconnect");
-				try {
-					ftp.disconnect();
-				} catch (Exception e) {
-				}
-				ftp.connect(hostname);
-				ftp.enterLocalPassiveMode();
-				ftp.setFileType(FTP.BINARY_FILE_TYPE);
-				ftp.login(login, password);
-				int reply = ftp.getReplyCode();
-				if (!FTPReply.isPositiveCompletion(reply)) {
-					throw new Exception("Cannot connect");
-				}
+			JLG.debug("Reconnect");
+			try {
+				ftp.disconnect();
+			} catch (Exception e) {
 			}
-			boolean b = ftp.changeWorkingDirectory(pathname);
+			ftp.connect(hostname);
+			ftp.enterLocalPassiveMode();
+			ftp.setFileType(FTP.BINARY_FILE_TYPE);
+			ftp.login(login, password);
+			int reply = ftp.getReplyCode();
+			if (!FTPReply.isPositiveCompletion(reply)) {
+				throw new Exception("Cannot connect");
+			}
+		}
+		boolean b = ftp.changeWorkingDirectory(pathname);
+		JLG.debug("b=" + b);
+		JLG.debug("pathname = " + pathname);
+		if (b == false) {
+			ftp.makeDirectory(pathname);
+			b = ftp.changeWorkingDirectory(pathname);
 			JLG.debug("b=" + b);
-			JLG.debug("pathname = " + pathname);
-			if (b == false) {
-				ftp.makeDirectory(pathname);
-				b = ftp.changeWorkingDirectory(pathname);
-				JLG.debug("b=" + b);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
 		}
 
 	}
 
 	@Override
-	public void clear() {
+	public void clear() throws Exception {
 		checkConnection();
 		try {
 			ftp.removeDirectory(pathname);
@@ -118,58 +114,15 @@ public class FTPPersistentFileMap extends DSContainer<DataSource> implements IPe
 	}
 
 	@Override
-	public boolean containsKey(Object key) {
-		try {
-			checkConnection();
-			for (FTPFile child : ftp.listFiles()) {
-				Address address = new Address(JLG.hexToBytes(child.getName()));
-				if (address.equals(key)) {
-					return true;
-				}
-			}
-
-		} catch (Exception e) {
-			JLG.error(e);
-		}
-		return false;
-	}
-
-	@Override
-	public boolean containsValue(Object value) {
-		try {
-			checkConnection();
-			for (FTPFile child : ftp.listFiles()) {
-				byte[] content = getBinaryFile(child.getName());
-				if (content.equals(value)) {
-					return true;
-				}
-			}
-
-		} catch (Exception e) {
-			JLG.error(e);
-		}
-
-		return false;
-	}
-
-	@Override
-	public Set<java.util.Map.Entry<Address, byte[]>> entrySet() {
+	public boolean containsKey(Address address) throws Exception {
 		checkConnection();
-		Set<java.util.Map.Entry<Address, byte[]>> result = new HashSet<java.util.Map.Entry<Address, byte[]>>();
-		try {
-			for (FTPFile child : ftp.listFiles()) {
-				Address address = new Address(JLG.hexToBytes(child.getName()));
-				byte[] content = getBinaryFile(child.getName());
-				PersistentMapEntry entry = new PersistentMapEntry(address,
-						content);
-				result.add(entry);
+		for (FTPFile child : ftp.listFiles()) {
+			Address a = new Address(JLG.hexToBytes(child.getName()));
+			if (a.equals(address)) {
+				return true;
 			}
-
-		} catch (Exception e) {
-			JLG.error(e);
 		}
-
-		return result;
+		return false;
 	}
 
 	private byte[] getBinaryFile(String name) throws Exception {
@@ -209,22 +162,17 @@ public class FTPPersistentFileMap extends DSContainer<DataSource> implements IPe
 	}
 
 	@Override
-	public byte[] get(Object key) {
+	public byte[] get(Address key) {
 		try {
 			return getBinaryFile(key.toString());
 		} catch (Exception e) {
-//			JLG.error(e);
+			// JLG.error(e);
 		}
 		return null;
 	}
 
 	@Override
-	public boolean isEmpty() {
-		return size() == 0;
-	}
-
-	@Override
-	public Set<Address> keySet() {
+	public Set<Address> keySet() throws Exception {
 		checkConnection();
 		Set<Address> result = new HashSet<Address>();
 		try {
@@ -240,7 +188,7 @@ public class FTPPersistentFileMap extends DSContainer<DataSource> implements IPe
 	}
 
 	@Override
-	public byte[] put(Address key, byte[] value) {
+	public void put(Address key, byte[] value) {
 		try {
 			checkConnection();
 			byte[] a = value;
@@ -251,56 +199,23 @@ public class FTPPersistentFileMap extends DSContainer<DataSource> implements IPe
 		} catch (Exception e) {
 			JLG.error(e);
 		}
-		return value;
 	}
 
 	@Override
-	public void putAll(Map<? extends Address, ? extends byte[]> m) {
-		Iterator<? extends Address> it = m.keySet().iterator();
-		while (it.hasNext()) {
-			Address address = it.next();
-			byte[] content = m.get(address);
-			put(address, content);
+	public void putAll(IDataStore datastore) throws Exception {
+		for (Address address : datastore.keySet()) {
+			put(address, datastore.get(address));
 		}
 	}
 
 	@Override
-	public byte[] remove(Object key) {
+	public void remove(Address address) {
 		try {
-			if (containsKey(key)) {
-				byte[] content = getBinaryFile(key.toString());
-				ftp.deleteFile(key.toString());
-				return content;
+			if (containsKey(address)) {
+				ftp.deleteFile(address.toString());
 			}
 		} catch (Exception e) {
 			JLG.error(e);
 		}
-		return null;
-	}
-
-	@Override
-	public int size() {
-		checkConnection();
-		try {
-			return ftp.listFiles().length;
-		} catch (IOException e) {
-			JLG.error(e);
-		}
-		return 0;
-	}
-
-	@Override
-	public Collection<byte[]> values() {
-		checkConnection();
-		Collection<byte[]> result = new HashSet<byte[]>();
-		try {
-			for (FTPFile child : ftp.listFiles()) {
-				byte[] content = getBinaryFile(child.getName());
-				result.add(content);
-			}
-		} catch (Exception e) {
-			JLG.error(e);
-		}
-		return result;
 	}
 }

@@ -5,12 +5,12 @@ import java.io.Serializable;
 import java.net.Socket;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
-import java.util.Map;
 import java.util.Queue;
 
 import org.ocpteam.entity.Response;
 import org.ocpteam.exception.NotAvailableContactException;
 import org.ocpteam.interfaces.IAddressMap;
+import org.ocpteam.interfaces.IDataStore;
 import org.ocpteam.interfaces.INodeMap;
 import org.ocpteam.misc.JLG;
 import org.ocpteam.serializable.Address;
@@ -23,17 +23,17 @@ import org.ocpteam.serializable.Node;
 public class AddressMap extends DSContainer<AddressDataSource> implements IAddressMap {
 
 	private NodeMap nodeMap;
-	private Map<Address, byte[]> localMap;
+	private IDataStore datastore;
 	
 	@Override
-	public void setLocalMap(Map<Address, byte[]> localMap) {
-		this.localMap = localMap;
+	public void setLocalMap(IDataStore datastore) {
+		this.datastore = datastore;
 	}
 
 	@Override
 	public byte[] get(Address address) throws Exception {
 		if (nodeMap.isResponsible(address)) {
-			return localMap.get(address);
+			return datastore.get(address);
 		}
 		Queue<Contact> contactQueue = nodeMap.getContactQueue(address);
 		MapModule m = ds().getComponent(MapModule.class);
@@ -44,7 +44,7 @@ public class AddressMap extends DSContainer<AddressDataSource> implements IAddre
 	@Override
 	public void put(Address address, byte[] value) throws Exception {
 		if (nodeMap.isResponsible(address)) {
-			localMap.put(address, value);
+			datastore.put(address, value);
 			return;
 		}
 		Queue<Contact> contactQueue = nodeMap.getContactQueue(address);
@@ -54,7 +54,7 @@ public class AddressMap extends DSContainer<AddressDataSource> implements IAddre
 
 	@Override
 	public void remove(Address address) throws Exception {
-		localMap.remove(address);
+		datastore.remove(address);
 		if (nodeMap.isResponsible(address)) {
 			return;
 		}
@@ -64,8 +64,8 @@ public class AddressMap extends DSContainer<AddressDataSource> implements IAddre
 	}
 
 	@Override
-	public Map<Address, byte[]> getLocalMap() {
-		return localMap;
+	public IDataStore getLocalMap() {
+		return datastore;
 	}
 
 	@Override
@@ -98,7 +98,7 @@ public class AddressMap extends DSContainer<AddressDataSource> implements IAddre
 				Address address = (Address) serializable;
 				byte[] value = (byte[]) ds().protocol.getStreamSerializer()
 						.readObject(socket);
-				localMap.put(address, value);
+				datastore.put(address, value);
 			}
 			ds().contactMap.getTcpClient(predecessor).returnSocket(socket);
 			socket = null;
@@ -130,10 +130,10 @@ public class AddressMap extends DSContainer<AddressDataSource> implements IAddre
 		Socket socket = null;
 		try {
 			socket = ds().contactMap.getTcpClient(predecessor).borrowSocket(message);
-			for (Address address : localMap.keySet()) {
+			for (Address address : datastore.keySet()) {
 				ds().protocol.getStreamSerializer().writeObject(socket, address);
 				ds().protocol.getStreamSerializer().writeObject(socket,
-						localMap.get(address));
+						datastore.get(address));
 				// read an acknowledgement for avoiding to sent to much on the
 				// stream.
 				ds().protocol.getStreamSerializer().readObject(socket);
@@ -162,7 +162,7 @@ public class AddressMap extends DSContainer<AddressDataSource> implements IAddre
 			JLG.println("Contact: " + c);
 			Node n = c.getNode();
 			JLG.println("  Node: " + n);
-			Map<Address, byte[]> localMap = ds().localMap(c);
+			IDataStore localMap = ds().localMap(c);
 			JLG.println("  Map: " + localMap);
 		}
 		

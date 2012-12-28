@@ -5,12 +5,10 @@ import java.io.Serializable;
 import java.net.Socket;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
 
 import org.ocpteam.exception.NotAvailableContactException;
 import org.ocpteam.interfaces.IAddressMap;
+import org.ocpteam.interfaces.IDataStore;
 import org.ocpteam.interfaces.INodeMap;
 import org.ocpteam.interfaces.IPersistentMap;
 import org.ocpteam.misc.JLG;
@@ -23,7 +21,7 @@ public abstract class AddressDataSource extends DSPDataSource {
 
 	protected INodeMap nodeMap;
 	protected IAddressMap map;
-	protected Map<Address, byte[]> localMap;
+	protected IDataStore localMap;
 	public MessageDigest md;
 	protected Random random;
 
@@ -42,11 +40,9 @@ public abstract class AddressDataSource extends DSPDataSource {
 	public void init() throws Exception {
 		super.init();
 		if (usesComponent(IPersistentMap.class)) {
-			localMap = Collections
-					.synchronizedMap(getComponent(IPersistentMap.class));
+			localMap = getComponent(IPersistentMap.class);
 		} else {
-			localMap = Collections
-					.synchronizedMap(new HashMap<Address, byte[]>());
+			localMap = new DataStore();
 		}
 		nodeMap = getComponent(INodeMap.class);
 		map = getComponent(IAddressMap.class);
@@ -97,11 +93,11 @@ public abstract class AddressDataSource extends DSPDataSource {
 		map.networkPicture();
 	}
 
-	public Map<Address, byte[]> localMap(Contact c) throws Exception {
+	public IDataStore localMap(Contact c) throws Exception {
 		if (c.isMyself()) {
 			return map.getLocalMap();
 		}
-		Map<Address, byte[]> localmap = new HashMap<Address, byte[]>();
+		IDataStore localmap = new DataStore();
 		MapModule m = getComponent(MapModule.class);
 		InputFlow message = new InputFlow(m.getLocalMap());
 

@@ -30,7 +30,11 @@ public class RemoveStorageAction extends Action {
 		JLG.debug("Removing storage...");
 		if (QuickMessage.confirm(window.getShell(), "This will destroy the storage of this agent. Are you sure ?")) {
 			OCPAgent agent = (OCPAgent) window.ds.getComponent(Agent.class);
-			agent.removeStorage();
+			try {
+				agent.removeStorage();
+			} catch (Exception e) {
+				QuickMessage.error(window.getShell(), e.getMessage());
+			}
 		}
 		window.getShell().setFocus();
 	}
