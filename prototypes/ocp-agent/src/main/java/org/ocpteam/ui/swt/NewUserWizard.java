@@ -108,7 +108,7 @@ public class NewUserWizard extends Wizard {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			QuickMessage.error(getShell(), "Sorry. Cannot create the user. e="
+			QuickMessage.error(getShell(), "Sorry. Cannot create the user. Error message: "
 					+ e.getMessage());
 		}
 		return true;

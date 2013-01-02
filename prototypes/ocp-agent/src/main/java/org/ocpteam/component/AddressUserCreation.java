@@ -1,5 +1,7 @@
 package org.ocpteam.component;
 
+import java.io.Serializable;
+
 import org.ocpteam.entity.Context;
 import org.ocpteam.interfaces.IAddressMap;
 import org.ocpteam.interfaces.IAuthenticable;
@@ -13,6 +15,7 @@ import org.ocpteam.misc.JLG;
 import org.ocpteam.serializable.Address;
 import org.ocpteam.serializable.AddressUser;
 import org.ocpteam.serializable.SecureUser;
+import org.ocpteam.serializable.UserPublicInfo;
 
 /**
  * Component for user creation.
@@ -37,6 +40,12 @@ public class AddressUserCreation extends DSContainer<AddressDataSource>
 			throw new Exception("user is null");
 		}
 
+		// Is the user already existing on the system?
+
+		if (userExists(user)) {
+			throw new Exception("User already exists");
+		}
+
 		if (ds().usesComponent(ISecurity.class)) {
 			ISecurity security = ds().getComponent(ISecurity.class);
 			SecureUser secureUser = (SecureUser) user;
@@ -49,6 +58,29 @@ public class AddressUserCreation extends DSContainer<AddressDataSource>
 			Address address = getUserAddress(user.getUsername(), getPassword());
 			byte[] value = ds().serializer.serialize(user);
 			map.put(address, value);
+		}
+	}
+
+	private boolean userExists(IUser user) throws Exception {
+
+		if (ds().usesComponent(ISecurity.class)) {
+			ISecurity security = ds().getComponent(ISecurity.class);
+			SecureUser secureUser = (SecureUser) user;
+			UserPublicInfo upi = security.getUPI(secureUser.getUsername());
+
+			return (upi != null);
+		} else {
+			Address address = getUserAddress(user.getUsername(), getPassword());
+			byte[] value = map.get(address);
+			if (value == null) {
+				return false;
+			}
+			try {
+				Serializable s = ds().serializer.deserialize(value);
+				return (s instanceof IUser);
+			} catch (Exception e) {
+				return false;
+			}
 		}
 	}
 
