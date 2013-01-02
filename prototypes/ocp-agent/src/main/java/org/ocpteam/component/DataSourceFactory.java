@@ -2,6 +2,8 @@ package org.ocpteam.component;
 
 import java.io.File;
 import java.net.URI;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -83,6 +85,18 @@ public class DataSourceFactory extends Container<IContainer> {
 			}
 		}
 		return l;
+	}
+
+	public List<DataSource> getDataSourceOrderedList() {
+		List<DataSource> list = getDataSourceList();
+		DataSource[] array = list.toArray(new DataSource[list.size()]);
+		Arrays.sort(array, new Comparator<DataSource>() {
+			@Override
+			public int compare(DataSource ds1, DataSource ds2) {
+				return ds1.getProtocolName().compareTo(ds2.getProtocolName());
+			}
+		});
+		return Arrays.asList(array);
 	}
 
 }

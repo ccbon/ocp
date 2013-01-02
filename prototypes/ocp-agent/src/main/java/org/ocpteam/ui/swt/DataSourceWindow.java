@@ -1,6 +1,8 @@
 package org.ocpteam.ui.swt;
 
-import java.util.Arrays;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -14,6 +16,7 @@ import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.action.StatusLineManager;
 import org.eclipse.jface.action.ToolBarManager;
+import org.eclipse.jface.preference.PreferenceStore;
 import org.eclipse.jface.window.ApplicationWindow;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
@@ -53,6 +56,9 @@ import org.ocpteam.misc.swt.QuickMessage;
 
 public class DataSourceWindow extends ApplicationWindow implements IComponent {
 
+	private static final String PROPERTIES_FILENAME = System
+			.getProperty("user.home") + "/gdse.properties";
+
 	public static final int ON_DS_CLOSE = 0;
 	OpenDataSourceAction openDataSourceAction;
 	CloseDataSourceAction closeDataSourceAction;
@@ -70,6 +76,7 @@ public class DataSourceWindow extends ApplicationWindow implements IComponent {
 	PasteAction pasteAction;
 	CommitAction commitAction;
 	CheckOutAction checkOutAction;
+	PreferencesAction preferenceAction;
 
 	public ViewExplorerAction viewExplorerAction;
 
@@ -91,6 +98,9 @@ public class DataSourceWindow extends ApplicationWindow implements IComponent {
 	private Map<Integer, List<Listener>> listenerMap;
 	public IContainer app;
 	public DataSourceFactory dsf;
+	public MyPreferenceStore ps;
+
+	MenuManager menuManager;
 
 	/**
 	 * Create the application window.
@@ -99,14 +109,49 @@ public class DataSourceWindow extends ApplicationWindow implements IComponent {
 		super(null);
 	}
 
-	public void init() {
+	public void init() throws Exception {
 		this.dsf = app.getComponent(DataSourceFactory.class);
+		initPreferenceStore();
+
 		createActions();
 		addToolBar(SWT.FLAT | SWT.WRAP);
 		addMenuBar();
 		addStatusLine();
 		refresh();
 		listenerMap = new HashMap<Integer, List<Listener>>();
+	}
+
+	public class MyPreferenceStore extends PreferenceStore {
+		public DataSourceWindow w;
+
+		MyPreferenceStore(String properties, DataSourceWindow w) {
+			super(properties);
+			this.w = w;
+		}
+	}
+
+	private void initPreferenceStore() throws Exception {
+		File file = new File(PROPERTIES_FILENAME);
+		if (!file.exists()) {
+
+			InputStream is = this.getClass().getResourceAsStream(
+					"preferences.properties");
+			FileOutputStream fos = null;
+			try {
+				fos = new FileOutputStream(file);
+				byte[] array = new byte[1024];
+				int l = 0;
+				while ((l = is.read(array)) != -1) {
+					fos.write(array, 0, l);
+				}
+			} finally {
+				if (fos != null) {
+					fos.close();
+				}
+			}
+		}
+		ps = new MyPreferenceStore(PROPERTIES_FILENAME, this);
+		ps.load();
 	}
 
 	void refresh() {
@@ -210,6 +255,7 @@ public class DataSourceWindow extends ApplicationWindow implements IComponent {
 		pasteAction = new PasteAction(this);
 		commitAction = new CommitAction(this);
 		checkOutAction = new CheckOutAction(this);
+		preferenceAction = new PreferencesAction(this);
 
 		viewExplorerAction = new ViewExplorerAction(this);
 
@@ -234,13 +280,8 @@ public class DataSourceWindow extends ApplicationWindow implements IComponent {
 		MenuManager fileMenu = new MenuManager("&File");
 		menuBar.add(fileMenu);
 
-		MenuManager menuManager = new MenuManager("New");
-		String[] protocols = newDataSourceActionMap.keySet().toArray(
-				new String[newDataSourceActionMap.size()]);
-		Arrays.sort(protocols);
-		for (String protocol : protocols) {
-			menuManager.add(newDataSourceActionMap.get(protocol));
-		}
+		menuManager = new MenuManager("New");
+		refreshNewMenuManager();
 
 		fileMenu.add(menuManager);
 
@@ -267,6 +308,8 @@ public class DataSourceWindow extends ApplicationWindow implements IComponent {
 		editMenu.add(new Separator());
 		editMenu.add(commitAction);
 		editMenu.add(checkOutAction);
+		editMenu.add(new Separator());
+		editMenu.add(preferenceAction);
 
 		MenuManager userMenu = new MenuManager("&User");
 		menuBar.add(userMenu);
@@ -289,6 +332,19 @@ public class DataSourceWindow extends ApplicationWindow implements IComponent {
 		helpMenu.add(aboutAction);
 
 		return menuBar;
+	}
+
+	public void refreshNewMenuManager() {
+		menuManager.removeAll();
+		List<DataSource> list = dsf.getDataSourceOrderedList();
+		for (DataSource ds : list) {
+			String protocol = ds.getProtocolName();
+			JLG.debug("ds=" + ds.getClass());
+			if (ps.getBoolean("ds." + protocol)) {
+				menuManager.add(newDataSourceActionMap.get(protocol));
+			}
+		}
+
 	}
 
 	/**
@@ -611,7 +667,7 @@ public class DataSourceWindow extends ApplicationWindow implements IComponent {
 		return this.app;
 	}
 
-	public void start() {
+	public void start() throws Exception {
 		init();
 		setBlockOnOpen(true);
 		open();
