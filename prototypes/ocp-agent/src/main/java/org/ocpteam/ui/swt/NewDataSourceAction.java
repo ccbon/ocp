@@ -4,6 +4,7 @@ import java.util.ResourceBundle;
 
 import org.eclipse.jface.action.Action;
 import org.ocpteam.misc.JLG;
+import org.ocpteam.misc.swt.QuickMessage;
 
 public class NewDataSourceAction extends Action {
 	private DataSourceWindow w;
@@ -22,6 +23,10 @@ public class NewDataSourceAction extends Action {
 		try {
 			if (w.ds != null) {
 				w.closeDataSourceAction.run();
+			}
+			if (w.ds != null) {
+				QuickMessage.error(w.getShell(), "Cannot open a datasource if another is already open.");
+				return;
 			}
 			w.ds = w.dsf.getInstance(protocol);
 			ResourceBundle swt = w.dsf.getResource(protocol, "swt");
