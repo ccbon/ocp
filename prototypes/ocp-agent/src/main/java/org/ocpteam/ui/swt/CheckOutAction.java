@@ -14,7 +14,7 @@ public class CheckOutAction extends Action {
 	public CheckOutAction(DataSourceWindow w) {
 		this.w = w;
 		// TODO: change the accelerator to ctrl + right arrow
-		setText("&Check Out@F6");
+		setText("Check &Out@F6");
 		setToolTipText("Check Out");
 	}
 

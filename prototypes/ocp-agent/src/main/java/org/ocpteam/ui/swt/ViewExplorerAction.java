@@ -11,8 +11,8 @@ public class ViewExplorerAction extends Action {
 
 	public ViewExplorerAction(DataSourceWindow w) {
 		this.w = w;
-		setText("&View Explorer@Ctrl+E");
-		setToolTipText("View Explorer");
+		setText("&Data Model@Ctrl+E");
+		setToolTipText("Data Model");
 		try {
 			ImageDescriptor i = ImageDescriptor
 					.createFromImageData(new ImageData(ViewExplorerAction.class

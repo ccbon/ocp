@@ -15,7 +15,7 @@ public class CommitAction extends Action {
 	public CommitAction(DataSourceWindow w) {
 		this.w = w;
 		// TODO: change the accelerator to ctrl + left arrow
-		setText("&Commit@F7");
+		setText("Co&mmit@F7");
 		setToolTipText("Commit");
 	}
 
