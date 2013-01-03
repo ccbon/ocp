@@ -81,7 +81,7 @@ public class DataSourceWindow extends ApplicationWindow implements IComponent {
 	CheckOutAction checkOutAction;
 	PreferencesAction preferenceAction;
 
-	public ViewExplorerAction viewExplorerAction;
+	public ViewDataModelAction viewExplorerAction;
 
 	DebugAction debugAction;
 
@@ -260,7 +260,7 @@ public class DataSourceWindow extends ApplicationWindow implements IComponent {
 		checkOutAction = new CheckOutAction(this);
 		preferenceAction = new PreferencesAction(this);
 
-		viewExplorerAction = new ViewExplorerAction(this);
+		viewExplorerAction = new ViewDataModelAction(this);
 
 		debugAction = new DebugAction();
 
@@ -414,8 +414,8 @@ public class DataSourceWindow extends ApplicationWindow implements IComponent {
 		return new Point(450, 300);
 	}
 
-	public void viewExplorer() throws Exception {
-		JLG.debug("viewExplorer");
+	public void viewDataModel() throws Exception {
+		JLG.debug("viewDataModel");
 		if (context == null) {
 			throw new Exception("missing context");
 		}

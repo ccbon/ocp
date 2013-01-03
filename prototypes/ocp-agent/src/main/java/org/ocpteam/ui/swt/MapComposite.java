@@ -2,7 +2,9 @@ package org.ocpteam.ui.swt;
 
 import java.util.Set;
 
+import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.action.Separator;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
@@ -19,6 +21,18 @@ import org.ocpteam.interfaces.IMapDataModel;
 import org.ocpteam.misc.JLG;
 
 public class MapComposite extends Composite {
+	public class RefreshAction extends Action {
+		public RefreshAction() {
+			setText("&Refresh@F5");
+			setToolTipText("Refresh");
+		}
+
+		@Override
+		public void run() {
+			refresh();
+		}
+	}
+
 	Table table;
 	private DataSourceWindow dsw;
 	private IMapDataModel mdm;
@@ -38,19 +52,23 @@ public class MapComposite extends Composite {
 		table = new Table(this, SWT.BORDER | SWT.FULL_SELECTION);
 		table.addMenuDetectListener(new MenuDetectListener() {
 			@Override
-			public void menuDetected(MenuDetectEvent arg0) {	
+			public void menuDetected(MenuDetectEvent arg0) {
 				JLG.debug("opening context menu");
 				final MenuManager myMenu = new MenuManager("xxx");
-				final Menu menu = myMenu.createContextMenu(MapComposite.this.dsw.getShell());
+				final Menu menu = myMenu
+						.createContextMenu(MapComposite.this.dsw.getShell());
 
 				int sel = table.getSelection().length;
 				if (sel > 0) {
-					RemoveKeyAction removeKeyAction = new RemoveKeyAction(MapComposite.this.dsw);
+					RemoveKeyAction removeKeyAction = new RemoveKeyAction(
+							MapComposite.this.dsw);
 					myMenu.add(removeKeyAction);
 				}
 				if (sel == 0) {
 					myMenu.add(new SetKeyAction(MapComposite.this.dsw));
 				}
+				myMenu.add(new Separator());
+				myMenu.add(new RefreshAction());
 				menu.setEnabled(true);
 				myMenu.setVisible(true);
 				menu.setVisible(true);

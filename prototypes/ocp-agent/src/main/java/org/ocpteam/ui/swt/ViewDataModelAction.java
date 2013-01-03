@@ -6,16 +6,16 @@ import org.eclipse.swt.graphics.ImageData;
 import org.ocpteam.misc.JLG;
 
 
-public class ViewExplorerAction extends Action {
+public class ViewDataModelAction extends Action {
 	private DataSourceWindow w;
 
-	public ViewExplorerAction(DataSourceWindow w) {
+	public ViewDataModelAction(DataSourceWindow w) {
 		this.w = w;
 		setText("&Data Model@Ctrl+E");
 		setToolTipText("Data Model");
 		try {
 			ImageDescriptor i = ImageDescriptor
-					.createFromImageData(new ImageData(ViewExplorerAction.class
+					.createFromImageData(new ImageData(ViewDataModelAction.class
 							.getResourceAsStream("view_user_explorer.png")));
 			setImageDescriptor(i);
 		} catch (Exception e) {
@@ -25,9 +25,9 @@ public class ViewExplorerAction extends Action {
 
 	@Override
 	public void run() {
-		JLG.debug("View Explorer");
+		JLG.debug("Data Model");
 		try {
-			w.viewExplorer();
+			w.viewDataModel();
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
