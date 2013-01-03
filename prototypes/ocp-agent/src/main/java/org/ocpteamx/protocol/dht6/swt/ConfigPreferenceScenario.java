@@ -11,11 +11,11 @@ import org.ocpteam.misc.JLG;
 import org.ocpteam.ui.swt.DataSourceWindow;
 import org.ocpteam.ui.swt.IScenario;
 
-public class ConfigPreference implements IScenario {
+public class ConfigPreferenceScenario implements IScenario {
 	public static final String URI = "uri";
 	private DataSourceWindow w;
 
-	public ConfigPreference() {
+	public ConfigPreferenceScenario() {
 	}
 
 	@Override

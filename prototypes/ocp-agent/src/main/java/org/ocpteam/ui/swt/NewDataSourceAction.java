@@ -3,6 +3,7 @@ package org.ocpteam.ui.swt;
 import java.util.ResourceBundle;
 
 import org.eclipse.jface.action.Action;
+import org.ocpteam.component.DSPDataSource;
 import org.ocpteam.misc.JLG;
 import org.ocpteam.misc.swt.QuickMessage;
 
@@ -25,7 +26,8 @@ public class NewDataSourceAction extends Action {
 				w.closeDataSourceAction.run();
 			}
 			if (w.ds != null) {
-				QuickMessage.error(w.getShell(), "Cannot open a datasource if another is already open.");
+				QuickMessage.error(w.getShell(),
+						"Cannot open a datasource if another is already open.");
 				return;
 			}
 			w.ds = w.dsf.getInstance(protocol);
@@ -36,9 +38,15 @@ public class NewDataSourceAction extends Action {
 						.getObject("NewDataSourceScenario");
 				scenario.setWindow(w);
 				scenario.run();
-				if (w.ds == null) {
-					return;
+			} else {
+				if (w.ds instanceof DSPDataSource) {
+					IScenario scenario = new NewDSPDataSourceScenario();
+					scenario.setWindow(w);
+					scenario.run();
 				}
+			}
+			if (w.ds == null) {
+				return;
 			}
 			w.openDataSource(w.ds);
 		} catch (Exception e) {

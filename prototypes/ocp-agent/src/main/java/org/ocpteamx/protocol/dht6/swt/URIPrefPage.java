@@ -30,11 +30,11 @@ public class URIPrefPage extends PreferencePage {
 
 		uriText = new Text(composite, SWT.BORDER);
 		uriText.setLayoutData(new RowData(337, SWT.DEFAULT));
-		if (preferenceStore.getDefaultString(ConfigPreference.URI).equals("")) {
+		if (preferenceStore.getDefaultString(ConfigPreferenceScenario.URI).equals("")) {
 			performDefaults();
 		} else {
 			uriText.setText(preferenceStore
-					.getDefaultString(ConfigPreference.URI));
+					.getDefaultString(ConfigPreferenceScenario.URI));
 		}
 		return composite;
 	}
@@ -43,12 +43,12 @@ public class URIPrefPage extends PreferencePage {
 	protected void performDefaults() {
 		// Reset the fields to the defaults
 		uriText.setText(getPreferenceStore().getDefaultString(
-				ConfigPreference.URI));
+				ConfigPreferenceScenario.URI));
 	}
 	
 	@Override
 	public boolean performOk() {
-		getPreferenceStore().setValue(ConfigPreference.URI, uriText.getText());
+		getPreferenceStore().setValue(ConfigPreferenceScenario.URI, uriText.getText());
 		return super.performOk();
 	}
 
