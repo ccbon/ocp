@@ -40,7 +40,11 @@ public class DataSourceFactory extends Container<IContainer> {
 			uri = new URI(p.getProperty("uri"));
 			protocol = uri.getScheme();
 		} else {
-			protocol = extensionResource.getString(extension.toLowerCase());
+			if (extensionResource.containsKey(extension.toLowerCase())) {
+				protocol = extensionResource.getString(extension.toLowerCase());
+			} else {
+				protocol = extension.substring(1);
+			}
 		}
 		DataSource ds = getInstance(protocol);
 		ds.open(file);
