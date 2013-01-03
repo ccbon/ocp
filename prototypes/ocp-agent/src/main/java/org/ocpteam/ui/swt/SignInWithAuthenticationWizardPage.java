@@ -7,8 +7,11 @@ import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.ocpteam.interfaces.IUserCreation;
 import org.ocpteam.misc.JLG;
-
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 
 public class SignInWithAuthenticationWizardPage extends WizardPage {
 	Text usernameText;
@@ -17,7 +20,8 @@ public class SignInWithAuthenticationWizardPage extends WizardPage {
 
 	/**
 	 * Create the wizard.
-	 * @param window 
+	 * 
+	 * @param window
 	 */
 	public SignInWithAuthenticationWizardPage(DataSourceWindow window) {
 		super("wizardPage");
@@ -43,7 +47,7 @@ public class SignInWithAuthenticationWizardPage extends WizardPage {
 			String[] array = window.ds.getURI().getUserInfo().split(":");
 			username = array[0];
 			password = array[1];
-		}  catch (Exception e) {
+		} catch (Exception e) {
 		}
 
 		Label lblUsername = new Label(container, SWT.NONE);
@@ -75,6 +79,22 @@ public class SignInWithAuthenticationWizardPage extends WizardPage {
 		});
 
 		passwordText.setBounds(10, 115, 187, 19);
+
+		if (window.ds.usesComponent(IUserCreation.class)) {
+			Button btnCreateAnNew = new Button(container, SWT.NONE);
+			btnCreateAnNew.addSelectionListener(new SelectionAdapter() {
+				@Override
+				public void widgetSelected(SelectionEvent e) {
+					JLG.debug("Create an account");
+					SignInWithAuthenticationWizard wizard = (SignInWithAuthenticationWizard) getWizard();
+					wizard.getWizardDialog().close();
+					window.newUserAction.run();
+					JLG.debug("Create an account 2");
+				}
+			});
+			btnCreateAnNew.setBounds(10, 203, 152, 25);
+			btnCreateAnNew.setText("Create an new account");
+		}
 	}
 
 	@Override
@@ -89,5 +109,4 @@ public class SignInWithAuthenticationWizardPage extends WizardPage {
 
 		return super.isPageComplete();
 	}
-
 }

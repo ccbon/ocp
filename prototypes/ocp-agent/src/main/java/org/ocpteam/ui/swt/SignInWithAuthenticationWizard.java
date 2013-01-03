@@ -16,7 +16,8 @@ public class SignInWithAuthenticationWizard extends Wizard {
 		final Shell shell = new Shell(window.getShell().getDisplay());
 		shell.setLayout(new FillLayout());
 
-		WizardDialog dialog = new WizardDialog(shell, new SignInWithAuthenticationWizard(window)) {
+		SignInWithAuthenticationWizard wizard = new SignInWithAuthenticationWizard(window);
+		WizardDialog dialog = new WizardDialog(shell, wizard) {
 			@Override
 			protected void finishPressed() {
 				// TODO Auto-generated method stub
@@ -24,10 +25,23 @@ public class SignInWithAuthenticationWizard extends Wizard {
 				window.tabFolder.setFocus();
 			}
 		};
+		wizard.setWizardDialog(dialog);
 		dialog.open();
 		JLG.debug("about to dispose shell");
 		shell.dispose();
 	}
+
+
+	private WizardDialog dialog;
+	
+	public void setWizardDialog(WizardDialog dialog) {
+		this.dialog = dialog;
+	}
+	
+	public WizardDialog getWizardDialog() {
+		return dialog;
+	}
+
 
 	private SignInWithAuthenticationWizardPage p1;
 	private DataSourceWindow window;

@@ -148,7 +148,7 @@ public class AddressUserCreation extends DSContainer<AddressDataSource>
 			Address address = getUserAddress(username, password);
 			byte[] value = map.get(address);
 			if (value == null) {
-				throw new Exception("user/password do not exist.");
+				throw new Exception("The user with this password does not exist.");
 			}
 			this.user = (IUser) ds().serializer.deserialize(value);
 		}
