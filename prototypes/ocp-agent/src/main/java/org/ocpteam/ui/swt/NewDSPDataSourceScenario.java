@@ -26,11 +26,14 @@ public class NewDSPDataSourceScenario implements IScenario {
 		PreferenceManager prefManager = new PreferenceManager();
 
 		// Create the nodes
-		PreferenceNode one = new PreferenceNode("TCP Server",
+		PreferenceNode tcpServer = new PreferenceNode("TCP Server",
 				"TCP Server", null, ConfigPrefPage.class.getName());
+		PreferenceNode network = new PreferenceNode("Network",
+				"Network", null, NetworkPrefPage.class.getName());
 
 		// Add the nodes
-		prefManager.addToRoot(one);
+		prefManager.addToRoot(tcpServer);
+		prefManager.addToRoot(network);
 
 		// Create the preferences dialog
 		PreferenceDialog prefDialog = new PreferenceDialog(shell, prefManager);
@@ -49,5 +52,4 @@ public class NewDSPDataSourceScenario implements IScenario {
 
 //		w.ds.setProperty("datastore.uri", ps.getString(URI));
 	}
-
 }

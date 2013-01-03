@@ -7,6 +7,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.ocpteam.misc.JLG;
 import org.ocpteam.ui.swt.DataSourceWindow.MyPreferenceStore;
 
 public class ConfigPrefPage extends PreferencePage {
@@ -30,9 +31,9 @@ public class ConfigPrefPage extends PreferencePage {
 	}
 
 	@Override
-	public boolean performOk() {
+	protected void performApply() {
+		JLG.debug("Config performApply");
 		ps = (MyPreferenceStore) getPreferenceStore();
 		ps.w.ds.setProperty("server.port", text.getText());
-		return super.performOk();
 	}
 }
