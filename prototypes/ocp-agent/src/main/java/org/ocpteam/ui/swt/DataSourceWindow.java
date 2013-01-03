@@ -63,6 +63,8 @@ public class DataSourceWindow extends ApplicationWindow implements IComponent {
 			.getProperty("user.home") + "/gdse.properties";
 
 	public static final int ON_DS_CLOSE = 0;
+
+	private static final String TITLE = "Generic Data Source Explorer";
 	OpenDataSourceAction openDataSourceAction;
 	CloseDataSourceAction closeDataSourceAction;
 	SaveDataSourceAction saveDataSourceAction;
@@ -196,6 +198,17 @@ public class DataSourceWindow extends ApplicationWindow implements IComponent {
 			status = "Protocol: " + ds.getProtocolName() + username;
 		}
 		setStatus(status);
+
+		// Shell title
+		String prefix = "";
+		if (ds != null && !ds.isNew()) {
+			prefix = ds.getFile().getName() + " - ";
+		}
+		String title = prefix + TITLE;
+		Shell shell = getShell();
+		if (shell != null) {
+			shell.setText(title);
+		}
 	}
 
 	/**
@@ -403,7 +416,7 @@ public class DataSourceWindow extends ApplicationWindow implements IComponent {
 		newShell.setImage(SWTResourceManager.getImage(DataSourceWindow.class,
 				"ocp_icon.png"));
 		super.configureShell(newShell);
-		newShell.setText("Generic Data Source Explorer");
+		newShell.setText(TITLE);
 	}
 
 	/**
