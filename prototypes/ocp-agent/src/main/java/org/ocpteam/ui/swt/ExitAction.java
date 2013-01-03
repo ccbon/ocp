@@ -6,7 +6,6 @@ import org.eclipse.swt.graphics.ImageData;
 import org.ocpteam.misc.JLG;
 import org.ocpteam.misc.swt.QuickMessage;
 
-
 public class ExitAction extends Action {
 	private DataSourceWindow w;
 	public boolean isFirstRun = true;
@@ -39,6 +38,10 @@ public class ExitAction extends Action {
 	}
 
 	public boolean confirm() {
-		return QuickMessage.confirm(w.getShell(), "Are you sure you want to exit?");
+		if (w.ps.getBoolean(GeneralPreferencePage.GENERAL_PREFIX + GeneralPreferencePage.CONFIRM_ON_EXIT)) {
+			return QuickMessage.confirm(w.getShell(),
+					"Are you sure you want to exit?");
+		}
+		return true;
 	}
 }

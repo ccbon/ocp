@@ -16,7 +16,7 @@ import org.ocpteam.misc.JLG;
 import org.ocpteam.ui.swt.DataSourceWindow.MyPreferenceStore;
 
 public class DataSourcesPreferencePage extends PreferencePage {
-	private static final String DS_PREFIX = "ds.";
+	public static final String DS_PREFIX = "ds.";
 	private MyPreferenceStore ps;
 	private List<Button> list;
 

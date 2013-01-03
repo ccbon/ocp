@@ -480,7 +480,7 @@ public class DataSourceWindow extends ApplicationWindow implements IComponent {
 	}
 
 	private boolean isDaemon() {
-		if (ps.getBoolean(StickyPreferencePage.NEVER_STICKY)) {
+		if (ps.getBoolean(GeneralPreferencePage.NEVER_STICKY)) {
 			return false;
 		}
 		if (ds != null && ds.usesComponent(Server.class)) {

@@ -25,6 +25,7 @@ public class ConfigPrefPage extends PreferencePage {
 		lblPort.setText("Port:");
 
 		text = new Text(composite, SWT.BORDER);
+		text.setText("22222");
 		return composite;
 	}
 

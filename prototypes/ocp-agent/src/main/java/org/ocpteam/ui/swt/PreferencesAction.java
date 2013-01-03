@@ -29,15 +29,16 @@ public class PreferencesAction extends Action {
 			PreferenceManager mgr = new PreferenceManager();
 
 			// Create the nodes
+			PreferenceNode generalPrefNode = new PreferenceNode("General",
+					"General", null,
+					GeneralPreferencePage.class.getName());
 			PreferenceNode dsPrefNode = new PreferenceNode("Datasources",
 					"Datasources", null,
 					DataSourcesPreferencePage.class.getName());
-			PreferenceNode stickyPrefNode = new PreferenceNode("Sticky",
-					"Sticky", null, StickyPreferencePage.class.getName());
 
 			// Add the nodes
+			mgr.addToRoot(generalPrefNode);
 			mgr.addToRoot(dsPrefNode);
-			mgr.addToRoot(stickyPrefNode);
 
 			// Create the preferences dialog
 			PreferenceDialog dlg = new PreferenceDialog(null, mgr);
