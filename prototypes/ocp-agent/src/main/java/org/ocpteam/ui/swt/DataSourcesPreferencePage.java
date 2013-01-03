@@ -16,6 +16,7 @@ import org.ocpteam.misc.JLG;
 import org.ocpteam.ui.swt.DataSourceWindow.MyPreferenceStore;
 
 public class DataSourcesPreferencePage extends PreferencePage {
+	private static final String DS_PREFIX = "ds.";
 	private MyPreferenceStore ps;
 	private List<Button> list;
 
@@ -35,12 +36,13 @@ public class DataSourcesPreferencePage extends PreferencePage {
 		list = new ArrayList<Button>();
 		this.ps = (MyPreferenceStore) getPreferenceStore();
 		JLG.debug("ps=" + ps);
+				
 		for (DataSource ds : ps.w.dsf.getDataSourceOrderedList()) {
 			Button btn = new Button(composite, SWT.CHECK);
 			btn.setText(ds.getProtocolName());
-			boolean b = this.ps.getBoolean("ds." + ds.getProtocolName());
+			boolean b = this.ps.getBoolean(DS_PREFIX + ds.getProtocolName());
 			btn.setSelection(b);
-			JLG.debug("ds." + ds.getProtocolName() + "=" + b);
+			JLG.debug(DS_PREFIX + ds.getProtocolName() + "=" + b);
 			new Label(composite, SWT.NONE);
 			list.add(btn);
 		}
@@ -51,7 +53,7 @@ public class DataSourcesPreferencePage extends PreferencePage {
 	protected void performDefaults() {
 		for (Button btn : list) {
 			boolean b = false;
-			String name = "ds." + btn.getText();
+			String name = DS_PREFIX + btn.getText();
 			if (PreferencesAction.defaultPreferences.containsKey(name)) {
 				String value = PreferencesAction.defaultPreferences
 						.getString(name);
@@ -60,14 +62,14 @@ public class DataSourcesPreferencePage extends PreferencePage {
 				}
 			}
 			btn.setSelection(b);
-			JLG.debug("ds." + btn.getText() + "=" + b);
+			JLG.debug(DS_PREFIX + btn.getText() + "=" + b);
 		}
 	}
 
 	@Override
 	protected void performApply() {
 		for (Button btn : list) {
-			ps.setValue("ds." + btn.getText(), btn.getSelection());
+			ps.setValue(DS_PREFIX + btn.getText(), btn.getSelection());
 			JLG.debug("ds." + btn.getText());
 		}
 		try {
