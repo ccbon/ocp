@@ -38,7 +38,7 @@ public class ExitAction extends Action {
 	}
 
 	public boolean confirm() {
-		if (w.ps.getBoolean(GeneralPreferencePage.GENERAL_PREFIX + GeneralPreferencePage.CONFIRM_ON_EXIT)) {
+		if (w.ps.getBoolean(GeneralPreferencePage.CONFIRM_ON_EXIT)) {
 			return QuickMessage.confirm(w.getShell(),
 					"Are you sure you want to exit?");
 		}

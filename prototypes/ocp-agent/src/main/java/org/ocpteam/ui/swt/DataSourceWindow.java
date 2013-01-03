@@ -42,7 +42,10 @@ import org.eclipse.swt.widgets.TrayItem;
 import org.eclipse.wb.swt.SWTResourceManager;
 import org.ocpteam.component.DataSource;
 import org.ocpteam.component.DataSourceFactory;
+import org.ocpteam.component.NATTraversal;
 import org.ocpteam.component.Server;
+import org.ocpteam.component.TCPListener;
+import org.ocpteam.component.UDPListener;
 import org.ocpteam.core.IComponent;
 import org.ocpteam.core.IContainer;
 import org.ocpteam.entity.Context;
@@ -505,6 +508,7 @@ public class DataSourceWindow extends ApplicationWindow implements IComponent {
 		try {
 			JLG.debug("datasource=" + ds);
 			this.ds = ds;
+			manageNATTraversal();
 			ds.readConfig();
 			ds.connect();
 			refresh();
@@ -527,6 +531,16 @@ public class DataSourceWindow extends ApplicationWindow implements IComponent {
 		} catch (Exception e) {
 			throw QuickMessage.exception(getShell(),
 					"Error when opening data source: ", e);
+		}
+	}
+
+	private void manageNATTraversal() {
+		if (ps.getBoolean(GeneralPreferencePage.NO_NAT_TRAVERSAL)) {
+			JLG.debug("Removing NATTraversal");
+			ds.getComponent(TCPListener.class).removeComponent(
+					NATTraversal.class);
+			ds.getComponent(UDPListener.class).removeComponent(
+					NATTraversal.class);
 		}
 	}
 
