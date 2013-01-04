@@ -106,7 +106,8 @@ public class NetworkPrefPage extends PreferencePage {
 		composite.setLayout(new GridLayout(1, false));
 
 		btnJoinAnExisting = new Button(composite, SWT.CHECK);
-		btnJoinAnExisting.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, false, 1, 1));
+		btnJoinAnExisting.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER,
+				true, false, 1, 1));
 		btnJoinAnExisting.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -146,32 +147,33 @@ public class NetworkPrefPage extends PreferencePage {
 		gd_grpNewNetwork.widthHint = 331;
 		grpNewNetwork.setLayoutData(gd_grpNewNetwork);
 		grpNewNetwork.setText("New Network");
-		
-				table = new Table(grpNewNetwork, SWT.BORDER | SWT.FULL_SELECTION);
-				table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 2));
-				table.addMouseListener(new MouseAdapter() {
-					@Override
-					public void mouseUp(MouseEvent e) {
-						if (table.getSelection().length > 0) {
-							btnDelete.setEnabled(true);
-						} else {
-							btnDelete.setEnabled(false);
-						}
-					}
-				});
-				table.setHeaderVisible(true);
-				table.setLinesVisible(true);
-				
-						TableColumn tblclmnKey = new TableColumn(table, SWT.NONE);
-						tblclmnKey.setWidth(96);
-						tblclmnKey.setText("Key");
-						
-								TableColumn tblclmnValue = new TableColumn(table, SWT.NONE);
-								tblclmnValue.setWidth(182);
-								tblclmnValue.setText("Value");
+
+		table = new Table(grpNewNetwork, SWT.BORDER | SWT.FULL_SELECTION);
+		table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 2));
+		table.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseUp(MouseEvent e) {
+				if (table.getSelection().length > 0) {
+					btnDelete.setEnabled(true);
+				} else {
+					btnDelete.setEnabled(false);
+				}
+			}
+		});
+		table.setHeaderVisible(true);
+		table.setLinesVisible(true);
+
+		TableColumn tblclmnKey = new TableColumn(table, SWT.NONE);
+		tblclmnKey.setWidth(96);
+		tblclmnKey.setText("Key");
+
+		TableColumn tblclmnValue = new TableColumn(table, SWT.NONE);
+		tblclmnValue.setWidth(182);
+		tblclmnValue.setText("Value");
 
 		btnSet = new Button(grpNewNetwork, SWT.NONE);
-		btnSet.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
+		btnSet.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false,
+				1, 1));
 		btnSet.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -184,7 +186,8 @@ public class NetworkPrefPage extends PreferencePage {
 		btnSet.setText("Set");
 
 		btnDelete = new Button(grpNewNetwork, SWT.NONE);
-		btnDelete.setLayoutData(new GridData(SWT.FILL, SWT.TOP, false, false, 1, 1));
+		btnDelete.setLayoutData(new GridData(SWT.FILL, SWT.TOP, false, false,
+				1, 1));
 		btnDelete.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -211,7 +214,7 @@ public class NetworkPrefPage extends PreferencePage {
 		for (Control c : grpExistingNetwork.getChildren()) {
 			c.setEnabled(b);
 		}
-	
+
 		grpNewNetwork.setEnabled(!b);
 		for (Control c : grpNewNetwork.getChildren()) {
 			c.setEnabled(!b);

@@ -40,6 +40,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Tray;
 import org.eclipse.swt.widgets.TrayItem;
 import org.eclipse.wb.swt.SWTResourceManager;
+import org.ocpteam.component.DSPDataSource;
 import org.ocpteam.component.DataSource;
 import org.ocpteam.component.DataSourceFactory;
 import org.ocpteam.component.NATTraversal;
@@ -550,10 +551,14 @@ public class DataSourceWindow extends ApplicationWindow implements IComponent {
 	private void manageNATTraversal() {
 		if (ps.getBoolean(GeneralPreferencePage.NO_NAT_TRAVERSAL)) {
 			JLG.debug("Removing NATTraversal");
-			ds.getComponent(TCPListener.class).removeComponent(
-					NATTraversal.class);
-			ds.getComponent(UDPListener.class).removeComponent(
-					NATTraversal.class);
+			if (ds.usesComponent(TCPListener.class)) {
+				ds.getComponent(TCPListener.class).removeComponent(
+						NATTraversal.class);
+			}
+			if (ds.usesComponent(UDPListener.class)) {
+				ds.getComponent(UDPListener.class).removeComponent(
+						NATTraversal.class);
+			}
 		}
 	}
 
@@ -636,6 +641,12 @@ public class DataSourceWindow extends ApplicationWindow implements IComponent {
 		} catch (Exception e) {
 			// e.printStackTrace();
 			JLG.debug("no specific menu for " + ds.getProtocolName());
+		}
+		if (ds instanceof DSPDataSource) {
+			protocolMenu = new DSPMenuManager(ds.getProtocolName()
+					.toUpperCase(), "protocolMenu");
+			protocolMenu.setParent(this);
+			protocolMenu.init();
 		}
 		if (protocolMenu != null) {
 			MenuManager menuBar = getMenuBarManager();
