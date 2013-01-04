@@ -26,14 +26,23 @@ public class ConfigPrefPage extends PreferencePage {
 		lblPort.setText("Port:");
 
 		text = new Text(composite, SWT.BORDER);
-		text.setText("22222");
+		int i = JLG.random(20000) + 20000;
+		text.setText(Integer.toString(i));
+//		text.setText("22222");
 		return composite;
 	}
-
+	
 	@Override
-	protected void performApply() {
+	protected void performDefaults() {
+		super.performDefaults();
+		text.setText("22222");
+	}
+	
+	@Override
+	public boolean performOk() {
 		JLG.debug("Config performApply");
 		ps = (MyPreferenceStore) getPreferenceStore();
 		ps.w.ds.setProperty("server.port", text.getText());
+		return super.performOk();
 	}
 }

@@ -242,7 +242,7 @@ public class NetworkPrefPage extends PreferencePage {
 	}
 
 	@Override
-	protected void performApply() {
+	public boolean performOk() {
 		JLG.debug("Network performApply");
 		MyPreferenceStore ps = (MyPreferenceStore) getPreferenceStore();
 		if (btnJoinAnExisting.getSelection()) {
@@ -253,5 +253,6 @@ public class NetworkPrefPage extends PreferencePage {
 				ps.w.ds.setProperty("network." + key, (String) p.get(key));
 			}
 		}
+		return super.performOk();
 	}
 }

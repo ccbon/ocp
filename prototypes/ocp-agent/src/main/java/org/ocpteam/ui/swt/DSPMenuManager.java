@@ -1,6 +1,5 @@
 package org.ocpteam.ui.swt;
 
-import org.eclipse.jface.action.Separator;
 
 public class DSPMenuManager extends DynamicMenuManager {
 
@@ -11,7 +10,7 @@ public class DSPMenuManager extends DynamicMenuManager {
 	@Override
 	public void init() {
 		add(new ViewNetworkPropertiesAction(w));
-		add(new Separator());
+		add(new ViewContactTabAction(w));
 	}
 
 }

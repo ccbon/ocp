@@ -1,4 +1,4 @@
-package org.ocpteamx.protocol.ocp.swt;
+package org.ocpteam.ui.swt;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -12,14 +12,13 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.ocpteam.component.Agent;
 import org.ocpteam.misc.JLG;
-import org.ocpteam.ui.swt.DataSourceWindow;
 
 public class ViewContactTabAction extends Action {
 	private DataSourceWindow window;
 
 	public ViewContactTabAction(DataSourceWindow w) {
 		window = w;
-		setText("Cont&act@Ctrl+T");
+		setText("View Cont&act@Ctrl+T");
 		setToolTipText("View Contact Tab");
 		try {
 			ImageDescriptor i = ImageDescriptor
