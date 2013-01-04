@@ -70,25 +70,24 @@ public class JLG {
 			}
 
 			String sPrefix = "DEBUG [T=" + Thread.currentThread().getName()
-					+ "] (" + s + ".java:"
-					+ ste.getLineNumber() + ") : ";
+					+ "] (" + s + ".java:" + ste.getLineNumber() + ") : ";
 			System.out.println(sPrefix + input);
 		}
 	}
-	
+
 	public static void debugStackTrace() {
 		Throwable t = new Throwable();
 		StringWriter result = new StringWriter();
 		t.printStackTrace(new PrintWriter(result));
 		debug(result.toString());
 	}
-	
+
 	public static String getStackTrace(Throwable aThrowable) {
-	    final Writer result = new StringWriter();
-	    final PrintWriter printWriter = new PrintWriter(result);
-	    aThrowable.printStackTrace(printWriter);
-	    return result.toString();
-	  }
+		final Writer result = new StringWriter();
+		final PrintWriter printWriter = new PrintWriter(result);
+		aThrowable.printStackTrace(printWriter);
+		return result.toString();
+	}
 
 	public static void error(Exception e) {
 		System.out.println("ERROR: " + e.getMessage());
@@ -345,9 +344,8 @@ public class JLG {
 		while (it.hasNext()) {
 			String key = it.next();
 			if (key.startsWith(s)) {
-				String networkKey = key.substring(s.length());
-				JLG.debug("network key=" + networkKey);
-				p.setProperty(networkKey, config.getProperty(key));
+				String subkey = key.substring(s.length());
+				p.setProperty(subkey, config.getProperty(key));
 			}
 		}
 		return p;
