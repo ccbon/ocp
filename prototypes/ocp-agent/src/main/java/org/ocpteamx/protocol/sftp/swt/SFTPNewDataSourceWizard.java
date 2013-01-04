@@ -21,6 +21,7 @@ public class SFTPNewDataSourceWizard extends Wizard implements IScenario {
 
 	private SSHSignInWizardPage p1;
 	private DataSourceWindow w;
+	private boolean bSucceeded;
 
 	public SFTPNewDataSourceWizard() {
 		setWindowTitle("SSH Sign In Wizard");
@@ -81,13 +82,18 @@ public class SFTPNewDataSourceWizard extends Wizard implements IScenario {
 		final Shell shell = new Shell(display);
 		shell.setLayout(new FillLayout());
 		WizardDialog dialog = new WizardDialog(shell, this);
-		dialog.open();
+		bSucceeded = (dialog.open() == 0);
 		shell.dispose();
 	}
 
 	@Override
 	public void setWindow(DataSourceWindow w) {
 		this.w = w;
+	}
+
+	@Override
+	public boolean succeeded() {
+		return bSucceeded;
 	}
 
 }

@@ -31,6 +31,7 @@ import org.ocpteam.ui.swt.DataSourceWindow.MyPreferenceStore;
 
 public class NetworkPrefPage extends PreferencePage {
 
+	private static final String DEFAULT_SPONSOR_URL = "tcp://localhost:22222";
 	private Text text;
 	private Label lblPleaseEnterAt;
 	private Button btnJoinAnExisting;
@@ -137,7 +138,7 @@ public class NetworkPrefPage extends PreferencePage {
 		fd_text.top = new FormAttachment(lblPleaseEnterAt, 6);
 		fd_text.left = new FormAttachment(lblPleaseEnterAt, 0, SWT.LEFT);
 		text.setLayoutData(fd_text);
-		text.setText("tcp://localhost:22222");
+		text.setText(DEFAULT_SPONSOR_URL);
 
 		grpNewNetwork = new Group(composite, SWT.NONE);
 		grpNewNetwork.setLayout(new GridLayout(2, false));
@@ -221,6 +222,14 @@ public class NetworkPrefPage extends PreferencePage {
 		}
 		refreshTable();
 		btnDelete.setEnabled(false);
+	}
+
+	@Override
+	protected void performDefaults() {
+		btnJoinAnExisting.setSelection(false);
+		text.setText(DEFAULT_SPONSOR_URL);
+		p.clear();
+		refresh();
 	}
 
 	private void refreshTable() {

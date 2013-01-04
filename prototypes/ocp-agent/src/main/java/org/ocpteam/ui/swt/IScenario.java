@@ -6,4 +6,6 @@ public interface IScenario {
 	
 	public void run() throws Exception;
 
+	public boolean succeeded();
+
 }

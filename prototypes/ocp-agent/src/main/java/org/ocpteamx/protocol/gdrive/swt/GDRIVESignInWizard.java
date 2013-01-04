@@ -21,6 +21,7 @@ public class GDRIVESignInWizard extends Wizard implements IScenario {
 
 	private GDRIVESignInWizardPage p1;
 	private DataSourceWindow w;
+	private boolean bSucceeded;
 
 	public GDRIVESignInWizard() {
 		setWindowTitle("GDrive Sign In Wizard");
@@ -70,13 +71,18 @@ public class GDRIVESignInWizard extends Wizard implements IScenario {
 		final Shell shell = new Shell(display);
 		shell.setLayout(new FillLayout());
 		WizardDialog dialog = new WizardDialog(shell, this);
-		dialog.open();
+		bSucceeded = (dialog.open() == 0);
 		shell.dispose();
 	}
 
 	@Override
 	public void setWindow(DataSourceWindow w) {
 		this.w = w;
+	}
+
+	@Override
+	public boolean succeeded() {
+		return bSucceeded;
 	}
 
 }

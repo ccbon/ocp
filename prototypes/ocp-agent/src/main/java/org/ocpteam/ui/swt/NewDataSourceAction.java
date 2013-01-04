@@ -38,11 +38,17 @@ public class NewDataSourceAction extends Action {
 						.getObject("NewDataSourceScenario");
 				scenario.setWindow(w);
 				scenario.run();
+				if (!scenario.succeeded()) {
+					w.ds = null;
+				}
 			} else {
 				if (w.ds instanceof DSPDataSource) {
 					IScenario scenario = new NewDSPDataSourceScenario();
 					scenario.setWindow(w);
 					scenario.run();
+					if (!scenario.succeeded()) {
+						w.ds = null;
+					}
 				}
 			}
 			if (w.ds == null) {

@@ -21,6 +21,7 @@ public class DROPBOXSignInWizard extends Wizard implements IScenario {
 	private DropboxClient c;
 	private WizardDialog dialog;
 	private WizardPage currentPage;
+	private boolean bSucceeded;
 
 	public DROPBOXSignInWizard() {
 		setWindowTitle("Dropbox Sign In Wizard");
@@ -57,7 +58,7 @@ public class DROPBOXSignInWizard extends Wizard implements IScenario {
 			}
 
 		};
-		dialog.open();
+		bSucceeded = (dialog.open() == 0);
 		shell.dispose();
 	}
 
@@ -103,6 +104,11 @@ public class DROPBOXSignInWizard extends Wizard implements IScenario {
 	public boolean performCancel() {
 		w.ds = null;
 		return super.performCancel();
+	}
+
+	@Override
+	public boolean succeeded() {
+		return bSucceeded;
 	}
 
 }

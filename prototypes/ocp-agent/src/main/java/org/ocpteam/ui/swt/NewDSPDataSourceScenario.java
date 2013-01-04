@@ -12,6 +12,7 @@ import org.ocpteam.ui.swt.DataSourceWindow.MyPreferenceStore;
 public class NewDSPDataSourceScenario implements IScenario {
 
 	private DataSourceWindow w;
+	private boolean bSucceeded;
 
 	@Override
 	public void setWindow(DataSourceWindow w) {
@@ -28,8 +29,8 @@ public class NewDSPDataSourceScenario implements IScenario {
 		// Create the nodes
 		PreferenceNode tcpServer = new PreferenceNode("TCP Server",
 				"TCP Server", null, ConfigPrefPage.class.getName());
-		PreferenceNode network = new PreferenceNode("Network",
-				"Network", null, NetworkPrefPage.class.getName());
+		PreferenceNode network = new PreferenceNode("Network", "Network", null,
+				NetworkPrefPage.class.getName());
 
 		// Add the nodes
 		prefManager.addToRoot(tcpServer);
@@ -48,8 +49,15 @@ public class NewDSPDataSourceScenario implements IScenario {
 		prefDialog.setPreferenceStore(ps);
 
 		// Open the dialog
-		prefDialog.open();
+		if (prefDialog.open() != 0) {
+			bSucceeded = false;
+		} else {
+			bSucceeded = true;
+		}
+	}
 
-//		w.ds.setProperty("datastore.uri", ps.getString(URI));
+	@Override
+	public boolean succeeded() {
+		return bSucceeded;
 	}
 }

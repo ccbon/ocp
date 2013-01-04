@@ -18,4 +18,9 @@ public class ZIPNewDataSourceScenario implements IScenario {
 
 	}
 
+	@Override
+	public boolean succeeded() {
+		return true;
+	}
+
 }

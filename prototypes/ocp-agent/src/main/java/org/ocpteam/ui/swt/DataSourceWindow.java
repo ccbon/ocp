@@ -633,20 +633,21 @@ public class DataSourceWindow extends ApplicationWindow implements IComponent {
 
 	public void addProtocolMenu() {
 		protocolMenu = null;
-		try {
-			ResourceBundle rb = ds.getResource("swt");
-			protocolMenu = (DynamicMenuManager) rb.getObject("menu");
-			protocolMenu.setParent(this);
-			protocolMenu.init();
-		} catch (Exception e) {
-			// e.printStackTrace();
-			JLG.debug("no specific menu for " + ds.getProtocolName());
-		}
 		if (ds instanceof DSPDataSource) {
 			protocolMenu = new DSPMenuManager(ds.getProtocolName()
 					.toUpperCase(), "protocolMenu");
 			protocolMenu.setParent(this);
 			protocolMenu.init();
+		}
+		try {
+			ResourceBundle rb = ds.getResource("swt");
+			DynamicMenuManager menu = (DynamicMenuManager) rb.getObject("menu");
+			menu.setParent(this);
+			menu.init();
+			protocolMenu = menu;
+		} catch (Exception e) {
+			// e.printStackTrace();
+			JLG.debug("no specific menu for " + ds.getProtocolName());
 		}
 		if (protocolMenu != null) {
 			MenuManager menuBar = getMenuBarManager();

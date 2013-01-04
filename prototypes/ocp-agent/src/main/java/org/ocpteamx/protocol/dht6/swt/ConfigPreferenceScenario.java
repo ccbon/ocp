@@ -14,6 +14,7 @@ import org.ocpteam.ui.swt.IScenario;
 public class ConfigPreferenceScenario implements IScenario {
 	public static final String URI = "uri";
 	private DataSourceWindow w;
+	private boolean bSucceeded;
 
 	public ConfigPreferenceScenario() {
 	}
@@ -51,8 +52,13 @@ public class ConfigPreferenceScenario implements IScenario {
 		prefDialog.setPreferenceStore(ps);
 
 		// Open the dialog
-		prefDialog.open();
+		bSucceeded = (prefDialog.open() == 0);
 
 		w.ds.setProperty("datastore.uri", ps.getString(URI));
+	}
+
+	@Override
+	public boolean succeeded() {
+		return bSucceeded;
 	}
 }

@@ -19,6 +19,7 @@ public class OCPNewDataSourceWizard extends Wizard implements IScenario {
 	public boolean bIsFirstAgent = false;
 	public String listenerPort = "22222";
 	private DataSourceWindow w;
+	private boolean bSucceeded;
 
 	public OCPNewDataSourceWizard() {
 		setWindowTitle("New Wizard");
@@ -67,17 +68,18 @@ public class OCPNewDataSourceWizard extends Wizard implements IScenario {
 			} else {
 				p.setProperty("network.type", "private");
 			}
-			
 
 			if (bIsFirstAgent) {
 				// TODO: review this later...
 				// merge this with ocp file
 				// prefix property name with network.
 				NetworkWizardPage networkPage = (NetworkWizardPage) getPage("networkPage");
-				p.setProperty("network.hash", networkPage.messageDigestCombo.getText());
+				p.setProperty("network.hash",
+						networkPage.messageDigestCombo.getText());
 				p.setProperty("network.PKAlgo",
 						networkPage.asymmetricAlgoCombo.getText());
-				p.setProperty("network.backupNbr", networkPage.backupNbrText.getText());
+				p.setProperty("network.backupNbr",
+						networkPage.backupNbrText.getText());
 				p.setProperty("network.SignatureAlgo", "SHA1withDSA");
 				p.setProperty("network.user.cipher.algo", "PBEWithMD5AndDES");
 
@@ -116,7 +118,7 @@ public class OCPNewDataSourceWizard extends Wizard implements IScenario {
 		Shell shell = new Shell(display);
 		shell.setLayout(new FillLayout());
 		WizardDialog dialog = new WizardDialog(shell, this);
-		dialog.open();
+		bSucceeded = (dialog.open() == 0);
 		shell.dispose();
 	}
 
@@ -124,6 +126,11 @@ public class OCPNewDataSourceWizard extends Wizard implements IScenario {
 	public void setWindow(DataSourceWindow w) {
 		this.w = w;
 
+	}
+
+	@Override
+	public boolean succeeded() {
+		return bSucceeded;
 	}
 
 }

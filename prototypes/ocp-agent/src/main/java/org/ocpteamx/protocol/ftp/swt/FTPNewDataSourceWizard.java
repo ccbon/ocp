@@ -15,13 +15,15 @@ import org.ocpteamx.protocol.ftp.FTPDataSource;
 public class FTPNewDataSourceWizard extends Wizard implements IScenario {
 	FirstWizardPage p1;
 	private DataSourceWindow w;
+	private boolean bSucceeded;
+
 	public FTPNewDataSourceWizard() {
 		setWindowTitle("FTP Wizard");
 	}
 
 	@Override
 	public void addPages() {
-		p1 = new FirstWizardPage(); 
+		p1 = new FirstWizardPage();
 		addPage(p1);
 	}
 
@@ -30,14 +32,15 @@ public class FTPNewDataSourceWizard extends Wizard implements IScenario {
 		try {
 			w.ds = new FTPDataSource();
 			w.ds.init();
-			URI uri = new URI("ftp://" + p1.serverHostnameText.getText() + ":" + p1.portText.getText() + p1.defaultLocalDirText.getText());
+			URI uri = new URI("ftp://" + p1.serverHostnameText.getText() + ":"
+					+ p1.portText.getText() + p1.defaultLocalDirText.getText());
 			w.ds.setURI(uri);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return true;
 	}
-	
+
 	@Override
 	public boolean performCancel() {
 		w.ds = null;
@@ -61,13 +64,18 @@ public class FTPNewDataSourceWizard extends Wizard implements IScenario {
 		final Shell shell = new Shell(display);
 		shell.setLayout(new FillLayout());
 		WizardDialog dialog = new WizardDialog(shell, this);
-		dialog.open();
+		bSucceeded = (dialog.open() == 0);
 		shell.dispose();
 	}
 
 	@Override
 	public void setWindow(DataSourceWindow w) {
 		this.w = w;
-		
+
+	}
+
+	@Override
+	public boolean succeeded() {
+		return bSucceeded;
 	}
 }
