@@ -66,9 +66,13 @@ public class AddressUserCreation extends DSContainer<AddressDataSource>
 		if (ds().usesComponent(ISecurity.class)) {
 			ISecurity security = ds().getComponent(ISecurity.class);
 			SecureUser secureUser = (SecureUser) user;
-			UserPublicInfo upi = security.getUPI(secureUser.getUsername());
+			try {
+				UserPublicInfo upi = security.getUPI(secureUser.getUsername());
+				return (upi != null);
+			} catch (Exception e) {
+				return false;
+			}
 
-			return (upi != null);
 		} else {
 			Address address = getUserAddress(user.getUsername(), getPassword());
 			byte[] value = map.get(address);
@@ -148,7 +152,8 @@ public class AddressUserCreation extends DSContainer<AddressDataSource>
 			Address address = getUserAddress(username, password);
 			byte[] value = map.get(address);
 			if (value == null) {
-				throw new Exception("The user with this password does not exist.");
+				throw new Exception(
+						"The user with this password does not exist.");
 			}
 			this.user = (IUser) ds().serializer.deserialize(value);
 		}
