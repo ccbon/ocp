@@ -101,12 +101,6 @@ public class DROPBOXSignInWizard extends Wizard implements IScenario {
 	}
 
 	@Override
-	public boolean performCancel() {
-		w.ds = null;
-		return super.performCancel();
-	}
-
-	@Override
 	public boolean succeeded() {
 		return bSucceeded;
 	}

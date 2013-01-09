@@ -32,6 +32,7 @@ public class ViewDataModelAction extends Action {
 			e.printStackTrace();
 		} finally {
 			w.refresh();
+			w.getShell().setFocus();
 		}
 	}
 }

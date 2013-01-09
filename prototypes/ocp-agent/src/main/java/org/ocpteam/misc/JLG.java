@@ -333,7 +333,16 @@ public class JLG {
 	public static Properties loadConfig(String filename) throws Exception {
 		Properties p = new Properties();
 		File file = new File(filename);
-		p.load(new FileInputStream(file));
+		FileInputStream fis = null;
+		try {
+			fis = new FileInputStream(file);
+			p.load(fis);
+		} finally {
+			try {
+				fis.close();
+			} catch (Exception e) {
+			}
+		}
 		return p;
 	}
 

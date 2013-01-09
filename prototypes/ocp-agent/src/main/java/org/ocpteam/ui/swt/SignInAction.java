@@ -39,7 +39,9 @@ public class SignInAction extends Action {
 			if (scenario != null) {
 				scenario.setWindow(window);
 				scenario.run();
-				window.signIn();
+				if (scenario.succeeded()) {
+					window.signIn();
+				}
 			} else {
 
 				if (window.ds.usesComponent(IAuthenticable.class)) {
