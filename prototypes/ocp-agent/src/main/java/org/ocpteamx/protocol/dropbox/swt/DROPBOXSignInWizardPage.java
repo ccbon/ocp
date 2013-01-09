@@ -40,5 +40,6 @@ public class DROPBOXSignInWizardPage extends WizardPage {
 		btnRememberMe = new Button(container, SWT.CHECK);
 		btnRememberMe.setBounds(39, 102, 110, 16);
 		btnRememberMe.setText("Remember me");
+		btnRememberMe.setSelection(true);
 	}
 }
