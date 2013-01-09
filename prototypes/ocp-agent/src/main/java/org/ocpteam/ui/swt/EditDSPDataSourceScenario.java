@@ -9,7 +9,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.ocpteam.misc.JLG;
 import org.ocpteam.ui.swt.DataSourceWindow.MyPreferenceStore;
 
-public class NewDSPDataSourceScenario implements IScenario {
+public class EditDSPDataSourceScenario implements IScenario {
 
 	private DataSourceWindow w;
 	private boolean bSucceeded;

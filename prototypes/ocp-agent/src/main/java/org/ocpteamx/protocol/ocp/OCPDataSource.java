@@ -70,7 +70,7 @@ public class OCPDataSource extends DSPDataSource {
 	}
 
 	@Override
-	protected void configureServer(Server server) throws Exception {
+	public void configureServer() throws Exception {
 	}
 
 	@Override

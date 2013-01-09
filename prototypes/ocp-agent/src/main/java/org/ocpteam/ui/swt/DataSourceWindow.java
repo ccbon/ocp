@@ -66,6 +66,10 @@ public class DataSourceWindow extends ApplicationWindow implements IComponent {
 	public static final int ON_DS_CLOSE = 0;
 
 	private static final String TITLE = "Generic Data Source Explorer";
+
+	public static final int EDIT_MODE = 1;
+	public static final int NEW_MODE = 0;
+
 	OpenDataSourceAction openDataSourceAction;
 	CloseDataSourceAction closeDataSourceAction;
 	SaveDataSourceAction saveDataSourceAction;
@@ -107,6 +111,8 @@ public class DataSourceWindow extends ApplicationWindow implements IComponent {
 	public MyPreferenceStore ps;
 
 	MenuManager menuManager;
+
+	private int editionMode;
 
 	/**
 	 * Create the application window.
@@ -719,6 +725,14 @@ public class DataSourceWindow extends ApplicationWindow implements IComponent {
 	@Override
 	public IContainer getRoot() {
 		return this.app.getRoot();
+	}
+
+	public void setDSEditionMode(int mode) {
+		this.editionMode = mode;
+	}
+
+	public int getDSEditMode() {
+		return this.editionMode;
 	}
 
 }

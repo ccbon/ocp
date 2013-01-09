@@ -42,6 +42,7 @@ public class NetworkPrefPage extends PreferencePage {
 	private Button btnSet;
 	private Group grpExistingNetwork;
 	private Group grpNewNetwork;
+	private String oldSponsor;
 
 	public class InsertKeyDialog extends Dialog {
 		private Text keyText;
@@ -116,7 +117,13 @@ public class NetworkPrefPage extends PreferencePage {
 			}
 		});
 		btnJoinAnExisting.setText("Join an existing network");
-
+		MyPreferenceStore ps = (MyPreferenceStore) getPreferenceStore();
+		if (ps.w.getDSEditMode() == DataSourceWindow.EDIT_MODE) {
+			boolean b = ps.w.ds.getProperty("agent.isFirst", "yes").equals(
+					"yes");
+			btnJoinAnExisting.setSelection(!b);
+			btnJoinAnExisting.setEnabled(false);
+		}
 		grpExistingNetwork = new Group(composite, SWT.NONE);
 		grpExistingNetwork.setLayout(new FormLayout());
 		GridData gd_grpExistingNetwork = new GridData(SWT.FILL, SWT.CENTER,
@@ -138,7 +145,12 @@ public class NetworkPrefPage extends PreferencePage {
 		fd_text.top = new FormAttachment(lblPleaseEnterAt, 6);
 		fd_text.left = new FormAttachment(lblPleaseEnterAt, 0, SWT.LEFT);
 		text.setLayoutData(fd_text);
-		text.setText(DEFAULT_SPONSOR_URL);
+		if (ps.w.getDSEditMode() == DataSourceWindow.EDIT_MODE) {
+			oldSponsor = ps.w.ds.getProperty("sponsor.1", "");
+			text.setText(oldSponsor);
+		} else {
+			text.setText(DEFAULT_SPONSOR_URL);
+		}
 
 		grpNewNetwork = new Group(composite, SWT.NONE);
 		grpNewNetwork.setLayout(new GridLayout(2, false));
@@ -246,8 +258,19 @@ public class NetworkPrefPage extends PreferencePage {
 		JLG.debug("Network performApply");
 		MyPreferenceStore ps = (MyPreferenceStore) getPreferenceStore();
 		if (btnJoinAnExisting.getSelection()) {
-			ps.w.ds.setProperty("sponsor.url", text.getText());
+			ps.w.ds.setProperty("sponsor.1", text.getText());
 			ps.w.ds.setProperty("agent.isFirst", "no");
+			if (ps.w.getDSEditMode() == DataSourceWindow.EDIT_MODE) {
+				if (!oldSponsor.equals(text.getText())) {
+					try {
+						ps.w.ds.disconnect();
+						ps.w.ds.connect();
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+					oldSponsor = text.getText();
+				}
+			}
 		} else {
 			for (Object key : p.keySet()) {
 				ps.w.ds.setProperty("network." + key, (String) p.get(key));

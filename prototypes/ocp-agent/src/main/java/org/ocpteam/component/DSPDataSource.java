@@ -80,7 +80,7 @@ public abstract class DSPDataSource extends DataSource {
 
 		if (getProperty("server", "yes").equals("yes")) {
 			JLG.debug("starting the server");
-			configureServer(server);
+			configureServer();
 			server.start();
 			askForNode();
 			contactMap.addMyself();
@@ -126,7 +126,7 @@ public abstract class DSPDataSource extends DataSource {
 		}
 	}
 
-	protected void configureServer(Server server) throws Exception {
+	public void configureServer() throws Exception {
 		int port = Integer.parseInt(getProperty("server.port", "22222"));
 
 		tcplistener.setUrl(new URI("tcp://localhost:" + port));

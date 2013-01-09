@@ -43,8 +43,9 @@ public class NewDataSourceAction extends Action {
 				}
 			} else {
 				if (w.ds instanceof DSPDataSource) {
-					IScenario scenario = new NewDSPDataSourceScenario();
+					EditDSPDataSourceScenario scenario = new EditDSPDataSourceScenario();
 					scenario.setWindow(w);
+					w.setDSEditionMode(DataSourceWindow.NEW_MODE);
 					scenario.run();
 					if (!scenario.succeeded()) {
 						w.ds = null;
