@@ -86,7 +86,8 @@ public class ContactComposite extends Composite {
 				if (contact.isMyself()) {
 					TreeItem urlTreeItem = new TreeItem(contactTreeItem,
 							SWT.NONE);
-					urlTreeItem.setText("<myself>");
+					int port = Integer.parseInt(agent.ds().getProperty("server.port", "22222"));
+					urlTreeItem.setText("<myself> (Port: " + port + ")");
 					contactTreeItem.setExpanded(true);
 				} else if (contact.getTcpPort() > 0) {
 					TreeItem urlTreeItem = new TreeItem(contactTreeItem,
