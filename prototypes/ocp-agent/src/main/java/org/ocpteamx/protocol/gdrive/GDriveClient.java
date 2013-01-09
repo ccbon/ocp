@@ -6,6 +6,7 @@ import org.ocpteam.component.DSContainer;
 import org.ocpteam.entity.Context;
 import org.ocpteam.interfaces.IAuthenticable;
 import org.ocpteam.interfaces.IDataModel;
+import org.ocpteam.interfaces.IUserManagement;
 import org.ocpteam.misc.JLG;
 
 import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
@@ -16,6 +17,7 @@ import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson.JacksonFactory;
 import com.google.api.services.drive.Drive;
+import com.google.api.services.drive.Drive.About.Get;
 import com.google.api.services.drive.DriveScopes;
 
 public class GDriveClient extends DSContainer<GDriveDataSource> implements
@@ -55,8 +57,15 @@ public class GDriveClient extends DSContainer<GDriveDataSource> implements
 		service = new Drive.Builder(httpTransport, jsonFactory, credential)
 				.build();
 		JLG.debug("GDrive logged in.");
+		Get get = service.about().get();
+		com.google.api.services.drive.model.About r = get.execute();
+		String username = r.getName();
+		ds().getComponent(IUserManagement.class).setUsername(username);
+		JLG.debug("username=" + username);
 		IDataModel dm = ds().getComponent(IDataModel.class);
 		ds().setContext(new Context(dm, "/"));
+		
+		JLG.debug("isConnected=" + ds().isConnected());
 	}
 
 	@Override

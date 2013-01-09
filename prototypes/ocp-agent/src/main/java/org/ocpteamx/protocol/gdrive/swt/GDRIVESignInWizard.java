@@ -15,7 +15,6 @@ import org.ocpteam.misc.swt.QuickMessage;
 import org.ocpteam.ui.swt.DataSourceWindow;
 import org.ocpteam.ui.swt.IScenario;
 import org.ocpteamx.protocol.gdrive.GDriveClient;
-import org.ocpteamx.protocol.gdrive.GDriveDataSource;
 
 public class GDRIVESignInWizard extends Wizard implements IScenario {
 
@@ -37,7 +36,6 @@ public class GDRIVESignInWizard extends Wizard implements IScenario {
 	public boolean performFinish() {
 		JLG.debug("sign in user");
 		try {
-			w.ds = new GDriveDataSource();
 			String code = p1.codeText.getText();
 			URI uri = new URI("gdrive://" + code);
 			w.ds.setURI(uri);

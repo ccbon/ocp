@@ -21,5 +21,4 @@ public class GDriveDataSource extends DataSource {
 	public String getProtocolName() {
 		return "GDrive";
 	}
-
 }

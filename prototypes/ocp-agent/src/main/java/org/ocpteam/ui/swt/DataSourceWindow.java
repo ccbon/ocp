@@ -530,7 +530,9 @@ public class DataSourceWindow extends ApplicationWindow implements IComponent {
 			this.ds = ds;
 			manageNATTraversal();
 			ds.readConfig();
+			JLG.debug("About to connect");
 			ds.connect();
+			JLG.debug("Connected: " + ds.isConnected());
 			refresh();
 			addProtocolMenu();
 			if (isDaemon()) {
@@ -569,6 +571,7 @@ public class DataSourceWindow extends ApplicationWindow implements IComponent {
 	}
 
 	public void closeDataSource() throws Exception {
+		JLG.debug("Close datasource");
 		ds.disconnect();
 		ds.close();
 		if (isDaemon()) {
