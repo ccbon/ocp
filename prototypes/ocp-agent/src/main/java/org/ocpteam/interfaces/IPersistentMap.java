@@ -13,4 +13,6 @@ public interface IPersistentMap extends IDataStore {
 	 * @throws Exception
 	 */
 	public void setURI(String uri) throws Exception;
+	
+	public String getURI();
 }

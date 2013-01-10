@@ -57,5 +57,6 @@ public class SaveAsDataSourceAction extends Action {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		window.refresh();
 	}
 }

@@ -11,10 +11,12 @@ import org.ocpteam.component.DSPDataSource;
 import org.ocpteam.component.Server;
 import org.ocpteam.misc.JLG;
 import org.ocpteam.ui.swt.DataSourceWindow.MyPreferenceStore;
+import org.eclipse.swt.layout.RowData;
 
 public class ConfigPrefPage extends PreferencePage {
 	private Text text;
 	private MyPreferenceStore ps;
+	private Text name;
 
 	public ConfigPrefPage() {
 	}
@@ -25,7 +27,7 @@ public class ConfigPrefPage extends PreferencePage {
 		composite.setLayout(new RowLayout(SWT.VERTICAL));
 
 		Label lblPort = new Label(composite, SWT.NONE);
-		lblPort.setText("Port:");
+		lblPort.setText("Server port:");
 
 		text = new Text(composite, SWT.BORDER);
 		ps = (MyPreferenceStore) getPreferenceStore();
@@ -36,12 +38,24 @@ public class ConfigPrefPage extends PreferencePage {
 			int i = JLG.random(20000) + 20000;
 			text.setText(Integer.toString(i));
 		}
+		Label lblName = new Label(composite, SWT.NONE);
+		lblName.setText("Datasource name:");
+
+		name = new Text(composite, SWT.BORDER);
+		name.setLayoutData(new RowData(228, SWT.DEFAULT));
+		if (ps.w.getDSEditMode() == DataSourceWindow.EDIT_MODE) {
+			JLG.debug("Edit mode");
+			name.setText(ps.w.ds.getProperty("name"));
+		} else {
+			name.setText("ds_" + JLG.random(10000000));
+		}
 		return composite;
 	}
 
 	@Override
 	protected void performDefaults() {
 		super.performDefaults();
+		name.setText("anonymous");
 		text.setText("22222");
 	}
 
@@ -49,6 +63,7 @@ public class ConfigPrefPage extends PreferencePage {
 	public boolean performOk() {
 		JLG.debug("Config performApply");
 		ps.w.ds.setProperty("server.port", text.getText());
+		ps.w.ds.setProperty("name", name.getText());
 		syncServer();
 		return super.performOk();
 	}

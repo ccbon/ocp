@@ -34,6 +34,6 @@ public class SaveDataSourceAction extends Action {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
+		window.refresh();
 	}
 }

@@ -4,19 +4,21 @@ import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.ocpteam.interfaces.IUserCreation;
 import org.ocpteam.misc.JLG;
-import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 
 public class SignInWithAuthenticationWizardPage extends WizardPage {
 	Text usernameText;
 	Text passwordText;
 	private DataSourceWindow window;
+	private Button btnCreateAnNew;
 
 	/**
 	 * Create the wizard.
@@ -64,6 +66,7 @@ public class SignInWithAuthenticationWizardPage extends WizardPage {
 		});
 
 		usernameText.setBounds(10, 71, 187, 19);
+		usernameText.setFocus();
 
 		Label lblPassword = new Label(container, SWT.NONE);
 		lblPassword.setBounds(10, 96, 75, 13);
@@ -81,7 +84,7 @@ public class SignInWithAuthenticationWizardPage extends WizardPage {
 		passwordText.setBounds(10, 115, 187, 19);
 
 		if (window.ds.usesComponent(IUserCreation.class)) {
-			Button btnCreateAnNew = new Button(container, SWT.NONE);
+			btnCreateAnNew = new Button(container, SWT.NONE);
 			btnCreateAnNew.addSelectionListener(new SelectionAdapter() {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
@@ -92,9 +95,13 @@ public class SignInWithAuthenticationWizardPage extends WizardPage {
 					JLG.debug("Create an account 2");
 				}
 			});
-			btnCreateAnNew.setBounds(10, 203, 152, 25);
-			btnCreateAnNew.setText("Create an new account");
+			btnCreateAnNew.setBounds(10, 10, 152, 25);
+			btnCreateAnNew.setText("Create a new account");
 		}
+
+		Control[] list = new Control[] { btnCreateAnNew, usernameText,
+				passwordText };
+		container.setTabList(list);
 	}
 
 	@Override

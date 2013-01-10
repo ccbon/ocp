@@ -6,6 +6,8 @@ import org.eclipse.jface.preference.PreferenceDialog;
 import org.eclipse.jface.preference.PreferenceManager;
 import org.eclipse.jface.preference.PreferenceNode;
 import org.eclipse.swt.widgets.Shell;
+import org.ocpteam.component.PersistentFileMap;
+import org.ocpteam.interfaces.IPersistentMap;
 import org.ocpteam.misc.JLG;
 import org.ocpteam.ui.swt.DataSourceWindow.MyPreferenceStore;
 
@@ -27,14 +29,24 @@ public class EditDSPDataSourceScenario implements IScenario {
 		PreferenceManager prefManager = new PreferenceManager();
 
 		// Create the nodes
-		PreferenceNode tcpServer = new PreferenceNode("TCP Server",
-				"TCP Server", null, ConfigPrefPage.class.getName());
+		PreferenceNode tcpServer = new PreferenceNode("General", "General",
+				null, ConfigPrefPage.class.getName());
 		PreferenceNode network = new PreferenceNode("Network", "Network", null,
 				NetworkPrefPage.class.getName());
 
 		// Add the nodes
 		prefManager.addToRoot(tcpServer);
 		prefManager.addToRoot(network);
+		if (w.getDSEditMode() == DataSourceWindow.EDIT_MODE) {
+			boolean bViewDataStore = (w.ds.usesComponent(IPersistentMap.class) && (w.ds
+					.getComponent(IPersistentMap.class) instanceof PersistentFileMap));
+			if (bViewDataStore) {
+				PreferenceNode dataStore = new PreferenceNode("Datastore",
+						"Datastore", null,
+						ViewDataStorePrefPage.class.getName());
+				prefManager.addToRoot(dataStore);
+			}
+		}
 
 		// Create the preferences dialog
 		PreferenceDialog prefDialog = new PreferenceDialog(shell, prefManager);

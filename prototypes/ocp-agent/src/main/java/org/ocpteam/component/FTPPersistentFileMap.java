@@ -186,4 +186,9 @@ public class FTPPersistentFileMap extends DSContainer<DataSource> implements
 			JLG.error(e);
 		}
 	}
+
+	@Override
+	public String getURI() {
+		return uri.toString();
+	}
 }

@@ -20,6 +20,11 @@ public class PersistentFileMap implements IPersistentMap {
 	}
 
 	@Override
+	public String getURI() {
+		return dir.toString();
+	}
+
+	@Override
 	public void clear() {
 		try {
 			JLG.rm(dir);

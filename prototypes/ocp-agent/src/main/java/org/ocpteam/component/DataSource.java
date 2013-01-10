@@ -40,7 +40,6 @@ public abstract class DataSource extends TopContainer implements IComponent,
 	private boolean bIsConnected;
 	private String name;
 	protected Class<? extends Contact> contactClass;
-	
 
 	@Override
 	public void init() throws Exception {
@@ -49,17 +48,19 @@ public abstract class DataSource extends TopContainer implements IComponent,
 	}
 
 	public abstract String getProtocolName();
-	
+
 	/**
-	 * When information is stored under properties, this function read the properties.
-	 * @throws Exception 
+	 * When information is stored under properties, this function read the
+	 * properties.
+	 * 
+	 * @throws Exception
 	 */
 	public void readConfig() throws Exception {
 		if (getConfig().containsKey("name")) {
 			setName(getProperty("name"));
 		}
 	}
-	
+
 	@Override
 	public void setConfig(Properties p) throws Exception {
 		super.setConfig(p);
@@ -105,7 +106,6 @@ public abstract class DataSource extends TopContainer implements IComponent,
 		} else {
 			throw new Exception("cannot save: file not set.");
 		}
-
 	}
 
 	@Override
@@ -118,7 +118,7 @@ public abstract class DataSource extends TopContainer implements IComponent,
 
 	@Override
 	public void close() throws Exception {
-		
+
 	}
 
 	public File getFile() {
@@ -200,9 +200,6 @@ public abstract class DataSource extends TopContainer implements IComponent,
 	public Contact toContact() throws Exception {
 		// convert the agent public information into a contact
 		Contact c = contactClass.newInstance();
-		if (getName() == null) {
-			setName("ds_" + JLG.random(10000000));
-		}
 		c.setName(getName());
 		c.setHost("localhost");
 		// add the listener url and node id information
