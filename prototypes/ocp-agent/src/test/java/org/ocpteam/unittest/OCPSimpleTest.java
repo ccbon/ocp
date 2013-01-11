@@ -7,6 +7,7 @@ import java.util.Properties;
 import org.ocpteam.component.Agent;
 import org.ocpteam.misc.JLG;
 import org.ocpteam.misc.LOG;
+import org.ocpteam.ui.swt.DataSourceWindow;
 import org.ocpteamx.protocol.ocp.Captcha;
 import org.ocpteamx.protocol.ocp.OCPAgent;
 import org.ocpteamx.protocol.ocp.OCPDataSource;
@@ -27,7 +28,7 @@ public class OCPSimpleTest {
 		LOG.debug_on();	
 		LOG.debug("starting 2 agents");
 		LOG.debug("working directory = " + System.getProperty("user.dir"));
-		JLG.rm(System.getenv("TEMP") + "/ocp_agent_storage");
+		JLG.rm(DataSourceWindow.GDSE_DIR + "/datastore/ocp/");
 		try {
 
 			// start 2 agents

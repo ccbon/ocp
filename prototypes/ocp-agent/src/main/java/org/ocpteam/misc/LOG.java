@@ -33,7 +33,7 @@ public class LOG {
 		r.setParameters(parameters);
 		StackTraceElement ste = t.getStackTrace()[2];
 		r.setSourceClassName(ste.getClassName());
-		
+
 		logger.log(r);
 		fh.flush();
 	}
@@ -124,9 +124,11 @@ public class LOG {
 			logger.removeHandler(fileHandler);
 		} else {
 			JLG.mkdir(JLG.dirname(escape(logfile)));
-			fileHandler = new FileHandler(logfile);
-			fileHandler.setFormatter(new DebugFormatter());
-			logger.addHandler(fileHandler);
+			if (fileHandler == null) {
+				fileHandler = new FileHandler(logfile);
+				fileHandler.setFormatter(new DebugFormatter());
+				logger.addHandler(fileHandler);
+			}
 		}
 	}
 
