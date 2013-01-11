@@ -11,7 +11,7 @@ import java.util.Set;
 
 import org.ocpteam.exception.NotAvailableContactException;
 import org.ocpteam.interfaces.INodeMap;
-import org.ocpteam.misc.JLG;
+import org.ocpteam.misc.LOG;
 import org.ocpteam.network.TCPClient;
 import org.ocpteam.network.UDPClient;
 import org.ocpteam.serializable.Contact;
@@ -101,7 +101,7 @@ public class ContactMap extends DSContainer<DSPDataSource> {
 	}
 
 	public Contact[] getOtherContacts() {
-		JLG.debug("contactmap=" + this);
+		LOG.debug("contactmap=" + this);
 		Contact[] result = null;
 		if (containsMyself()) {
 			result = new Contact[map.size() - 1];
@@ -156,7 +156,7 @@ public class ContactMap extends DSContainer<DSPDataSource> {
 
 	public UDPClient getUdpClient(Contact contact) throws Exception {
 		String name = contact.getName();
-		JLG.debug("contact name: " + name);
+		LOG.debug("contact name: " + name);
 		contact = this.get(name);
 		if (contact.getUdpPort() <= 0) {
 			return null;

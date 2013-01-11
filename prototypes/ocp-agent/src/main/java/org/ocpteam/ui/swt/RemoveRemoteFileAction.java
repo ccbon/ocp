@@ -2,7 +2,7 @@ package org.ocpteam.ui.swt;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.swt.widgets.TableItem;
-import org.ocpteam.misc.JLG;
+import org.ocpteam.misc.LOG;
 import org.ocpteam.misc.swt.QuickMessage;
 
 
@@ -20,7 +20,7 @@ public class RemoveRemoteFileAction extends Action {
 
 	@Override
 	public void run() {
-		JLG.debug("Delete remote file");
+		LOG.debug("Delete remote file");
 		int selNbr = composite.remoteDirectoryTable.getSelection().length;
 		if (selNbr == 1) {
 			String name = composite.remoteDirectoryTable.getSelection()[0].getText();

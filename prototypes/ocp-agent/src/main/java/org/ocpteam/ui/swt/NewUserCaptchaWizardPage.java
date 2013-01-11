@@ -9,7 +9,7 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
-import org.ocpteam.misc.JLG;
+import org.ocpteam.misc.LOG;
 
 public class NewUserCaptchaWizardPage extends WizardPage {
 	public Text captchaAnswerText;
@@ -61,7 +61,7 @@ public class NewUserCaptchaWizardPage extends WizardPage {
 
 	@Override
 	public IWizardPage getNextPage() {
-		JLG.debug("p2: getNextPage");
+		LOG.debug("p2: getNextPage");
 		return super.getNextPage();
 	}
 

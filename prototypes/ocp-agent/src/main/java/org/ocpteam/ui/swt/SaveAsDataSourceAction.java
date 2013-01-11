@@ -10,7 +10,7 @@ import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Shell;
-import org.ocpteam.misc.JLG;
+import org.ocpteam.misc.LOG;
 
 public class SaveAsDataSourceAction extends Action {
 	private DataSourceWindow window;
@@ -32,7 +32,7 @@ public class SaveAsDataSourceAction extends Action {
 	@Override
 	public void run() {
 		try {
-			JLG.debug("Saving as datasource");
+			LOG.debug("Saving as datasource");
 			Display display = window.getShell().getDisplay();
 			Shell shell = new Shell(display);
 			shell.setLayout(new FillLayout());
@@ -48,7 +48,7 @@ public class SaveAsDataSourceAction extends Action {
 			}
 			String selected = fd.open();
 			window.getShell().setFocus();
-			JLG.debug(selected);
+			LOG.debug(selected);
 			if (selected == null) {
 				return;
 			}

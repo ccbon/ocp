@@ -11,7 +11,7 @@ import org.ocpteam.component.ContactMap;
 import org.ocpteam.component.DSPDataSource;
 import org.ocpteam.component.DataSource;
 import org.ocpteam.entity.Context;
-import org.ocpteam.misc.JLG;
+import org.ocpteam.misc.LOG;
 import org.ocpteamx.protocol.dht0.DHTDataModel;
 import org.ocpteamx.protocol.dht0.DHTDataSource;
 
@@ -29,7 +29,7 @@ public class DHTSimpleTest {
 
 	public boolean oneinstance() {
 		try {
-			JLG.debug_on();
+			LOG.debug_on();
 			System.out.println("Hello Test Scenario");
 			DataSource ds = new DHTDataSource();
 			ds.init();
@@ -50,7 +50,7 @@ public class DHTSimpleTest {
 	
 	public boolean twoinstances() {
 		try {
-			JLG.debug_on();
+			LOG.debug_on();
 			DHTDataSource ds = new DHTDataSource();
 			ds.init();
 			ds.setName("first_agent");
@@ -72,32 +72,32 @@ public class DHTSimpleTest {
 			ds2.connect();
 
 			ContactMap cm = ds.getComponent(ContactMap.class);
-			JLG.debug("contactMap 1 size:" + cm.size());
-			JLG.debug("contactMap 1 :" + cm);
+			LOG.debug("contactMap 1 size:" + cm.size());
+			LOG.debug("contactMap 1 :" + cm);
 			
 			ContactMap cm2 = ds2.getComponent(ContactMap.class);
-			JLG.debug("contactMap 2 size:" + cm2.size());
+			LOG.debug("contactMap 2 size:" + cm2.size());
 			
 			Context ctx = ds.getContext();
 			DHTDataModel dm = (DHTDataModel) ctx.getDataModel();
 			dm.set("hello", "world");
 			ds.remove("hello");
 			String value = dm.get("hello");
-			JLG.debug("hello=" + value);
+			LOG.debug("hello=" + value);
 			assertEquals("world", value);
 			dm.remove("hello");
 			value = dm.get("hello");
-			JLG.debug("hello=" + value);
+			LOG.debug("hello=" + value);
 			assertNull(value);
 			
 			dm.set("hello", "world");
 			dm.set("ejder", "bastug");
 			dm.set("jean-louis", "guenego");
 			Set<String> set = dm.keySet();
-			JLG.debug("set: " + set);
+			LOG.debug("set: " + set);
 			assertEquals(3, set.size());
 			
-			JLG.debug("testing sendquick");
+			LOG.debug("testing sendquick");
 			ds.client.sendQuick(ds2.toContact(), "hello".getBytes());
 			
 			ds.disconnect();

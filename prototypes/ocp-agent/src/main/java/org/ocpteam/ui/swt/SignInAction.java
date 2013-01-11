@@ -6,7 +6,7 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.graphics.ImageData;
 import org.ocpteam.interfaces.IAuthenticable;
-import org.ocpteam.misc.JLG;
+import org.ocpteam.misc.LOG;
 import org.ocpteam.misc.swt.QuickMessage;
 
 public class SignInAction extends Action {
@@ -28,7 +28,7 @@ public class SignInAction extends Action {
 
 	@Override
 	public void run() {
-		JLG.debug("Authentication User: display a wizard...");
+		LOG.debug("Authentication User: display a wizard...");
 		IScenario scenario = null;
 		try {
 			ResourceBundle swt = window.ds.getResource("swt");

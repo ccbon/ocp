@@ -2,7 +2,7 @@ package org.ocpteam.ui.swt;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.swt.widgets.TableItem;
-import org.ocpteam.misc.JLG;
+import org.ocpteam.misc.LOG;
 
 
 public class OpenFileAction extends Action {
@@ -27,7 +27,7 @@ public class OpenFileAction extends Action {
 
 	@Override
 	public void run() {
-		JLG.debug("Open");
+		LOG.debug("Open");
 		TableItem item = composite.localDirectoryTable.getSelection()[0];
 		composite.openLocalFile(item);
 	}

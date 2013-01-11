@@ -7,7 +7,7 @@ import java.util.Set;
 
 import org.ocpteam.component.DSPDataSource;
 import org.ocpteam.interfaces.IDataModel;
-import org.ocpteam.misc.JLG;
+import org.ocpteam.misc.LOG;
 
 /**
  * DHT is a distributed hashtable, very minimalist and naive.
@@ -51,19 +51,19 @@ public class DHTDataSource extends DSPDataSource {
 		Set<String> set = dm.keySet(); 
 		for (String s : set) {
 			if (!map.containsKey(s)) {
-				JLG.debug("synchronize " + s);
+				LOG.debug("synchronize " + s);
 				map.put(s, dm.get(s));
 			}
 		}
 	}
 
 	public void store(String key, String value) {
-		JLG.debug("local store: " + key + "->" + value);
+		LOG.debug("local store: " + key + "->" + value);
 		map.put(key, value);
 	}
 
 	public String retrieve(String key) {
-		JLG.debug("local retrieve: " + key);
+		LOG.debug("local retrieve: " + key);
 		return map.get(key);
 	}
 

@@ -12,7 +12,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.ocpteam.interfaces.IUserCreation;
-import org.ocpteam.misc.JLG;
+import org.ocpteam.misc.LOG;
 
 public class SignInWithAuthenticationWizardPage extends WizardPage {
 	Text usernameText;
@@ -88,11 +88,11 @@ public class SignInWithAuthenticationWizardPage extends WizardPage {
 			btnCreateAnNew.addSelectionListener(new SelectionAdapter() {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
-					JLG.debug("Create an account");
+					LOG.debug("Create an account");
 					SignInWithAuthenticationWizard wizard = (SignInWithAuthenticationWizard) getWizard();
 					wizard.getWizardDialog().close();
 					window.newUserAction.run();
-					JLG.debug("Create an account 2");
+					LOG.debug("Create an account 2");
 				}
 			});
 			btnCreateAnNew.setBounds(10, 10, 152, 25);
@@ -106,7 +106,7 @@ public class SignInWithAuthenticationWizardPage extends WizardPage {
 
 	@Override
 	public boolean isPageComplete() {
-		JLG.debug("isPageComplete");
+		LOG.debug("isPageComplete");
 		if (usernameText.getText().equals("")) {
 			return false;
 		}

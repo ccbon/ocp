@@ -6,6 +6,7 @@ import org.ocpteam.component.ContactMap;
 import org.ocpteam.component.NATTraversal;
 import org.ocpteam.core.TopContainer;
 import org.ocpteam.misc.JLG;
+import org.ocpteam.misc.LOG;
 import org.ocpteamx.protocol.dht0.DHTDataSource;
 
 public class ThreadStress extends TopContainer {
@@ -33,7 +34,7 @@ public class ThreadStress extends TopContainer {
 		super.init();
 		n = 2;
 		port = 40000;
-		JLG.debug_on();
+		LOG.debug_on();
 	}
 
 	public void start() throws Exception {
@@ -42,14 +43,14 @@ public class ThreadStress extends TopContainer {
 		ds[1].disconnect();
 		ds[1].connect();
 		disconnectAll();
-		JLG.debug("app finished");
+		LOG.debug("app finished");
 		JLG.showActiveThreads();
 	}
 
 	private void disconnectAll() throws Exception {
 		for (int i = 0; i < n; i++) {
 			synchronized (ds[i]) {
-				JLG.debug("disconnecting " + i);
+				LOG.debug("disconnecting " + i);
 				if (ds[i].isConnected()) {
 					ds[i].disconnect();
 				}
@@ -87,11 +88,11 @@ public class ThreadStress extends TopContainer {
 		for (int i = 0; i < n; i++) {
 			ds[i].connect();
 			ContactMap cm = ds[i].getComponent(ContactMap.class);
-			JLG.debug("ds[" + i + "] contact map size: " + cm.size());
+			LOG.debug("ds[" + i + "] contact map size: " + cm.size());
 		}
 		for (int i = 0; i < n; i++) {
 			ContactMap cm = ds[i].getComponent(ContactMap.class);
-			JLG.debug("ds[" + i + "] contact map size: " + cm.size());
+			LOG.debug("ds[" + i + "] contact map size: " + cm.size());
 		}
 
 	}

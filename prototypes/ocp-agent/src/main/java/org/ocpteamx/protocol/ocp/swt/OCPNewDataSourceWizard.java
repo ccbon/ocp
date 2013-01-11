@@ -8,7 +8,7 @@ import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
-import org.ocpteam.misc.JLG;
+import org.ocpteam.misc.LOG;
 import org.ocpteam.misc.swt.QuickMessage;
 import org.ocpteam.ui.swt.DataSourceWindow;
 import org.ocpteam.ui.swt.IScenario;
@@ -86,7 +86,7 @@ public class OCPNewDataSourceWizard extends Wizard implements IScenario {
 			}
 			((OCPDataSource) w.ds).setConfig(p);
 		} catch (Exception e) {
-			JLG.error(e);
+			LOG.error(e);
 			QuickMessage.error(getShell(), e.getMessage());
 			return false;
 		}

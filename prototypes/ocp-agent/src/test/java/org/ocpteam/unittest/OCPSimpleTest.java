@@ -6,6 +6,7 @@ import java.util.Properties;
 
 import org.ocpteam.component.Agent;
 import org.ocpteam.misc.JLG;
+import org.ocpteam.misc.LOG;
 import org.ocpteamx.protocol.ocp.Captcha;
 import org.ocpteamx.protocol.ocp.OCPAgent;
 import org.ocpteamx.protocol.ocp.OCPDataSource;
@@ -23,9 +24,9 @@ public class OCPSimpleTest {
 	}
 
 	public boolean twin() {
-		JLG.debug_on();	
-		JLG.debug("starting 2 agents");
-		JLG.debug("working directory = " + System.getProperty("user.dir"));
+		LOG.debug_on();	
+		LOG.debug("starting 2 agents");
+		LOG.debug("working directory = " + System.getProperty("user.dir"));
 		JLG.rm(System.getenv("TEMP") + "/ocp_agent_storage");
 		try {
 
@@ -61,27 +62,27 @@ public class OCPSimpleTest {
 			p2.setProperty("sponsor.1", "tcp://localhost:22220");
 			p2.setProperty("sponsor.2", "xxx://localhost:22223");
 			ds2.connect();
-			JLG.debug("done for me.");
-			JLG.debug("contact map size:" + ds2.contactMap.getContactSnapshotList().size());
-			JLG.debug("contact map: " + ds2.contactMap.getContactSnapshotList().toString());
-			JLG.debug("contact map size:" + ds.contactMap.getContactSnapshotList().size());
-			JLG.debug("contact map: " + ds.contactMap.getContactSnapshotList().toString());
+			LOG.debug("done for me.");
+			LOG.debug("contact map size:" + ds2.contactMap.getContactSnapshotList().size());
+			LOG.debug("contact map: " + ds2.contactMap.getContactSnapshotList().toString());
+			LOG.debug("contact map size:" + ds.contactMap.getContactSnapshotList().size());
+			LOG.debug("contact map: " + ds.contactMap.getContactSnapshotList().toString());
 
 			OCPAgent a2 = (OCPAgent) ds2.getComponent(Agent.class);
 			String username = "jlguenego";
 			String password = "jlouis";
 			Captcha captcha = a2.wantToCreateUser(username, password);
-			JLG.debug("captcha received: " + captcha);
+			LOG.debug("captcha received: " + captcha);
 			//String answer = JLG.input("captcha challenge: " + captcha.challengeObject + "> ");
 			String answer = "didounette";
 			a2.createUser(username, password, 2, captcha, answer);
-			JLG.debug(a2.toString());
+			LOG.debug(a2.toString());
 			
 			
 			ds2.disconnect();
 			ds.disconnect();
 		} catch (Exception e) {
-			JLG.error(e);
+			LOG.error(e);
 			return false;
 		}
 		return true;

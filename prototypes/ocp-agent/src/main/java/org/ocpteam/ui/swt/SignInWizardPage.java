@@ -7,7 +7,7 @@ import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
-import org.ocpteam.misc.JLG;
+import org.ocpteam.misc.LOG;
 
 
 public class SignInWizardPage extends WizardPage {
@@ -61,7 +61,7 @@ public class SignInWizardPage extends WizardPage {
 
 	@Override
 	public boolean isPageComplete() {
-		JLG.debug("isPageComplete");
+		LOG.debug("isPageComplete");
 		if (usernameText.getText().equals("")) {
 			return false;
 		}

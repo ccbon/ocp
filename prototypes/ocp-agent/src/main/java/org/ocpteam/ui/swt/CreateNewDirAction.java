@@ -1,7 +1,7 @@
 package org.ocpteam.ui.swt;
 
 import org.eclipse.jface.action.Action;
-import org.ocpteam.misc.JLG;
+import org.ocpteam.misc.LOG;
 
 
 public class CreateNewDirAction extends Action {
@@ -26,7 +26,7 @@ public class CreateNewDirAction extends Action {
 
 	@Override
 	public void run() {
-		JLG.debug("Create New Directory");
+		LOG.debug("Create New Directory");
 		composite.createNewLocalDir();
 	}
 }

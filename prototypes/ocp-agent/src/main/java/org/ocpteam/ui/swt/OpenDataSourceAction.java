@@ -7,7 +7,7 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.widgets.FileDialog;
 import org.ocpteam.component.DataSourceFactory;
-import org.ocpteam.misc.JLG;
+import org.ocpteam.misc.LOG;
 import org.ocpteam.misc.swt.QuickMessage;
 
 
@@ -30,7 +30,7 @@ public class OpenDataSourceAction extends Action {
 
 	@Override
 	public void run() {
-		JLG.debug("Open DataSource");
+		LOG.debug("Open DataSource");
 		try {
 			if (w.ds != null) {
 				w.closeDataSourceAction.run();

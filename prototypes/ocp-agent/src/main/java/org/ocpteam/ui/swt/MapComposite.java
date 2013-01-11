@@ -18,7 +18,7 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.ocpteam.interfaces.IDataModel;
 import org.ocpteam.interfaces.IMapDataModel;
-import org.ocpteam.misc.JLG;
+import org.ocpteam.misc.LOG;
 
 public class MapComposite extends Composite {
 	public class RefreshAction extends Action {
@@ -53,7 +53,7 @@ public class MapComposite extends Composite {
 		table.addMenuDetectListener(new MenuDetectListener() {
 			@Override
 			public void menuDetected(MenuDetectEvent arg0) {
-				JLG.debug("opening context menu");
+				LOG.debug("opening context menu");
 				final MenuManager myMenu = new MenuManager("xxx");
 				final Menu menu = myMenu
 						.createContextMenu(MapComposite.this.dsw.getShell());
@@ -93,7 +93,7 @@ public class MapComposite extends Composite {
 					break;
 				default:
 				}
-				JLG.debug("keypressed: keycode:" + e.keyCode
+				LOG.debug("keypressed: keycode:" + e.keyCode
 						+ " and character = '" + e.character + "'");
 				MapComposite.this.dsw.refresh();
 			}
@@ -145,7 +145,7 @@ public class MapComposite extends Composite {
 	public void remove() throws Exception {
 		for (TableItem item : table.getSelection()) {
 			String key = item.getText(0);
-			JLG.debug("removing key = " + key);
+			LOG.debug("removing key = " + key);
 			mdm.remove(key);
 		}
 		refresh();

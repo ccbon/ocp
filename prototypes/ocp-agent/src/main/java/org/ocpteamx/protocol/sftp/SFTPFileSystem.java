@@ -7,6 +7,7 @@ import java.util.Vector;
 import org.ocpteam.interfaces.IFile;
 import org.ocpteam.interfaces.IFileSystem;
 import org.ocpteam.misc.JLG;
+import org.ocpteam.misc.LOG;
 import org.ocpteam.serializable.User;
 
 import com.jcraft.jsch.ChannelSftp.LsEntry;
@@ -45,7 +46,7 @@ public class SFTPFileSystem implements IFileSystem {
 			JLG.mkdir(dir);
 			IFile d = getFile(path);
 			for (IFile child : d.listFiles()) {
-				JLG.debug("child: " + child.getName());
+				LOG.debug("child: " + child.getName());
 				checkout(path, child.getName(), dir);
 			}
 		} else { // file
@@ -62,7 +63,7 @@ public class SFTPFileSystem implements IFileSystem {
 		if (file.isDirectory()) {
 			mkdir(remoteDir, file.getName());
 			for (File child : file.listFiles()) {
-				JLG.debug("child: " + child.getName());
+				LOG.debug("child: " + child.getName());
 				commit(remoteDir + file.getName(), child);
 			}
 		} else {

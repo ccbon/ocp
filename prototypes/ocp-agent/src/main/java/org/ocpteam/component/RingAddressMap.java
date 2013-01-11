@@ -13,6 +13,7 @@ import org.ocpteam.interfaces.IAddressMap;
 import org.ocpteam.interfaces.IDataStore;
 import org.ocpteam.interfaces.INodeMap;
 import org.ocpteam.misc.JLG;
+import org.ocpteam.misc.LOG;
 import org.ocpteam.serializable.Address;
 import org.ocpteam.serializable.Contact;
 import org.ocpteam.serializable.EOMObject;
@@ -132,7 +133,7 @@ public class RingAddressMap extends DSContainer<AddressDataSource> implements
 		Contact predecessor = ringNodeMap.getPredecessor(ds().getNode());
 		if (predecessor.isMyself()) {
 			if (ds().agent.isFirstAgent()) {
-				JLG.debug("first agent: ds=" + ds().getName());
+				LOG.debug("first agent: ds=" + ds().getName());
 				return;
 			} else {
 				ds().client.getExecutor().execute(new Runnable() {
@@ -196,7 +197,7 @@ public class RingAddressMap extends DSContainer<AddressDataSource> implements
 			getLocalMap().putAll(map);
 			contact = ds().nodeMap.getSuccessor(contact.getNode());
 			if (contact == firstContact) {
-				JLG.debug("break copyRing");
+				LOG.debug("break copyRing");
 				break;
 			}
 		}

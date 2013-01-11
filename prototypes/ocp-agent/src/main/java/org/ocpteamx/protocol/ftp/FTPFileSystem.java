@@ -10,6 +10,7 @@ import org.apache.commons.net.ftp.FTPFileFilter;
 import org.ocpteam.interfaces.IFile;
 import org.ocpteam.interfaces.IFileSystem;
 import org.ocpteam.misc.JLG;
+import org.ocpteam.misc.LOG;
 
 public class FTPFileSystem implements IFileSystem {
 
@@ -53,7 +54,7 @@ public class FTPFileSystem implements IFileSystem {
 
 		// Check if FTPFile is a regular file
 		if (ftpFile.isFile()) {
-			JLG.debug("FTPFile: " + ftpFile.getName() + "; "
+			LOG.debug("FTPFile: " + ftpFile.getName() + "; "
 					+ ftpFile.getSize());
 			fos = new FileOutputStream(new File(localDir, ftpFile.getName()));
 			ftp.retrieveFile(ftpFile.getName(), fos);
@@ -73,7 +74,7 @@ public class FTPFileSystem implements IFileSystem {
 		for (FTPFile ftpFile : ftpFiles) {
 			// Check if FTPFile is a regular file
 			if (ftpFile.isFile()) {
-				JLG.debug("FTPFile: " + ftpFile.getName() + "; "
+				LOG.debug("FTPFile: " + ftpFile.getName() + "; "
 						+ ftpFile.getSize());
 				fos = new FileOutputStream(
 						new File(localDir, ftpFile.getName()));
@@ -95,7 +96,7 @@ public class FTPFileSystem implements IFileSystem {
 		if (file.isDirectory()) {
 			ftp.mkd(remoteDir + file.getName());
 			for (File child : file.listFiles()) {
-				JLG.debug("child: " + child.getName());
+				LOG.debug("child: " + child.getName());
 				commit(remoteDir + file.getName(), child);
 			}
 		} else {

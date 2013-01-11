@@ -12,6 +12,7 @@ import org.ocpteam.interfaces.IDataStore;
 import org.ocpteam.interfaces.INodeMap;
 import org.ocpteam.interfaces.IPersistentMap;
 import org.ocpteam.misc.JLG;
+import org.ocpteam.misc.LOG;
 import org.ocpteam.serializable.Address;
 import org.ocpteam.serializable.Contact;
 import org.ocpteam.serializable.EOMObject;
@@ -58,7 +59,7 @@ public abstract class AddressDataSource extends DSPDataSource {
 		if (usesComponent(IPersistentMap.class)) {
 			String dir = getProperty("uri", System.getenv("TEMP") + "/"
 					+ getProtocolName() + "/" + getName());
-			JLG.debug("dir=" + dir);
+			LOG.debug("dir=" + dir);
 			String uri = getProperty("datastore.uri", dir);
 			
 			getComponent(IPersistentMap.class).setURI(uri);
@@ -112,10 +113,10 @@ public abstract class AddressDataSource extends DSPDataSource {
 					break;
 				}
 				Address key = (Address) serializable;
-				JLG.debug("address=" + key);
+				LOG.debug("address=" + key);
 				byte[] value = (byte[]) protocol.getStreamSerializer()
 						.readObject(socket);
-				JLG.debug("sha1(value)=" + JLG.sha1(value));
+				LOG.debug("sha1(value)=" + JLG.sha1(value));
 				localmap.put(key, value);
 			}
 			contactMap.getTcpClient(c).returnSocket(socket);
@@ -126,7 +127,7 @@ public abstract class AddressDataSource extends DSPDataSource {
 		} catch (NotAvailableContactException e) {
 		} finally {
 			if (socket != null) {
-				JLG.debug("about to close the socket. For info socket buffer size:"
+				LOG.debug("about to close the socket. For info socket buffer size:"
 						+ socket.getReceiveBufferSize());
 				socket.close();
 				socket = null;

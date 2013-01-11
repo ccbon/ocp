@@ -8,7 +8,7 @@ import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
-import org.ocpteam.misc.JLG;
+import org.ocpteam.misc.LOG;
 
 
 public class RenameRemoteFileAction extends Action {
@@ -23,7 +23,7 @@ public class RenameRemoteFileAction extends Action {
 
 	@Override
 	public void run() {
-		JLG.debug("Rename");
+		LOG.debug("Rename");
 		final TableItem item = composite.remoteDirectoryTable.getSelection()[0];
 		final String name = item.getText(0);
 		final Text text = new Text(item.getParent(), SWT.BORDER);
@@ -49,7 +49,7 @@ public class RenameRemoteFileAction extends Action {
 					break;
 				default:
 				}
-				JLG.debug("keypressed: keycode:" + e.keyCode
+				LOG.debug("keypressed: keycode:" + e.keyCode
 						+ " and character = '" + e.character + "'");
 			};
 		});

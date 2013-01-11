@@ -9,6 +9,7 @@ import org.ocpteam.component.ContactMap;
 import org.ocpteam.component.NATTraversal;
 import org.ocpteam.core.TopContainer;
 import org.ocpteam.misc.JLG;
+import org.ocpteam.misc.LOG;
 import org.ocpteamx.protocol.dht0.DHTDataSource;
 
 public class DHTConnect extends TopContainer {
@@ -38,7 +39,7 @@ public class DHTConnect extends TopContainer {
 		super.init();
 		n = 10;
 		port = 40000;
-		JLG.debug_on();
+		LOG.debug_on();
 		JLG.bUseSet = true;
 		JLG.set.add(DHTConnect.class.getName());
 		// JLG.set.add(TCPServer.class.getName());
@@ -83,17 +84,17 @@ public class DHTConnect extends TopContainer {
 		for (int i = 0; i < n; i++) {
 			ds[i].connect();
 			ContactMap cm = ds[i].getComponent(ContactMap.class);
-			JLG.debug("ds[" + i + "] contact map size: " + cm.size());
+			LOG.debug("ds[" + i + "] contact map size: " + cm.size());
 			assertEquals(i + 1, cm.size());
 		}
 		for (int i = 0; i < n; i++) {
 			ContactMap cm = ds[i].getComponent(ContactMap.class);
-			JLG.debug("ds[" + i + "] contact map size: " + cm.size());
+			LOG.debug("ds[" + i + "] contact map size: " + cm.size());
 			assertEquals(n, cm.size());
 		}
 
 		// disconnect the #1
-		JLG.debug("disconnect 1");
+		LOG.debug("disconnect 1");
 		ds[1].disconnect();
 		ds[1].getComponent(ContactMap.class).removeAll();
 		ds[3].disconnect();
@@ -110,13 +111,13 @@ public class DHTConnect extends TopContainer {
 			JLG.println("ds[" + i + "] contact map size: " + cm.size());
 		}
 
-		JLG.debug("reconnect 1");
+		LOG.debug("reconnect 1");
 		ds[1].connect();
 		for (int i = 0; i < n; i++) {
 			ContactMap cm = ds[i].getComponent(ContactMap.class);
 			JLG.println("ds[" + i + "] contact map size: " + cm.size() + ": " + cm.values());
 		}
-		JLG.debug("reconnect 3");
+		LOG.debug("reconnect 3");
 		ds[3].connect();
 		for (int i = 0; i < n; i++) {
 			ContactMap cm = ds[i].getComponent(ContactMap.class);

@@ -8,7 +8,7 @@ import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
-import org.ocpteam.misc.JLG;
+import org.ocpteam.misc.LOG;
 
 
 public class RenameFileAction extends Action {
@@ -23,7 +23,7 @@ public class RenameFileAction extends Action {
 
 	@Override
 	public void run() {
-		JLG.debug("Rename");
+		LOG.debug("Rename");
 		final TableItem item = composite.localDirectoryTable.getSelection()[0];
 		final String name = item.getText(0);
 		final Text text = new Text(item.getParent(), SWT.BORDER);
@@ -38,7 +38,7 @@ public class RenameFileAction extends Action {
 				case SWT.KEYPAD_CR:
 				case '\r':
 					if ((text.getText() != "") && (!name.equals(text.getText()))) {
-						JLG.debug("renaming...");
+						LOG.debug("renaming...");
 						composite.renameLocalFile(name, text.getText());
 						item.setText(0, text.getText());
 					}
@@ -49,7 +49,7 @@ public class RenameFileAction extends Action {
 					break;
 				default:
 				}
-				JLG.debug("keypressed: keycode:" + e.keyCode
+				LOG.debug("keypressed: keycode:" + e.keyCode
 						+ " and character = '" + e.character + "'");
 			};
 		});
@@ -57,9 +57,9 @@ public class RenameFileAction extends Action {
 			@Override
 			public void focusLost(FocusEvent e) {
 				if ((text.getText() != "") && (!name.equals(text.getText()))) {
-					JLG.debug("renaming2...");
-					JLG.debug("name = |" + name + "|");
-					JLG.debug("text.getText() = |" + text.getText() + "|");
+					LOG.debug("renaming2...");
+					LOG.debug("name = |" + name + "|");
+					LOG.debug("text.getText() = |" + text.getText() + "|");
 					composite.renameLocalFile(name, text.getText());
 					item.setText(0, text.getText());
 				}

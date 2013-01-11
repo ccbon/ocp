@@ -5,7 +5,7 @@ import java.net.URI;
 import org.ocpteam.core.Container;
 import org.ocpteam.interfaces.IListener;
 import org.ocpteam.interfaces.IProtocol;
-import org.ocpteam.misc.JLG;
+import org.ocpteam.misc.LOG;
 
 public class UDPListener extends Container<DataSource> implements IListener {
 
@@ -45,7 +45,7 @@ public class UDPListener extends Container<DataSource> implements IListener {
 
 	@Override
 	public void stop() {
-		JLG.debug("stopping tcp listener");
+		LOG.debug("stopping tcp listener");
 		if (usesComponent(NATTraversal.class)) {
 			getComponent(NATTraversal.class).unmap();
 		}

@@ -3,7 +3,7 @@ package org.ocpteam.ui.swt;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.graphics.ImageData;
-import org.ocpteam.misc.JLG;
+import org.ocpteam.misc.LOG;
 
 
 public class OpenConsoleAction extends Action {
@@ -26,7 +26,7 @@ public class OpenConsoleAction extends Action {
 
 	@Override
 	public void run() {
-		JLG.debug("Opening Console");
+		LOG.debug("Opening Console");
 		window.open();
 	}
 

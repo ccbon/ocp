@@ -11,6 +11,7 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.ocpteam.interfaces.IMarshaler;
 import org.ocpteam.misc.JLG;
+import org.ocpteam.misc.LOG;
 import org.ocpteam.misc.Structure;
 
 public class FListMarshaler implements IMarshaler {
@@ -23,10 +24,10 @@ public class FListMarshaler implements IMarshaler {
 		private int maxField = 0;
 
 		public TabInfo(Structure s) throws Exception {
-			JLG.debug("Call TabInfo with s.name=" + s.getName());
+			LOG.debug("Call TabInfo with s.name=" + s.getName());
 			initMaxLevel(s, 0);
 			init(s, 0);
-			JLG.debug("maxlevel=" + maxLevel);
+			LOG.debug("maxlevel=" + maxLevel);
 			tabeltid = maxLevel + 1 + maxField + 2;
 		}
 
@@ -64,7 +65,7 @@ public class FListMarshaler implements IMarshaler {
 			if (s == null) {
 				return;
 			}
-			JLG.debug("structure name = " + s.getName());
+			LOG.debug("structure name = " + s.getName());
 			if (s.getName() == null) {
 				throw new Exception("Struture without name.");
 			}
@@ -108,7 +109,7 @@ public class FListMarshaler implements IMarshaler {
 		public String fieldeltid;
 
 		public FListLine(String buffer) {
-			JLG.debug("buffer=" + buffer);
+			LOG.debug("buffer=" + buffer);
 			String[] sa = buffer.split("\\s+", 5);
 			level = Integer.parseInt(sa[0]);
 			fieldname = sa[1];
@@ -117,11 +118,11 @@ public class FListMarshaler implements IMarshaler {
 			if (sa.length > 4) {
 				fieldvalue = sa[4];
 			}
-			JLG.debug("level=" + level);
-			JLG.debug("fieldname=" + fieldname);
-			JLG.debug("fieldtype=" + fieldtype);
-			JLG.debug("fieldeltid=" + fieldeltid);
-			JLG.debug("fieldvalue=" + fieldvalue);
+			LOG.debug("level=" + level);
+			LOG.debug("fieldname=" + fieldname);
+			LOG.debug("fieldtype=" + fieldtype);
+			LOG.debug("fieldeltid=" + fieldeltid);
+			LOG.debug("fieldvalue=" + fieldvalue);
 		}
 
 		public boolean hasNullValue() {
@@ -153,17 +154,17 @@ public class FListMarshaler implements IMarshaler {
 
 	@Override
 	public Structure unmarshal(byte[] array) throws Exception {
-		JLG.debug("array=" + new String(array));
+		LOG.debug("array=" + new String(array));
 		return fromFList(new String(array));
 	}
 
 	private Structure fromFList(String string) throws Exception {
-		JLG.debug("string=" + JLG.NL + string);
+		LOG.debug("string=" + JLG.NL + string);
 		Structure s = new Structure();
 		BufferedReader br = new BufferedReader(new StringReader(string));
 		fromFList(s, br, 0);
 		br.close();
-		JLG.debug("structure=" + s);
+		LOG.debug("structure=" + s);
 		return s;
 
 	}
@@ -299,7 +300,7 @@ public class FListMarshaler implements IMarshaler {
 		try {
 			String result = new String();
 			result += format(level, "[" + s.getName() + "]", "", 0, "", tabInfo);
-			JLG.debug("Object=" + s.getName() + " | Fields="
+			LOG.debug("Object=" + s.getName() + " | Fields="
 					+ s.getFields().keySet());
 			String[] set = (String[]) s.getFields().keySet()
 					.toArray(new String[0]);
@@ -312,7 +313,7 @@ public class FListMarshaler implements IMarshaler {
 			});
 			for (String name : set) {
 				String type = s.getField(name).getType();
-				JLG.debug("Field=" + name + " | Type=" + type);
+				LOG.debug("Field=" + name + " | Type=" + type);
 				if (type.equals(Structure.TYPE_BYTES)) {
 					byte[] array = (byte[]) s.getFields().get(name).getValue();
 					String value = Base64.encodeBase64URLSafeString(array);
@@ -323,7 +324,7 @@ public class FListMarshaler implements IMarshaler {
 					result += format(level, name, type, 0, value, tabInfo);
 				} else if (type.equals(Structure.TYPE_SUBSTRUCT)) {
 					Structure value = (Structure) s.getField(name).getValue();
-					JLG.debug("Field=" + name + " | type=" + type + " | value="
+					LOG.debug("Field=" + name + " | type=" + type + " | value="
 							+ value);
 					if (value == null) {
 						result += format(level, name, type, 0, VALUE_NULL,

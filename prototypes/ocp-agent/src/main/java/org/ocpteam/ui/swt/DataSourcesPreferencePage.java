@@ -12,7 +12,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.ocpteam.component.DataSource;
-import org.ocpteam.misc.JLG;
+import org.ocpteam.misc.LOG;
 import org.ocpteam.ui.swt.DataSourceWindow.MyPreferenceStore;
 
 public class DataSourcesPreferencePage extends PreferencePage {
@@ -35,14 +35,14 @@ public class DataSourcesPreferencePage extends PreferencePage {
 
 		list = new ArrayList<Button>();
 		this.ps = (MyPreferenceStore) getPreferenceStore();
-		JLG.debug("ps=" + ps);
+		LOG.debug("ps=" + ps);
 				
 		for (DataSource ds : ps.w.dsf.getDataSourceOrderedList()) {
 			Button btn = new Button(composite, SWT.CHECK);
 			btn.setText(ds.getProtocolName());
 			boolean b = this.ps.getBoolean(DS_PREFIX + ds.getProtocolName());
 			btn.setSelection(b);
-			JLG.debug(DS_PREFIX + ds.getProtocolName() + "=" + b);
+			LOG.debug(DS_PREFIX + ds.getProtocolName() + "=" + b);
 			new Label(composite, SWT.NONE);
 			list.add(btn);
 		}
@@ -62,7 +62,7 @@ public class DataSourcesPreferencePage extends PreferencePage {
 				}
 			}
 			btn.setSelection(b);
-			JLG.debug(DS_PREFIX + btn.getText() + "=" + b);
+			LOG.debug(DS_PREFIX + btn.getText() + "=" + b);
 		}
 	}
 
@@ -70,7 +70,7 @@ public class DataSourcesPreferencePage extends PreferencePage {
 	protected void performApply() {
 		for (Button btn : list) {
 			ps.setValue(DS_PREFIX + btn.getText(), btn.getSelection());
-			JLG.debug("ds." + btn.getText());
+			LOG.debug("ds." + btn.getText());
 		}
 		try {
 			ps.save();

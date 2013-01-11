@@ -8,6 +8,7 @@ import org.junit.Test;
 import org.ocpteam.component.ContactMap;
 import org.ocpteam.component.FListSerializer;
 import org.ocpteam.misc.JLG;
+import org.ocpteam.misc.LOG;
 import org.ocpteamx.protocol.dht2.DHT2DataSource;
 
 public class DHT2Test {
@@ -21,7 +22,7 @@ public class DHT2Test {
 		try {
 			int n = 10;
 			int port = 40000;
-			JLG.debug_on();
+			LOG.debug_on();
 			JLG.bUseSet = true;
 			JLG.set.add(DHT2Test.class.getName());
 			JLG.set.add(FListSerializer.class.getName());
@@ -57,23 +58,23 @@ public class DHT2Test {
 			for (int i = 1; i < n; i++) {
 				ds[i].connect();
 				ContactMap cm = ds[i].getComponent(ContactMap.class);
-				JLG.debug("ds[" + i + "] contact map size: " + cm.size());
+				LOG.debug("ds[" + i + "] contact map size: " + cm.size());
 				assertEquals(i + 1, cm.size());
 			}
 			ds[0].dm.set("coucou", "suzana");
-			JLG.debug("keyset: " + ds[0].dm.keySet());
+			LOG.debug("keyset: " + ds[0].dm.keySet());
 			ds[0].dm.remove("hello");
 			ds[0].networkPicture();
 			
 			ds[0].disconnectHard();
 			ds[1].contactMap.refreshContactList();
 			ds[1].client.waitForCompletion();
-			JLG.debug("-------------------------------------");
+			LOG.debug("-------------------------------------");
 			ds[1].networkPicture();
 			
-			JLG.debug("coucou->" + ds[1].dm.get("coucou"));
+			LOG.debug("coucou->" + ds[1].dm.get("coucou"));
 			for (int i = 1; i < n; i++) {
-				JLG.debug("disconnecting " + ds[i].getName());
+				LOG.debug("disconnecting " + ds[i].getName());
 				ds[i].disconnectHard();
 			}
 

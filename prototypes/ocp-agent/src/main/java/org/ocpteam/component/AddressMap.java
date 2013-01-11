@@ -13,6 +13,7 @@ import org.ocpteam.interfaces.IAddressMap;
 import org.ocpteam.interfaces.IDataStore;
 import org.ocpteam.interfaces.INodeMap;
 import org.ocpteam.misc.JLG;
+import org.ocpteam.misc.LOG;
 import org.ocpteam.serializable.Address;
 import org.ocpteam.serializable.Contact;
 import org.ocpteam.serializable.EOMObject;
@@ -78,7 +79,7 @@ public class AddressMap extends DSContainer<AddressDataSource> implements IAddre
 		Contact predecessor = nodeMap.getPredecessor(ds().getNode());
 		if (predecessor.isMyself()) {
 			if (ds().agent.isFirstAgent()) {
-				JLG.debug("first agent: ds=" + ds().getName());
+				LOG.debug("first agent: ds=" + ds().getName());
 				return;
 			}
 		}

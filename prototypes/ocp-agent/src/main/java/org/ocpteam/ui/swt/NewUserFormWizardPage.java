@@ -11,7 +11,7 @@ import org.eclipse.swt.widgets.Text;
 import org.ocpteam.component.DataSource;
 import org.ocpteam.interfaces.ICaptcha;
 import org.ocpteam.interfaces.IUserCreation;
-import org.ocpteam.misc.JLG;
+import org.ocpteam.misc.LOG;
 
 public class NewUserFormWizardPage extends WizardPage {
 	Text usernameText;
@@ -69,7 +69,7 @@ public class NewUserFormWizardPage extends WizardPage {
 	
 	@Override
 	public boolean isPageComplete() {
-		JLG.debug("isPageComplete");
+		LOG.debug("isPageComplete");
 		if (usernameText.getText().equals("")) {
 			return false;
 		}
@@ -81,7 +81,7 @@ public class NewUserFormWizardPage extends WizardPage {
 	}
 	
 	public void onNextPage() throws Exception {
-		JLG.debug("onNextPage");
+		LOG.debug("onNextPage");
 		NewUserWizard wizard = (NewUserWizard) getWizard();
 		DataSource ds = wizard.window.ds;
 		IUserCreation uc = ds.getComponent(IUserCreation.class);

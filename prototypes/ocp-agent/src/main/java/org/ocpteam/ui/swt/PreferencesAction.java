@@ -6,7 +6,7 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.preference.PreferenceDialog;
 import org.eclipse.jface.preference.PreferenceManager;
 import org.eclipse.jface.preference.PreferenceNode;
-import org.ocpteam.misc.JLG;
+import org.ocpteam.misc.LOG;
 
 public class PreferencesAction extends Action {
 	public static ResourceBundle defaultPreferences = ResourceBundle
@@ -23,7 +23,7 @@ public class PreferencesAction extends Action {
 
 	@Override
 	public void run() {
-		JLG.debug("Start preferences");
+		LOG.debug("Start preferences");
 		try {
 			// Create the preference manager
 			PreferenceManager mgr = new PreferenceManager();

@@ -55,7 +55,7 @@ import org.ocpteam.interfaces.IFileSystem;
 import org.ocpteam.interfaces.IMapDataModel;
 import org.ocpteam.interfaces.IUserCreation;
 import org.ocpteam.interfaces.IUserManagement;
-import org.ocpteam.misc.JLG;
+import org.ocpteam.misc.LOG;
 import org.ocpteam.misc.swt.QuickMessage;
 
 public class DataSourceWindow extends ApplicationWindow implements IComponent {
@@ -264,7 +264,7 @@ public class DataSourceWindow extends ApplicationWindow implements IComponent {
 		newDataSourceActionMap = new HashMap<String, NewDataSourceAction>();
 		for (DataSource ds : dsf.getDataSourceList()) {
 			String protocol = ds.getProtocolName();
-			JLG.debug("ds=" + ds.getClass());
+			LOG.debug("ds=" + ds.getClass());
 			newDataSourceActionMap.put(protocol, new NewDataSourceAction(this,
 					protocol));
 		}
@@ -362,7 +362,7 @@ public class DataSourceWindow extends ApplicationWindow implements IComponent {
 		List<DataSource> list = dsf.getDataSourceOrderedList();
 		for (DataSource ds : list) {
 			String protocol = ds.getProtocolName();
-			JLG.debug("ds=" + ds.getClass());
+			LOG.debug("ds=" + ds.getClass());
 			if (ps.getBoolean("ds." + protocol)) {
 				menuManager.add(newDataSourceActionMap.get(protocol));
 			}
@@ -435,19 +435,19 @@ public class DataSourceWindow extends ApplicationWindow implements IComponent {
 	}
 
 	public void viewDataModel() throws Exception {
-		JLG.debug("viewDataModel");
+		LOG.debug("viewDataModel");
 		if (context == null) {
 			throw new Exception("missing context");
 		}
 		IDataModel dm = context.getDataModel();
-		JLG.debug("dm=" + dm);
+		LOG.debug("dm=" + dm);
 
 		if (explorerCTabItem == null) {
 			explorerCTabItem = new CTabItem(tabFolder, SWT.NONE);
 			explorerCTabItem.addDisposeListener(new DisposeListener() {
 				@Override
 				public void widgetDisposed(DisposeEvent arg0) {
-					JLG.debug("on dispose event");
+					LOG.debug("on dispose event");
 					explorerCTabItem = null;
 				}
 			});
@@ -470,7 +470,7 @@ public class DataSourceWindow extends ApplicationWindow implements IComponent {
 		}
 		tabFolder.setSelection(explorerCTabItem);
 
-		JLG.debug("viewExplorer done.");
+		LOG.debug("viewExplorer done.");
 
 	}
 
@@ -526,13 +526,13 @@ public class DataSourceWindow extends ApplicationWindow implements IComponent {
 
 	public void openDataSource(DataSource ds) throws Exception {
 		try {
-			JLG.debug("datasource=" + ds);
+			LOG.debug("datasource=" + ds);
 			this.ds = ds;
 			manageNATTraversal();
 			ds.readConfig();
-			JLG.debug("About to connect");
+			LOG.debug("About to connect");
 			ds.connect();
-			JLG.debug("Connected: " + ds.isConnected());
+			LOG.debug("Connected: " + ds.isConnected());
 			refresh();
 			addProtocolMenu();
 			if (isDaemon()) {
@@ -558,7 +558,7 @@ public class DataSourceWindow extends ApplicationWindow implements IComponent {
 
 	private void manageNATTraversal() {
 		if (ps.getBoolean(GeneralPreferencePage.NO_NAT_TRAVERSAL)) {
-			JLG.debug("Removing NATTraversal");
+			LOG.debug("Removing NATTraversal");
 			if (ds.usesComponent(TCPListener.class)) {
 				ds.getComponent(TCPListener.class).removeComponent(
 						NATTraversal.class);
@@ -571,7 +571,7 @@ public class DataSourceWindow extends ApplicationWindow implements IComponent {
 	}
 
 	public void closeDataSource() throws Exception {
-		JLG.debug("Close datasource");
+		LOG.debug("Close datasource");
 		ds.disconnect();
 		ds.close();
 		if (isDaemon()) {
@@ -620,7 +620,7 @@ public class DataSourceWindow extends ApplicationWindow implements IComponent {
 
 			@Override
 			public void handleEvent(Event arg0) {
-				JLG.debug("coucou");
+				LOG.debug("coucou");
 				myMenu.setVisible(true);
 				menu.setVisible(true);
 			}
@@ -634,7 +634,7 @@ public class DataSourceWindow extends ApplicationWindow implements IComponent {
 
 			@Override
 			public void widgetDefaultSelected(SelectionEvent arg0) {
-				JLG.debug("item default selected");
+				LOG.debug("item default selected");
 				new OpenConsoleAction(DataSourceWindow.this).run();
 			}
 		});
@@ -656,7 +656,7 @@ public class DataSourceWindow extends ApplicationWindow implements IComponent {
 			protocolMenu = menu;
 		} catch (Exception e) {
 			// e.printStackTrace();
-			JLG.debug("no specific menu for " + ds.getProtocolName());
+			LOG.debug("no specific menu for " + ds.getProtocolName());
 		}
 		if (protocolMenu != null) {
 			MenuManager menuBar = getMenuBarManager();

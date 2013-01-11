@@ -4,7 +4,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Properties;
 
-import org.ocpteam.misc.JLG;
+import org.ocpteam.misc.LOG;
 
 public class TopContainer implements IContainer {
 
@@ -128,7 +128,7 @@ public class TopContainer implements IContainer {
 
 	@Override
 	public void init() throws Exception {
-		JLG.debug("init class " + getClass());
+		LOG.debug("init class " + getClass());
 		Iterator<Object> it = designer.iterator();
 		while (it.hasNext()) {
 			Object o = it.next();

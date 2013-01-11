@@ -7,6 +7,7 @@ import java.util.Set;
 import org.ocpteam.interfaces.IDataStore;
 import org.ocpteam.interfaces.IPersistentMap;
 import org.ocpteam.misc.JLG;
+import org.ocpteam.misc.LOG;
 import org.ocpteam.serializable.Address;
 
 public class PersistentFileMap implements IPersistentMap {
@@ -30,7 +31,7 @@ public class PersistentFileMap implements IPersistentMap {
 			JLG.rm(dir);
 			JLG.mkdir(dir);
 		} catch (Exception e) {
-			JLG.error(e);
+			LOG.error(e);
 		}
 	}
 
@@ -45,7 +46,7 @@ public class PersistentFileMap implements IPersistentMap {
 			}
 
 		} catch (Exception e) {
-			JLG.error(e);
+			LOG.error(e);
 		}
 		return false;
 	}
@@ -59,7 +60,7 @@ public class PersistentFileMap implements IPersistentMap {
 				return content;
 			}
 		} catch (Exception e) {
-			JLG.error(e);
+			LOG.error(e);
 		}
 		return null;
 	}
@@ -73,7 +74,7 @@ public class PersistentFileMap implements IPersistentMap {
 				result.add(address);
 			}
 		} catch (Exception e) {
-			JLG.error(e);
+			LOG.error(e);
 		}
 
 		return result;
@@ -85,7 +86,7 @@ public class PersistentFileMap implements IPersistentMap {
 			File file = new File(dir, JLG.bytesToHex(key.getBytes()));
 			JLG.setBinaryFile(file, value);
 		} catch (Exception e) {
-			JLG.error(e);
+			LOG.error(e);
 		}
 	}
 
@@ -105,7 +106,7 @@ public class PersistentFileMap implements IPersistentMap {
 				file.delete();
 			}
 		} catch (Exception e) {
-			JLG.error(e);
+			LOG.error(e);
 		}
 	}
 }

@@ -26,7 +26,7 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
-import org.ocpteam.misc.JLG;
+import org.ocpteam.misc.LOG;
 import org.ocpteam.ui.swt.DataSourceWindow.MyPreferenceStore;
 
 public class NetworkPrefPage extends PreferencePage {
@@ -190,7 +190,7 @@ public class NetworkPrefPage extends PreferencePage {
 		btnSet.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				JLG.debug("Add entry");
+				LOG.debug("Add entry");
 				InsertKeyDialog dialog = new InsertKeyDialog(getShell());
 				dialog.open();
 				refreshTable();
@@ -255,7 +255,7 @@ public class NetworkPrefPage extends PreferencePage {
 
 	@Override
 	public boolean performOk() {
-		JLG.debug("Network performApply");
+		LOG.debug("Network performApply");
 		MyPreferenceStore ps = (MyPreferenceStore) getPreferenceStore();
 		if (btnJoinAnExisting.getSelection()) {
 			ps.w.ds.setProperty("sponsor.1", text.getText());

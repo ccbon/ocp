@@ -15,7 +15,7 @@ import org.ocpteam.interfaces.IPersistentMap;
 import org.ocpteam.interfaces.IUserCreation;
 import org.ocpteam.interfaces.IUserManagement;
 import org.ocpteam.misc.Id;
-import org.ocpteam.misc.JLG;
+import org.ocpteam.misc.LOG;
 import org.ocpteam.serializable.Contact;
 
 public class OCPDataSource extends DSPDataSource {
@@ -95,7 +95,7 @@ public class OCPDataSource extends DSPDataSource {
 				c.nodeIdSet.add(nodeId);
 			}
 		}
-		JLG.debug("toContact: " + c);
+		LOG.debug("toContact: " + c);
 		return c;
 	}
 

@@ -4,7 +4,7 @@ import java.io.File;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.swt.widgets.TableItem;
-import org.ocpteam.misc.JLG;
+import org.ocpteam.misc.LOG;
 
 
 public class CommitAction extends Action {
@@ -22,7 +22,7 @@ public class CommitAction extends Action {
 
 	@Override
 	public void run() {
-		JLG.debug("Commit");
+		LOG.debug("Commit");
 		if (!(w.explorerComposite instanceof ExplorerComposite)) {
 			return;			
 		}

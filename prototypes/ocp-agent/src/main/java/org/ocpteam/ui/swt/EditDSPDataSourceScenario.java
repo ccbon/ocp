@@ -8,7 +8,7 @@ import org.eclipse.jface.preference.PreferenceNode;
 import org.eclipse.swt.widgets.Shell;
 import org.ocpteam.component.PersistentFileMap;
 import org.ocpteam.interfaces.IPersistentMap;
-import org.ocpteam.misc.JLG;
+import org.ocpteam.misc.LOG;
 import org.ocpteam.ui.swt.DataSourceWindow.MyPreferenceStore;
 
 public class EditDSPDataSourceScenario implements IScenario {
@@ -23,7 +23,7 @@ public class EditDSPDataSourceScenario implements IScenario {
 
 	@Override
 	public void run() throws Exception {
-		JLG.debug("Starting new DataSource senario");
+		LOG.debug("Starting new DataSource senario");
 		Shell shell = new Shell(w.getShell().getDisplay());
 		// Create the preference manager
 		PreferenceManager prefManager = new PreferenceManager();

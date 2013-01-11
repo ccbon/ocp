@@ -10,11 +10,12 @@ import org.ocpteam.component.Protocol;
 import org.ocpteam.component.TCPListener;
 import org.ocpteam.interfaces.IProtocol;
 import org.ocpteam.misc.JLG;
+import org.ocpteam.misc.LOG;
 import org.ocpteam.network.TCPClient;
 
 public class BigMessageTest {
 	public static void main(String[] args) {
-		JLG.debug_on();
+		LOG.debug_on();
 		try {
 			IProtocol p = new MyProtocol();
 			TCPListener l = new TCPListener();
@@ -27,7 +28,7 @@ public class BigMessageTest {
 
 			Socket socket = c.borrowSocket();
 			int bufferSize = socket.getSendBufferSize();
-			JLG.debug("bufferSize=" + bufferSize);
+			LOG.debug("bufferSize=" + bufferSize);
 			DataInputStream in = new DataInputStream(socket.getInputStream());
 			DataOutputStream out = new DataOutputStream(
 					socket.getOutputStream());
@@ -36,9 +37,9 @@ public class BigMessageTest {
 			int n = 10000;
 			out.writeInt(n);
 			out.flush();
-			JLG.debug("big message sent.");
+			LOG.debug("big message sent.");
 			int nbr = in.readInt();
-			JLG.debug("new length received: " + nbr);
+			LOG.debug("new length received: " + nbr);
 
 			if (n != nbr) {
 				throw new Exception("length differs");
@@ -48,11 +49,11 @@ public class BigMessageTest {
 				out.flush();
 
 				int size = in.readInt();
-				JLG.debug("object length: " + size);
+				LOG.debug("object length: " + size);
 				byte[] buffer = new byte[size];
 				in.read(buffer, 0, size);
 				Serializable s = JLG.deserialize(buffer);
-				JLG.debug("serializable=" + s);
+				LOG.debug("serializable=" + s);
 			}
 			l.stop();
 			c.returnSocket(socket);
@@ -69,21 +70,21 @@ class MyProtocol extends Protocol {
 		DataInputStream in = new DataInputStream(clientSocket.getInputStream());
 		DataOutputStream out = new DataOutputStream(clientSocket.getOutputStream());
 		// read the first object
-		JLG.debug("about to read object");
+		LOG.debug("about to read object");
 		int n = in.readInt();
-		JLG.debug("n = " + n);
+		LOG.debug("n = " + n);
 		out.writeInt(n);
 		out.flush();
-		JLG.debug("length sent");
+		LOG.debug("length sent");
 		for (int i = 0; i < n; i++) {
 			int x = in.readInt();
 			byte[] s = JLG.serialize(new MyObject(x));
 			out.writeInt(s.length);
 			out.write(s);
 			out.flush();
-			JLG.debug("object sent: " + x);
+			LOG.debug("object sent: " + x);
 		}
-		JLG.debug("end process");
+		LOG.debug("end process");
 	}
 }
 

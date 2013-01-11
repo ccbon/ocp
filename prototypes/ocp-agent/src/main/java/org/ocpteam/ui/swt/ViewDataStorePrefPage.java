@@ -11,7 +11,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.ocpteam.component.PersistentFileMap;
 import org.ocpteam.interfaces.IPersistentMap;
-import org.ocpteam.misc.JLG;
+import org.ocpteam.misc.LOG;
 import org.ocpteam.ui.swt.DataSourceWindow.MyPreferenceStore;
 
 public class ViewDataStorePrefPage extends PreferencePage {
@@ -33,7 +33,7 @@ public class ViewDataStorePrefPage extends PreferencePage {
 			public void widgetSelected(SelectionEvent e) {
 				try {
 					PersistentFileMap fs = (PersistentFileMap) ps.w.ds.getComponent(IPersistentMap.class);
-					JLG.debug("root path=" + fs.getURI());
+					LOG.debug("root path=" + fs.getURI());
 					Program.launch(fs.getURI());
 				} catch (Exception e1) {
 					e1.printStackTrace();

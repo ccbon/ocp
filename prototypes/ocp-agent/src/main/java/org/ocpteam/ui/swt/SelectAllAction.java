@@ -3,7 +3,7 @@ package org.ocpteam.ui.swt;
 import org.eclipse.jface.action.Action;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Table;
-import org.ocpteam.misc.JLG;
+import org.ocpteam.misc.LOG;
 
 
 public class SelectAllAction extends Action {
@@ -18,7 +18,7 @@ public class SelectAllAction extends Action {
 
 	@Override
 	public void run() {
-		JLG.debug("Select All");
+		LOG.debug("Select All");
 		Control c = window.getShell().getDisplay().getFocusControl();
 		if (c.getClass() == Table.class) {
 			Table t = (Table) c;

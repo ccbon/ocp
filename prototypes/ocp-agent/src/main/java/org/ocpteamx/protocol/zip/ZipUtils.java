@@ -8,22 +8,22 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
-import org.ocpteam.misc.JLG;
+import org.ocpteam.misc.LOG;
 
 public class ZipUtils {
 
 	public static void extract(File zipfile, String path, File file)
 			throws Exception {
-		JLG.debug("extracting from " + zipfile + " path=" + path);
+		LOG.debug("extracting from " + zipfile + " path=" + path);
 		ZipInputStream zipInputStream = null;
 		ZipEntry zipEntry = null;
 		byte[] buffer = new byte[2048];
 		try {
 			zipInputStream = new ZipInputStream(new FileInputStream(zipfile));
 			while ((zipEntry = zipInputStream.getNextEntry()) != null) {
-				JLG.debug("zip path=" + zipEntry.getName());
+				LOG.debug("zip path=" + zipEntry.getName());
 				if (zipEntry.getName().equalsIgnoreCase(path)) {
-					JLG.debug("found it.");
+					LOG.debug("found it.");
 					FileOutputStream fileoutputstream = new FileOutputStream(
 							file);
 					int n;
@@ -129,11 +129,11 @@ public class ZipUtils {
 			if (name.startsWith("/")) {
 				name = name.substring(1);
 			}
-			JLG.debug("name=" + name);
-			JLG.debug("oldname=" + oldname);
+			LOG.debug("name=" + name);
+			LOG.debug("oldname=" + oldname);
 			boolean toBeRenamed = false;
 			if (name.startsWith(oldname + "/") || name.equals(oldname)) {
-				JLG.debug("to be renamed.");
+				LOG.debug("to be renamed.");
 				toBeRenamed = true;
 			}
 			String newEntryName = name;
@@ -234,21 +234,21 @@ public class ZipUtils {
 				if (name.startsWith("/")) {
 					name = name.substring(1);
 				}
-				JLG.debug("name=" + name);
+				LOG.debug("name=" + name);
 
 				boolean toBeReplaced = false;
 				for (File f : files) {
 					String base = parent.getCanonicalFile().toURI().getPath();
 					String fname = f.getCanonicalFile().toURI().getPath()
 							.replaceFirst("\\Q" + base + "\\E", "");
-					JLG.debug("fname=" + fname);
+					LOG.debug("fname=" + fname);
 					if (!dir.equals("")) {
 						fname = dir + "/" + fname;
 					}
 					if (name.startsWith("/" + fname + "/")
 							|| name.startsWith(fname + "/")
 							|| name.equals("/" + fname) || name.equals(fname)) {
-						JLG.debug("to be replaced.");
+						LOG.debug("to be replaced.");
 						toBeReplaced = true;
 						break;
 					}
@@ -267,12 +267,12 @@ public class ZipUtils {
 			}
 
 			// add all the files
-			JLG.debug("Adding the new files");
+			LOG.debug("Adding the new files");
 			for (File f : files) {
 				String base = parent.getCanonicalFile().toURI().getPath();
 				String fname = f.getCanonicalFile().toURI().getPath()
 						.replaceFirst("\\Q" + base + "\\E", "");
-				JLG.debug("fname=" + fname);
+				LOG.debug("fname=" + fname);
 				if (!dir.equals("")) {
 					fname = dir + "/" + fname;
 				}

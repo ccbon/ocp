@@ -6,6 +6,7 @@ import java.util.Map;
 import org.ocpteam.interfaces.INodeMap;
 import org.ocpteam.misc.Id;
 import org.ocpteam.misc.JLG;
+import org.ocpteam.misc.LOG;
 import org.ocpteam.serializable.Address;
 import org.ocpteam.serializable.Contact;
 import org.ocpteam.serializable.Node;
@@ -22,7 +23,7 @@ public class RingNodeMap extends DSContainer<DSPDataSource> implements INodeMap 
 
 	public void readNetworkConfig() throws Exception {
 		setRingNbr(Integer.parseInt(ds().network.getProperty("ringNbr", "3")));
-		JLG.debug("ringNbr=" + ringNbr);
+		LOG.debug("ringNbr=" + ringNbr);
 	}
 	
 	@Override
@@ -38,8 +39,8 @@ public class RingNodeMap extends DSContainer<DSPDataSource> implements INodeMap 
 			rings.put(r, nodeMap);
 		}
 		rings.get(r).put(node, c);
-		JLG.debug("ringNodeMap contains " + getRoot().getName());
-		JLG.debug("ringNodeMap " + this);
+		LOG.debug("ringNodeMap contains " + getRoot().getName());
+		LOG.debug("ringNodeMap " + this);
 	}
 
 	@Override
@@ -102,17 +103,17 @@ public class RingNodeMap extends DSContainer<DSPDataSource> implements INodeMap 
 
 	public int getLessPopulatedRing() {
 		int size = rings.get(0).size();
-		JLG.debug("ring.size[0]=" + size);
+		LOG.debug("ring.size[0]=" + size);
 		int result = 0;
 		for (int i = 1; i < rings.size(); i++) {
 			int newSize = Math.min(size, rings.get(i).size());
-			JLG.debug("ring.size[" + i + "]=" + rings.get(i).size());
+			LOG.debug("ring.size[" + i + "]=" + rings.get(i).size());
 			if (newSize < size) {
 				result = i;
 				size = newSize;
 			}
 		}
-		JLG.debug("lessPopulatedRing=" + result);
+		LOG.debug("lessPopulatedRing=" + result);
 		return result;
 	}
 

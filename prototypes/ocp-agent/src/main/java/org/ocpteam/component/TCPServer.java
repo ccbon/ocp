@@ -12,7 +12,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import org.ocpteam.interfaces.IProtocol;
-import org.ocpteam.misc.JLG;
+import org.ocpteam.misc.LOG;
 
 public class TCPServer {
 
@@ -33,13 +33,13 @@ public class TCPServer {
 
 	public void start() {
 		pool = Executors.newCachedThreadPool();
-		JLG.debug("pool class=" + pool);
+		LOG.debug("pool class=" + pool);
 
 		pool.execute(new Runnable() {
 
 			@Override
 			public void run() {
-				JLG.debug("starting a TCP server thread on port:" + port);
+				LOG.debug("starting a TCP server thread on port:" + port);
 				try {
 					if (serverSocket != null) {
 						try {
@@ -52,7 +52,7 @@ public class TCPServer {
 					serverSocket.setReuseAddress(true);
 					serverSocket.bind(new InetSocketAddress(port));
 					while (true) {
-						JLG.debug("waiting for a client connection");
+						LOG.debug("waiting for a client connection");
 						final Socket socket = serverSocket.accept();
 						socket.setSendBufferSize(32768);
 						pool.execute(new Runnable() {
@@ -64,7 +64,7 @@ public class TCPServer {
 								try {
 									int i = 0;
 									while (i < 1000) {
-										JLG.debug("wait for message");
+										LOG.debug("wait for message");
 										protocol.process(socket);
 										i++;
 									}
@@ -78,20 +78,20 @@ public class TCPServer {
 									} catch (Exception e) {
 									}
 									TCPServer.this.unregister(socket);
-									JLG.debug("end");
+									LOG.debug("end");
 								}
 							}
 						});
 					}
 				} catch (Exception e) {
 				}
-				JLG.debug("TCP server thread finished");
+				LOG.debug("TCP server thread finished");
 			}
 		});
 	}
 
 	public void stop() {
-		JLG.debug("stopping a TCP server with port: " + port);
+		LOG.debug("stopping a TCP server with port: " + port);
 		try {
 			if (serverSocket != null) {
 				serverSocket.close();
@@ -113,8 +113,8 @@ public class TCPServer {
 			}
 		}
 		pool.shutdownNow();
-		JLG.debug("pool shutdownNow=" + pool);
-		JLG.debug("end stopping a TCP server with port: " + port);
+		LOG.debug("pool shutdownNow=" + pool);
+		LOG.debug("end stopping a TCP server with port: " + port);
 	}
 
 	public void register(Socket socket) {

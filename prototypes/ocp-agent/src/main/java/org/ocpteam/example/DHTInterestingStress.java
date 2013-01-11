@@ -12,6 +12,7 @@ import org.ocpteam.component.NATTraversal;
 import org.ocpteam.core.TopContainer;
 import org.ocpteam.entity.Context;
 import org.ocpteam.misc.JLG;
+import org.ocpteam.misc.LOG;
 import org.ocpteamx.protocol.dht0.DHTDataModel;
 import org.ocpteamx.protocol.dht0.DHTDataSource;
 
@@ -45,7 +46,7 @@ public class DHTInterestingStress extends TopContainer {
 		duration = 5;
 		port = 40000;
 		availabilityRate = 0.8;
-		JLG.debug_on();
+		LOG.debug_on();
 		JLG.bUseSet = true;
 		// JLG.set.add(TCPServer.class.getName());
 		JLG.set.add(DHTInterestingStress.class.getName());
@@ -67,7 +68,7 @@ public class DHTInterestingStress extends TopContainer {
 			}
 		}
 		System.out.println();
-		JLG.debug("try to pick up a connected datasource");
+		LOG.debug("try to pick up a connected datasource");
 		int r = JLG.random(n);
 		DataSource d = ds[r];
 		synchronized (d) {
@@ -75,13 +76,13 @@ public class DHTInterestingStress extends TopContainer {
 				return;
 			}
 			try {
-				JLG.debug("found datasource=" + r);
+				LOG.debug("found datasource=" + r);
 				Context c = d.getContext();
 				DHTDataModel dht = (DHTDataModel) c.getDataModel();
 				dht.set("key" + JLG.random(100), "value" + JLG.random(100));
-				JLG.debug("keyset size: " + dht.keySet().size());
+				LOG.debug("keyset size: " + dht.keySet().size());
 				String key = "key" + JLG.random(100);
-				JLG.debug("getting " + key + " : " + dht.get(key));
+				LOG.debug("getting " + key + " : " + dht.get(key));
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -116,7 +117,7 @@ public class DHTInterestingStress extends TopContainer {
 			@Override
 			public void run() {
 				try {
-					JLG.debug("availability");
+					LOG.debug("availability");
 					for (int i = 1; i < ds.length; i++) {
 						synchronized (ds[i]) {
 							double r = Math.random();
@@ -162,14 +163,14 @@ public class DHTInterestingStress extends TopContainer {
 		scheduler.shutdown();
 		scheduler.shutdownNow();
 		disconnectAll();
-		JLG.debug("app finished");
+		LOG.debug("app finished");
 		JLG.showActiveThreads();
 	}
 
 	private void disconnectAll() throws Exception {
 		for (int i = 0; i < n; i++) {
 			synchronized (ds[i]) {
-				JLG.debug("disconnecting " + i);
+				LOG.debug("disconnecting " + i);
 				if (ds[i].isConnected()) {
 					ds[i].disconnect();
 				}
@@ -207,11 +208,11 @@ public class DHTInterestingStress extends TopContainer {
 		for (int i = 0; i < n; i++) {
 			ds[i].connect();
 			ContactMap cm = ds[i].getComponent(ContactMap.class);
-			JLG.debug("ds[" + i + "] contact map size: " + cm.size());
+			LOG.debug("ds[" + i + "] contact map size: " + cm.size());
 		}
 		for (int i = 0; i < n; i++) {
 			ContactMap cm = ds[i].getComponent(ContactMap.class);
-			JLG.debug("ds[" + i + "] contact map size: " + cm.size());
+			LOG.debug("ds[" + i + "] contact map size: " + cm.size());
 		}
 	}
 

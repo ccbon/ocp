@@ -2,13 +2,13 @@ package org.ocpteam.test;
 
 import java.io.File;
 
-import org.ocpteam.misc.JLG;
+import org.ocpteam.misc.LOG;
 
 
 public class RemoveDir {
 	public static void main(String[] args) {
 
-		JLG.debug_on();
+		LOG.debug_on();
 		String path = "C:\\Documents and Settings\\jlouis\\ftp\\local\\qqq";
 
 		while (true) {
@@ -24,7 +24,7 @@ public class RemoveDir {
 				f = new File(f, "qqq");
 
 			}
-			JLG.debug("i=" + i);
+			LOG.debug("i=" + i);
 			p.delete();
 		}
 	}

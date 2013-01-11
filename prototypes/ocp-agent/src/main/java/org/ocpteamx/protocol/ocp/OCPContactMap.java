@@ -5,7 +5,7 @@ import java.util.Iterator;
 import org.ocpteam.component.Agent;
 import org.ocpteam.component.ContactMap;
 import org.ocpteam.misc.Id;
-import org.ocpteam.misc.JLG;
+import org.ocpteam.misc.LOG;
 import org.ocpteam.serializable.Contact;
 
 public class OCPContactMap extends ContactMap {
@@ -23,7 +23,7 @@ public class OCPContactMap extends ContactMap {
 		Iterator<Id> it = contact.nodeIdSet.iterator();
 		while (it.hasNext()) {
 			Id id = it.next();
-			JLG.debug("adding node to nodeMap");
+			LOG.debug("adding node to nodeMap");
 			agent.nodeMap.put(id, contact);
 		}
 		return c;
@@ -40,7 +40,7 @@ public class OCPContactMap extends ContactMap {
 		Iterator<Id> it = contact.nodeIdSet.iterator();
 		while (it.hasNext()) {
 			Id id = it.next();
-			JLG.debug("adding node to nodeMap");
+			LOG.debug("adding node to nodeMap");
 			agent.nodeMap.put(id, contact);
 		}
 	}

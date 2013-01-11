@@ -37,61 +37,14 @@ public class JLG {
 	static {
 		NL = System.getProperty("line.separator");
 	}
-	private static boolean sDebug = false;
-
 	public static Set<String> set = new HashSet<String>();
 	public static boolean bUseSet = false;
-
-	public static void debug_on() {
-		sDebug = true;
-		debug("debug on");
-	}
-
-	public static void debug_off() {
-		sDebug = false;
-	}
-
-	public static boolean getDebugStatus() {
-		return sDebug;
-	}
-
-	public static void debug(String input) {
-		if (sDebug) {
-
-			Throwable t = new Throwable();
-			StackTraceElement ste = t.getStackTrace()[1];
-			String s = ste.getClassName();
-			int i = s.indexOf("$");
-			if (i != -1) {
-				s = s.substring(0, s.indexOf("$"));
-			}
-			if (bUseSet && !set.contains(s)) {
-				return;
-			}
-
-			String sPrefix = "DEBUG [T=" + Thread.currentThread().getName()
-					+ "] (" + s + ".java:" + ste.getLineNumber() + ") : ";
-			System.out.println(sPrefix + input);
-		}
-	}
-
-	public static void debugStackTrace() {
-		Throwable t = new Throwable();
-		StringWriter result = new StringWriter();
-		t.printStackTrace(new PrintWriter(result));
-		debug(result.toString());
-	}
 
 	public static String getStackTrace(Throwable aThrowable) {
 		final Writer result = new StringWriter();
 		final PrintWriter printWriter = new PrintWriter(result);
 		aThrowable.printStackTrace(printWriter);
 		return result.toString();
-	}
-
-	public static void error(Exception e) {
-		System.out.println("ERROR: " + e.getMessage());
-		e.printStackTrace();
 	}
 
 	public static void println(String string) {
@@ -102,22 +55,6 @@ public class JLG {
 
 	public static int random(int size) {
 		return (int) Math.floor((Math.random() * size));
-	}
-
-	public static void error(String string) {
-		System.out.println("ERROR: " + string);
-
-	}
-
-	public static void warn(Exception e) {
-		System.out.println("WARNING: ");
-		e.printStackTrace(System.out);
-
-	}
-
-	public static void warn(String string) {
-		System.out.println("WARNING: " + string);
-
 	}
 
 	public static String bytesToHex(byte[] input) {
@@ -150,7 +87,7 @@ public class JLG {
 			}
 			return result;
 		} catch (Exception e) {
-			JLG.debug("string = " + string);
+			LOG.debug("string = " + string);
 			throw e;
 		}
 	}
@@ -204,7 +141,7 @@ public class JLG {
 			String s = br.readLine();
 			return s;
 		} catch (Exception e) {
-			JLG.error(e);
+			LOG.error(e);
 		}
 		return null;
 	}
@@ -218,7 +155,7 @@ public class JLG {
 	}
 
 	public static void rm(String path) {
-		JLG.debug("removing " + path);
+		LOG.debug("removing " + path);
 		rm(new File(path));
 	}
 
@@ -228,7 +165,7 @@ public class JLG {
 				rm(child);
 			}
 		}
-		JLG.debug("About to delete " + file.getAbsolutePath());
+		LOG.debug("About to delete " + file.getAbsolutePath());
 		file.delete();
 	}
 
@@ -372,18 +309,18 @@ public class JLG {
 
 	public static void showActiveThreads() {
 		while (true) {
-			JLG.debug("active threads:");
+			LOG.debug("active threads:");
 			ThreadGroup tg = Thread.currentThread().getThreadGroup();
 			Thread[] list = new Thread[tg.activeCount()];
 			tg.enumerate(list);
 			for (Thread t : list) {
-				JLG.debug("running thread: " + t.getName());
+				LOG.debug("running thread: " + t.getName());
 			}
 
 			ThreadGroup[] glist = new ThreadGroup[tg.activeGroupCount()];
 			tg.enumerate(glist);
 			for (ThreadGroup t : glist) {
-				JLG.debug("running threadgroup: " + t.getName());
+				LOG.debug("running threadgroup: " + t.getName());
 			}
 			try {
 				Thread.sleep(1000);

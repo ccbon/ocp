@@ -10,6 +10,7 @@ import java.util.Map;
 import org.ocpteam.core.Container;
 import org.ocpteam.core.IContainer;
 import org.ocpteam.misc.JLG;
+import org.ocpteam.misc.LOG;
 
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
@@ -46,8 +47,8 @@ public class HTTPServerHandler extends Container<IContainer> implements HttpHand
 			OutputStream responseBody = exchange.getResponseBody();
 			try {
 				File file = new File(root + path);
-				JLG.debug("asking path: " + path);
-				JLG.debug("asking file: " + file.getAbsolutePath());
+				LOG.debug("asking path: " + path);
+				LOG.debug("asking file: " + file.getAbsolutePath());
 				responseBody.write(JLG.getBinaryFile(file));
 			} catch (Exception e) {
 				responseBody.write(("Error...\n").getBytes());

@@ -8,7 +8,7 @@ import org.ocpteam.interfaces.IAuthenticable;
 import org.ocpteam.interfaces.IConnect;
 import org.ocpteam.interfaces.IDataModel;
 import org.ocpteam.interfaces.IUserManagement;
-import org.ocpteam.misc.JLG;
+import org.ocpteam.misc.LOG;
 import org.ocpteam.serializable.User;
 
 public class FTPClient extends DSContainer<FTPDataSource> implements
@@ -25,7 +25,7 @@ public class FTPClient extends DSContainer<FTPDataSource> implements
 	@Override
 	public void connect() throws Exception {
 		hostname = ds().getURI().getHost();
-		JLG.debug("hostname=" + hostname);
+		LOG.debug("hostname=" + hostname);
 		try {
 			ftp.connect(hostname);
 		} catch (Exception e) {
@@ -53,7 +53,7 @@ public class FTPClient extends DSContainer<FTPDataSource> implements
 		String login = a.getUsername();
 		String password = (String) getChallenge();
 		if (ftp.login(login, password)) {
-			JLG.debug("ftp logged in.");
+			LOG.debug("ftp logged in.");
 			IDataModel dm = new FTPFileSystem(this);
 			User user = new User();
 			user.setUsername(login);

@@ -4,7 +4,7 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.program.Program;
-import org.ocpteam.misc.JLG;
+import org.ocpteam.misc.LOG;
 
 
 public class HelpAction extends Action {
@@ -25,7 +25,7 @@ public class HelpAction extends Action {
 
 	@Override
 	public void run() {
-		JLG.debug("Starting help in OS default browser...");
+		LOG.debug("Starting help in OS default browser...");
 			Program.launch(window.getHelpURL());
 		}
 

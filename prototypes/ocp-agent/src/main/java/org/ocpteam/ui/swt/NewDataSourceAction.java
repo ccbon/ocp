@@ -4,7 +4,7 @@ import java.util.ResourceBundle;
 
 import org.eclipse.jface.action.Action;
 import org.ocpteam.component.DSPDataSource;
-import org.ocpteam.misc.JLG;
+import org.ocpteam.misc.LOG;
 import org.ocpteam.misc.swt.QuickMessage;
 
 public class NewDataSourceAction extends Action {
@@ -20,7 +20,7 @@ public class NewDataSourceAction extends Action {
 
 	@Override
 	public void run() {
-		JLG.debug("New DataSource");
+		LOG.debug("New DataSource");
 		try {
 			if (w.ds != null) {
 				w.closeDataSourceAction.run();
@@ -32,7 +32,7 @@ public class NewDataSourceAction extends Action {
 			}
 			w.ds = w.dsf.getInstance(protocol);
 			ResourceBundle swt = w.dsf.getResource(protocol, "swt");
-			JLG.debug("bundle=" + swt);
+			LOG.debug("bundle=" + swt);
 			if (swt != null && swt.containsKey("NewDataSourceScenario")) {
 				IScenario scenario = (IScenario) swt
 						.getObject("NewDataSourceScenario");

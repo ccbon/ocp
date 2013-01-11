@@ -16,7 +16,7 @@ import org.ocpteam.interfaces.IModule;
 import org.ocpteam.interfaces.IProtocol;
 import org.ocpteam.interfaces.ISerializer;
 import org.ocpteam.interfaces.ITransaction;
-import org.ocpteam.misc.JLG;
+import org.ocpteam.misc.LOG;
 import org.ocpteam.serializable.EOMObject;
 import org.ocpteam.serializable.InputFlow;
 import org.ocpteam.serializable.InputMessage;
@@ -38,7 +38,7 @@ public class Protocol extends DSContainer<DataSource> implements IProtocol {
 		super.init();
 		streamSerializer.setSerializer(ds().getComponent(ISerializer.class));
 		// load all module
-		JLG.debug("components: " + this.getDesigner().getMap());
+		LOG.debug("components: " + this.getDesigner().getMap());
 		Iterator<Object> it = ds().iteratorComponent();
 		while (it.hasNext()) {
 			Object o = it.next();
@@ -49,7 +49,7 @@ public class Protocol extends DSContainer<DataSource> implements IProtocol {
 	}
 
 	public void load(IModule m) throws Exception {
-		JLG.debug("loading module: " + m.getClass());
+		LOG.debug("loading module: " + m.getClass());
 		for (Method f : m.getClass().getMethods()) {
 			Object o = f.getReturnType();
 			if (o == ITransaction.class) {
@@ -61,7 +61,7 @@ public class Protocol extends DSContainer<DataSource> implements IProtocol {
 				activityMap.put(t.getId(), t);
 			}
 		}
-		JLG.debug("map: " + map);
+		LOG.debug("map: " + map);
 	}
 
 	@Override
@@ -72,7 +72,7 @@ public class Protocol extends DSContainer<DataSource> implements IProtocol {
 	@Override
 	public void process(Socket clientSocket) throws Exception {
 		// read the first object
-		JLG.debug("about to read object");
+		LOG.debug("about to read object");
 		Serializable o = getStreamSerializer().readObject(clientSocket);
 		if (o instanceof InputMessage) {
 			InputMessage inputMessage = (InputMessage) o;
@@ -92,15 +92,15 @@ public class Protocol extends DSContainer<DataSource> implements IProtocol {
 			inputFlow.activity.run(session, inputFlow.objects, clientSocket, this);
 			getStreamSerializer().writeObject(clientSocket, new EOMObject());
 		}
-		JLG.debug("end process");
+		LOG.debug("end process");
 	}
 
 	@Override
 	public void process(DatagramPacket packet) {
 		byte[] input = Arrays.copyOf(packet.getData(), packet.getLength());
 		String s = new String(input);
-		JLG.debug("length=" + packet.getLength());
-		JLG.debug("message=" + s);
+		LOG.debug("length=" + packet.getLength());
+		LOG.debug("message=" + s);
 	}
 
 	public Map<Integer, ITransaction> getMap() {

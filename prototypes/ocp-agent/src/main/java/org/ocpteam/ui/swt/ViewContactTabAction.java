@@ -11,7 +11,7 @@ import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.ocpteam.component.Agent;
-import org.ocpteam.misc.JLG;
+import org.ocpteam.misc.LOG;
 
 public class ViewContactTabAction extends Action {
 	private DataSourceWindow window;
@@ -32,7 +32,7 @@ public class ViewContactTabAction extends Action {
 
 	@Override
 	public void run() {
-		JLG.debug("View Contact");
+		LOG.debug("View Contact");
 		addContactTab();
 	}
 
@@ -56,7 +56,7 @@ public class ViewContactTabAction extends Action {
 		contactCTabItem.addDisposeListener(new DisposeListener() {
 			@Override
 			public void widgetDisposed(DisposeEvent arg0) {
-				JLG.debug("dispose");
+				LOG.debug("dispose");
 			}
 		});
 
@@ -69,7 +69,7 @@ public class ViewContactTabAction extends Action {
 
 			@Override
 			public void handleEvent(Event event) {
-				JLG.debug("closing contact list");
+				LOG.debug("closing contact list");
 				contactCTabItem.dispose();
 			}
 		});

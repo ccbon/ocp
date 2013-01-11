@@ -18,7 +18,7 @@ import org.ocpteam.exception.NotAvailableContactException;
 import org.ocpteam.interfaces.IDataModel;
 import org.ocpteam.interfaces.INodeMap;
 import org.ocpteam.misc.Id;
-import org.ocpteam.misc.JLG;
+import org.ocpteam.misc.LOG;
 import org.ocpteam.serializable.Contact;
 import org.ocpteam.serializable.EOMObject;
 import org.ocpteam.serializable.InputFlow;
@@ -173,12 +173,12 @@ public class DHT1DataSource extends DSPDataSource {
 	}
 
 	public void store(String key, String value) {
-		JLG.debug("local store: " + key + "->" + value);
+		LOG.debug("local store: " + key + "->" + value);
 		map.put(key, value);
 	}
 
 	public String retrieve(String key) {
-		JLG.debug("local retrieve: " + key);
+		LOG.debug("local retrieve: " + key);
 		return map.get(key);
 	}
 

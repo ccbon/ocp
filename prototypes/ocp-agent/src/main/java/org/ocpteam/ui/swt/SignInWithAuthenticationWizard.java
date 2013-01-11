@@ -6,7 +6,7 @@ import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Shell;
 import org.ocpteam.interfaces.IAuthenticable;
 import org.ocpteam.interfaces.IUserManagement;
-import org.ocpteam.misc.JLG;
+import org.ocpteam.misc.LOG;
 import org.ocpteam.misc.swt.QuickMessage;
 
 
@@ -27,7 +27,7 @@ public class SignInWithAuthenticationWizard extends Wizard {
 		};
 		wizard.setWizardDialog(dialog);
 		dialog.open();
-		JLG.debug("about to dispose shell");
+		LOG.debug("about to dispose shell");
 		shell.dispose();
 	}
 
@@ -59,7 +59,7 @@ public class SignInWithAuthenticationWizard extends Wizard {
 
 	@Override
 	public boolean performFinish() {
-		JLG.debug("sign in user");
+		LOG.debug("sign in user");
 		try {
 			IUserManagement um = window.ds.getComponent(IUserManagement.class);
 			um.setUsername(p1.usernameText.getText());
@@ -67,7 +67,7 @@ public class SignInWithAuthenticationWizard extends Wizard {
 			auth.setChallenge(p1.passwordText.getText());
 			window.signIn();
 		} catch (Exception e) {
-			JLG.error(e);
+			LOG.error(e);
 			QuickMessage.error(window.getShell(), "Sign in failed: " + e.getMessage());
 		}
 		return true;

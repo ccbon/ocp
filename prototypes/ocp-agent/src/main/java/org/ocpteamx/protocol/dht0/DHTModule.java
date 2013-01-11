@@ -9,7 +9,7 @@ import org.ocpteam.entity.Session;
 import org.ocpteam.interfaces.IActivity;
 import org.ocpteam.interfaces.IModule;
 import org.ocpteam.interfaces.ITransaction;
-import org.ocpteam.misc.JLG;
+import org.ocpteam.misc.LOG;
 
 public class DHTModule implements IModule {
 
@@ -24,7 +24,7 @@ public class DHTModule implements IModule {
 			@Override
 			public Serializable run(Session session, Serializable[] objects)
 					throws Exception {
-				JLG.debug("storing...");
+				LOG.debug("storing...");
 				DHTDataSource ds = (DHTDataSource) session.ds();
 				String key = (String) objects[0];
 				String value = (String) objects[1];
@@ -50,7 +50,7 @@ public class DHTModule implements IModule {
 			@Override
 			public Serializable run(Session session, Serializable[] objects)
 					throws Exception {
-				JLG.debug("retrieving...");
+				LOG.debug("retrieving...");
 				DHTDataSource ds = (DHTDataSource) session.ds();
 				String key = (String) objects[0];
 				return ds.retrieve(key);
@@ -74,7 +74,7 @@ public class DHTModule implements IModule {
 			@Override
 			public Serializable run(Session session, Serializable[] objects)
 					throws Exception {
-				JLG.debug("remove...");
+				LOG.debug("remove...");
 				DHTDataSource ds = (DHTDataSource) session.ds();
 				String key = (String) objects[0];
 				ds.remove(key);
@@ -99,12 +99,12 @@ public class DHTModule implements IModule {
 			@Override
 			public void run(Session session, Serializable[] objects,
 					Socket socket, Protocol protocol) throws Exception {
-				JLG.debug("keyset...");
+				LOG.debug("keyset...");
 				DHTDataSource ds = (DHTDataSource) session.ds();
 				Set<String> set = ds.keySet();
-				JLG.debug("set=" + set);
+				LOG.debug("set=" + set);
 				for (String s : set) {
-					JLG.debug("write " + s);
+					LOG.debug("write " + s);
 					protocol.getStreamSerializer().writeObject(socket, s);
 				}
 			}

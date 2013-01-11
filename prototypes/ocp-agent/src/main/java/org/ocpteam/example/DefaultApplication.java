@@ -2,7 +2,7 @@ package org.ocpteam.example;
 
 import org.ocpteam.component.DataSourceFactory;
 import org.ocpteam.core.TopContainer;
-import org.ocpteam.misc.JLG;
+import org.ocpteam.misc.LOG;
 import org.ocpteam.ui.swt.DataSourceWindow;
 import org.ocpteamx.protocol.dht0.DHTDataSource;
 import org.ocpteamx.protocol.dht1.DHT1DataSource;
@@ -57,7 +57,7 @@ public class DefaultApplication extends TopContainer {
 	}
 
 	public void start() {
-		JLG.debug_on();
+		LOG.debug_on();
 		try {
 			getComponent(DataSourceWindow.class).start();
 		} catch (Exception e) {

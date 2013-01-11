@@ -5,6 +5,7 @@ import java.util.Properties;
 import org.ocpteam.component.NATTraversal;
 import org.ocpteam.core.TopContainer;
 import org.ocpteam.misc.JLG;
+import org.ocpteam.misc.LOG;
 import org.ocpteamx.protocol.dht0.DHTDataModel;
 import org.ocpteamx.protocol.dht0.DHTDataSource;
 
@@ -34,7 +35,7 @@ public class DHTMemoryIssue extends TopContainer {
 		n = 10;
 		key = 1000;
 		port = 35000;
-		JLG.debug_on();
+		LOG.debug_on();
 		//JLG.bUseSet = true;
 		//JLG.set.add(TCPServer.class.getName());
 		JLG.set.add(DHTMemoryIssue.class.getName());
@@ -60,12 +61,12 @@ public class DHTMemoryIssue extends TopContainer {
 						i++;
 					}
 				} catch (Exception e) {
-					JLG.debug("Threads: " + Thread.activeCount());
+					LOG.debug("Threads: " + Thread.activeCount());
 					e.printStackTrace();
 				} finally {
 					for (int i = 0; i < n; i++) {
 						try {
-							JLG.debug("disconnecting " + i);
+							LOG.debug("disconnecting " + i);
 							ds[i].disconnect();
 						} catch (Exception e) {
 							e.printStackTrace();
@@ -110,7 +111,7 @@ public class DHTMemoryIssue extends TopContainer {
 				
 				for (int i = 0; i < n; i++) {
 					DHTDataModel dht = (DHTDataModel) ds[i].getContext().getDataModel();
-					JLG.debug("size=" + dht.keySet().size());
+					LOG.debug("size=" + dht.keySet().size());
 				}	
 			}
 		};
@@ -118,7 +119,7 @@ public class DHTMemoryIssue extends TopContainer {
 		run1.run();
 		
 		
-		JLG.debug("app finished");
+		LOG.debug("app finished");
 	}
 
 }

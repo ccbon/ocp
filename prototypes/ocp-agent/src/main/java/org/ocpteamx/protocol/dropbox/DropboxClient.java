@@ -7,6 +7,7 @@ import org.ocpteam.entity.Context;
 import org.ocpteam.interfaces.IAuthenticable;
 import org.ocpteam.interfaces.IDataModel;
 import org.ocpteam.misc.JLG;
+import org.ocpteam.misc.LOG;
 
 import com.dropbox.client2.DropboxAPI;
 import com.dropbox.client2.exception.DropboxException;
@@ -57,7 +58,7 @@ public class DropboxClient extends DSContainer<DropboxDataSource> implements
 			properties.remove(username);
 		}
 
-		JLG.debug("username=" + username);
+		LOG.debug("username=" + username);
 		if (properties.containsKey(username)) {
 			reAuth();
 		} else {
@@ -94,7 +95,7 @@ public class DropboxClient extends DSContainer<DropboxDataSource> implements
 		}
 
 		for (Object key : properties.keySet()) {
-			JLG.debug(key + "=" + properties.get(key));
+			LOG.debug(key + "=" + properties.get(key));
 		}
 	}
 
@@ -104,8 +105,8 @@ public class DropboxClient extends DSContainer<DropboxDataSource> implements
 		tokenKey = array[0];
 		tokenSecret = array[1];
 
-		JLG.debug("token_key=" + tokenKey);
-		JLG.debug("token_secret=" + tokenSecret);
+		LOG.debug("token_key=" + tokenKey);
+		LOG.debug("token_secret=" + tokenSecret);
 		AccessTokenPair reAuthTokens = new AccessTokenPair(tokenKey,
 				tokenSecret);
 
@@ -124,8 +125,8 @@ public class DropboxClient extends DSContainer<DropboxDataSource> implements
 		tokenKey = getSession().getAccessTokenPair().key;
 		tokenSecret = getSession().getAccessTokenPair().secret;
 
-		JLG.debug("tokenKey=" + tokenKey);
-		JLG.debug("tokenSecret=" + tokenSecret);
+		LOG.debug("tokenKey=" + tokenKey);
+		LOG.debug("tokenSecret=" + tokenSecret);
 		username = mDBApi.accountInfo().displayName;
 	}
 

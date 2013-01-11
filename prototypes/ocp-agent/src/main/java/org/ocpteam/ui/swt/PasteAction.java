@@ -7,7 +7,7 @@ import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
-import org.ocpteam.misc.JLG;
+import org.ocpteam.misc.LOG;
 
 public class PasteAction extends Action {
 
@@ -29,7 +29,7 @@ public class PasteAction extends Action {
 
 	@Override
 	public void run() {
-		JLG.debug("Paste");
+		LOG.debug("Paste");
 		if (window.explorerComposite == null) {
 			return;
 		}

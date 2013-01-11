@@ -3,7 +3,7 @@ package org.ocpteam.serializable;
 import java.io.Serializable;
 
 import org.ocpteam.interfaces.IStructurable;
-import org.ocpteam.misc.JLG;
+import org.ocpteam.misc.LOG;
 import org.ocpteam.misc.Structure;
 
 /**
@@ -25,7 +25,7 @@ public class EOMObject implements Serializable, IStructurable {
 
 	@Override
 	public void fromStructure(Structure s) throws Exception {
-		JLG.debug("End Of Message");
+		LOG.debug("End Of Message");
 	}
 
 }

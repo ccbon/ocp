@@ -7,7 +7,7 @@ import org.eclipse.jface.preference.PreferenceManager;
 import org.eclipse.jface.preference.PreferenceNode;
 import org.eclipse.jface.preference.PreferenceStore;
 import org.eclipse.swt.widgets.Shell;
-import org.ocpteam.misc.JLG;
+import org.ocpteam.misc.LOG;
 import org.ocpteam.ui.swt.DataSourceWindow;
 import org.ocpteam.ui.swt.IScenario;
 
@@ -26,7 +26,7 @@ public class ConfigPreferenceScenario implements IScenario {
 
 	@Override
 	public void run() throws Exception {
-		JLG.debug("Starting DHT6 new DataSource senario");
+		LOG.debug("Starting DHT6 new DataSource senario");
 		Shell shell = new Shell(w.getShell().getDisplay());
 		// Create the preference manager
 		PreferenceManager prefManager = new PreferenceManager();

@@ -8,7 +8,7 @@ import org.eclipse.swt.program.Program;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.ocpteam.interfaces.IAuthenticable;
-import org.ocpteam.misc.JLG;
+import org.ocpteam.misc.LOG;
 import org.ocpteam.ui.swt.DataSourceWindow;
 import org.ocpteam.ui.swt.IScenario;
 import org.ocpteamx.protocol.dropbox.DropboxClient;
@@ -53,7 +53,7 @@ public class DROPBOXSignInWizard extends Wizard implements IScenario {
 
 			@Override
 			protected void nextPressed() {
-				JLG.debug("Next pressed");
+				LOG.debug("Next pressed");
 				super.nextPressed();
 			}
 
@@ -64,10 +64,10 @@ public class DROPBOXSignInWizard extends Wizard implements IScenario {
 
 	protected void informClient() {
 		c.username = p1.text.getText();
-		JLG.debug("username=" + c.username);
+		LOG.debug("username=" + c.username);
 
 		boolean bRememberMe = p1.btnRememberMe.getSelection();
-		JLG.debug("bRememberMe=" + bRememberMe);
+		LOG.debug("bRememberMe=" + bRememberMe);
 		c.setRememberMe(bRememberMe);
 	}
 

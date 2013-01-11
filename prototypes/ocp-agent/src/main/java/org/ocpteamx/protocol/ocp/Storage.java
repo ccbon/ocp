@@ -8,6 +8,7 @@ import org.ocpteam.interfaces.IDataStore;
 import org.ocpteam.interfaces.IPersistentMap;
 import org.ocpteam.misc.Id;
 import org.ocpteam.misc.JLG;
+import org.ocpteam.misc.LOG;
 import org.ocpteam.serializable.Address;
 
 public class Storage {
@@ -65,7 +66,7 @@ public class Storage {
 				return (Content) agent.ds().serializer.deserialize(array);
 			}
 		} catch (Exception e) {
-			JLG.error(e);
+			LOG.error(e);
 			return null;
 		}
 	}
@@ -88,7 +89,7 @@ public class Storage {
 					content = (Content) agent.ds().serializer
 							.deserialize(datastore.get(address));
 				} catch (Exception e) {
-					JLG.error(e);
+					LOG.error(e);
 				}
 				result += address + "->" + content + JLG.NL;
 			}

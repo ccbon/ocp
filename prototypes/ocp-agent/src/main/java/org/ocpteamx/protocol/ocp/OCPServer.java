@@ -11,13 +11,14 @@ import org.ocpteam.component.Server;
 import org.ocpteam.component.TCPListener;
 import org.ocpteam.interfaces.IListener;
 import org.ocpteam.misc.JLG;
+import org.ocpteam.misc.LOG;
 
 public class OCPServer extends Server {
 
 	public OCPAgent agent;
 
 	public void configure() throws Exception {
-		JLG.debug("ds = " + ds());
+		LOG.debug("ds = " + ds());
 		this.agent = (OCPAgent) ds().getComponent(Agent.class);
 
 		boolean bFound = false;
@@ -65,12 +66,12 @@ public class OCPServer extends Server {
 
 	@Override
 	public void stop() {
-		JLG.debug("stopping servers");
+		LOG.debug("stopping servers");
 		for (Iterator<IListener> it = listenerList.iterator(); it.hasNext();) {
 			it.next().stop();
 		}
 		bIsStarted = false;
-		JLG.debug("servers stopped.");
+		LOG.debug("servers stopped.");
 	}
 
 	@Override

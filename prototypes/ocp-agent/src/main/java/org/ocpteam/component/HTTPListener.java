@@ -4,7 +4,7 @@ import java.net.URI;
 
 import org.ocpteam.interfaces.IListener;
 import org.ocpteam.interfaces.IProtocol;
-import org.ocpteam.misc.JLG;
+import org.ocpteam.misc.LOG;
 
 import com.sun.net.httpserver.HttpServer;
 
@@ -49,13 +49,13 @@ public class HTTPListener extends DSContainer<DataSource> implements IListener {
 
 			
 		} catch (Exception e) {
-			JLG.error(e);
+			LOG.error(e);
 		}
 	}
 
 	@Override
 	public void stop() {
-		JLG.debug("stopping http server");
+		LOG.debug("stopping http server");
 		if (usesComponent(NATTraversal.class)) {
 			getComponent(NATTraversal.class).unmap();
 		}

@@ -30,6 +30,7 @@ import org.ocpteam.misc.ByteUtil;
 import org.ocpteam.misc.Cache;
 import org.ocpteam.misc.Id;
 import org.ocpteam.misc.JLG;
+import org.ocpteam.misc.LOG;
 import org.ocpteam.serializable.Address;
 import org.ocpteam.serializable.Contact;
 import org.ocpteam.serializable.Pointer;
@@ -129,7 +130,7 @@ public class OCPAgent extends Agent {
 		} else {
 			id = new Id(sId);
 		}
-		JLG.debug("agent id = " + id);
+		LOG.debug("agent id = " + id);
 
 		try {
 			backupNbr = (byte) Integer.parseInt(ds().network.getProperty(
@@ -162,11 +163,11 @@ public class OCPAgent extends Agent {
 			storage = new Storage(this);
 			storage.attach();
 		}
-		JLG.debug("end");
+		LOG.debug("end");
 	}
 
 	public void disconnect() throws Exception {
-		JLG.debug("disconnect");
+		LOG.debug("disconnect");
 		if (getServer() != null) {
 			getServer().stop();
 		}
@@ -204,12 +205,12 @@ public class OCPAgent extends Agent {
 	}
 
 	public boolean isResponsible(Address address) throws Exception {
-		JLG.debug("address = " + address);
+		LOG.debug("address = " + address);
 		Id nodeId = getNodeId(address);
-		JLG.debug("nodeId = " + nodeId);
+		LOG.debug("nodeId = " + nodeId);
 		OCPContact contact = getContactFromNodeId(nodeId);
-		JLG.debug("contact = " + contact);
-		JLG.debug("is responsible: " + contact.getName().equals(id.toString()));
+		LOG.debug("contact = " + contact);
+		LOG.debug("is responsible: " + contact.getName().equals(id.toString()));
 		return contact.getName().equals(id.toString());
 		// return true;
 	}
@@ -235,7 +236,7 @@ public class OCPAgent extends Agent {
 			storage.put(address, content);
 		} else {
 			// transfer the order to another agent
-			JLG.debug("transfert the order");
+			LOG.debug("transfert the order");
 			Id nodeId = getNodeId(address);
 			Queue<Contact> contactQueue = makeContactQueue(nodeId);
 			getClient().store(contactQueue, address, content);
@@ -377,7 +378,7 @@ public class OCPAgent extends Agent {
 
 	public Pointer set(OCPUser user, Serializable serializable)
 			throws Exception {
-		JLG.debug("set serializable: " + serializable.getClass());
+		LOG.debug("set serializable: " + serializable.getClass());
 		return set(user, ds().serializer.serialize(serializable));
 	}
 
@@ -508,8 +509,8 @@ public class OCPAgent extends Agent {
 
 	public void createUser(String login, String password, int backupNbr,
 			Captcha captcha, String answer) throws Exception {
-		JLG.debug("creating user: " + login + ", " + password + ", " + backupNbr + ", answer=" + answer);
-		JLG.debug("captcha=" + captcha);
+		LOG.debug("creating user: " + login + ", " + password + ", " + backupNbr + ", answer=" + answer);
+		LOG.debug("captcha=" + captcha);
 		OCPUser user = new OCPUser(this, login, backupNbr);
 		UserPublicInfo upi = user.getPublicInfo(this);
 
@@ -542,7 +543,7 @@ public class OCPAgent extends Agent {
 		if (nodeMap.size() == 0) {
 			throw new Exception("nodeMap is not populated.");
 		}
-		JLG.debug("nodeMap=" + nodeMap);
+		LOG.debug("nodeMap=" + nodeMap);
 		Id nodeId = nodeMap.floorKey(address);
 		if (nodeId == null) {
 			nodeId = nodeMap.lastKey();
@@ -561,15 +562,15 @@ public class OCPAgent extends Agent {
 
 		// debugging aspect
 		if (ds().getProperty("debug", "false").equalsIgnoreCase("true")) {
-			JLG.debug_on();
-			JLG.debug("working directory = " + System.getProperty("user.dir"));
+			LOG.debug_on();
+			LOG.debug("working directory = " + System.getProperty("user.dir"));
 		}
 
 		Iterator<String> it = ds().iterator();
 		while (it.hasNext()) {
 			String key = it.next();
 			String value = ds().getProperty(key);
-			JLG.debug(key + "=" + value);
+			LOG.debug(key + "=" + value);
 		}
 		name = ds().getProperty("name", "anonymous");
 
@@ -624,7 +625,7 @@ public class OCPAgent extends Agent {
 	}
 
 	public void addContact(Contact contact) throws Exception {
-		JLG.debug("adding contact: " + contact);
+		LOG.debug("adding contact: " + contact);
 		ds().contactMap.add(contact);
 		OCPContact c = (OCPContact) contact;
 		if (c.nodeIdSet.size() == 0) {
@@ -633,7 +634,7 @@ public class OCPAgent extends Agent {
 		Iterator<Id> it = c.nodeIdSet.iterator();
 		while (it.hasNext()) {
 			Id id = it.next();
-			JLG.debug("adding node to nodeMap");
+			LOG.debug("adding node to nodeMap");
 			nodeMap.put(id, c);
 		}
 	}
@@ -645,7 +646,7 @@ public class OCPAgent extends Agent {
 			Iterator<Id> it = c.nodeIdSet.iterator();
 			while (it.hasNext()) {
 				Id id = it.next();
-				JLG.debug("removing node to nodeMap");
+				LOG.debug("removing node to nodeMap");
 				nodeMap.remove(id);
 			}
 			return c;
@@ -657,11 +658,11 @@ public class OCPAgent extends Agent {
 	public Captcha wantToCreateUser(String login, String password)
 			throws Exception {
 		// TODO check if user already exists ?
-		JLG.debug("want to create a user");
+		LOG.debug("want to create a user");
 		Id key = hash(ucrypt(password, (login + password).getBytes()));
-		JLG.debug("key = " + key);
+		LOG.debug("key = " + key);
 		Queue<Contact> contactQueue = makeContactQueue(key);
-		JLG.debug("contact queue established.");
+		LOG.debug("contact queue established.");
 		return getClient().askCaptcha(contactQueue);
 	}
 

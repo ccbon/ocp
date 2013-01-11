@@ -7,7 +7,7 @@ import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
-import org.ocpteam.misc.JLG;
+import org.ocpteam.misc.LOG;
 
 
 public class AboutAction extends Action {
@@ -30,7 +30,7 @@ public class AboutAction extends Action {
 
 	@Override
 	public void run() {
-		JLG.debug("About");
+		LOG.debug("About");
 		Display display = window.getShell().getDisplay();
 		MessageBox messageBox = new MessageBox(new Shell(display),
 				SWT.ICON_INFORMATION | SWT.OK);

@@ -4,7 +4,7 @@ import java.security.PublicKey;
 import java.security.Signature;
 
 import org.ocpteam.interfaces.ICaptcha;
-import org.ocpteam.misc.JLG;
+import org.ocpteam.misc.LOG;
 import org.ocpteam.misc.Structure;
 
 public class Captcha implements ICaptcha {
@@ -27,11 +27,11 @@ public class Captcha implements ICaptcha {
 		this.challengeObject = "the answer is :didounette";
 		this.created = System.currentTimeMillis();
 		cryptedAnswer = agent.crypt("didounette".getBytes());
-		JLG.debug("cryptedAnswer = " + cryptedAnswer);
-		JLG.debug("decryptedAnswer = "
+		LOG.debug("cryptedAnswer = " + cryptedAnswer);
+		LOG.debug("decryptedAnswer = "
 				+ new String(agent.decrypt(cryptedAnswer)));
 		contactId = agent.id.toString();
-		JLG.debug("contactId = " + contactId);
+		LOG.debug("contactId = " + contactId);
 		signatureAlgo = agent.signatureAlgorithm;
 		Signature s = Signature.getInstance(signatureAlgo);
 		s.initSign(agent.keyPair.getPrivate());

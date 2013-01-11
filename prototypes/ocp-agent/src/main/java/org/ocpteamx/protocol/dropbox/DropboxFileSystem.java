@@ -7,7 +7,7 @@ import org.ocpteam.component.DSContainer;
 import org.ocpteam.interfaces.IAuthenticable;
 import org.ocpteam.interfaces.IFile;
 import org.ocpteam.interfaces.IFileSystem;
-import org.ocpteam.misc.JLG;
+import org.ocpteam.misc.LOG;
 
 import com.dropbox.client2.DropboxAPI.Entry;
 import com.dropbox.client2.exception.DropboxServerException;
@@ -33,13 +33,13 @@ public class DropboxFileSystem extends DSContainer<DropboxDataSource> implements
 
 	@Override
 	public IFile getFile(String dir) throws Exception {
-		JLG.debug("About to get: " + dir);
+		LOG.debug("About to get: " + dir);
 		Entry entries = getClient().mDBApi.metadata(dir, 100, null, true, null);
 
 		DropboxFileImpl fi = new DropboxFileImpl();
 		for (Entry e : entries.contents) {
 			if (!e.isDeleted) {
-				JLG.debug("File: " + e.path);
+				LOG.debug("File: " + e.path);
 				fi.add(new DropboxFileImpl(e));
 			}
 		}
@@ -81,7 +81,7 @@ public class DropboxFileSystem extends DSContainer<DropboxDataSource> implements
 	@Override
 	public void checkout(String remoteDir, String remoteFilename,
 			java.io.File localDir) throws Exception {
-		JLG.debug("About to download \"" + remoteFilename + "\" from:"
+		LOG.debug("About to download \"" + remoteFilename + "\" from:"
 				+ remoteDir);
 		if (!remoteDir.endsWith("/")) {
 			remoteDir += "/";
@@ -96,14 +96,14 @@ public class DropboxFileSystem extends DSContainer<DropboxDataSource> implements
 
 	@Override
 	public void commit(String remoteDir, java.io.File file) throws Exception {
-		JLG.debug("About to upload \"" + file.getName() + "\" to:" + remoteDir);
+		LOG.debug("About to upload \"" + file.getName() + "\" to:" + remoteDir);
 		if (!remoteDir.endsWith("/")) {
 			remoteDir += "/";
 		}
 		if (file.isDirectory()) {
 			mkdir(remoteDir, file.getName());
 			for (java.io.File child : file.listFiles()) {
-				JLG.debug("child: " + child.getName());
+				LOG.debug("child: " + child.getName());
 				commit(remoteDir + file.getName(), child);
 			}
 		} else {
@@ -111,9 +111,9 @@ public class DropboxFileSystem extends DSContainer<DropboxDataSource> implements
 				getClient().mDBApi.putFile(remoteDir + file.getName(),
 						new FileInputStream(file), file.length(), null, null);
 			} catch (DropboxServerException e) {
-				JLG.debug("message=" + e.toString());
+				LOG.debug("message=" + e.toString());
 				int i = e.toString().indexOf("ignored file list");
-				JLG.debug("i=" + i);
+				LOG.debug("i=" + i);
 				if (i == -1) {
 					throw e;
 				}

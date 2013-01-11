@@ -10,6 +10,7 @@ import org.ocpteam.interfaces.IProtocol;
 import org.ocpteam.interfaces.ISerializer;
 import org.ocpteam.interfaces.IUserManagement;
 import org.ocpteam.misc.JLG;
+import org.ocpteam.misc.LOG;
 import org.ocpteam.serializable.Contact;
 import org.ocpteam.serializable.Node;
 
@@ -68,18 +69,18 @@ public abstract class DSPDataSource extends DataSource {
 	public synchronized void connect() throws Exception {
 		super.connect();
 		if (agent.isFirstAgent()) {
-			JLG.debug("This is the first agent on the network");
+			LOG.debug("This is the first agent on the network");
 			network = this.getNetworkProperties();
 		} else {
 			network = client.getNetworkProperties();
 		}
-		JLG.debug("network properties: " + JLG.propertiesToString(network));
+		LOG.debug("network properties: " + JLG.propertiesToString(network));
 		readNetworkConfig();
 
 		client.askForContact();
 
 		if (getProperty("server", "yes").equals("yes")) {
-			JLG.debug("starting the server");
+			LOG.debug("starting the server");
 			configureServer();
 			server.start();
 			askForNode();
@@ -119,7 +120,7 @@ public abstract class DSPDataSource extends DataSource {
 		for (Object component : components()) {
 			try {
 				Method m = component.getClass().getMethod("readNetworkConfig");
-				JLG.debug("invoke");
+				LOG.debug("invoke");
 				m.invoke(component);
 			} catch (NoSuchMethodException e) {
 			}
@@ -142,7 +143,7 @@ public abstract class DSPDataSource extends DataSource {
 		super.disconnect();
 		if (server.isStarted()) {
 			onNodeNiceDeparture();
-			JLG.debug("stopping the server");
+			LOG.debug("stopping the server");
 			server.stop();
 		}
 	}
@@ -150,7 +151,7 @@ public abstract class DSPDataSource extends DataSource {
 	public synchronized void disconnectHard() throws Exception {
 		super.disconnect();
 		if (server.isStarted()) {
-			JLG.debug("stopping the server");
+			LOG.debug("stopping the server");
 			server.stop();
 		}
 	}

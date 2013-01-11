@@ -11,7 +11,7 @@ import org.ocpteam.interfaces.ICaptcha;
 import org.ocpteam.interfaces.IUser;
 import org.ocpteam.interfaces.IUserCreation;
 import org.ocpteam.interfaces.IUserManagement;
-import org.ocpteam.misc.JLG;
+import org.ocpteam.misc.LOG;
 import org.ocpteam.misc.swt.QuickMessage;
 
 public class NewUserWizard extends Wizard {
@@ -25,15 +25,15 @@ public class NewUserWizard extends Wizard {
 			@Override
 			protected void nextPressed() {
 				try {
-					JLG.debug("next button pressed");
+					LOG.debug("next button pressed");
 					IWizardPage page = this.getCurrentPage();
 					if (page.getClass() == NewUserFormWizardPage.class) {
-						JLG.debug("form page");
+						LOG.debug("form page");
 						((NewUserFormWizardPage) page).onNextPage();
 					}
 					super.nextPressed();
 				} catch (Exception e) {
-					JLG.error(e);
+					LOG.error(e);
 					this.close();
 				}
 
@@ -47,7 +47,7 @@ public class NewUserWizard extends Wizard {
 			}
 		};
 		dialog.open();
-		JLG.debug("about to dispose shell");
+		LOG.debug("about to dispose shell");
 	}
 
 	private NewUserFormWizardPage p1;
@@ -77,18 +77,18 @@ public class NewUserWizard extends Wizard {
 		IWizardPage[] pages = getPages();
 		for (int i = 0; i < pages.length; i++) {
 			if (!pages[i].isPageComplete()) {
-				JLG.debug("page not completed: " + i);
+				LOG.debug("page not completed: " + i);
 				return false;
 			}
 		}
-		JLG.debug("all pages completed.");
+		LOG.debug("all pages completed.");
 		return true;
 	}
 
 	@Override
 	public boolean performFinish() {
 		try {
-			JLG.debug("creating the user");
+			LOG.debug("creating the user");
 			IUserCreation uc = window.ds.getComponent(IUserCreation.class);
 			if (uc.needsCaptcha()) {
 				uc.setCaptcha(getCaptcha());

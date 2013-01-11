@@ -3,7 +3,7 @@ package org.ocpteam.core2;
 import java.util.Iterator;
 import java.util.Map;
 
-import org.ocpteam.misc.JLG;
+import org.ocpteam.misc.LOG;
 
 public class Component implements IComponent {
 
@@ -79,7 +79,7 @@ public class Component implements IComponent {
 
 	@Override
 	public void init() throws Exception {
-		JLG.debug("init class " + getClass());
+		LOG.debug("init class " + getClass());
 		Iterator<Object> it = designer.components().iterator();
 		while (it.hasNext()) {
 			Object o = it.next();

@@ -1,6 +1,6 @@
 package org.ocpteam.test;
 
-import org.ocpteam.misc.JLG;
+import org.ocpteam.misc.LOG;
 
 public class TestLog {
 
@@ -9,8 +9,8 @@ public class TestLog {
 	 */
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		JLG.debug_on();
-		JLG.debug("Ceci est mon premier debug.");
+		LOG.debug_on();
+		LOG.debug("Ceci est mon premier debug.");
 	}
 
 }

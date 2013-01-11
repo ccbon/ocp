@@ -1,7 +1,7 @@
 package org.ocpteam.ui.swt;
 
 import org.eclipse.jface.action.Action;
-import org.ocpteam.misc.JLG;
+import org.ocpteam.misc.LOG;
 
 public class ViewNetworkPropertiesAction extends Action {
 
@@ -15,7 +15,7 @@ public class ViewNetworkPropertiesAction extends Action {
 
 	@Override
 	public void run() {
-		JLG.debug("View Network properties...");
+		LOG.debug("View Network properties...");
 		NetworkPropertiesDialog dialog = new NetworkPropertiesDialog(window.getShell(), window);
 		dialog.open();
 		window.getShell().setFocus();

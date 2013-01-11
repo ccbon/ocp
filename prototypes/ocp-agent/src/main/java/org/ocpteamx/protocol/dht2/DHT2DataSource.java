@@ -20,6 +20,7 @@ import org.ocpteam.interfaces.IDataModel;
 import org.ocpteam.interfaces.INodeMap;
 import org.ocpteam.misc.Id;
 import org.ocpteam.misc.JLG;
+import org.ocpteam.misc.LOG;
 import org.ocpteam.serializable.Address;
 import org.ocpteam.serializable.Contact;
 import org.ocpteam.serializable.EOMObject;
@@ -86,7 +87,7 @@ public class DHT2DataSource extends DSPDataSource {
 		Contact predecessor = ringNodeMap.getPredecessor(getNode());
 		if (predecessor.isMyself()) {
 			if (agent.isFirstAgent()) {
-				JLG.debug("first agent: ds=" + getName());
+				LOG.debug("first agent: ds=" + getName());
 				return;
 			}
 			// it means I am the first agent on my ring.
@@ -126,7 +127,7 @@ public class DHT2DataSource extends DSPDataSource {
 	}
 
 	private void copyRingContent() throws Exception {
-		JLG.debug("start to copy ring content (ds=" + getName() + " ring="
+		LOG.debug("start to copy ring content (ds=" + getName() + " ring="
 				+ getNode().getRing() + ")");
 		for (NodeMap nodeMap : ringNodeMap.getNodeMaps()) {
 			for (Contact c : nodeMap.getNodeMap().values()) {
@@ -186,12 +187,12 @@ public class DHT2DataSource extends DSPDataSource {
 	}
 
 	public void store(String key, String value) {
-		JLG.debug("local store: " + key + "->" + value);
+		LOG.debug("local store: " + key + "->" + value);
 		map.put(key, value);
 	}
 
 	public String retrieve(String key) {
-		JLG.debug("local retrieve: " + key);
+		LOG.debug("local retrieve: " + key);
 		return map.get(key);
 	}
 

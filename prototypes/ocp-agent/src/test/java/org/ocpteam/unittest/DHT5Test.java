@@ -16,6 +16,7 @@ import org.ocpteam.interfaces.IUserCreation;
 import org.ocpteam.interfaces.IUserManagement;
 import org.ocpteam.misc.Id;
 import org.ocpteam.misc.JLG;
+import org.ocpteam.misc.LOG;
 import org.ocpteam.misc.TestUtils;
 import org.ocpteamx.protocol.dht5.DHT5v2DataSource;
 
@@ -31,7 +32,7 @@ public class DHT5Test {
 			String filename = "test.txt";
 			int n = 2;
 			int port = 40000;
-			JLG.debug_on();
+			LOG.debug_on();
 			JLG.bUseSet = true;
 			JLG.set.add(DHT5Test.class.getName());
 			DHT5v2DataSource[] ds = new DHT5v2DataSource[n];
@@ -69,7 +70,7 @@ public class DHT5Test {
 			
 			Context ctx = dts.getContext();
 			IFileSystem fs = (IFileSystem) ctx.getDataModel();
-			JLG.debug("commit " + filename);
+			LOG.debug("commit " + filename);
 			fs.commit("/", new File(filename));
 			JLG.rm(filename);
 			
@@ -88,7 +89,7 @@ public class DHT5Test {
 			for (int i = 1; i < n; i++) {
 				ds[i].connect();
 				ContactMap cm = ds[i].getComponent(ContactMap.class);
-				JLG.debug("ds[" + i + "] contact map size: " + cm.size());
+				LOG.debug("ds[" + i + "] contact map size: " + cm.size());
 				assertEquals(i + 1, cm.size());
 			}
 			
@@ -100,18 +101,18 @@ public class DHT5Test {
 
 			ctx = dts.getContext();
 			fs = (IFileSystem) ctx.getDataModel();
-			JLG.debug("checkout" + filename);
+			LOG.debug("checkout" + filename);
 			fs.checkout("/", filename, new File("."));
 			Id checksum2 = TestUtils.checksum(filename);
 			
 			for (int i = 0; i < n; i++) {
-				JLG.debug("disconnecting " + ds[i].getName());
+				LOG.debug("disconnecting " + ds[i].getName());
 				ds[i].disconnectHard();
 			}
 			
 			JLG.rm(filename);
-			JLG.debug("checksum=" + checksum);
-			JLG.debug("checksum2=" + checksum2);
+			LOG.debug("checksum=" + checksum);
+			LOG.debug("checksum2=" + checksum2);
 			assertEquals(checksum, checksum2);
 		} catch (Exception e) {
 			e.printStackTrace();

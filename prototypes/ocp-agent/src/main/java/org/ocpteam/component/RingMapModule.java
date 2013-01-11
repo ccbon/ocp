@@ -6,7 +6,7 @@ import org.ocpteam.entity.Session;
 import org.ocpteam.interfaces.IAddressMap;
 import org.ocpteam.interfaces.IModule;
 import org.ocpteam.interfaces.ITransaction;
-import org.ocpteam.misc.JLG;
+import org.ocpteam.misc.LOG;
 import org.ocpteam.serializable.Address;
 
 public class RingMapModule implements IModule {
@@ -21,7 +21,7 @@ public class RingMapModule implements IModule {
 			@Override
 			public Serializable run(Session session, Serializable[] objects)
 					throws Exception {
-				JLG.debug("GET_ON_RING...");
+				LOG.debug("GET_ON_RING...");
 				int ring = (Integer) objects[0];
 				Address address = (Address) objects[1];
 				RingAddressMap map = (RingAddressMap) session.ds().getComponent(IAddressMap.class);
@@ -46,7 +46,7 @@ public class RingMapModule implements IModule {
 			@Override
 			public Serializable run(Session session, Serializable[] objects)
 					throws Exception {
-				JLG.debug("PUT_ON_RING...");
+				LOG.debug("PUT_ON_RING...");
 				int ring = (Integer) objects[0];
 				Address address = (Address) objects[1];
 				byte[] value = (byte[]) objects[2];
@@ -73,7 +73,7 @@ public class RingMapModule implements IModule {
 			@Override
 			public Serializable run(Session session, Serializable[] objects)
 					throws Exception {
-				JLG.debug("REMOVE_ON_RING...");
+				LOG.debug("REMOVE_ON_RING...");
 				int ring = (Integer) objects[0];
 				Address address = (Address) objects[1];
 				RingAddressMap map = (RingAddressMap) session.ds().getComponent(IAddressMap.class);

@@ -6,6 +6,7 @@ import java.util.zip.ZipEntry;
 
 import org.ocpteam.interfaces.IFile;
 import org.ocpteam.misc.JLG;
+import org.ocpteam.misc.LOG;
 
 public class ZipFileImpl implements IFile {
 
@@ -16,7 +17,7 @@ public class ZipFileImpl implements IFile {
 	public ZipFileImpl(ZipEntry zipEntry) {
 		map = new HashMap<String, ZipFileImpl>();
 		this.path = zipEntry.getName();
-		JLG.debug("zipentry.path=" + path);
+		LOG.debug("zipentry.path=" + path);
 		this.bIsDirectory = zipEntry.isDirectory();
 	}
 

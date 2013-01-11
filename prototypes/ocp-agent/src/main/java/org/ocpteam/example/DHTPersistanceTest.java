@@ -5,6 +5,7 @@ import java.util.Properties;
 import org.ocpteam.component.DSPDataSource;
 import org.ocpteam.entity.Context;
 import org.ocpteam.misc.JLG;
+import org.ocpteam.misc.LOG;
 import org.ocpteamx.protocol.dht0.DHTDataModel;
 import org.ocpteamx.protocol.dht0.DHTDataSource;
 import org.ocpteamx.protocol.dht0.DHTModule;
@@ -12,7 +13,7 @@ import org.ocpteamx.protocol.dht0.DHTModule;
 public class DHTPersistanceTest {
 	public static void main(String[] args) {
 		try {
-			JLG.debug_on();
+			LOG.debug_on();
 			JLG.bUseSet = true;
 			JLG.set.add(DHTPersistanceTest.class.getName());
 			JLG.set.add(DHTDataModel.class.getName());
@@ -45,14 +46,14 @@ public class DHTPersistanceTest {
 
 			Context ctx2 = ds2.getContext();
 			DHTDataModel dm2 = (DHTDataModel) ctx2.getDataModel();
-			JLG.debug("keyset=" + dm.keySet());
-			JLG.debug("keyset=" + dm2.keySet());
-			JLG.debug("hello2->" + dm2.get("hello2"));
-			JLG.debug("coucou->" + dm2.get("coucou"));
+			LOG.debug("keyset=" + dm.keySet());
+			LOG.debug("keyset=" + dm2.keySet());
+			LOG.debug("hello2->" + dm2.get("hello2"));
+			LOG.debug("coucou->" + dm2.get("coucou"));
 			
 			ds.disconnect();
-			JLG.debug("hello2->" + dm2.get("hello2"));
-			JLG.debug("coucou->" + dm2.get("coucou"));
+			LOG.debug("hello2->" + dm2.get("hello2"));
+			LOG.debug("coucou->" + dm2.get("coucou"));
 			ds2.disconnect();
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -17,7 +17,7 @@ import java.util.concurrent.ExecutorService;
 import org.ocpteam.component.DSContainer;
 import org.ocpteam.exception.NotAvailableContactException;
 import org.ocpteam.interfaces.IMapDataModel;
-import org.ocpteam.misc.JLG;
+import org.ocpteam.misc.LOG;
 import org.ocpteam.serializable.Contact;
 import org.ocpteam.serializable.EOMObject;
 import org.ocpteam.serializable.InputFlow;
@@ -52,9 +52,9 @@ public class DHTDataModel extends DSContainer<DHTDataSource> implements IMapData
 				@Override
 				public String call() throws Exception {
 					try {
-						JLG.debug("request");
+						LOG.debug("request");
 						String value = (String) ds().client.request(c, message);
-						JLG.debug("request end");
+						LOG.debug("request end");
 						if (value != null) {
 							return value;
 						}
@@ -108,7 +108,7 @@ public class DHTDataModel extends DSContainer<DHTDataSource> implements IMapData
 								break;
 							}
 							String s = (String) serializable;
-							JLG.debug("s=" + s);
+							LOG.debug("s=" + s);
 							set.add(s);
 						}
 						ds().contactMap.getTcpClient(c).returnSocket(socket);

@@ -6,7 +6,7 @@ import java.util.Set;
 
 import org.ocpteam.interfaces.IAddressMap;
 import org.ocpteam.interfaces.IMapDataModel;
-import org.ocpteam.misc.JLG;
+import org.ocpteam.misc.LOG;
 import org.ocpteam.serializable.Address;
 import org.ocpteam.serializable.RootContent;
 
@@ -27,7 +27,7 @@ public class AddressMapDataModel extends DSContainer<DSPDataSource> implements
 		Address address = getAddress(key);
 		getMap().put(address, value.getBytes());
 		setRootContent(key, address);
-		JLG.debug("set finished.");
+		LOG.debug("set finished.");
 	}
 
 	private void setRootContent(String key, Address address) throws Exception {

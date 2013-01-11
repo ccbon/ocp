@@ -11,7 +11,7 @@ import org.ocpteam.interfaces.ISecurity;
 import org.ocpteam.interfaces.IUser;
 import org.ocpteam.interfaces.IUserCreation;
 import org.ocpteam.interfaces.IUserManagement;
-import org.ocpteam.misc.JLG;
+import org.ocpteam.misc.LOG;
 import org.ocpteam.serializable.Address;
 import org.ocpteam.serializable.AddressUser;
 import org.ocpteam.serializable.SecureUser;
@@ -140,8 +140,8 @@ public class AddressUserCreation extends DSContainer<AddressDataSource>
 		String username = um.getUsername();
 		IAuthenticable a = ds().getComponent(IAuthenticable.class);
 		String password = (String) a.getChallenge();
-		JLG.debug("username=" + username);
-		JLG.debug("password=" + password);
+		LOG.debug("username=" + username);
+		LOG.debug("password=" + password);
 		if (ds().usesComponent(ISecurity.class)) {
 			ISecurity security = ds().getComponent(ISecurity.class);
 			this.user = security.getUser(username, password);

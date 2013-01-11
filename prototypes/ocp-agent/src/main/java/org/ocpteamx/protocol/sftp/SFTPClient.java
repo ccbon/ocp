@@ -6,7 +6,7 @@ import org.ocpteam.interfaces.IAuthenticable;
 import org.ocpteam.interfaces.IClient;
 import org.ocpteam.interfaces.IDataModel;
 import org.ocpteam.interfaces.IUserManagement;
-import org.ocpteam.misc.JLG;
+import org.ocpteam.misc.LOG;
 import org.ocpteam.serializable.User;
 
 import com.jcraft.jsch.ChannelSftp;
@@ -49,10 +49,10 @@ public class SFTPClient extends DSContainer<SFTPDataSource> implements
 				session.setUserInfo(ui);
 			} else if (c.getType() == SSHChallenge.PRIVATE_KEY) {
 				if (c.getPassphrase() == null) {
-					JLG.debug("passphrase is null");
+					LOG.debug("passphrase is null");
 					jsch.addIdentity(c.getPrivateKeyFile().getAbsolutePath());
 				} else {
-					JLG.debug("passphrase is set");
+					LOG.debug("passphrase is set");
 					jsch.addIdentity(c.getPrivateKeyFile().getAbsolutePath(),
 							c.getPassphrase());
 				}
@@ -64,9 +64,9 @@ public class SFTPClient extends DSContainer<SFTPDataSource> implements
 			channel.connect();
 			User user = new SFTPUser(login, c);
 			IDataModel dm = new SFTPFileSystem(user, this);
-			JLG.debug("setting context");
+			LOG.debug("setting context");
 			ds().setContext(new Context(user, dm, "/"));
-			JLG.debug("dm=" + ds().getContext().getDataModel().getClass());
+			LOG.debug("dm=" + ds().getContext().getDataModel().getClass());
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new Exception("Cannot login");

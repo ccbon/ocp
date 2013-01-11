@@ -2,7 +2,7 @@ package org.ocpteam.ui.swt;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.swt.widgets.TableItem;
-import org.ocpteam.misc.JLG;
+import org.ocpteam.misc.LOG;
 import org.ocpteam.misc.swt.QuickMessage;
 
 
@@ -28,7 +28,7 @@ public class RemoveFileAction extends Action {
 
 	@Override
 	public void run() {
-		JLG.debug("Delete local file");
+		LOG.debug("Delete local file");
 		int selNbr = composite.localDirectoryTable.getSelection().length;
 		if (selNbr == 1) {
 			String name = composite.localDirectoryTable.getSelection()[0].getText();

@@ -8,6 +8,7 @@ import java.util.Iterator;
 import org.ocpteam.interfaces.IFile;
 import org.ocpteam.interfaces.IFileSystem;
 import org.ocpteam.misc.JLG;
+import org.ocpteam.misc.LOG;
 import org.ocpteam.serializable.Pointer;
 import org.ocpteam.serializable.Tree;
 import org.ocpteam.serializable.TreeEntry;
@@ -68,12 +69,12 @@ public class OCPFileSystem implements IFileSystem {
 	}
 
 	private Pointer commit(File file) throws Exception {
-		JLG.debug("about to commit " + file.getName());
+		LOG.debug("about to commit " + file.getName());
 		Pointer result = null;
 		if (file.isDirectory()) {
 			Tree tree = new Tree();
 			for (File child : file.listFiles()) {
-				JLG.debug("child: " + child.getName());
+				LOG.debug("child: " + child.getName());
 				Pointer p = commit(child);
 				if (child.isDirectory()) {
 					tree.addTree(child.getName(), p);
@@ -117,12 +118,12 @@ public class OCPFileSystem implements IFileSystem {
 	}
 
 	public void deleteFile(String path, String name) throws Exception {
-		JLG.debug("path = " + path);
+		LOG.debug("path = " + path);
 		String[] dirnames = path.split("/");
 		if (path.equals("/")) {
 			dirnames = new String[] { "" };
 		}
-		JLG.debug("dirnames.length = " + dirnames.length);
+		LOG.debug("dirnames.length = " + dirnames.length);
 		Tree[] trees = getTreeStack(dirnames);
 
 		Tree tree = trees[trees.length - 1];
@@ -139,12 +140,12 @@ public class OCPFileSystem implements IFileSystem {
 
 	public void renameFile(String path, String oldName, String newName)
 			throws Exception {
-		JLG.debug("path = " + path);
+		LOG.debug("path = " + path);
 		String[] dirnames = path.split("/");
 		if (path.equals("/")) {
 			dirnames = new String[] { "" };
 		}
-		JLG.debug("dirnames.length = " + dirnames.length);
+		LOG.debug("dirnames.length = " + dirnames.length);
 		Tree[] trees = getTreeStack(dirnames);
 
 		Tree tree = trees[trees.length - 1];
@@ -184,12 +185,12 @@ public class OCPFileSystem implements IFileSystem {
 	}
 
 	public void createNewDir(String path, String directoryNew) throws Exception {
-		JLG.debug("path = " + path);
+		LOG.debug("path = " + path);
 		String[] dirnames = path.split("/");
 		if (path.equals("/")) {
 			dirnames = new String[] { "" };
 		}
-		JLG.debug("dirnames.length = " + dirnames.length);
+		LOG.debug("dirnames.length = " + dirnames.length);
 		Tree[] trees = getTreeStack(dirnames);
 		Pointer p = agent.set(user, new Tree());
 		Tree tree = trees[trees.length - 1];
@@ -236,12 +237,12 @@ public class OCPFileSystem implements IFileSystem {
 
 	@Override
 	public void commit(String remoteDir, File file) throws Exception {
-		JLG.debug("path = " + remoteDir);
+		LOG.debug("path = " + remoteDir);
 		String[] dirnames = remoteDir.split("/");
 		if (remoteDir.equals("/")) {
 			dirnames = new String[] { "" };
 		}
-		JLG.debug("dirnames.length = " + dirnames.length);
+		LOG.debug("dirnames.length = " + dirnames.length);
 		Tree[] trees = getTreeStack(dirnames);
 		Pointer p = commit(file);
 		Tree tree = trees[trees.length - 1];

@@ -13,6 +13,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 import org.ocpteam.misc.JLG;
+import org.ocpteam.misc.LOG;
 
 public class CopyAction extends Action {
 
@@ -34,7 +35,7 @@ public class CopyAction extends Action {
 
 	@Override
 	public void run() {
-		JLG.debug("Copy");
+		LOG.debug("Copy");
 		// copy only from the local directory
 		if (window.explorerComposite == null) {
 			return;
@@ -57,7 +58,7 @@ public class CopyAction extends Action {
 						explorerComposite.currentLocalDirectory,
 						name);
 				String path = f.getAbsolutePath();
-				JLG.debug("path=" + path);
+				LOG.debug("path=" + path);
 				data[i] = path;
 			}
 			window.clipboard.setContents(new Object[] { data },

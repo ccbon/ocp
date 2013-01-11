@@ -5,7 +5,7 @@ import java.net.URI;
 import org.ocpteam.component.TCPListener;
 import org.ocpteam.core.TopContainer;
 import org.ocpteam.interfaces.IProtocol;
-import org.ocpteam.misc.JLG;
+import org.ocpteam.misc.LOG;
 import org.ocpteam.network.TCPClient;
 
 public class DHTConnectStress extends TopContainer {
@@ -23,7 +23,7 @@ public class DHTConnectStress extends TopContainer {
 	@Override
 	public void init() throws Exception {
 		super.init();
-		JLG.debug_on();
+		LOG.debug_on();
 	}
 
 	public void start() throws Exception {
@@ -36,10 +36,10 @@ public class DHTConnectStress extends TopContainer {
 		
 		TCPClient tcpClient = new TCPClient("localhost", 12345, protocol);
 		String response = (String) tcpClient.request("coucou");
-		JLG.debug("response=" + response);
+		LOG.debug("response=" + response);
 		tcplistener.stop();
 		response = (String) tcpClient.request("coucou");
-		JLG.debug("response=" + response);
+		LOG.debug("response=" + response);
 		
 	}
 

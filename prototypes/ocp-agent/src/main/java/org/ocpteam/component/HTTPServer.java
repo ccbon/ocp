@@ -3,7 +3,7 @@ package org.ocpteam.component;
 import java.net.InetSocketAddress;
 import java.util.concurrent.Executors;
 
-import org.ocpteam.misc.JLG;
+import org.ocpteam.misc.LOG;
 
 import com.sun.net.httpserver.HttpServer;
 
@@ -23,7 +23,7 @@ public class HTTPServer implements Runnable {
 			server.createContext("/", handler);
 			server.setExecutor(Executors.newCachedThreadPool());
 			server.start();
-			JLG.debug("Server is listening on port " + port);
+			LOG.debug("Server is listening on port " + port);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

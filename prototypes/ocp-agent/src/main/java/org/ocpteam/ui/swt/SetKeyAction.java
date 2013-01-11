@@ -1,7 +1,7 @@
 package org.ocpteam.ui.swt;
 
 import org.eclipse.jface.action.Action;
-import org.ocpteam.misc.JLG;
+import org.ocpteam.misc.LOG;
 
 
 public class SetKeyAction extends Action {
@@ -18,7 +18,7 @@ public class SetKeyAction extends Action {
 
 	@Override
 	public void run() {
-		JLG.debug("Set Key");
+		LOG.debug("Set Key");
 		SetKeyWizard wizard = new SetKeyWizard(w);
 		wizard.start();
 	}

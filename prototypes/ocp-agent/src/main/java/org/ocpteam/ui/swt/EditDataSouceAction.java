@@ -1,7 +1,7 @@
 package org.ocpteam.ui.swt;
 
 import org.eclipse.jface.action.Action;
-import org.ocpteam.misc.JLG;
+import org.ocpteam.misc.LOG;
 
 public class EditDataSouceAction extends Action {
 
@@ -15,7 +15,7 @@ public class EditDataSouceAction extends Action {
 
 	@Override
 	public void run() {
-		JLG.debug("EditDataSourceAction");
+		LOG.debug("EditDataSourceAction");
 		try {
 			EditDSPDataSourceScenario scenario = new EditDSPDataSourceScenario();
 			scenario.setWindow(w);

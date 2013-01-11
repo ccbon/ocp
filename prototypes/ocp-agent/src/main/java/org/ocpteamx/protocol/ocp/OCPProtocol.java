@@ -15,6 +15,7 @@ import org.ocpteam.component.Protocol;
 import org.ocpteam.entity.Session;
 import org.ocpteam.misc.Id;
 import org.ocpteam.misc.JLG;
+import org.ocpteam.misc.LOG;
 import org.ocpteam.serializable.Address;
 import org.ocpteam.serializable.InputMessage;
 
@@ -55,12 +56,12 @@ public class OCPProtocol extends Protocol {
 	
 	@Override
 	public void process(Socket clientSocket) throws Exception {
-		JLG.debug("about to read object");
+		LOG.debug("about to read object");
 		Serializable o = getStreamSerializer().readObject(clientSocket);
 		if (o instanceof InputMessage) {
 			InputMessage inputMessage = (InputMessage) o;
 			Session session = new Session(ds(), clientSocket);
-			JLG.debug("inputMessage.transid=" + inputMessage.transid);
+			LOG.debug("inputMessage.transid=" + inputMessage.transid);
 			inputMessage.transaction = getMap().get(inputMessage.transid);
 			if (inputMessage.transaction == null) {
 				throw new Exception("transaction unknown: " + inputMessage.transid);
@@ -101,7 +102,7 @@ public class OCPProtocol extends Protocol {
 				// serialize it.
 				return data.getContent();
 			} catch (Exception e) {
-				JLG.error(e);
+				LOG.error(e);
 				return ERROR;
 			}
 		}
@@ -117,7 +118,7 @@ public class OCPProtocol extends Protocol {
 				// serialize it.
 				return ds().serializer.serialize(data);
 			} catch (Exception e) {
-				JLG.error(e);
+				LOG.error(e);
 				return ERROR;
 			}
 		}
@@ -159,7 +160,7 @@ public class OCPProtocol extends Protocol {
 
 				return SUCCESS;
 			} catch (Exception e) {
-				JLG.error(e);
+				LOG.error(e);
 				return ERROR;
 			}
 
@@ -176,7 +177,7 @@ public class OCPProtocol extends Protocol {
 				// serialize it.
 				return SUCCESS;
 			} catch (Exception e) {
-				JLG.error(e);
+				LOG.error(e);
 				return ERROR;
 			}
 
@@ -190,7 +191,7 @@ public class OCPProtocol extends Protocol {
 				// serialize it.
 				return SUCCESS;
 			} catch (Exception e) {
-				JLG.error(e);
+				LOG.error(e);
 				return ERROR;
 			}
 

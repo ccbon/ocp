@@ -14,6 +14,7 @@ import org.ocpteam.interfaces.IFileSystem;
 import org.ocpteam.interfaces.ISecurity;
 import org.ocpteam.interfaces.IUser;
 import org.ocpteam.misc.JLG;
+import org.ocpteam.misc.LOG;
 import org.ocpteam.serializable.Address;
 import org.ocpteam.serializable.AddressUser;
 import org.ocpteam.serializable.SecureUser;
@@ -117,12 +118,12 @@ public class BFSDataModel extends DSContainer<AddressDataSource> implements
 	}
 
 	private Pointer commit(File file) throws Exception {
-		JLG.debug("about to commit " + file.getName());
+		LOG.debug("about to commit " + file.getName());
 		Pointer result = null;
 		if (file.isDirectory()) {
 			Tree tree = new Tree();
 			for (File child : file.listFiles()) {
-				JLG.debug("child: " + child.getName());
+				LOG.debug("child: " + child.getName());
 				Pointer p = commit(child);
 				if (child.isDirectory()) {
 					tree.addTree(child.getName(), p);
@@ -189,12 +190,12 @@ public class BFSDataModel extends DSContainer<AddressDataSource> implements
 
 	@Override
 	public void commit(String remoteDir, File file) throws Exception {
-		JLG.debug("path = " + remoteDir);
+		LOG.debug("path = " + remoteDir);
 		String[] dirnames = remoteDir.split("/");
 		if (remoteDir.equals("/")) {
 			dirnames = new String[] { "" };
 		}
-		JLG.debug("dirnames.length = " + dirnames.length);
+		LOG.debug("dirnames.length = " + dirnames.length);
 		Tree[] trees = getTreeStack(dirnames);
 		Pointer p = commit(file);
 		Tree tree = trees[trees.length - 1];
@@ -219,12 +220,12 @@ public class BFSDataModel extends DSContainer<AddressDataSource> implements
 
 	@Override
 	public void mkdir(String existingParentDir, String newDir) throws Exception {
-		JLG.debug("existingParentDir = " + existingParentDir);
+		LOG.debug("existingParentDir = " + existingParentDir);
 		String[] dirnames = existingParentDir.split("/");
 		if (existingParentDir.equals("/")) {
 			dirnames = new String[] { "" };
 		}
-		JLG.debug("dirnames.length = " + dirnames.length);
+		LOG.debug("dirnames.length = " + dirnames.length);
 		Tree[] trees = getTreeStack(dirnames);
 		Pointer p = set(ds().serializer.serialize(new Tree()));
 		Tree tree = trees[trees.length - 1];
@@ -240,12 +241,12 @@ public class BFSDataModel extends DSContainer<AddressDataSource> implements
 
 	@Override
 	public void rm(String existingParentDir, String name) throws Exception {
-		JLG.debug("existingParentDir = " + existingParentDir);
+		LOG.debug("existingParentDir = " + existingParentDir);
 		String[] dirnames = existingParentDir.split("/");
 		if (existingParentDir.equals("/")) {
 			dirnames = new String[] { "" };
 		}
-		JLG.debug("dirnames.length = " + dirnames.length);
+		LOG.debug("dirnames.length = " + dirnames.length);
 		Tree[] trees = getTreeStack(dirnames);
 
 		Tree tree = trees[trees.length - 1];
@@ -262,12 +263,12 @@ public class BFSDataModel extends DSContainer<AddressDataSource> implements
 	@Override
 	public void rename(String existingParentDir, String oldName, String newName)
 			throws Exception {
-		JLG.debug("existingParentDir = " + existingParentDir);
+		LOG.debug("existingParentDir = " + existingParentDir);
 		String[] dirnames = existingParentDir.split("/");
 		if (existingParentDir.equals("/")) {
 			dirnames = new String[] { "" };
 		}
-		JLG.debug("dirnames.length = " + dirnames.length);
+		LOG.debug("dirnames.length = " + dirnames.length);
 		Tree[] trees = getTreeStack(dirnames);
 
 		Tree tree = trees[trees.length - 1];

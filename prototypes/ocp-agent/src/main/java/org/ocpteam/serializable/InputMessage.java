@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 import org.ocpteam.interfaces.IStructurable;
 import org.ocpteam.interfaces.ITransaction;
-import org.ocpteam.misc.JLG;
+import org.ocpteam.misc.LOG;
 import org.ocpteam.misc.Structure;
 
 public class InputMessage implements IStructurable {
@@ -33,7 +33,7 @@ public class InputMessage implements IStructurable {
 	public Structure toStructure() throws Exception {
 		Structure result = new Structure(getClass());
 		result.setIntField("transid", transid);
-		JLG.debug("objects=" + objects);
+		LOG.debug("objects=" + objects);
 		result.setListField("objects", objects);
 		return result;
 	}

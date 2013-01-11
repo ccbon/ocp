@@ -7,6 +7,7 @@ import java.util.Properties;
 import org.junit.Test;
 import org.ocpteam.component.ContactMap;
 import org.ocpteam.misc.JLG;
+import org.ocpteam.misc.LOG;
 import org.ocpteamx.protocol.dht3.DHT3DataSource;
 
 public class DHT3Test {
@@ -20,7 +21,7 @@ public class DHT3Test {
 		try {
 			int n = 10;
 			int port = 40000;
-			JLG.debug_on();
+			LOG.debug_on();
 			JLG.bUseSet = true;
 			JLG.set.add(DHT3Test.class.getName());
 			//JLG.set.add(DHT2DataSource.class.getName());
@@ -51,33 +52,33 @@ public class DHT3Test {
 
 			ds[0].connect();
 			ds[0].dm.set("hello", "world");
-			JLG.debug("hello->" + ds[0].dm.get("hello"));
+			LOG.debug("hello->" + ds[0].dm.get("hello"));
 
 			// start all
 			for (int i = 1; i < n; i++) {
 				ds[i].connect();
 				ContactMap cm = ds[i].getComponent(ContactMap.class);
-				JLG.debug("ds[" + i + "] contact map size: " + cm.size());
+				LOG.debug("ds[" + i + "] contact map size: " + cm.size());
 				assertEquals(i + 1, cm.size());
 			}
 			
 			
 			
 			ds[0].dm.set("coucou", "suzana");
-			JLG.debug("keyset: " + ds[0].dm.keySet());
+			LOG.debug("keyset: " + ds[0].dm.keySet());
 			//ds[0].dm.remove("hello");
 			ds[0].networkPicture();
 			
 			ds[0].disconnectHard();
 			ds[1].contactMap.refreshContactList();
 			ds[1].client.waitForCompletion();
-			JLG.debug("-------------------------------------");
+			LOG.debug("-------------------------------------");
 			ds[1].networkPicture();
 			
-			JLG.debug("coucou->" + ds[1].dm.get("coucou"));
+			LOG.debug("coucou->" + ds[1].dm.get("coucou"));
 			ds[1].client.waitForCompletion();
 			for (int i = 1; i < n; i++) {
-				JLG.debug("disconnecting " + ds[i].getName());
+				LOG.debug("disconnecting " + ds[i].getName());
 				ds[i].disconnectHard();
 			}
 

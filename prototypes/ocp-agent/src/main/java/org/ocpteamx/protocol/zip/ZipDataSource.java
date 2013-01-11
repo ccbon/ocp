@@ -5,7 +5,7 @@ import java.io.File;
 import org.ocpteam.component.DataSource;
 import org.ocpteam.entity.Context;
 import org.ocpteam.interfaces.IDataModel;
-import org.ocpteam.misc.JLG;
+import org.ocpteam.misc.LOG;
 
 public class ZipDataSource extends DataSource {
 	
@@ -33,7 +33,7 @@ public class ZipDataSource extends DataSource {
 	
 	@Override
 	public void saveAs(File file) throws Exception {
-		JLG.debug("zip saveas");
+		LOG.debug("zip saveas");
 		file.delete();
 		getFile().renameTo(file);
 		bIsNew = false;
@@ -42,7 +42,7 @@ public class ZipDataSource extends DataSource {
 	@Override
 	public void connect() throws Exception {
 		super.connect();
-		JLG.debug("opening datasource: " + getFile());
+		LOG.debug("opening datasource: " + getFile());
 		ZipFileSystem fs = (ZipFileSystem) getComponent(IDataModel.class);
 		fs.refresh();
 		setContext(new Context(fs));

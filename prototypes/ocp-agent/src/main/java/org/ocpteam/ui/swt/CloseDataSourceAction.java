@@ -3,7 +3,7 @@ package org.ocpteam.ui.swt;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.graphics.ImageData;
-import org.ocpteam.misc.JLG;
+import org.ocpteam.misc.LOG;
 import org.ocpteam.misc.swt.QuickMessage;
 
 public class CloseDataSourceAction extends Action {
@@ -26,7 +26,7 @@ public class CloseDataSourceAction extends Action {
 
 	@Override
 	public void run() {
-		JLG.debug("Close DataSource");
+		LOG.debug("Close DataSource");
 
 		try {
 			if (w.ds == null) {

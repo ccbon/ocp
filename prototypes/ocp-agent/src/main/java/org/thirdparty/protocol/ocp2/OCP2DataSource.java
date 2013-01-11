@@ -3,7 +3,7 @@ package org.thirdparty.protocol.ocp2;
 import java.util.ResourceBundle;
 
 import org.ocpteam.interfaces.IPersistentMap;
-import org.ocpteam.misc.JLG;
+import org.ocpteam.misc.LOG;
 import org.ocpteamx.protocol.ocp.OCPDataSource;
 
 public class OCP2DataSource extends OCPDataSource {
@@ -26,7 +26,7 @@ public class OCP2DataSource extends OCPDataSource {
 		String resourceClassString = packageString + "."
 				+ "OCP" + subpackage.toUpperCase()
 				+ "Resource";
-		JLG.debug("class=" + resourceClassString);
+		LOG.debug("class=" + resourceClassString);
 		return (ResourceBundle) Class.forName(resourceClassString)
 				.newInstance();
 

@@ -4,7 +4,7 @@ import java.io.File;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.swt.widgets.TableItem;
-import org.ocpteam.misc.JLG;
+import org.ocpteam.misc.LOG;
 import org.ocpteam.misc.swt.QuickMessage;
 
 public class CheckOutAction extends Action {
@@ -20,7 +20,7 @@ public class CheckOutAction extends Action {
 
 	@Override
 	public void run() {
-		JLG.debug("Check Out");
+		LOG.debug("Check Out");
 		if (!(w.explorerComposite instanceof ExplorerComposite)) {
 			return;
 		}

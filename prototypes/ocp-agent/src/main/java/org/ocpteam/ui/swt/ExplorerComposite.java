@@ -48,6 +48,7 @@ import org.ocpteam.component.Agent;
 import org.ocpteam.interfaces.IFile;
 import org.ocpteam.interfaces.IFileSystem;
 import org.ocpteam.misc.JLG;
+import org.ocpteam.misc.LOG;
 import org.ocpteam.misc.swt.QuickMessage;
 import org.ocpteam.win32.WindowsKernel32;
 
@@ -129,7 +130,7 @@ public class ExplorerComposite extends Composite {
 					break;
 				default:
 				}
-				JLG.debug("keypressed: keycode:" + e.keyCode
+				LOG.debug("keypressed: keycode:" + e.keyCode
 						+ " and character = '" + e.character + "'");
 				ExplorerComposite.this.w.refresh();
 			}
@@ -137,7 +138,7 @@ public class ExplorerComposite extends Composite {
 		localDirectoryTable.addMenuDetectListener(new MenuDetectListener() {
 			@Override
 			public void menuDetected(MenuDetectEvent arg0) {
-				JLG.debug("opening context menu");
+				LOG.debug("opening context menu");
 				final MenuManager myMenu = new MenuManager("xxx");
 				final Menu menu = myMenu
 						.createContextMenu(ExplorerComposite.this.w.getShell());
@@ -157,7 +158,7 @@ public class ExplorerComposite extends Composite {
 					RenameFileAction renameFileAction = new RenameFileAction(
 							ExplorerComposite.this);
 					myMenu.add(renameFileAction);
-					JLG.debug("array.lenght=" + sel);
+					LOG.debug("array.lenght=" + sel);
 					if (sel > 1) {
 						openFileAction.setEnabled(false);
 						renameFileAction.setEnabled(false);
@@ -184,21 +185,21 @@ public class ExplorerComposite extends Composite {
 		localDirectoryTable.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseDoubleClick(MouseEvent e) {
-				JLG.debug("double click");
+				LOG.debug("double click");
 				TableItem[] items = localDirectoryTable.getSelection();
 				if (items.length == 1) {
 					TableItem item = items[0];
 					openLocalFile(item);
 				}
-				JLG.debug("table item:" + e.widget.getClass());
+				LOG.debug("table item:" + e.widget.getClass());
 			}
 
 			@Override
 			public void mouseDown(MouseEvent e) {
-				JLG.debug("mouse down");
+				LOG.debug("mouse down");
 				Point pt = new Point(e.x, e.y);
 				if (localDirectoryTable.getItem(pt) == null) {
-					JLG.debug("cancel selection");
+					LOG.debug("cancel selection");
 					localDirectoryTable.deselectAll();
 				}
 				ExplorerComposite.this.w.refresh();
@@ -264,7 +265,7 @@ public class ExplorerComposite extends Composite {
 					break;
 				}
 
-				JLG.debug("keypressed: keycode:" + e.keyCode
+				LOG.debug("keypressed: keycode:" + e.keyCode
 						+ " and character = '" + e.character + "'");
 				ExplorerComposite.this.w.refresh();
 			}
@@ -272,7 +273,7 @@ public class ExplorerComposite extends Composite {
 		remoteDirectoryTable.addMenuDetectListener(new MenuDetectListener() {
 			@Override
 			public void menuDetected(MenuDetectEvent e) {
-				JLG.debug("opening context menu");
+				LOG.debug("opening context menu");
 				final MenuManager myMenu = new MenuManager("xxx");
 				final Menu menu = myMenu
 						.createContextMenu(ExplorerComposite.this.w.getShell());
@@ -321,24 +322,24 @@ public class ExplorerComposite extends Composite {
 		remoteDirectoryTable.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseDoubleClick(MouseEvent e) {
-				JLG.debug("double click");
+				LOG.debug("double click");
 				TableItem[] items = remoteDirectoryTable.getSelection();
-				JLG.debug("length=" + items.length);
+				LOG.debug("length=" + items.length);
 				if (items.length == 1) {
-					JLG.debug("length=1");
+					LOG.debug("length=1");
 					TableItem item = items[0];
 					openRemoteFile(item);
 				}
-				JLG.debug("table item:" + e.widget.getClass());
+				LOG.debug("table item:" + e.widget.getClass());
 
 			}
 
 			@Override
 			public void mouseDown(MouseEvent e) {
-				JLG.debug("mouse down");
+				LOG.debug("mouse down");
 				Point pt = new Point(e.x, e.y);
 				if (remoteDirectoryTable.getItem(pt) == null) {
-					JLG.debug("cancel selection");
+					LOG.debug("cancel selection");
 					remoteDirectoryTable.deselectAll();
 				}
 				ExplorerComposite.this.w.refresh();
@@ -400,11 +401,11 @@ public class ExplorerComposite extends Composite {
 
 			@Override
 			public void drop(DropTargetEvent event) {
-				JLG.debug("drop");
+				LOG.debug("drop");
 				if (TextTransfer.getInstance().isSupportedType(
 						event.currentDataType)) {
 					String text = (String) event.data;
-					JLG.debug("received from transfer: " + text);
+					LOG.debug("received from transfer: " + text);
 					(new CommitAction(ExplorerComposite.this.w)).run();
 				} else if (FileTransfer.getInstance().isSupportedType(
 						event.currentDataType)) {
@@ -446,11 +447,11 @@ public class ExplorerComposite extends Composite {
 
 			@Override
 			public void drop(DropTargetEvent event) {
-				JLG.debug("drop");
+				LOG.debug("drop");
 				if (TextTransfer.getInstance().isSupportedType(
 						event.currentDataType)) {
 					String text = (String) event.data;
-					JLG.debug("received from transfer: " + text);
+					LOG.debug("received from transfer: " + text);
 					(new CheckOutAction(ExplorerComposite.this.w)).run();
 				} else if (FileTransfer.getInstance().isSupportedType(
 						event.currentDataType)) {
@@ -546,7 +547,7 @@ public class ExplorerComposite extends Composite {
 	protected void openLocalFile(TableItem item) {
 		String name = item.getText(0);
 		String type = item.getText(1);
-		JLG.debug("type = " + type);
+		LOG.debug("type = " + type);
 		if (type.equals(DIRECTORY_TYPE)) {
 
 			if (name.equals(DIRECTORY_PARENT)) {
@@ -603,7 +604,7 @@ public class ExplorerComposite extends Composite {
 		});
 
 		for (File f : children) {
-			JLG.debug("filename: " + f.getAbsolutePath());
+			LOG.debug("filename: " + f.getAbsolutePath());
 			TableItem tableItem = new TableItem(localDirectoryTable, SWT.NONE);
 			String type = null;
 			String size = null;
@@ -668,7 +669,7 @@ public class ExplorerComposite extends Composite {
 					"Cannot delete the parent directory.");
 			return;
 		}
-		JLG.debug("type = " + type);
+		LOG.debug("type = " + type);
 		JLG.rm(new File(currentLocalDirectory, name));
 	}
 

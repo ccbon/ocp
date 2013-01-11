@@ -13,7 +13,7 @@ import org.ocpteam.interfaces.IActivity;
 import org.ocpteam.interfaces.IModule;
 import org.ocpteam.interfaces.ITransaction;
 import org.ocpteam.misc.Id;
-import org.ocpteam.misc.JLG;
+import org.ocpteam.misc.LOG;
 import org.ocpteam.serializable.EOMObject;
 
 public class DHT2Module implements IModule {
@@ -33,7 +33,7 @@ public class DHT2Module implements IModule {
 			@Override
 			public Serializable run(Session session, Serializable[] objects)
 					throws Exception {
-				JLG.debug("storing...");
+				LOG.debug("storing...");
 				DHT2DataSource ds = (DHT2DataSource) session.ds();
 				DHT2DataModel dm = (DHT2DataModel) ds.getContext()
 						.getDataModel();
@@ -62,7 +62,7 @@ public class DHT2Module implements IModule {
 			@Override
 			public Serializable run(Session session, Serializable[] objects)
 					throws Exception {
-				JLG.debug("retrieving...");
+				LOG.debug("retrieving...");
 				DHT2DataSource ds = (DHT2DataSource) session.ds();
 				DHT2DataModel dm = (DHT2DataModel) ds.getContext()
 						.getDataModel();
@@ -88,7 +88,7 @@ public class DHT2Module implements IModule {
 			@Override
 			public Serializable run(Session session, Serializable[] objects)
 					throws Exception {
-				JLG.debug("storing...");
+				LOG.debug("storing...");
 				DHT2DataSource ds = (DHT2DataSource) session.ds();
 				DHT2DataModel dm = (DHT2DataModel) ds.getContext()
 						.getDataModel();
@@ -117,12 +117,12 @@ public class DHT2Module implements IModule {
 			public void run(Session session, Serializable[] objects,
 					Socket socket, Protocol protocol)
 					throws Exception {
-				JLG.debug("keyset...");
+				LOG.debug("keyset...");
 				DHT2DataSource ds = (DHT2DataSource) session.ds();
 				Set<String> set = ds.keySet();
-				JLG.debug("set=" + set);
+				LOG.debug("set=" + set);
 				for (String s : set) {
-					JLG.debug("write " + s);
+					LOG.debug("write " + s);
 					protocol.getStreamSerializer().writeObject(socket, s);
 				}
 			}
@@ -141,17 +141,17 @@ public class DHT2Module implements IModule {
 			public void run(Session session, Serializable[] objects,
 					Socket socket, Protocol protocol)
 					throws Exception {
-				JLG.debug("transfer submap...");
+				LOG.debug("transfer submap...");
 				// normally we should filter the key where hash(key) >= given
 				// node_id...
 				Id nodeId = (Id) objects[0];
 				DHT2DataSource ds = (DHT2DataSource) session.ds();
 				Set<String> set = ds.keySet();
-				JLG.debug("set=" + set);
+				LOG.debug("set=" + set);
 				for (String s : set) {
 					Id address = ds.getAddress(s);
 					if (address.compareTo(nodeId) > 0) {
-						JLG.debug("write " + s);
+						LOG.debug("write " + s);
 						protocol.getStreamSerializer().writeObject(socket, s);
 						protocol.getStreamSerializer().writeObject(socket,
 								ds.retrieve(s));
@@ -174,7 +174,7 @@ public class DHT2Module implements IModule {
 			public void run(Session session, Serializable[] objects,
 					Socket socket, Protocol protocol)
 					throws Exception {
-				JLG.debug("setMap...");
+				LOG.debug("setMap...");
 				// normally we should filter the key where hash(key) >= given
 				// node_id...
 				DHT2DataSource ds = (DHT2DataSource) session.ds();
@@ -214,12 +214,12 @@ public class DHT2Module implements IModule {
 			public void run(Session session, Serializable[] objects,
 					Socket socket, Protocol protocol)
 					throws Exception {
-				JLG.debug("localmap...");
+				LOG.debug("localmap...");
 				DHT2DataSource ds = (DHT2DataSource) session.ds();
 				Set<String> set = ds.keySet();
-				JLG.debug("set=" + set);
+				LOG.debug("set=" + set);
 				for (String s : set) {
-					JLG.debug("write " + s);
+					LOG.debug("write " + s);
 					protocol.getStreamSerializer().writeObject(socket, s);
 					protocol.getStreamSerializer().writeObject(socket,
 							ds.retrieve(s));
@@ -240,7 +240,7 @@ public class DHT2Module implements IModule {
 			@Override
 			public Serializable run(Session session, Serializable[] objects)
 					throws Exception {
-				JLG.debug("restore...");
+				LOG.debug("restore...");
 				DHT2DataSource ds = (DHT2DataSource) session.ds();
 				// find another ring and copy the data from it.
 				Id startNodeId = (Id) objects[0];

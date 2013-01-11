@@ -6,7 +6,7 @@ import java.net.InetAddress;
 import org.ocpteam.entity.Session;
 import org.ocpteam.interfaces.IModule;
 import org.ocpteam.interfaces.ITransaction;
-import org.ocpteam.misc.JLG;
+import org.ocpteam.misc.LOG;
 import org.ocpteam.serializable.Contact;
 import org.ocpteam.serializable.ContactList;
 
@@ -25,7 +25,7 @@ public class DSPModule implements IModule {
 			@Override
 			public Serializable run(Session session, Serializable[] objects)
 					throws Exception {
-				JLG.debug("declareContact: ");
+				LOG.debug("declareContact: ");
 
 				Contact contact = (Contact) objects[0];
 				InetAddress host = session.getSocket().getInetAddress();
@@ -53,7 +53,7 @@ public class DSPModule implements IModule {
 			@Override
 			public Serializable run(Session session, Serializable[] objects)
 					throws Exception {
-				JLG.debug("get network properties: ");
+				LOG.debug("get network properties: ");
 				DSPDataSource ds = (DSPDataSource) session.ds();
 				return ds.network;
 			}
@@ -76,7 +76,7 @@ public class DSPModule implements IModule {
 			@Override
 			public Serializable run(Session session, Serializable[] objects)
 					throws Exception {
-				JLG.debug("get contact: " + session.ds().toContact());
+				LOG.debug("get contact: " + session.ds().toContact());
 				return session.ds().toContact();
 			}
 

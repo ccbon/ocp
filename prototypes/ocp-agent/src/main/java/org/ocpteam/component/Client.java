@@ -24,7 +24,7 @@ import org.ocpteam.exception.NotAvailableContactException;
 import org.ocpteam.interfaces.IClient;
 import org.ocpteam.interfaces.IProtocol;
 import org.ocpteam.interfaces.IStartable;
-import org.ocpteam.misc.JLG;
+import org.ocpteam.misc.LOG;
 import org.ocpteam.network.TCPClient;
 import org.ocpteam.network.UDPClient;
 import org.ocpteam.serializable.Contact;
@@ -53,7 +53,7 @@ public class Client extends DSContainer<DSPDataSource> implements IClient, IStar
 	 */
 	public Properties getNetworkProperties() throws Exception {
 		DSPModule m = ds().getComponent(DSPModule.class);
-		JLG.debug("module class: " + m.getClass());
+		LOG.debug("module class: " + m.getClass());
 		Response response = request(new InputMessage(m.getNetworkProperties()));
 		Properties network = (Properties) response.getObject();
 		return network;
@@ -68,10 +68,10 @@ public class Client extends DSContainer<DSPDataSource> implements IClient, IStar
 
 			Contact sponsor = getContact(url);
 			if (sponsor != null) {
-				JLG.debug("we found a pingable sponsor");
+				LOG.debug("we found a pingable sponsor");
 				contactMap.add(sponsor);
 			} else {
-				JLG.warn("url not pingable: " + url);
+				LOG.warn("url not pingable: " + url);
 			}
 		}
 
@@ -98,14 +98,14 @@ public class Client extends DSContainer<DSPDataSource> implements IClient, IStar
 				for (int i = 0; i < result.length; i++) {
 					@SuppressWarnings("unchecked")
 					Map<String, String> map = (Map<String, String>) result[i];
-					JLG.debug("url = " + map.get("url"));
+					LOG.debug("url = " + map.get("url"));
 					list.add(map.get("url"));
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 			if (list.isEmpty()) {
-				JLG.warn("first agent on the public network");
+				LOG.warn("first agent on the public network");
 			}
 
 		} else { // private network... agent properties must have at least one
@@ -127,7 +127,7 @@ public class Client extends DSContainer<DSPDataSource> implements IClient, IStar
 	}
 
 	public Contact getContact(URI url) throws Exception {
-		JLG.debug("getContact");
+		LOG.debug("getContact");
 		try {
 			TCPClient tcpClient = new TCPClient(url.getHost(), url.getPort(),
 					getProtocol());
@@ -139,7 +139,7 @@ public class Client extends DSContainer<DSPDataSource> implements IClient, IStar
 			tcpClient.releaseSocket();
 			return c;
 		} catch (Exception e) {
-			JLG.warn("contact not reachable. get contact returns null.");
+			LOG.warn("contact not reachable. get contact returns null.");
 			return null;
 		}
 	}
@@ -158,12 +158,12 @@ public class Client extends DSContainer<DSPDataSource> implements IClient, IStar
 	public Response requestByPriority(Queue<Contact> contactQueue, Serializable input)
 			throws Exception {
 		Serializable output = null;
-		JLG.debug("contact queue size: " + contactQueue.size());
+		LOG.debug("contact queue size: " + contactQueue.size());
 		Contact contact = null;
 		boolean done = false;
 		while (!contactQueue.isEmpty()) {
 			contact = contactQueue.poll();
-			JLG.debug("contact: " + contact);
+			LOG.debug("contact: " + contact);
 			try {
 				output = request(contact, input);
 				done = true;
@@ -185,9 +185,9 @@ public class Client extends DSContainer<DSPDataSource> implements IClient, IStar
 			throws Exception {
 		if (input instanceof InputMessage) {
 			InputMessage im = (InputMessage) input;
-			JLG.debug(ds().getName() + " sending message (" + im.transaction.getName() + ") on contact: " + contact);
+			LOG.debug(ds().getName() + " sending message (" + im.transaction.getName() + ") on contact: " + contact);
 		} else {
-			JLG.debug("sending request on contact: " + contact);
+			LOG.debug("sending request on contact: " + contact);
 		}
 		Serializable output = null;
 		// use the TCP connection.
@@ -197,17 +197,17 @@ public class Client extends DSContainer<DSPDataSource> implements IClient, IStar
 			output = tcpClient.request(input);
 			return output;
 		} catch (java.net.SocketTimeoutException e) {
-			JLG.debug("SocketTimeoutException on contact " + contact);
+			LOG.debug("SocketTimeoutException on contact " + contact);
 
 		} catch (java.net.ConnectException e) {
-			JLG.debug("ConnectException on contact " + contact);
+			LOG.debug("ConnectException on contact " + contact);
 
 		} catch (SocketException e) {
-			JLG.debug("SocketException on contact " + contact);
+			LOG.debug("SocketException on contact " + contact);
 
 		}
 
-		JLG.debug("about to throw a not available exception regarding contact "
+		LOG.debug("about to throw a not available exception regarding contact "
 				+ contact);
 		detach(contact);
 		throw new NotAvailableContactException();
@@ -216,13 +216,13 @@ public class Client extends DSContainer<DSPDataSource> implements IClient, IStar
 	public void declareContact() throws Exception {
 		Contact contact = ds().toContact();
 		DSPModule m = ds().getComponent(DSPModule.class);
-		JLG.debug(ds().getName() + " declares contact: " + contact);
+		LOG.debug(ds().getName() + " declares contact: " + contact);
 		sendAll(new InputMessage(m.declareContact(), contact));
 		waitForCompletion();
 	}
 
 	public void sendAll(final Serializable message) throws Exception {
-		JLG.debug("send all");
+		LOG.debug("send all");
 		Collection<Callable<Object>> tasks = new LinkedList<Callable<Object>>();
 		for (final Contact c : contactMap.getOtherContacts()) {
 			tasks.add(Executors.callable(new Runnable() {
@@ -232,7 +232,7 @@ public class Client extends DSContainer<DSPDataSource> implements IClient, IStar
 						// we do not care about the response
 						send(c, message);
 					} catch (NotAvailableContactException e) {
-						JLG.debug("detach");
+						LOG.debug("detach");
 						try {
 							detach(c);
 						} catch (Exception e1) {
@@ -243,7 +243,7 @@ public class Client extends DSContainer<DSPDataSource> implements IClient, IStar
 						// we don't care for agent that don't understand the
 						// sent
 						// message.
-						JLG.debug("Contact answered with error: "
+						LOG.debug("Contact answered with error: "
 								+ e.getMessage());
 					}
 				}
@@ -253,16 +253,16 @@ public class Client extends DSContainer<DSPDataSource> implements IClient, IStar
 			try {
 				completionService.submit(task);
 				remainingTasks++;
-				JLG.debug("increasing remainingTasks = " + remainingTasks);
+				LOG.debug("increasing remainingTasks = " + remainingTasks);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
-		JLG.debug("last remainingTasks = " + remainingTasks);
+		LOG.debug("last remainingTasks = " + remainingTasks);
 	}
 
 	public void detach(Contact contact) throws Exception {
-		JLG.debug("detaching contact: " + contact);
+		LOG.debug("detaching contact: " + contact);
 		
 		contactMap.remove(contact);
 		ds().onDetach(contact);
@@ -286,11 +286,11 @@ public class Client extends DSContainer<DSPDataSource> implements IClient, IStar
 	}
 
 	public void sendQuick(Contact c, byte[] message) throws Exception {
-		JLG.debug(ds().getName() + " sends a message to " + c);
+		LOG.debug(ds().getName() + " sends a message to " + c);
 
 		UDPClient udpClient = contactMap.getUdpClient(c);
 		if (udpClient == null) {
-			JLG.debug("no udp client found");
+			LOG.debug("no udp client found");
 			try {
 				request(c, message);
 			} catch (Exception e) {
@@ -299,7 +299,7 @@ public class Client extends DSContainer<DSPDataSource> implements IClient, IStar
 		}
 
 		try {
-			JLG.debug("udp client found");
+			LOG.debug("udp client found");
 			udpClient.send(message);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -307,7 +307,7 @@ public class Client extends DSContainer<DSPDataSource> implements IClient, IStar
 	}
 
 	public void send(Contact c, Serializable message) throws Exception {
-		JLG.debug("send");
+		LOG.debug("send");
 		try {
 			request(c, message);
 		} catch (NotAvailableContactException e) {
@@ -329,16 +329,16 @@ public class Client extends DSContainer<DSPDataSource> implements IClient, IStar
 		
 		for (Contact c : contactMap.getOtherContacts()) {
 			try {
-				JLG.debug(ds().getName() + " requests askForContact");
+				LOG.debug(ds().getName() + " requests askForContact");
 				ContactList contactsOfContact = (ContactList) request(c,
 						new InputMessage(m.askForContact()));
 				// strategy : friends of my friends are my friends.
-				JLG.debug(ds().getName() + " received "
+				LOG.debug(ds().getName() + " received "
 						+ contactsOfContact.getList().size() + " contact(s).");
 				for (Contact nc : contactsOfContact.getList()) {
-					JLG.debug("nc: " + nc);
+					LOG.debug("nc: " + nc);
 					if (nc.getName().equals(ds().getName())) {
-						JLG.debug("skipping");
+						LOG.debug("skipping");
 						continue;
 					}
 					contactMap.add(nc);
@@ -353,7 +353,7 @@ public class Client extends DSContainer<DSPDataSource> implements IClient, IStar
 		executor = Executors.newCachedThreadPool();
 		completionService = new ExecutorCompletionService<Object>(executor);
 		remainingTasks = 0;
-		JLG.debug("client started");
+		LOG.debug("client started");
 	}
 
 	@Override
@@ -377,9 +377,9 @@ public class Client extends DSContainer<DSPDataSource> implements IClient, IStar
 
 	public void waitForCompletion() {
 		try {
-			JLG.debug("remainingTasks = " + remainingTasks);
+			LOG.debug("remainingTasks = " + remainingTasks);
 			while (remainingTasks > 0) {
-				JLG.debug("remainingTasks = " + remainingTasks);
+				LOG.debug("remainingTasks = " + remainingTasks);
 				completionService.take();
 				remainingTasks--;
 			}

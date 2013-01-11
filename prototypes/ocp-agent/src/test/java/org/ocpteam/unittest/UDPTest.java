@@ -8,7 +8,7 @@ import org.ocpteam.component.NATTraversal;
 import org.ocpteam.component.UDPListener;
 import org.ocpteam.example.MinimalistProtocol;
 import org.ocpteam.interfaces.IProtocol;
-import org.ocpteam.misc.JLG;
+import org.ocpteam.misc.LOG;
 import org.ocpteam.network.UDPClient;
 
 public class UDPTest {
@@ -26,7 +26,7 @@ public class UDPTest {
 		try {
 			int i = 0;
 			int n = 3;
-			JLG.debug_on();
+			LOG.debug_on();
 			IProtocol protocol = new MinimalistProtocol();
 			UDPListener udplistener = new UDPListener();
 			udplistener.removeComponent(NATTraversal.class);

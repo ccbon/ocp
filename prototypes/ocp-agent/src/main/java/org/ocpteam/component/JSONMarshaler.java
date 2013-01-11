@@ -10,7 +10,7 @@ import org.apache.commons.codec.binary.Base64;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.ocpteam.interfaces.IMarshaler;
-import org.ocpteam.misc.JLG;
+import org.ocpteam.misc.LOG;
 import org.ocpteam.misc.Structure;
 
 public class JSONMarshaler implements IMarshaler {
@@ -37,7 +37,7 @@ public class JSONMarshaler implements IMarshaler {
 				String type = jsonArray.getString(0);
 				
 				if (jsonArray.get(1) == JSONObject.NULL) {
-					JLG.debug("JSONObject.NULL");
+					LOG.debug("JSONObject.NULL");
 					if (type.equals(Structure.TYPE_INT)) {
 						result.setIntField(key, (Integer) null);
 					} else if (type.equals(Structure.TYPE_DECIMAL)) {

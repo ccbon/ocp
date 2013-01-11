@@ -14,6 +14,7 @@ import org.ocpteam.interfaces.IConnect;
 import org.ocpteam.interfaces.IDocument;
 import org.ocpteam.interfaces.IListener;
 import org.ocpteam.misc.JLG;
+import org.ocpteam.misc.LOG;
 import org.ocpteam.serializable.Contact;
 
 public abstract class DataSource extends TopContainer implements IComponent,
@@ -96,7 +97,7 @@ public abstract class DataSource extends TopContainer implements IComponent,
 
 	@Override
 	public void save() throws Exception {
-		JLG.debug("saving ds");
+		LOG.debug("saving ds");
 		if (bIsNew) {
 			throw new Exception("Need a filename to save a new datasource");
 		}
@@ -112,7 +113,7 @@ public abstract class DataSource extends TopContainer implements IComponent,
 	public void saveAs(File file) throws Exception {
 		this.file = file;
 		bIsNew = false;
-		JLG.debug("save");
+		LOG.debug("save");
 		save();
 	}
 
@@ -175,7 +176,7 @@ public abstract class DataSource extends TopContainer implements IComponent,
 		String resourceClassString = packageString + "."
 				+ getProtocolName().toUpperCase() + subpackage.toUpperCase()
 				+ "Resource";
-		JLG.debug("class=" + resourceClassString);
+		LOG.debug("class=" + resourceClassString);
 		try {
 			ResourceBundle result = (ResourceBundle) Class.forName(
 					resourceClassString).newInstance();

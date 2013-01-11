@@ -14,7 +14,7 @@ import org.ocpteam.component.DSContainer;
 import org.ocpteam.entity.Response;
 import org.ocpteam.exception.NotAvailableContactException;
 import org.ocpteam.interfaces.IMapDataModel;
-import org.ocpteam.misc.JLG;
+import org.ocpteam.misc.LOG;
 import org.ocpteam.serializable.Address;
 import org.ocpteam.serializable.Contact;
 import org.ocpteam.serializable.EOMObject;
@@ -33,7 +33,7 @@ public class DHT1DataModel extends DSContainer<DHT1DataSource> implements IMapDa
 			return;
 		}
 		Queue<Contact> contactQueue = ds().nodeMap.getContactQueue(address);
-		JLG.debug("contactQueue=" + contactQueue);
+		LOG.debug("contactQueue=" + contactQueue);
 		
 		DHT1Module m = ds().getComponent(DHT1Module.class);
 		ds().client.requestByPriority(contactQueue, new InputMessage(m.store(), key, value));
@@ -92,7 +92,7 @@ public class DHT1DataModel extends DSContainer<DHT1DataSource> implements IMapDa
 								break;
 							}
 							String s = (String) serializable;
-							JLG.debug("s=" + s);
+							LOG.debug("s=" + s);
 							set.add(s);
 						}
 						ds().contactMap.getTcpClient(c).returnSocket(socket);

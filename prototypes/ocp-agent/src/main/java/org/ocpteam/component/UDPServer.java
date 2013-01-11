@@ -6,7 +6,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import org.ocpteam.interfaces.IProtocol;
-import org.ocpteam.misc.JLG;
+import org.ocpteam.misc.LOG;
 
 public class UDPServer {
 
@@ -54,7 +54,7 @@ public class UDPServer {
 	}
 
 	public void stop() {
-		JLG.debug("stopping a UDP server with port: " + port);
+		LOG.debug("stopping a UDP server with port: " + port);
 		try {
 			if (serverSocket != null) {
 				serverSocket.close();
@@ -66,8 +66,8 @@ public class UDPServer {
 		// make sure we don't accept new tasks
 		pool.shutdown();
 		pool.shutdownNow();
-		JLG.debug("pool shutdownNow=" + pool);
-		JLG.debug("end stopping a TCP server with port: " + port);
+		LOG.debug("pool shutdownNow=" + pool);
+		LOG.debug("end stopping a TCP server with port: " + port);
 	}
 
 	public void setProtocol(IProtocol protocol) {

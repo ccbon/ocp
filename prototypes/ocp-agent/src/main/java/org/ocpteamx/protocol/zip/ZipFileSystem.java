@@ -11,6 +11,7 @@ import org.ocpteam.core.Container;
 import org.ocpteam.interfaces.IFile;
 import org.ocpteam.interfaces.IFileSystem;
 import org.ocpteam.misc.JLG;
+import org.ocpteam.misc.LOG;
 
 public class ZipFileSystem extends Container<ZipDataSource> implements IFileSystem {
 
@@ -46,7 +47,7 @@ public class ZipFileSystem extends Container<ZipDataSource> implements IFileSyst
 			JLG.mkdir(dir);
 			IFile d = getFile(path);
 			for (IFile child : d.listFiles()) {
-				JLG.debug("child: " + child.getName());
+				LOG.debug("child: " + child.getName());
 				checkout(path, child.getName(), dir);
 			}
 		} else { // file
@@ -58,7 +59,7 @@ public class ZipFileSystem extends Container<ZipDataSource> implements IFileSyst
 
 	@Override
 	public void commit(String remoteDir, File file) throws Exception {
-		JLG.debug("zip commit: " + file.getName());
+		LOG.debug("zip commit: " + file.getName());
 		if (remoteDir.startsWith("/")) {
 			remoteDir = remoteDir.substring(1);
 		}
@@ -140,7 +141,7 @@ public class ZipFileSystem extends Container<ZipDataSource> implements IFileSyst
 			ZipEntry zipEntry = null;
 
 			while ((zipEntry = zipInputStream.getNextEntry()) != null) {
-				JLG.debug("adding to fs " + zipEntry.getName());
+				LOG.debug("adding to fs " + zipEntry.getName());
 				this.root.add(zipEntry.getName(), zipEntry);
 			}
 

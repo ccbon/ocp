@@ -4,7 +4,7 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.graphics.ImageData;
 import org.ocpteam.component.Agent;
-import org.ocpteam.misc.JLG;
+import org.ocpteam.misc.LOG;
 import org.ocpteam.misc.swt.QuickMessage;
 import org.ocpteam.ui.swt.DataSourceWindow;
 import org.ocpteamx.protocol.ocp.OCPAgent;
@@ -27,7 +27,7 @@ public class RemoveStorageAction extends Action {
 
 	@Override
 	public void run() {
-		JLG.debug("Removing storage...");
+		LOG.debug("Removing storage...");
 		if (QuickMessage.confirm(window.getShell(), "This will destroy the storage of this agent. Are you sure ?")) {
 			OCPAgent agent = (OCPAgent) window.ds.getComponent(Agent.class);
 			try {

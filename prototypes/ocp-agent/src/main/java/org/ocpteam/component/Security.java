@@ -14,7 +14,7 @@ import javax.crypto.spec.PBEParameterSpec;
 import org.ocpteam.interfaces.IAddressMap;
 import org.ocpteam.interfaces.ISecurity;
 import org.ocpteam.interfaces.IUserBackup;
-import org.ocpteam.misc.JLG;
+import org.ocpteam.misc.LOG;
 import org.ocpteam.serializable.Address;
 import org.ocpteam.serializable.Content;
 import org.ocpteam.serializable.SecureUser;
@@ -209,8 +209,8 @@ public class Security extends DSContainer<AddressDataSource> implements
 	@Override
 	public void putUser(SecureUser secureUser, String password)
 			throws Exception {
-		JLG.debug("secureUser.getUsername()=" + secureUser.getUsername());
-		JLG.debug("password=" + password);
+		LOG.debug("secureUser.getUsername()=" + secureUser.getUsername());
+		LOG.debug("password=" + password);
 		Address address = getUserAddress(secureUser.getUsername(), password);
 		byte[] value = ds().serializer.serialize(secureUser);
 		value = passwordCrypt(password, value);

@@ -13,6 +13,7 @@ import java.util.ResourceBundle;
 import org.ocpteam.core.Container;
 import org.ocpteam.core.IContainer;
 import org.ocpteam.misc.JLG;
+import org.ocpteam.misc.LOG;
 
 public class DataSourceFactory extends Container<IContainer> {
 	public static ResourceBundle extensionResource = ResourceBundle
@@ -32,7 +33,7 @@ public class DataSourceFactory extends Container<IContainer> {
 
 		String name = file.getName();
 		String extension = name.substring(name.lastIndexOf("."));
-		JLG.debug("extension=" + extension);
+		LOG.debug("extension=" + extension);
 		String protocol = null;
 		URI uri = null;
 		if (file.exists() && extension.equalsIgnoreCase(".uri")) {

@@ -14,7 +14,7 @@ import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
-import org.ocpteam.misc.JLG;
+import org.ocpteam.misc.LOG;
 
 public class SSHSignInWizardPage extends WizardPage {
 	Text sessionText;
@@ -33,7 +33,7 @@ public class SSHSignInWizardPage extends WizardPage {
 	 */
 	public SSHSignInWizardPage() {
 		super("wizardPage");
-		JLG.debug_on();
+		LOG.debug_on();
 		setTitle("Sign In Wizard");
 		setDescription("Please enter the SSH connection information below");
 	}
@@ -69,7 +69,7 @@ public class SSHSignInWizardPage extends WizardPage {
 		btnPasswordAuthentication.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				JLG.debug("bIsPassword = true");
+				LOG.debug("bIsPassword = true");
 				bIsPassword = true;
 				update();
 			}
@@ -82,7 +82,7 @@ public class SSHSignInWizardPage extends WizardPage {
 		btnRadioButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				JLG.debug("bIsPassword = false");
+				LOG.debug("bIsPassword = false");
 				bIsPassword = false;
 				update();
 			}
@@ -198,7 +198,7 @@ public class SSHSignInWizardPage extends WizardPage {
 
 	@Override
 	public boolean isPageComplete() {
-		JLG.debug("isPageComplete");
+		LOG.debug("isPageComplete");
 		if (sessionText.getText().equals("")) {
 			return false;
 		}

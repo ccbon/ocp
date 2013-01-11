@@ -14,6 +14,7 @@ import org.apache.commons.net.ftp.FTPReply;
 import org.ocpteam.interfaces.IDataStore;
 import org.ocpteam.interfaces.IPersistentMap;
 import org.ocpteam.misc.JLG;
+import org.ocpteam.misc.LOG;
 import org.ocpteam.serializable.Address;
 
 public class FTPPersistentFileMap extends DSContainer<DataSource> implements
@@ -28,23 +29,23 @@ public class FTPPersistentFileMap extends DSContainer<DataSource> implements
 
 	public void setURI(String uri) throws Exception {
 		this.uri = new URI(uri);
-		JLG.debug("uri = " + uri);
+		LOG.debug("uri = " + uri);
 		this.ftp = new FTPClient();
 		this.hostname = this.uri.getHost();
 		String[] a = this.uri.getUserInfo().split(":");
 		this.login = a[0];
 		this.password = a[1];
-		JLG.debug("login = " + login);
-		JLG.debug("passord = " + password);
+		LOG.debug("login = " + login);
+		LOG.debug("passord = " + password);
 		this.pathname = this.uri.getPath();
-		JLG.debug("pathname = " + pathname);
+		LOG.debug("pathname = " + pathname);
 		checkConnection();
 	}
 
 	private void checkConnection() throws Exception {
 		if (ftp.isConnected() == false) {
 
-			JLG.debug("Reconnect");
+			LOG.debug("Reconnect");
 			try {
 				ftp.disconnect();
 			} catch (Exception e) {
@@ -59,15 +60,15 @@ public class FTPPersistentFileMap extends DSContainer<DataSource> implements
 			}
 		}
 		boolean b = ftp.changeWorkingDirectory(pathname);
-		JLG.debug("b=" + b);
-		JLG.debug("pathname = " + pathname);
+		LOG.debug("b=" + b);
+		LOG.debug("pathname = " + pathname);
 		if (b == false) {
 			ftp.makeDirectory(pathname);
 			b = ftp.changeWorkingDirectory(pathname);
-			JLG.debug("b=" + b);
+			LOG.debug("b=" + b);
 		}
 		ftp.enterLocalPassiveMode();
-		JLG.debug("check connection passed.");
+		LOG.debug("check connection passed.");
 	}
 
 	@Override
@@ -77,7 +78,7 @@ public class FTPPersistentFileMap extends DSContainer<DataSource> implements
 			ftp.removeDirectory(pathname);
 			ftp.mkd(pathname);
 		} catch (Exception e) {
-			JLG.error(e);
+			LOG.error(e);
 		}
 	}
 
@@ -100,7 +101,7 @@ public class FTPPersistentFileMap extends DSContainer<DataSource> implements
 		ByteArrayOutputStream baos = null;
 		try {
 			ftp.setFileType(FTP.BINARY_FILE_TYPE);
-			JLG.debug("name = " + name);
+			LOG.debug("name = " + name);
 			f = ftp.retrieveFileStream(name);
 			if (f == null) {
 				throw new Exception("Cannot retrieve the file content of "
@@ -149,7 +150,7 @@ public class FTPPersistentFileMap extends DSContainer<DataSource> implements
 				result.add(address);
 			}
 		} catch (Exception e) {
-			JLG.error(e);
+			LOG.error(e);
 		}
 
 		return result;
@@ -157,8 +158,8 @@ public class FTPPersistentFileMap extends DSContainer<DataSource> implements
 
 	@Override
 	public void put(Address address, byte[] value) throws Exception {
-		JLG.debug("Start put");
-		JLG.debug("Address=" + address);
+		LOG.debug("Start put");
+		LOG.debug("Address=" + address);
 		checkConnection();
 		ByteArrayInputStream bais = new ByteArrayInputStream(value);
 		ftp.setFileType(FTP.BINARY_FILE_TYPE);
@@ -166,7 +167,7 @@ public class FTPPersistentFileMap extends DSContainer<DataSource> implements
 			throw new Exception("Cannot store file");
 		}
 		bais.close();
-		JLG.debug("End put");
+		LOG.debug("End put");
 	}
 
 	@Override
@@ -183,7 +184,7 @@ public class FTPPersistentFileMap extends DSContainer<DataSource> implements
 				ftp.deleteFile(address.toString());
 			}
 		} catch (Exception e) {
-			JLG.error(e);
+			LOG.error(e);
 		}
 	}
 

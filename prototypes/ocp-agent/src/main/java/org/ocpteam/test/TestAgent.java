@@ -7,6 +7,7 @@ import org.ocpteam.component.Agent;
 import org.ocpteam.interfaces.IAuthenticable;
 import org.ocpteam.interfaces.IUserManagement;
 import org.ocpteam.misc.JLG;
+import org.ocpteam.misc.LOG;
 import org.ocpteam.serializable.Pointer;
 import org.ocpteamx.protocol.ocp.Captcha;
 import org.ocpteamx.protocol.ocp.OCPAgent;
@@ -17,9 +18,9 @@ import org.ocpteamx.protocol.ocp.OCPUser;
 
 public class TestAgent {
 	public static void main(String[] args) {
-		JLG.debug_on();
-		JLG.debug("starting the test agent");
-		JLG.debug("working directory = " + System.getProperty("user.dir"));
+		LOG.debug_on();
+		LOG.debug("starting the test agent");
+		LOG.debug("working directory = " + System.getProperty("user.dir"));
 
 		try {
 			JLG.rm(System.getenv("TEMP") + "/ocp_agent_storage");
@@ -42,7 +43,7 @@ public class TestAgent {
 			// UserInterface ui = new CommandLine(agent);
 			// (new Thread(ui)).start();
 			Thread.sleep(2000);
-			JLG.debug(a1.toString());
+			LOG.debug(a1.toString());
 			
 
 			// starting second agent
@@ -56,8 +57,8 @@ public class TestAgent {
 			p2.setProperty("sponsor.2", "xxx://localhost:22223");
 			a2.connect();
 			Thread.sleep(2000);
-			JLG.debug(a1.toString());
-			JLG.debug(a2.toString());
+			LOG.debug(a1.toString());
+			LOG.debug(a2.toString());
 			//System.exit(0);
 			
 			String username = "jlguenego";
@@ -67,16 +68,16 @@ public class TestAgent {
 			//String answer = JLG.input("captcha challenge: " + captcha.challengeObject + "> ");
 			String answer = "didounette";
 			a2.createUser(username, password, 2, captcha, answer);
-			JLG.debug(a1.toString());
-			JLG.debug(a2.toString());
+			LOG.debug(a1.toString());
+			LOG.debug(a2.toString());
 			//System.exit(0);
 			
 			// test ucrypt and udecrypt
 			String message = "this is my message";
-			JLG.debug(message);
+			LOG.debug(message);
 			byte[] ciphertext = a2.ucrypt(password, message.getBytes());
 			String decryptedMessage = new String(a2.udecrypt(password, ciphertext));
-			JLG.debug(decryptedMessage);
+			LOG.debug(decryptedMessage);
 			//System.exit(0);
 			
 			IUserManagement um = ds2.getComponent(IUserManagement.class);
@@ -85,13 +86,13 @@ public class TestAgent {
 			auth.setChallenge(password);
 			um.login();
 			OCPUser user = (OCPUser) ds2.getContext().getUser();
-			JLG.debug(user.toString());
+			LOG.debug(user.toString());
 			
 			
 			String str = "This is my object";
 			Pointer pointer = a2.set(user, str);
-			JLG.debug(a1.toString());
-			JLG.debug(a2.toString());
+			LOG.debug(a1.toString());
+			LOG.debug(a2.toString());
 			//System.exit(0);
 			
 			
@@ -99,26 +100,26 @@ public class TestAgent {
 			a2.set(user, str);
 
 			String str2 = (String) a2.get(user, pointer);
-			JLG.debug("str2 = " + str2);
+			LOG.debug("str2 = " + str2);
 			Iterator<Pointer> it = user.getUserIndex(a2).iterator();
 			while (it.hasNext()) {
 				Pointer p = it.next();
-				JLG.debug("pointer p = " + p);
+				LOG.debug("pointer p = " + p);
 				String str3 = (String) a2.get(user, p);
-				JLG.debug("str3 = " + str3);
+				LOG.debug("str3 = " + str3);
 			}
 			a2.remove(user, pointer);
 			it = user.getUserIndex(a2).iterator();
 			while (it.hasNext()) {
 				Pointer p = it.next();
-				JLG.debug("pointer p = " + p);
+				LOG.debug("pointer p = " + p);
 				String str3 = (String) a2.get(user, p);
-				JLG.debug("str3 = " + str3);
+				LOG.debug("str3 = " + str3);
 				a2.remove(user, p);
 			}
 
-			JLG.debug(a1.toString());
-			JLG.debug(a2.toString());
+			LOG.debug(a1.toString());
+			LOG.debug(a2.toString());
 
 			OCPFileSystem fs = new OCPFileSystem(user, a2);
 			fs.checkoutAll("C:/jlouis/ocp_dir");
@@ -137,7 +138,7 @@ public class TestAgent {
 			e.printStackTrace();
 			System.exit(1);
 		}
-		JLG.debug("finished.");
+		LOG.debug("finished.");
 	}
 
 }

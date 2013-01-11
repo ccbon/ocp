@@ -11,6 +11,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.ocpteam.interfaces.IAuthenticable;
 import org.ocpteam.interfaces.IUserManagement;
 import org.ocpteam.misc.JLG;
+import org.ocpteam.misc.LOG;
 import org.ocpteam.misc.swt.QuickMessage;
 import org.ocpteam.ui.swt.DataSourceWindow;
 import org.ocpteam.ui.swt.IScenario;
@@ -35,7 +36,7 @@ public class SFTPNewDataSourceWizard extends Wizard implements IScenario {
 
 	@Override
 	public boolean performFinish() {
-		JLG.debug("sign in user");
+		LOG.debug("sign in user");
 		try {
 			w.ds = new SFTPDataSource();
 			SSHChallenge c = new SSHChallenge();

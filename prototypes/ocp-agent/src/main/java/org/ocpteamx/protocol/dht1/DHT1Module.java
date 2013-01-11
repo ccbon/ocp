@@ -12,7 +12,7 @@ import org.ocpteam.entity.Session;
 import org.ocpteam.interfaces.IActivity;
 import org.ocpteam.interfaces.IModule;
 import org.ocpteam.interfaces.ITransaction;
-import org.ocpteam.misc.JLG;
+import org.ocpteam.misc.LOG;
 import org.ocpteam.serializable.EOMObject;
 
 public class DHT1Module implements IModule {
@@ -30,7 +30,7 @@ public class DHT1Module implements IModule {
 			@Override
 			public Serializable run(Session session, Serializable[] objects)
 					throws Exception {
-				JLG.debug("storing...");
+				LOG.debug("storing...");
 				DHT1DataSource ds = (DHT1DataSource) session.ds();
 				DHT1DataModel dm = (DHT1DataModel) ds.getContext()
 						.getDataModel();
@@ -58,7 +58,7 @@ public class DHT1Module implements IModule {
 			@Override
 			public Serializable run(Session session, Serializable[] objects)
 					throws Exception {
-				JLG.debug("retrieving...");
+				LOG.debug("retrieving...");
 				DHT1DataSource ds = (DHT1DataSource) session.ds();
 				DHT1DataModel dm = (DHT1DataModel) ds.getContext()
 						.getDataModel();
@@ -84,7 +84,7 @@ public class DHT1Module implements IModule {
 			@Override
 			public Serializable run(Session session, Serializable[] objects)
 					throws Exception {
-				JLG.debug("remove...");
+				LOG.debug("remove...");
 				DHT1DataSource ds = (DHT1DataSource) session.ds();
 				String key = (String) objects[0];
 				ds.destroy(key);
@@ -110,12 +110,12 @@ public class DHT1Module implements IModule {
 			public void run(Session session, Serializable[] objects,
 					Socket socket, Protocol protocol)
 					throws Exception {
-				JLG.debug("keyset...");
+				LOG.debug("keyset...");
 				DHT1DataSource ds = (DHT1DataSource) session.ds();
 				Set<String> set = ds.keySet();
-				JLG.debug("set=" + set);
+				LOG.debug("set=" + set);
 				for (String s : set) {
-					JLG.debug("write " + s);
+					LOG.debug("write " + s);
 					protocol.getStreamSerializer().writeObject(socket, s);
 				}
 			}
@@ -135,14 +135,14 @@ public class DHT1Module implements IModule {
 			public void run(Session session, Serializable[] objects,
 					Socket socket, Protocol protocol)
 					throws Exception {
-				JLG.debug("submap...");
+				LOG.debug("submap...");
 				// normally we should filter the key where hash(key) >= given
 				// node_id...
 				DHT1DataSource ds = (DHT1DataSource) session.ds();
 				Set<String> set = ds.keySet();
-				JLG.debug("set=" + set);
+				LOG.debug("set=" + set);
 				for (String s : set) {
-					JLG.debug("write " + s);
+					LOG.debug("write " + s);
 					protocol.getStreamSerializer().writeObject(socket, s);
 					protocol.getStreamSerializer().writeObject(socket,
 							ds.retrieve(s));
@@ -164,7 +164,7 @@ public class DHT1Module implements IModule {
 			public void run(Session session, Serializable[] objects,
 					Socket socket, Protocol protocol)
 					throws Exception {
-				JLG.debug("setMap...");
+				LOG.debug("setMap...");
 				// normally we should filter the key where hash(key) >= given
 				// node_id...
 				DHT1DataSource ds = (DHT1DataSource) session.ds();

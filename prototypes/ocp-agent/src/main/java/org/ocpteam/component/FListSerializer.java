@@ -5,7 +5,7 @@ import java.util.Properties;
 
 import org.ocpteam.interfaces.ISerializer;
 import org.ocpteam.interfaces.IStructurable;
-import org.ocpteam.misc.JLG;
+import org.ocpteam.misc.LOG;
 import org.ocpteam.misc.Structure;
 
 public class FListSerializer implements ISerializer {
@@ -58,7 +58,7 @@ public class FListSerializer implements ISerializer {
 	@Override
 	public Serializable deserialize(byte[] input) throws Exception {
 		if (input == null) {
-			JLG.debug("Want to dezerialize null input");
+			LOG.debug("Want to dezerialize null input");
 		}
 		Structure s = new FListMarshaler().unmarshal(input);
 		return toSerializable(s);

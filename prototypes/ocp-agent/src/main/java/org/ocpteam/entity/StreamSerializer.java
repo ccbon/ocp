@@ -9,7 +9,7 @@ import java.net.Socket;
 import org.ocpteam.component.JavaSerializer;
 import org.ocpteam.interfaces.ISerializer;
 import org.ocpteam.interfaces.IStreamSerializer;
-import org.ocpteam.misc.JLG;
+import org.ocpteam.misc.LOG;
 import org.ocpteam.serializable.EOMObject;
 
 public class StreamSerializer implements IStreamSerializer {
@@ -35,12 +35,12 @@ public class StreamSerializer implements IStreamSerializer {
 		int remaining = length;
 		int start = 0;
 		while (remaining > so_rcvbuf) {
-			JLG.debug("reading " + so_rcvbuf + " byte. start=" + start);
+			LOG.debug("reading " + so_rcvbuf + " byte. start=" + start);
 			read(in, input, start, so_rcvbuf);
 			remaining -= so_rcvbuf;
 			start += so_rcvbuf;
 		}
-		JLG.debug("reading " + remaining + " byte. start=" + start);
+		LOG.debug("reading " + remaining + " byte. start=" + start);
 		read(in, input, start, remaining);
 		return ser.deserialize(input);
 	}
@@ -52,43 +52,43 @@ public class StreamSerializer implements IStreamSerializer {
 			int readed = in.read(input, start + total_readed, length
 					- total_readed);
 			total_readed += readed;
-			JLG.debug("total_readed " + total_readed);
+			LOG.debug("total_readed " + total_readed);
 		}
 	}
 
 	@Override
 	public void writeObject(Socket socket, Serializable o) throws Exception {
 		DataOutputStream out = new DataOutputStream(socket.getOutputStream());
-		JLG.debug("start");
+		LOG.debug("start");
 		if (o == null) {
-			JLG.debug("o is null");
+			LOG.debug("o is null");
 			out.writeInt(0);
 			out.flush();
 		} else {
-			JLG.debug("about to serialize");
+			LOG.debug("about to serialize");
 			byte[] input = serialize(o);
-			JLG.debug("about to write the length=" + input.length);
+			LOG.debug("about to write the length=" + input.length);
 			out.writeInt(input.length);
 			out.flush();
-			JLG.debug("about to write the content");
-			JLG.debug("SO_RCVBUF=" + socket.getReceiveBufferSize()
+			LOG.debug("about to write the content");
+			LOG.debug("SO_RCVBUF=" + socket.getReceiveBufferSize()
 					+ " and SO_SNDBUF=" + socket.getSendBufferSize());
 
 			int so_rcvbuf = 32768; // socket.getReceiveBufferSize() - 1192;
 			int remaining = input.length;
 			int start = 0;
 			while (remaining > so_rcvbuf) {
-				JLG.debug("writing " + so_rcvbuf + " bytes. start=" + start);
+				LOG.debug("writing " + so_rcvbuf + " bytes. start=" + start);
 				out.write(input, start, so_rcvbuf);
 				out.flush();
 				remaining -= so_rcvbuf;
 				start += so_rcvbuf;
 			}
-			JLG.debug("reading " + remaining + " byte. start=" + start);
+			LOG.debug("reading " + remaining + " byte. start=" + start);
 			out.write(input, start, remaining);
 			out.flush();
 		}
-		JLG.debug("write performed well");
+		LOG.debug("write performed well");
 	}
 
 	@Override
@@ -100,7 +100,7 @@ public class StreamSerializer implements IStreamSerializer {
 	@Override
 	public byte[] serialize(Serializable o) throws Exception {
 		byte[] result = ser.serialize(o);
-		JLG.debug("serialized=" + new String(result));
+		LOG.debug("serialized=" + new String(result));
 		return result;
 	}
 

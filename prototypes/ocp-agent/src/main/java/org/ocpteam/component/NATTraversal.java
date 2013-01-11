@@ -6,7 +6,7 @@ import java.util.logging.Logger;
 
 import org.ocpteam.core.Component;
 import org.ocpteam.interfaces.INATTraversal;
-import org.ocpteam.misc.JLG;
+import org.ocpteam.misc.LOG;
 import org.teleal.cling.UpnpService;
 import org.teleal.cling.UpnpServiceImpl;
 import org.teleal.cling.support.igd.PortMappingListener;
@@ -44,7 +44,7 @@ public class NATTraversal extends Component implements INATTraversal {
 			@Override
 			public void run() {
 				synchronized (NATTraversal.this) {
-					JLG.debug("start synchronized on " + NATTraversal.this);
+					LOG.debug("start synchronized on " + NATTraversal.this);
 					try {
 						
 						// be silent and try to do only your job...
@@ -52,8 +52,8 @@ public class NATTraversal extends Component implements INATTraversal {
 								.setLevel(Level.OFF);
 
 						InetAddress addr = InetAddress.getLocalHost();
-						JLG.debug("my hostname:" + addr.getHostName());
-						JLG.debug("my ip:" + addr.getHostAddress());
+						LOG.debug("my hostname:" + addr.getHostName());
+						LOG.debug("my ip:" + addr.getHostAddress());
 						PortMapping desiredMapping = new PortMapping(port,
 								addr.getHostAddress(),
 								protocol, "OCP Agent Mapping");
@@ -62,11 +62,11 @@ public class NATTraversal extends Component implements INATTraversal {
 								new PortMappingListener(desiredMapping));
 
 						upnpService.getControlPoint().search();
-						JLG.debug("NAT run done.");
+						LOG.debug("NAT run done.");
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
-					JLG.debug("stop synchronized on " + NATTraversal.this);
+					LOG.debug("stop synchronized on " + NATTraversal.this);
 				}
 			}
 		}, "NATTraversal").start();
@@ -74,7 +74,7 @@ public class NATTraversal extends Component implements INATTraversal {
 		Runtime.getRuntime().addShutdownHook(new Thread() {
 			@Override
 			public void run() {
-				JLG.debug("NAT Traversal: hook on exit...");
+				LOG.debug("NAT Traversal: hook on exit...");
 				unmap();
 			}
 		});
@@ -86,16 +86,16 @@ public class NATTraversal extends Component implements INATTraversal {
 
 			@Override
 			public void run() {
-				JLG.debug("unmap on " + NATTraversal.this);
+				LOG.debug("unmap on " + NATTraversal.this);
 				synchronized (NATTraversal.this) {
-					JLG.debug("start sync on " + NATTraversal.this);
+					LOG.debug("start sync on " + NATTraversal.this);
 					if (upnpService != null) {
-						JLG.debug("About to stop nat traversal for port "
+						LOG.debug("About to stop nat traversal for port "
 								+ port + ".");
 						upnpService.shutdown();
 						upnpService = null;
 					}
-					JLG.debug("stop sync on " + NATTraversal.this);
+					LOG.debug("stop sync on " + NATTraversal.this);
 				}
 			}
 		}, "NATTraversal-unmap").start();

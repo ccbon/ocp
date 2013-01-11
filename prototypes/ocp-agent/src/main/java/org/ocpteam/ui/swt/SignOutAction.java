@@ -3,7 +3,7 @@ package org.ocpteam.ui.swt;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.graphics.ImageData;
-import org.ocpteam.misc.JLG;
+import org.ocpteam.misc.LOG;
 
 public class SignOutAction extends Action {
 	private DataSourceWindow window;
@@ -24,7 +24,7 @@ public class SignOutAction extends Action {
 
 	@Override
 	public void run() {
-		JLG.debug("Disconnect a user...");
+		LOG.debug("Disconnect a user...");
 		try {
 			window.signOut();
 		} catch (Exception e) {
