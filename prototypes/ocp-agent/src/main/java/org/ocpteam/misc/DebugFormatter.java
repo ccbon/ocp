@@ -4,7 +4,7 @@ import java.util.logging.Formatter;
 import java.util.logging.LogRecord;
 
 public class DebugFormatter extends Formatter {
-
+	
 	@Override
 	public String format(LogRecord record) {
 		Throwable t = (Throwable) record.getParameters()[0];

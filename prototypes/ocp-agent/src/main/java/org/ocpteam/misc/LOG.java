@@ -2,7 +2,6 @@ package org.ocpteam.misc;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
@@ -11,6 +10,7 @@ import java.util.logging.StreamHandler;
 public class LOG {
 
 	private static Logger logger = null;
+	private static StreamHandler fh;
 
 	public static void debug(String input) {
 		log(Level.INFO, input);
@@ -24,6 +24,7 @@ public class LOG {
 		parameters[1] = Thread.currentThread();
 		r.setParameters(parameters);
 		logger.log(r);
+		fh.flush();
 	}
 
 	private static void checkInit() {
@@ -33,7 +34,7 @@ public class LOG {
 	}
 
 	public static void init() {
-		Handler fh = new StreamHandler(System.out, new DebugFormatter());
+		fh = new StreamHandler(System.out, new DebugFormatter());
 		logger = Logger.getLogger("yannis");
 		logger.setUseParentHandlers(false);
 		logger.addHandler(fh);
