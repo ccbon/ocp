@@ -17,7 +17,7 @@ public class FListSerializerTest {
 		LOG.debug_on();
 //		JLG.bUseSet = true;
 //		JLG.set.add(getClass().getName());
-		JLG.set.add(FListSerializer.class.getName());
+		LOG.set.add(FListSerializer.class.getName());
 		try {
 			// test();
 //			testMap();

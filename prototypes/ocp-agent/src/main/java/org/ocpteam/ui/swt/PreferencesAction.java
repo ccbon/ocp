@@ -48,6 +48,7 @@ public class PreferencesAction extends Action {
 			dlg.open();
 			// Save the preferences
 			w.ps.save();
+			w.refreshPreference();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

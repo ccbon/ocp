@@ -44,9 +44,9 @@ public class StructTest extends TopContainer {
 	@Test
 	public void mytest() {
 		LOG.debug_on();
-		JLG.bUseSet = true;
-		JLG.set.add(StructTest.class.getName());
-		JLG.set.add(InputMessage.class.getName());
+		LOG.bUseSet = true;
+		LOG.set.add(StructTest.class.getName());
+		LOG.set.add(InputMessage.class.getName());
 		try {
 			testRootContent();
 //			testProperties();

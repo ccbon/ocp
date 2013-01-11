@@ -38,7 +38,7 @@ public class DHTMemoryIssue extends TopContainer {
 		LOG.debug_on();
 		//JLG.bUseSet = true;
 		//JLG.set.add(TCPServer.class.getName());
-		JLG.set.add(DHTMemoryIssue.class.getName());
+		LOG.set.add(DHTMemoryIssue.class.getName());
 		//JLG.set.add(JLG.class.getName());
 		//JLG.set.add(NATTraversal.class.getName());
 	}

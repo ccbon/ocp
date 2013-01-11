@@ -10,6 +10,7 @@ import org.ocpteam.misc.Id;
 import org.ocpteam.misc.JLG;
 import org.ocpteam.misc.LOG;
 import org.ocpteam.serializable.Address;
+import org.ocpteam.ui.swt.DataSourceWindow;
 
 public class Storage {
 
@@ -19,11 +20,10 @@ public class Storage {
 
 	public Storage(OCPAgent agent) throws Exception {
 		nodeSet = new TreeSet<Id>();
-		String root = agent.ds()
-				.getProperty(
-						"storage.dir",
-						System.getenv("TEMP") + "/ocp_agent_storage/"
-								+ agent.getName());
+		String root = agent.ds().getProperty(
+				"storage.dir",
+				DataSourceWindow.GDSE_DIR + "/datastore/ocp/"
+						+ agent.getName());
 		IPersistentMap persistentMap = agent.ds().getComponent(
 				IPersistentMap.class);
 		persistentMap.setURI(root);

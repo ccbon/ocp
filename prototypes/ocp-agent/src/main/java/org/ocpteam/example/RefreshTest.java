@@ -3,7 +3,6 @@ package org.ocpteam.example;
 import java.util.Properties;
 
 import org.ocpteam.component.DSPDataSource;
-import org.ocpteam.misc.JLG;
 import org.ocpteam.misc.LOG;
 import org.ocpteamx.protocol.dht0.DHTDataSource;
 
@@ -11,8 +10,8 @@ public class RefreshTest {
 	public static void main(String[] args) {
 		try {
 			LOG.debug_on();
-			JLG.bUseSet = true;
-			JLG.set.add(RefreshTest.class.getName());
+			LOG.bUseSet = true;
+			LOG.set.add(RefreshTest.class.getName());
 			// JLG.set.add(Client.class.getName());
 
 			int n = 10;

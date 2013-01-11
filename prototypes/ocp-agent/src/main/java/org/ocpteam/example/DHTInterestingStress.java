@@ -47,12 +47,12 @@ public class DHTInterestingStress extends TopContainer {
 		port = 40000;
 		availabilityRate = 0.8;
 		LOG.debug_on();
-		JLG.bUseSet = true;
+		LOG.bUseSet = true;
 		// JLG.set.add(TCPServer.class.getName());
-		JLG.set.add(DHTInterestingStress.class.getName());
+		LOG.set.add(DHTInterestingStress.class.getName());
 		// JLG.set.add(DHTDataModel.class.getName());
 		// JLG.set.add(TCPClient.class.getName());
-		JLG.set.add(JLG.class.getName());
+		LOG.set.add(JLG.class.getName());
 		// JLG.set.add(Client.class.getName());
 		// JLG.set.add(NATTraversal.class.getName());
 	}

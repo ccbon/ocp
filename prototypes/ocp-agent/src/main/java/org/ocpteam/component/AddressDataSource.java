@@ -17,6 +17,7 @@ import org.ocpteam.serializable.Address;
 import org.ocpteam.serializable.Contact;
 import org.ocpteam.serializable.EOMObject;
 import org.ocpteam.serializable.InputFlow;
+import org.ocpteam.ui.swt.DataSourceWindow;
 
 public abstract class AddressDataSource extends DSPDataSource {
 
@@ -57,7 +58,7 @@ public abstract class AddressDataSource extends DSPDataSource {
 	public void readConfig() throws Exception {
 		super.readConfig();
 		if (usesComponent(IPersistentMap.class)) {
-			String dir = getProperty("uri", System.getenv("TEMP") + "/"
+			String dir = getProperty("uri", DataSourceWindow.GDSE_DIR + "/datastore/"
 					+ getProtocolName() + "/" + getName());
 			LOG.debug("dir=" + dir);
 			String uri = getProperty("datastore.uri", dir);

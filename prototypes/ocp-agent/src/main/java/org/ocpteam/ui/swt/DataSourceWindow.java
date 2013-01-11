@@ -55,13 +55,11 @@ import org.ocpteam.interfaces.IFileSystem;
 import org.ocpteam.interfaces.IMapDataModel;
 import org.ocpteam.interfaces.IUserCreation;
 import org.ocpteam.interfaces.IUserManagement;
+import org.ocpteam.misc.JLG;
 import org.ocpteam.misc.LOG;
 import org.ocpteam.misc.swt.QuickMessage;
 
 public class DataSourceWindow extends ApplicationWindow implements IComponent {
-
-	private static final String PROPERTIES_FILENAME = System
-			.getProperty("user.home") + "/gdse.properties";
 
 	public static final int ON_DS_CLOSE = 0;
 
@@ -69,6 +67,11 @@ public class DataSourceWindow extends ApplicationWindow implements IComponent {
 
 	public static final int EDIT_MODE = 1;
 	public static final int NEW_MODE = 0;
+
+	public static final String GDSE_DIR = System.getProperty("user.home")
+			+ "/.gdse";
+	private static final String PROPERTIES_FILENAME = GDSE_DIR
+			+ "/gdse.properties";
 
 	OpenDataSourceAction openDataSourceAction;
 	CloseDataSourceAction closeDataSourceAction;
@@ -719,7 +722,10 @@ public class DataSourceWindow extends ApplicationWindow implements IComponent {
 	}
 
 	public void start() throws Exception {
+		JLG.mkdir(GDSE_DIR);
+		LOG.checkInit();
 		init();
+		refreshPreference();
 		setBlockOnOpen(true);
 		open();
 		Display.getCurrent().dispose();
@@ -736,6 +742,14 @@ public class DataSourceWindow extends ApplicationWindow implements IComponent {
 
 	public int getDSEditMode() {
 		return this.editionMode;
+	}
+
+	public void refreshPreference() {
+		try {
+			LOG.logInFile(ps.getString(GeneralPreferencePage.LOGFILE));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 }

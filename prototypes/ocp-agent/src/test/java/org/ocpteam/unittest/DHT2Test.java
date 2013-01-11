@@ -7,7 +7,6 @@ import java.util.Properties;
 import org.junit.Test;
 import org.ocpteam.component.ContactMap;
 import org.ocpteam.component.FListSerializer;
-import org.ocpteam.misc.JLG;
 import org.ocpteam.misc.LOG;
 import org.ocpteamx.protocol.dht2.DHT2DataSource;
 
@@ -23,9 +22,9 @@ public class DHT2Test {
 			int n = 10;
 			int port = 40000;
 			LOG.debug_on();
-			JLG.bUseSet = true;
-			JLG.set.add(DHT2Test.class.getName());
-			JLG.set.add(FListSerializer.class.getName());
+			LOG.bUseSet = true;
+			LOG.set.add(DHT2Test.class.getName());
+			LOG.set.add(FListSerializer.class.getName());
 			//JLG.set.add(RingNodeMap.class.getName());
 
 			DHT2DataSource[] ds = new DHT2DataSource[n];

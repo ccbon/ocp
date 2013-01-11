@@ -8,6 +8,7 @@ import org.ocpteam.interfaces.IAuthenticable;
 import org.ocpteam.interfaces.IDataModel;
 import org.ocpteam.misc.JLG;
 import org.ocpteam.misc.LOG;
+import org.ocpteam.ui.swt.DataSourceWindow;
 
 import com.dropbox.client2.DropboxAPI;
 import com.dropbox.client2.exception.DropboxException;
@@ -19,7 +20,7 @@ import com.dropbox.client2.session.WebAuthSession;
 
 public class DropboxClient extends DSContainer<DropboxDataSource> implements
 		IAuthenticable {
-	public static final String TOKEN_FILENAME = System.getProperty("user.home")
+	public static final String TOKEN_FILENAME = DataSourceWindow.GDSE_DIR
 			+ "/dropbox_tokens.properties";
 	final static private String APP_KEY = "1s2uo2miptnr9sq";
 	final static private String APP_SECRET = "tk88gf7o4gi8bxx";
@@ -35,7 +36,7 @@ public class DropboxClient extends DSContainer<DropboxDataSource> implements
 	public DropboxClient() {
 		setup();
 	}
-	
+
 	private void setup() {
 		loadTokens();
 
@@ -142,7 +143,6 @@ public class DropboxClient extends DSContainer<DropboxDataSource> implements
 		}
 		return true;
 	}
-
 
 	@Override
 	public void setChallenge(Object challenge) {

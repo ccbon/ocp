@@ -40,8 +40,8 @@ public class DHTConnect extends TopContainer {
 		n = 10;
 		port = 40000;
 		LOG.debug_on();
-		JLG.bUseSet = true;
-		JLG.set.add(DHTConnect.class.getName());
+		LOG.bUseSet = true;
+		LOG.set.add(DHTConnect.class.getName());
 		// JLG.set.add(TCPServer.class.getName());
 		// JLG.set.add(DHTInterestingStress.class.getName());
 		// JLG.set.add(DHTDataModel.class.getName());

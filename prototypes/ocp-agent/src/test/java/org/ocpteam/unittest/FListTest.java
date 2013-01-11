@@ -4,7 +4,6 @@ import org.junit.Test;
 import org.ocpteam.component.FListMarshaler;
 import org.ocpteam.interfaces.IMarshaler;
 import org.ocpteam.interfaces.IStructurable;
-import org.ocpteam.misc.JLG;
 import org.ocpteam.misc.LOG;
 import org.ocpteam.misc.Structure;
 import org.ocpteam.serializable.TestObject;
@@ -30,8 +29,8 @@ public class FListTest {
 	@Test
 	public void mytest() {
 		LOG.debug_on();
-		JLG.bUseSet = true;
-		JLG.set.add(FListTest.class.getName());
+		LOG.bUseSet = true;
+		LOG.set.add(FListTest.class.getName());
 //		 JLG.set.add(FListMarshaler.class.getName());
 		try {
 			 testFList();

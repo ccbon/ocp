@@ -22,10 +22,8 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.PublicKey;
 import java.security.spec.X509EncodedKeySpec;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Properties;
-import java.util.Set;
 
 import org.apache.commons.io.FileUtils;
 
@@ -37,8 +35,6 @@ public class JLG {
 	static {
 		NL = System.getProperty("line.separator");
 	}
-	public static Set<String> set = new HashSet<String>();
-	public static boolean bUseSet = false;
 
 	public static String getStackTrace(Throwable aThrowable) {
 		final Writer result = new StringWriter();
@@ -335,6 +331,6 @@ public class JLG {
 	}
 
 	public static String dirname(String dir) {
-		return dir.substring(0, dir.lastIndexOf('/'));
+		return new File(dir).getParentFile().getPath();
 	}
 }

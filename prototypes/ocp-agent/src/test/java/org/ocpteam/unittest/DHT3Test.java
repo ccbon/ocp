@@ -6,7 +6,6 @@ import java.util.Properties;
 
 import org.junit.Test;
 import org.ocpteam.component.ContactMap;
-import org.ocpteam.misc.JLG;
 import org.ocpteam.misc.LOG;
 import org.ocpteamx.protocol.dht3.DHT3DataSource;
 
@@ -22,8 +21,8 @@ public class DHT3Test {
 			int n = 10;
 			int port = 40000;
 			LOG.debug_on();
-			JLG.bUseSet = true;
-			JLG.set.add(DHT3Test.class.getName());
+			LOG.bUseSet = true;
+			LOG.set.add(DHT3Test.class.getName());
 			//JLG.set.add(DHT2DataSource.class.getName());
 			//JLG.set.add(RingNodeMap.class.getName());
 

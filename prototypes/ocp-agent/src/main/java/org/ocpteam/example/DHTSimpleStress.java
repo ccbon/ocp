@@ -34,9 +34,9 @@ public class DHTSimpleStress extends TopContainer {
 		n = 10;
 		port = 35000;
 		LOG.debug_on();
-		JLG.bUseSet = true;
+		LOG.bUseSet = true;
 		//JLG.set.add(TCPServer.class.getName());
-		JLG.set.add(DHTSimpleStress.class.getName());
+		LOG.set.add(DHTSimpleStress.class.getName());
 		//JLG.set.add(StreamSerializer.class.getName());
 		//JLG.set.add(JLG.class.getName());
 		//JLG.set.add(MessageSerializer.class.getName());

@@ -2,15 +2,22 @@ package org.ocpteam.misc;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.logging.FileHandler;
+import java.util.logging.Filter;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 import java.util.logging.StreamHandler;
 
 public class LOG {
+	public static Set<String> set = new HashSet<String>();
+	public static boolean bUseSet = false;
 
 	private static Logger logger = null;
 	private static StreamHandler fh;
+	private static FileHandler fileHandler;
 
 	public static void debug(String input) {
 		log(Level.INFO, input);
@@ -20,14 +27,18 @@ public class LOG {
 		checkInit();
 		LogRecord r = new LogRecord(level, msg);
 		Object[] parameters = new Object[2];
-		parameters[0] = new Throwable();
+		Throwable t = new Throwable();
+		parameters[0] = t;
 		parameters[1] = Thread.currentThread();
 		r.setParameters(parameters);
+		StackTraceElement ste = t.getStackTrace()[2];
+		r.setSourceClassName(ste.getClassName());
+		
 		logger.log(r);
 		fh.flush();
 	}
 
-	private static void checkInit() {
+	public static void checkInit() {
 		if (logger == null) {
 			init();
 		}
@@ -38,6 +49,31 @@ public class LOG {
 		logger = Logger.getLogger("yannis");
 		logger.setUseParentHandlers(false);
 		logger.addHandler(fh);
+		logger.setFilter(new Filter() {
+
+			@Override
+			public boolean isLoggable(LogRecord record) {
+				String classname = record.getSourceClassName();
+				int i = classname.indexOf("$");
+				if (i != -1) {
+					classname = classname.substring(0, classname.indexOf("$"));
+				}
+				if (bUseSet && !set.contains(classname)) {
+					return false;
+				}
+				return true;
+			}
+		});
+
+		Runtime.getRuntime().addShutdownHook(new Thread() {
+			@Override
+			public void run() {
+				if (fileHandler != null) {
+					fileHandler.flush();
+					fileHandler.close();
+				}
+			}
+		});
 	}
 
 	public static void debug_on() {
@@ -81,6 +117,23 @@ public class LOG {
 	public static void warn(String string) {
 		System.out.println("WARNING: " + string);
 
+	}
+
+	public static void logInFile(String logfile) throws Exception {
+		if (JLG.isNullOrEmpty(logfile)) {
+			logger.removeHandler(fileHandler);
+		} else {
+			JLG.mkdir(JLG.dirname(escape(logfile)));
+			fileHandler = new FileHandler(logfile);
+			fileHandler.setFormatter(new DebugFormatter());
+			logger.addHandler(fileHandler);
+		}
+	}
+
+	private static String escape(String logfile) {
+		LOG.debug("logfile=" + logfile);
+		return logfile.replaceAll("%t", System.getProperty("java.io.tmpdir"))
+				.replaceAll("%h", System.getProperty("user.home"));
 	}
 
 }

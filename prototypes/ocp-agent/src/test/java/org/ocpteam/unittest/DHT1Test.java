@@ -9,7 +9,6 @@ import org.junit.Test;
 import org.ocpteam.component.ContactMap;
 import org.ocpteam.component.NodeMap;
 import org.ocpteam.interfaces.IMapDataModel;
-import org.ocpteam.misc.JLG;
 import org.ocpteam.misc.LOG;
 import org.ocpteamx.protocol.dht1.DHT1DataSource;
 
@@ -28,8 +27,8 @@ public class DHT1Test {
 			int port = 40000;
 			LOG.debug_on();
 			//JLG.bUseSet = true;
-			JLG.set.add(DHT1Test.class.getName());
-			JLG.set.add(NodeMap.class.getName());
+			LOG.set.add(DHT1Test.class.getName());
+			LOG.set.add(NodeMap.class.getName());
 
 			DHT1DataSource[] ds = new DHT1DataSource[n];
 			for (int i = 0; i < n; i++) {
@@ -93,9 +92,9 @@ public class DHT1Test {
 			n = 40;
 			port = 40000;
 			LOG.debug_on();
-			JLG.bUseSet = true;
-			JLG.set.add(DHT1Test.class.getName());
-			JLG.set.add(NodeMap.class.getName());
+			LOG.bUseSet = true;
+			LOG.set.add(DHT1Test.class.getName());
+			LOG.set.add(NodeMap.class.getName());
 
 			ds = new DHT1DataSource[n];
 			for (int i = 0; i < n; i++) {

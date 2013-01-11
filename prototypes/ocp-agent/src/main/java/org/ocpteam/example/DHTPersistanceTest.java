@@ -4,7 +4,6 @@ import java.util.Properties;
 
 import org.ocpteam.component.DSPDataSource;
 import org.ocpteam.entity.Context;
-import org.ocpteam.misc.JLG;
 import org.ocpteam.misc.LOG;
 import org.ocpteamx.protocol.dht0.DHTDataModel;
 import org.ocpteamx.protocol.dht0.DHTDataSource;
@@ -14,10 +13,10 @@ public class DHTPersistanceTest {
 	public static void main(String[] args) {
 		try {
 			LOG.debug_on();
-			JLG.bUseSet = true;
-			JLG.set.add(DHTPersistanceTest.class.getName());
-			JLG.set.add(DHTDataModel.class.getName());
-			JLG.set.add(DHTModule.class.getName());
+			LOG.bUseSet = true;
+			LOG.set.add(DHTPersistanceTest.class.getName());
+			LOG.set.add(DHTDataModel.class.getName());
+			LOG.set.add(DHTModule.class.getName());
 			DHTDataSource ds = new DHTDataSource();
 			ds.init();
 			ds.setName("first_agent");

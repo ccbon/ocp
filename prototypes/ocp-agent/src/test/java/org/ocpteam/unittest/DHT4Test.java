@@ -6,7 +6,6 @@ import java.util.Properties;
 
 import org.junit.Test;
 import org.ocpteam.component.ContactMap;
-import org.ocpteam.misc.JLG;
 import org.ocpteam.misc.LOG;
 import org.ocpteamx.protocol.dht4.DHT4DataSource;
 
@@ -22,8 +21,8 @@ public class DHT4Test {
 			int n = 10;
 			int port = 40000;
 			LOG.debug_on();
-			JLG.bUseSet = true;
-			JLG.set.add(DHT4Test.class.getName());
+			LOG.bUseSet = true;
+			LOG.set.add(DHT4Test.class.getName());
 			DHT4DataSource[] ds = new DHT4DataSource[n];
 			for (int i = 0; i < n; i++) {
 				ds[i] = new DHT4DataSource();

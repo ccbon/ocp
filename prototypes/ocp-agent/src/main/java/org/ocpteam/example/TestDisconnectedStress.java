@@ -37,10 +37,10 @@ public class TestDisconnectedStress extends TopContainer {
 		LOG.debug_on();
 		//JLG.bUseSet = true;
 		// JLG.set.add(TCPServer.class.getName());
-		JLG.set.add(TestDisconnectedStress.class.getName());
+		LOG.set.add(TestDisconnectedStress.class.getName());
 		// JLG.set.add(DHTDataModel.class.getName());
 		// JLG.set.add(TCPClient.class.getName());
-		JLG.set.add(JLG.class.getName());
+		LOG.set.add(JLG.class.getName());
 		// JLG.set.add(Client.class.getName());
 		// JLG.set.add(NATTraversal.class.getName());
 	}
