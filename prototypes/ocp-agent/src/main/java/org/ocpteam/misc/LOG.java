@@ -120,16 +120,15 @@ public class LOG {
 	}
 
 	public static void logInFile(String logfile) throws Exception {
+		logger.removeHandler(fileHandler);
 		if (JLG.isNullOrEmpty(logfile)) {
-			logger.removeHandler(fileHandler);
-		} else {
-			JLG.mkdir(JLG.dirname(escape(logfile)));
-			if (fileHandler == null) {
-				fileHandler = new FileHandler(logfile);
-				fileHandler.setFormatter(new DebugFormatter());
-				logger.addHandler(fileHandler);
-			}
+			return;
 		}
+		JLG.mkdir(JLG.dirname(escape(logfile)));
+		fileHandler = new FileHandler(logfile);
+		fileHandler.setFormatter(new DebugFormatter());
+		logger.addHandler(fileHandler);
+
 	}
 
 	private static String escape(String logfile) {
