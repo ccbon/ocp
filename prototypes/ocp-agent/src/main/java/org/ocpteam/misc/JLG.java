@@ -13,6 +13,7 @@ import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.Serializable;
 import java.io.StringWriter;
@@ -22,10 +23,13 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.PublicKey;
 import java.security.spec.X509EncodedKeySpec;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Properties;
+import java.util.Set;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.StringEscapeUtils;
 
 public class JLG {
 
@@ -211,9 +215,8 @@ public class JLG {
 		OutputStream out = null;
 		try {
 			out = new FileOutputStream(new File(file));
-			p.store(out, "no comment");
+			p.store(out, null);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} finally {
 			try {
@@ -221,6 +224,29 @@ public class JLG {
 			} catch (Exception e) {
 				// TODO: handle exception
 			}
+		}
+	}
+
+	public static void saveProperties(File file, Properties p) throws Exception {
+		OutputStreamWriter out = new OutputStreamWriter(new FileOutputStream(
+				file));
+		try {
+			writeProperties(out, p);
+		} finally {
+			out.close();
+		}
+
+	}
+
+	public static void writeProperties(OutputStreamWriter out, Properties p)
+			throws Exception {
+		Set<Object> keys = p.keySet();
+		String[] array = keys.toArray(new String[keys.size()]);
+		Arrays.sort(array);
+		for (String key : array) {
+			out.write(StringEscapeUtils.escapeJava(key + "="
+					+ p.getProperty(key))
+					+ JLG.NL);
 		}
 	}
 

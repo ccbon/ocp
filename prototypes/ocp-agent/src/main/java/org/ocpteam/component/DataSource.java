@@ -103,7 +103,7 @@ public abstract class DataSource extends TopContainer implements IComponent,
 		}
 
 		if (this.getFile() != null) {
-			JLG.storeConfig(this.getConfig(), this.getFile().getAbsolutePath());
+			JLG.saveProperties(this.getFile(), this.getConfig());
 		} else {
 			throw new Exception("cannot save: file not set.");
 		}
