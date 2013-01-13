@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
 
+import javax.swing.JOptionPane;
+
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
@@ -727,7 +729,11 @@ public class DataSourceWindow extends ApplicationWindow implements IComponent {
 		init();
 		refreshPreference();
 		setBlockOnOpen(true);
-		open();
+		try {
+			open();
+		} catch (UnsatisfiedLinkError e) {
+			JOptionPane.showMessageDialog(null, "Cannot run the GUI: SWT version not compliant with JRE version. e = " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+		}
 		Display.getCurrent().dispose();
 	}
 
