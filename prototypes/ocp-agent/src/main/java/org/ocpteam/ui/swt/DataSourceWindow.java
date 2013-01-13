@@ -2,7 +2,10 @@ package org.ocpteam.ui.swt;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStreamWriter;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -12,6 +15,7 @@ import java.util.ResourceBundle;
 
 import javax.swing.JOptionPane;
 
+import org.apache.commons.lang.StringEscapeUtils;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
@@ -140,11 +144,31 @@ public class DataSourceWindow extends ApplicationWindow implements IComponent {
 
 	public class MyPreferenceStore extends PreferenceStore {
 		public DataSourceWindow w;
+		private String filename;
 
-		MyPreferenceStore(String properties, DataSourceWindow w) {
-			super(properties);
+		MyPreferenceStore(String filename, DataSourceWindow w) {
+			super(filename);
 			this.w = w;
+			this.filename = filename;
 		}
+
+		@Override
+		public void save() throws IOException {
+			String[] keys = preferenceNames();
+			Arrays.sort(keys);
+			OutputStreamWriter out = new OutputStreamWriter(new FileOutputStream(filename));
+			try {
+				for (String key : keys) {
+					out.write(StringEscapeUtils.escapeJava(key + "=" + getString(key)) + JLG.NL);
+				}
+			} finally {
+				if (out != null) {
+					out.close();
+				}
+			}
+			super.load();
+		}
+
 	}
 
 	private void initPreferenceStore() throws Exception {
@@ -732,7 +756,10 @@ public class DataSourceWindow extends ApplicationWindow implements IComponent {
 		try {
 			open();
 		} catch (UnsatisfiedLinkError e) {
-			JOptionPane.showMessageDialog(null, "Cannot run the GUI: SWT version not compliant with JRE version. e = " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(null,
+					"Cannot run the GUI: SWT version not compliant with JRE version. e = "
+							+ e.getMessage(), "Error",
+					JOptionPane.ERROR_MESSAGE);
 		}
 		Display.getCurrent().dispose();
 	}
