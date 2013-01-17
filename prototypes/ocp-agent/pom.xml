@@ -46,7 +46,6 @@
 			<id>fake</id>
 			<activation>
 				<os>
-					<arch>x86</arch>
 					<family>windows</family>
 				</os>
 			</activation>
