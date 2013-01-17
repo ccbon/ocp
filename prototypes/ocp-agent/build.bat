@@ -18,6 +18,11 @@ copy /Y build\Soccer.ico "%LAUNCH4J_HOME%\Soccer.ico"
 cd "%LAUNCH4J_HOME%"
 launch4jc gdse_64.l4j
 launch4jc gdse_32.l4j
+del /F "%LAUNCH4J_HOME%\gdse_64.l4j"
+del /F "%LAUNCH4J_HOME%\gdse_32.l4j"
+del /F "%LAUNCH4J_HOME%\ocp-agent-complete-windows-x86_64.jar"
+del /F "%LAUNCH4J_HOME%\ocp-agent-complete-windows-x86_32.jar"
+del /F "%LAUNCH4J_HOME%\Soccer.ico"
 endlocal
 move /Y "%LAUNCH4J_HOME%\gdse_x64.exe" "target\gdse_x64.exe"
 move /Y "%LAUNCH4J_HOME%\gdse_x32.exe" "target\gdse_x32.exe"
@@ -32,5 +37,6 @@ cd target\nsis
 "%NSIS_HOME%\makensis.exe" gdse.nsi
 endlocal
 move /Y "target\nsis\gdse_setup.exe" "target\gdse_setup.exe"
+rmdir /q /s target\nsis
 
 :end
