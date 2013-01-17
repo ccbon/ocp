@@ -7,18 +7,19 @@ import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.security.MessageDigest;
 import java.security.SecureRandom;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.HashSet;
 import java.util.Set;
 
 import org.ocpteam.component.DSPDataSource;
+import org.ocpteam.component.DataStore;
 import org.ocpteam.component.NodeMap;
 import org.ocpteam.exception.NotAvailableContactException;
 import org.ocpteam.interfaces.IDataModel;
+import org.ocpteam.interfaces.IDataStore;
 import org.ocpteam.interfaces.INodeMap;
 import org.ocpteam.misc.Id;
 import org.ocpteam.misc.LOG;
+import org.ocpteam.serializable.Address;
 import org.ocpteam.serializable.Contact;
 import org.ocpteam.serializable.EOMObject;
 import org.ocpteam.serializable.InputFlow;
@@ -46,7 +47,7 @@ import org.ocpteam.serializable.Node;
  */
 public class DHT1DataSource extends DSPDataSource {
 
-	private Map<String, String> map;
+	private DataStore map;
 	private MessageDigest md;
 	public NodeMap nodeMap;
 
@@ -55,12 +56,13 @@ public class DHT1DataSource extends DSPDataSource {
 		addComponent(INodeMap.class, new NodeMap());
 		addComponent(IDataModel.class, new DHT1DataModel());
 		addComponent(DHT1Module.class);
+		addComponent(IDataStore.class, new DataStore());
 	}
 
 	@Override
 	public void init() throws Exception {
 		super.init();
-		map = Collections.synchronizedMap(new HashMap<String, String>());
+		map = (DataStore) getComponent(IDataStore.class);
 		nodeMap = (NodeMap) getComponent(INodeMap.class);
 	}
 
@@ -135,7 +137,7 @@ public class DHT1DataSource extends DSPDataSource {
 		try {
 
 			socket = contactMap.getTcpClient(predecessor).borrowSocket(message);
-			for (String key : map.keySet()) {
+			for (Address key : map.keySet()) {
 				protocol.getStreamSerializer().writeObject(socket, key);
 				protocol.getStreamSerializer().writeObject(socket, map.get(key));
 				// read an acknowledgement for avoiding to sent to much on the
@@ -172,21 +174,26 @@ public class DHT1DataSource extends DSPDataSource {
 		return new Id(md.digest(input));
 	}
 
-	public void store(String key, String value) {
+	public void store(String key, String value) throws Exception {
 		LOG.debug("local store: " + key + "->" + value);
-		map.put(key, value);
+		map.put(new Address(key.getBytes()), value.getBytes());
 	}
 
 	public String retrieve(String key) {
 		LOG.debug("local retrieve: " + key);
-		return map.get(key);
+		return new String(map.get(new Address(key.getBytes())));
 	}
 
 	public void destroy(String key) {
-		map.remove(key);
+		map.remove(new Address(key.getBytes()));
 	}
 
-	public Set<String> keySet() {
-		return map.keySet();
+	public Set<String> keySet() throws Exception {
+		Set<Address> set = map.keySet();
+		Set<String> result = new HashSet<String>();
+		for (Address a : set) {
+			result.add(new String(a.getBytes()));
+		}
+		return result;
 	}
 }

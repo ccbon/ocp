@@ -10,9 +10,11 @@ import java.util.Set;
 import org.ocpteam.component.Protocol;
 import org.ocpteam.entity.Session;
 import org.ocpteam.interfaces.IActivity;
+import org.ocpteam.interfaces.IDataStore;
 import org.ocpteam.interfaces.IModule;
 import org.ocpteam.interfaces.ITransaction;
 import org.ocpteam.misc.LOG;
+import org.ocpteam.serializable.Address;
 import org.ocpteam.serializable.EOMObject;
 
 public class DHT1Module implements IModule {
@@ -175,10 +177,10 @@ public class DHT1Module implements IModule {
 						if (serializable instanceof EOMObject) {
 							break;
 						}
-						String key = (String) serializable;
-						String value = (String) protocol.getStreamSerializer()
+						Address key = (Address) serializable;
+						byte[] value = (byte[]) protocol.getStreamSerializer()
 								.readObject(socket);
-						ds.store(key, value);
+						ds.getComponent(IDataStore.class).put(key, value);
 						protocol.getStreamSerializer().writeObject(socket, null);
 					}
 					
