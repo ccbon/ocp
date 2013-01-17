@@ -319,7 +319,7 @@
 				<version>2.3</version>
 
 				<configuration>
-					<finalName>${project.artifactId}-${project.version}-${maven.build.timestamp}</finalName>
+					<finalName>${project.artifactId}</finalName>
 					<descriptors>
 						<descriptor>${asm.Descriptor}</descriptor>
 					</descriptors>
