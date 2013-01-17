@@ -1,3 +1,13 @@
+@echo off
+if "%LAUNCH4J_HOME%"=="" (
+	echo Env var LAUNCH4J_HOME is not defined.
+	goto end
+)
+if "%NSIS_HOME%"=="" (
+	echo Env var NSIS_HOME is not defined.
+	goto end
+)
+
 call mvn package -P windows-x86_64 -DskipTests
 call mvn package -P windows-x86_32 -DskipTests
 call mvn package -P linux-x86_64 -DskipTests
@@ -28,3 +38,5 @@ cd target\nsis
 "%NSIS_HOME%\makensis.exe" gdse.nsi
 endlocal
 move /Y "target\nsis\gdse_setup.exe" "target\gdse_setup.exe"
+
+:end
