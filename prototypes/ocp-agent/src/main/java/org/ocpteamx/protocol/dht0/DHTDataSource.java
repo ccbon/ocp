@@ -66,7 +66,11 @@ public class DHTDataSource extends DSPDataSource {
 	public String retrieve(String key) throws Exception {
 		LOG.debug("local retrieve: " + key);
 		Address a = new Address(key.getBytes());
-		return new String(map.get(a));
+		byte[] b = map.get(a);
+		if (b == null) {
+			return null;
+		}
+		return new String(b);
 	}
 
 	public void remove(String key) throws Exception {

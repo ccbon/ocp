@@ -64,6 +64,24 @@ import org.ocpteam.interfaces.IUserManagement;
 import org.ocpteam.misc.JLG;
 import org.ocpteam.misc.LOG;
 import org.ocpteam.misc.swt.QuickMessage;
+import org.ocpteam.ui.swt.action.AboutAction;
+import org.ocpteam.ui.swt.action.CheckOutAction;
+import org.ocpteam.ui.swt.action.CloseDataSourceAction;
+import org.ocpteam.ui.swt.action.CommitAction;
+import org.ocpteam.ui.swt.action.CopyAction;
+import org.ocpteam.ui.swt.action.EditPreferencesAction;
+import org.ocpteam.ui.swt.action.ExitAction;
+import org.ocpteam.ui.swt.action.NewDataSourceAction;
+import org.ocpteam.ui.swt.action.NewUserAction;
+import org.ocpteam.ui.swt.action.OpenConsoleAction;
+import org.ocpteam.ui.swt.action.OpenDataSourceAction;
+import org.ocpteam.ui.swt.action.PasteAction;
+import org.ocpteam.ui.swt.action.SaveAsDataSourceAction;
+import org.ocpteam.ui.swt.action.SaveDataSourceAction;
+import org.ocpteam.ui.swt.action.SelectAllAction;
+import org.ocpteam.ui.swt.action.SignInAction;
+import org.ocpteam.ui.swt.action.SignOutAction;
+import org.ocpteam.ui.swt.action.ViewDataModelAction;
 
 public class DataSourceWindow extends ApplicationWindow implements IComponent {
 
@@ -80,9 +98,9 @@ public class DataSourceWindow extends ApplicationWindow implements IComponent {
 			+ "/gdse.properties";
 
 	OpenDataSourceAction openDataSourceAction;
-	CloseDataSourceAction closeDataSourceAction;
+	public CloseDataSourceAction closeDataSourceAction;
 	SaveDataSourceAction saveDataSourceAction;
-	SaveAsDataSourceAction saveAsDataSourceAction;
+	public SaveAsDataSourceAction saveAsDataSourceAction;
 	Map<String, NewDataSourceAction> newDataSourceActionMap;
 	ExitAction exitAction;
 
@@ -95,7 +113,7 @@ public class DataSourceWindow extends ApplicationWindow implements IComponent {
 	PasteAction pasteAction;
 	CommitAction commitAction;
 	CheckOutAction checkOutAction;
-	PreferencesAction preferenceAction;
+	EditPreferencesAction preferenceAction;
 
 	public ViewDataModelAction viewExplorerAction;
 
@@ -195,7 +213,7 @@ public class DataSourceWindow extends ApplicationWindow implements IComponent {
 		ps.load();
 	}
 
-	void refresh() {
+	public void refresh() {
 		// action status
 		boolean bAuth = ds != null && ds.usesComponent(IUserManagement.class);
 		closeDataSourceAction.setEnabled(ds != null);
@@ -307,7 +325,7 @@ public class DataSourceWindow extends ApplicationWindow implements IComponent {
 		pasteAction = new PasteAction(this);
 		commitAction = new CommitAction(this);
 		checkOutAction = new CheckOutAction(this);
-		preferenceAction = new PreferencesAction(this);
+		preferenceAction = new EditPreferencesAction(this);
 
 		viewExplorerAction = new ViewDataModelAction(this);
 

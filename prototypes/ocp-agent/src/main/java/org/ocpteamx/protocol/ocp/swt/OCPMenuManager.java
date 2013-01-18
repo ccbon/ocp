@@ -1,7 +1,7 @@
 package org.ocpteamx.protocol.ocp.swt;
 
 import org.ocpteam.ui.swt.DynamicMenuManager;
-import org.ocpteam.ui.swt.ViewContactTabAction;
+import org.ocpteam.ui.swt.action.ViewContactTabAction;
 
 public class OCPMenuManager extends DynamicMenuManager {
 	

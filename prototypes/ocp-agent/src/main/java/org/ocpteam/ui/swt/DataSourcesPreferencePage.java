@@ -14,6 +14,7 @@ import org.eclipse.swt.widgets.Label;
 import org.ocpteam.component.DataSource;
 import org.ocpteam.misc.LOG;
 import org.ocpteam.ui.swt.DataSourceWindow.MyPreferenceStore;
+import org.ocpteam.ui.swt.action.EditPreferencesAction;
 
 public class DataSourcesPreferencePage extends PreferencePage {
 	public static final String DS_PREFIX = "ds.";
@@ -54,8 +55,8 @@ public class DataSourcesPreferencePage extends PreferencePage {
 		for (Button btn : list) {
 			boolean b = false;
 			String name = DS_PREFIX + btn.getText();
-			if (PreferencesAction.defaultPreferences.containsKey(name)) {
-				String value = PreferencesAction.defaultPreferences
+			if (EditPreferencesAction.defaultPreferences.containsKey(name)) {
+				String value = EditPreferencesAction.defaultPreferences
 						.getString(name);
 				if (value != null && value.equalsIgnoreCase("true")) {
 					b = true;

@@ -19,6 +19,8 @@ import org.eclipse.swt.widgets.TableItem;
 import org.ocpteam.interfaces.IDataModel;
 import org.ocpteam.interfaces.IMapDataModel;
 import org.ocpteam.misc.LOG;
+import org.ocpteam.ui.swt.action.RemoveKeyAction;
+import org.ocpteam.ui.swt.action.SetKeyAction;
 
 public class MapComposite extends Composite {
 	public class RefreshAction extends Action {

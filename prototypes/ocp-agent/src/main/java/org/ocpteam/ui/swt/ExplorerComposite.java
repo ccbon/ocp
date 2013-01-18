@@ -50,6 +50,16 @@ import org.ocpteam.interfaces.IFileSystem;
 import org.ocpteam.misc.JLG;
 import org.ocpteam.misc.LOG;
 import org.ocpteam.misc.swt.QuickMessage;
+import org.ocpteam.ui.swt.action.CheckOutAction;
+import org.ocpteam.ui.swt.action.CommitAction;
+import org.ocpteam.ui.swt.action.CreateNewDirAction;
+import org.ocpteam.ui.swt.action.CreateNewRemoteDirAction;
+import org.ocpteam.ui.swt.action.OpenFileAction;
+import org.ocpteam.ui.swt.action.OpenRemoteFileAction;
+import org.ocpteam.ui.swt.action.RemoveFileAction;
+import org.ocpteam.ui.swt.action.RemoveRemoteFileAction;
+import org.ocpteam.ui.swt.action.RenameFileAction;
+import org.ocpteam.ui.swt.action.RenameRemoteFileAction;
 import org.ocpteam.win32.WindowsKernel32;
 
 import com.sun.jna.Platform;
@@ -462,7 +472,7 @@ public class ExplorerComposite extends Composite {
 
 	}
 
-	protected void openRemoteFile(TableItem item) {
+	public void openRemoteFile(TableItem item) {
 		try {
 			String name = item.getText(0);
 			if (name.equals(DIRECTORY_PARENT)) {
@@ -544,7 +554,7 @@ public class ExplorerComposite extends Composite {
 		}
 	}
 
-	protected void openLocalFile(TableItem item) {
+	public void openLocalFile(TableItem item) {
 		String name = item.getText(0);
 		String type = item.getText(1);
 		LOG.debug("type = " + type);
