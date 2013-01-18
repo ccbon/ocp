@@ -1,6 +1,5 @@
 package org.ocpteam.ui.swt;
 
-import java.awt.Desktop;
 import java.io.File;
 import java.util.Set;
 
@@ -16,6 +15,7 @@ import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.program.Program;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Item;
 import org.eclipse.swt.widgets.Menu;
@@ -79,8 +79,7 @@ public class DataStoreComposite extends Composite {
 					File file = new File(dsw.getTempDir() + "/" + address
 							+ ".txt");
 					JLG.setBinaryFile(file, content);
-					Desktop dt = Desktop.getDesktop();
-					dt.open(file);
+					Program.launch(file.getAbsolutePath());
 				}
 			} catch (Exception e) {
 				QuickMessage.exception(getShell(), "error", e);

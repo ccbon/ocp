@@ -60,14 +60,16 @@ public class TreeEntry implements IStructurable, IFile {
 	public Structure toStructure() throws Exception {
 		Structure result = new Structure("FSTreeEntry");
 		result.setStringField("name", name);
-		result.setIntField("type", type);
+		result.setStringField("type", (type == TREE) ? "DIR" : "FILE");
 		result.setStructureToSubstructField("p", p.toStructure());
 		return result;
 	}
 	@Override
 	public void fromStructure(Structure s) throws Exception {
 		setName(s.getStringField("name"));
-		type = s.getIntField("type");
+		String stype = s.getStringField("type");
+		
+		type = stype.equals("DIR") ? TREE : FILE; 
 		p = (Pointer) s.getStructureFromSubstructField("p").toStructurable();
 	}
 

@@ -2,6 +2,7 @@ package org.ocpteam.serializable;
 
 import org.ocpteam.interfaces.IStructurable;
 import org.ocpteam.misc.Id;
+import org.ocpteam.misc.JLG;
 import org.ocpteam.misc.Structure;
 
 /**
@@ -38,13 +39,14 @@ public class Address extends Id implements IStructurable {
 	@Override
 	public Structure toStructure() throws Exception {
 		Structure result = new Structure(Address.class);
-		result.setBinField("id", getBytes());
+		result.setStringField("address", toString());
 		return result;
 	}
 
 	@Override
 	public void fromStructure(Structure s) throws Exception {
-		setValue((byte[]) s.getFieldValue("id"));
+		String str = (String) s.getFieldValue("address");
+		setValue(JLG.hexToBytes(str));
 	}
 
 }

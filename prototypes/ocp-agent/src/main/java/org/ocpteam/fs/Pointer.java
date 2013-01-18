@@ -39,7 +39,7 @@ public class Pointer implements IStructurable {
 
 	@Override
 	public Structure toStructure() throws Exception {
-		Structure result = new Structure("FSPointer");
+		Structure result = new Structure(getClass());
 		Address[] addresseArray = addressList.toArray(new Address[0]);
 		result.setListField("addressList", addresseArray);
 		return result;
