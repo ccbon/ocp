@@ -10,6 +10,9 @@ import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.MenuDetectEvent;
 import org.eclipse.swt.events.MenuDetectListener;
+import org.eclipse.swt.events.MouseAdapter;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Menu;
@@ -100,6 +103,18 @@ public class MapComposite extends Composite {
 				MapComposite.this.dsw.refresh();
 			}
 
+		});
+		table.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseDown(MouseEvent e) {
+				LOG.debug("mouse down");
+				Point pt = new Point(e.x, e.y);
+				if (table.getItem(pt) == null) {
+					LOG.debug("cancel selection");
+					table.deselectAll();
+				}
+				MapComposite.this.dsw.refresh();
+			}
 		});
 		table.setHeaderVisible(true);
 		table.setLinesVisible(true);

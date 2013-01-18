@@ -10,8 +10,12 @@ import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.MenuDetectEvent;
 import org.eclipse.swt.events.MenuDetectListener;
+import org.eclipse.swt.events.MouseAdapter;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Item;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
@@ -19,8 +23,6 @@ import org.eclipse.swt.widgets.TableItem;
 import org.ocpteam.interfaces.IDataStore;
 import org.ocpteam.misc.LOG;
 import org.ocpteam.serializable.Address;
-import org.ocpteam.ui.swt.action.RemoveKeyAction;
-import org.ocpteam.ui.swt.action.SetKeyAction;
 
 public class DataStoreComposite extends Composite {
 	public class RefreshAction extends Action {
@@ -32,6 +34,34 @@ public class DataStoreComposite extends Composite {
 		@Override
 		public void run() {
 			refresh();
+		}
+	}
+
+	public class InternalViewAction extends Action {
+		public InternalViewAction() {
+			setText("View in internal viewer");
+			setToolTipText("View in internal viewer");
+		}
+
+		@Override
+		public void run() {
+			try {
+				for (Item item : table.getSelection()) {
+					Address address = new Address(item.getText());
+					LOG.debug("name=" + address);
+					byte[] content = mdm.get(address);
+					LOG.debug("content=" + new String(content));
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
+	public class ExternalViewAction extends Action {
+		public ExternalViewAction() {
+			setText("View in external viewer");
+			setToolTipText("View in external viewer");
 		}
 	}
 
@@ -59,18 +89,17 @@ public class DataStoreComposite extends Composite {
 				LOG.debug("opening context menu");
 				final MenuManager myMenu = new MenuManager("xxx");
 				final Menu menu = myMenu
-						.createContextMenu(DataStoreComposite.this.dsw.getShell());
+						.createContextMenu(DataStoreComposite.this.dsw
+								.getShell());
 
 				int sel = table.getSelection().length;
 				if (sel > 0) {
-					RemoveKeyAction removeKeyAction = new RemoveKeyAction(
-							DataStoreComposite.this.dsw);
-					myMenu.add(removeKeyAction);
+					InternalViewAction internalViewAction = new InternalViewAction();
+					ExternalViewAction externalViewAction = new ExternalViewAction();
+					myMenu.add(internalViewAction);
+					myMenu.add(externalViewAction);
+					myMenu.add(new Separator());
 				}
-				if (sel == 0) {
-					myMenu.add(new SetKeyAction(DataStoreComposite.this.dsw));
-				}
-				myMenu.add(new Separator());
 				myMenu.add(new RefreshAction());
 				menu.setEnabled(true);
 				myMenu.setVisible(true);
@@ -78,7 +107,6 @@ public class DataStoreComposite extends Composite {
 
 			}
 		});
-
 		table.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent e) {
@@ -96,6 +124,25 @@ public class DataStoreComposite extends Composite {
 				DataStoreComposite.this.dsw.refresh();
 			}
 
+		});
+		table.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseDoubleClick(MouseEvent e) {
+				LOG.debug("double click");
+				new InternalViewAction().run();
+				LOG.debug("table item:" + e.widget.getClass());
+			}
+
+			@Override
+			public void mouseDown(MouseEvent e) {
+				LOG.debug("mouse down");
+				Point pt = new Point(e.x, e.y);
+				if (table.getItem(pt) == null) {
+					LOG.debug("cancel selection");
+					table.deselectAll();
+				}
+				DataStoreComposite.this.dsw.refresh();
+			}
 		});
 		table.setHeaderVisible(true);
 		table.setLinesVisible(true);
