@@ -151,7 +151,7 @@ public class DataSourceWindow extends ApplicationWindow implements IComponent {
 	public void init() throws Exception {
 		this.dsf = app.getComponent(DataSourceFactory.class);
 		initPreferenceStore();
-
+		
 		createActions();
 		addToolBar(SWT.FLAT | SWT.WRAP);
 		addMenuBar();
@@ -174,10 +174,13 @@ public class DataSourceWindow extends ApplicationWindow implements IComponent {
 		public void save() throws IOException {
 			String[] keys = preferenceNames();
 			Arrays.sort(keys);
-			OutputStreamWriter out = new OutputStreamWriter(new FileOutputStream(filename));
+			OutputStreamWriter out = new OutputStreamWriter(
+					new FileOutputStream(filename));
 			try {
 				for (String key : keys) {
-					out.write(StringEscapeUtils.escapeJava(key + "=" + getString(key)) + JLG.NL);
+					out.write(StringEscapeUtils.escapeJava(key + "="
+							+ getString(key))
+							+ JLG.NL);
 				}
 			} finally {
 				if (out != null) {
@@ -771,6 +774,7 @@ public class DataSourceWindow extends ApplicationWindow implements IComponent {
 		init();
 		refreshPreference();
 		setBlockOnOpen(true);
+		JLG.mkdir(getTempDir());
 		try {
 			open();
 		} catch (UnsatisfiedLinkError e) {
@@ -780,6 +784,7 @@ public class DataSourceWindow extends ApplicationWindow implements IComponent {
 					JOptionPane.ERROR_MESSAGE);
 		}
 		Display.getCurrent().dispose();
+		JLG.rm(getTempDir());
 	}
 
 	@Override
@@ -801,6 +806,10 @@ public class DataSourceWindow extends ApplicationWindow implements IComponent {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	public String getTempDir() {
+		return System.getProperty("java.io.tmpdir") + "/gdse";
 	}
 
 }

@@ -1,5 +1,7 @@
 package org.ocpteam.ui.swt;
 
+import java.awt.Desktop;
+import java.io.File;
 import java.util.Set;
 
 import org.eclipse.jface.action.Action;
@@ -21,7 +23,9 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.ocpteam.interfaces.IDataStore;
+import org.ocpteam.misc.JLG;
 import org.ocpteam.misc.LOG;
+import org.ocpteam.misc.swt.QuickMessage;
 import org.ocpteam.serializable.Address;
 
 public class DataStoreComposite extends Composite {
@@ -62,6 +66,25 @@ public class DataStoreComposite extends Composite {
 		public ExternalViewAction() {
 			setText("View in external viewer");
 			setToolTipText("View in external viewer");
+		}
+
+		@Override
+		public void run() {
+			try {
+				for (Item item : table.getSelection()) {
+					Address address = new Address(item.getText());
+					LOG.debug("name=" + address);
+					byte[] content = mdm.get(address);
+					LOG.debug("content=" + new String(content));
+					File file = new File(dsw.getTempDir() + "/" + address
+							+ ".txt");
+					JLG.setBinaryFile(file, content);
+					Desktop dt = Desktop.getDesktop();
+					dt.open(file);
+				}
+			} catch (Exception e) {
+				QuickMessage.exception(getShell(), "error", e);
+			}
 		}
 	}
 
@@ -172,7 +195,6 @@ public class DataStoreComposite extends Composite {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
 	}
 
 	@Override

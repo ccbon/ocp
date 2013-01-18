@@ -35,17 +35,13 @@ public abstract class AddressDataSource extends DSPDataSource {
 		addComponent(RingMapModule.class);
 		addComponent(MessageDigest.class);
 		addComponent(Random.class);
-		// addComponent(IPersistentMap.class, new PersistentFileMap());
+		addComponent(IDataStore.class, new DataStore());
 	}
 
 	@Override
 	public void init() throws Exception {
 		super.init();
-		if (usesComponent(IPersistentMap.class)) {
-			localMap = getComponent(IPersistentMap.class);
-		} else {
-			localMap = new DataStore();
-		}
+		localMap = getComponent(IDataStore.class);
 		nodeMap = getComponent(INodeMap.class);
 		map = getComponent(IAddressMap.class);
 		map.setNodeMap(nodeMap);
@@ -57,13 +53,13 @@ public abstract class AddressDataSource extends DSPDataSource {
 	@Override
 	public void readConfig() throws Exception {
 		super.readConfig();
-		if (usesComponent(IPersistentMap.class)) {
-			String dir = getProperty("uri", DataSourceWindow.GDSE_DIR + "/datastore/"
-					+ getProtocolName() + "/" + getName());
+		if (getComponent(IDataStore.class) instanceof IPersistentMap) {
+			String dir = getProperty("uri", DataSourceWindow.GDSE_DIR
+					+ "/datastore/" + getProtocolName() + "/" + getName());
 			LOG.debug("dir=" + dir);
 			String uri = getProperty("datastore.uri", dir);
-			
-			getComponent(IPersistentMap.class).setURI(uri);
+
+			((IPersistentMap) getComponent(IDataStore.class)).setURI(uri);
 		}
 	}
 

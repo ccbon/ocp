@@ -20,12 +20,13 @@ public class Storage {
 
 	public Storage(OCPAgent agent) throws Exception {
 		nodeSet = new TreeSet<Id>();
-		String root = agent.ds().getProperty(
-				"storage.dir",
-				DataSourceWindow.GDSE_DIR + "/datastore/ocp/"
-						+ agent.getName());
-		IPersistentMap persistentMap = agent.ds().getComponent(
-				IPersistentMap.class);
+		String root = agent.ds()
+				.getProperty(
+						"storage.dir",
+						DataSourceWindow.GDSE_DIR + "/datastore/ocp/"
+								+ agent.getName());
+		IPersistentMap persistentMap = (IPersistentMap) agent.ds()
+				.getComponent(IDataStore.class);
 		persistentMap.setURI(root);
 		datastore = persistentMap;
 		this.agent = agent;

@@ -10,8 +10,8 @@ import org.ocpteam.component.ContactMap;
 import org.ocpteam.component.DataSource;
 import org.ocpteam.entity.Context;
 import org.ocpteam.interfaces.IAuthenticable;
+import org.ocpteam.interfaces.IDataStore;
 import org.ocpteam.interfaces.IFileSystem;
-import org.ocpteam.interfaces.IPersistentMap;
 import org.ocpteam.interfaces.IUserCreation;
 import org.ocpteam.interfaces.IUserManagement;
 import org.ocpteam.misc.Id;
@@ -41,7 +41,7 @@ public class DHT5Test {
 				ds[i].init();
 				ds[i].setName("a" + i);
 				ds[i].readConfig();
-				ds[i].getComponent(IPersistentMap.class).clear();
+				ds[i].getComponent(IDataStore.class).clear();
 			}
 			
 			// first agent

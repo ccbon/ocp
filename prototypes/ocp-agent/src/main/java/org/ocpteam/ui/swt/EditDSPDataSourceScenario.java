@@ -7,7 +7,7 @@ import org.eclipse.jface.preference.PreferenceManager;
 import org.eclipse.jface.preference.PreferenceNode;
 import org.eclipse.swt.widgets.Shell;
 import org.ocpteam.component.PersistentFileMap;
-import org.ocpteam.interfaces.IPersistentMap;
+import org.ocpteam.interfaces.IDataStore;
 import org.ocpteam.misc.LOG;
 import org.ocpteam.ui.swt.DataSourceWindow.MyPreferenceStore;
 
@@ -38,8 +38,7 @@ public class EditDSPDataSourceScenario implements IScenario {
 		prefManager.addToRoot(tcpServer);
 		prefManager.addToRoot(network);
 		if (w.getDSEditMode() == DataSourceWindow.EDIT_MODE) {
-			boolean bViewDataStore = (w.ds.usesComponent(IPersistentMap.class) && (w.ds
-					.getComponent(IPersistentMap.class) instanceof PersistentFileMap));
+			boolean bViewDataStore = ((w.ds.getComponent(IDataStore.class) instanceof PersistentFileMap));
 			if (bViewDataStore) {
 				PreferenceNode dataStore = new PreferenceNode("Datastore",
 						"Datastore", null,
