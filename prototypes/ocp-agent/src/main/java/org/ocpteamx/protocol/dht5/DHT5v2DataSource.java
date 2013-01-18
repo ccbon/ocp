@@ -12,6 +12,7 @@ import org.ocpteam.component.UserManagement;
 import org.ocpteam.fs.BFSDataModel;
 import org.ocpteam.interfaces.IAuthenticable;
 import org.ocpteam.interfaces.IDataModel;
+import org.ocpteam.interfaces.IDataStore;
 import org.ocpteam.interfaces.IPersistentMap;
 import org.ocpteam.interfaces.ISecurity;
 import org.ocpteam.interfaces.IUser;
@@ -31,8 +32,12 @@ public class DHT5v2DataSource extends AddressDataSource {
 
 	public DHT5v2DataSource() throws Exception {
 		super();
+
+		IDataStore datastore = new PersistentFileMap();
+		addComponent(IPersistentMap.class, (IPersistentMap) datastore);
+		addComponent(IDataStore.class, datastore);
+
 		addComponent(IDataModel.class, new BFSDataModel());
-		addComponent(IPersistentMap.class, new PersistentFileMap());
 		addComponent(IUserManagement.class, new UserManagement());
 		addComponent(IUser.class, new SecureUser());
 		AddressUserCreation uc = new AddressUserCreation();
@@ -40,7 +45,7 @@ public class DHT5v2DataSource extends AddressDataSource {
 		addComponent(IAuthenticable.class, uc);
 		addComponent(ISecurity.class, new Security());
 		addComponent(IUserBackup.class, new UserBackup());
-		
+
 		getComponent(TCPListener.class).addComponent(NATTraversal.class);
 		getComponent(UDPListener.class).addComponent(NATTraversal.class);
 	}
