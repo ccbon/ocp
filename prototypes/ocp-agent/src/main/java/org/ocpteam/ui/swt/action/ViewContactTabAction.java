@@ -12,8 +12,8 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.ocpteam.component.Agent;
 import org.ocpteam.misc.LOG;
-import org.ocpteam.ui.swt.ContactComposite;
 import org.ocpteam.ui.swt.DataSourceWindow;
+import org.ocpteam.ui.swt.composite.ContactComposite;
 
 public class ViewContactTabAction extends Action {
 	private DataSourceWindow window;

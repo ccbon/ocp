@@ -1,4 +1,4 @@
-package org.ocpteam.ui.swt;
+package org.ocpteam.ui.swt.wizard;
 
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.jface.wizard.WizardDialog;
@@ -7,6 +7,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.ocpteam.interfaces.IUserManagement;
 import org.ocpteam.misc.LOG;
 import org.ocpteam.misc.swt.QuickMessage;
+import org.ocpteam.ui.swt.DataSourceWindow;
 
 
 public class SignInWizard extends Wizard {

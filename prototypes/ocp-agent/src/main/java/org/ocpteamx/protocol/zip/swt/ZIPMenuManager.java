@@ -1,7 +1,7 @@
 package org.ocpteamx.protocol.zip.swt;
 
 import org.ocpteam.ui.swt.DynamicMenuManager;
-import org.ocpteam.ui.swt.HelpAction;
+import org.ocpteam.ui.swt.action.HelpAction;
 
 public class ZIPMenuManager extends DynamicMenuManager {
 	

@@ -1,4 +1,4 @@
-package org.ocpteam.ui.swt;
+package org.ocpteam.ui.swt.wizard;
 
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.Wizard;
@@ -13,6 +13,7 @@ import org.ocpteam.interfaces.IUserCreation;
 import org.ocpteam.interfaces.IUserManagement;
 import org.ocpteam.misc.LOG;
 import org.ocpteam.misc.swt.QuickMessage;
+import org.ocpteam.ui.swt.DataSourceWindow;
 
 public class NewUserWizard extends Wizard {
 

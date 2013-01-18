@@ -69,8 +69,10 @@ import org.ocpteam.ui.swt.action.CheckOutAction;
 import org.ocpteam.ui.swt.action.CloseDataSourceAction;
 import org.ocpteam.ui.swt.action.CommitAction;
 import org.ocpteam.ui.swt.action.CopyAction;
+import org.ocpteam.ui.swt.action.DebugAction;
 import org.ocpteam.ui.swt.action.EditPreferencesAction;
 import org.ocpteam.ui.swt.action.ExitAction;
+import org.ocpteam.ui.swt.action.HelpAction;
 import org.ocpteam.ui.swt.action.NewDataSourceAction;
 import org.ocpteam.ui.swt.action.NewUserAction;
 import org.ocpteam.ui.swt.action.OpenConsoleAction;
@@ -82,6 +84,8 @@ import org.ocpteam.ui.swt.action.SelectAllAction;
 import org.ocpteam.ui.swt.action.SignInAction;
 import org.ocpteam.ui.swt.action.SignOutAction;
 import org.ocpteam.ui.swt.action.ViewDataModelAction;
+import org.ocpteam.ui.swt.composite.ExplorerComposite;
+import org.ocpteam.ui.swt.composite.MapComposite;
 
 public class DataSourceWindow extends ApplicationWindow implements IComponent {
 
@@ -97,30 +101,30 @@ public class DataSourceWindow extends ApplicationWindow implements IComponent {
 	private static final String PROPERTIES_FILENAME = GDSE_DIR
 			+ "/gdse.properties";
 
-	OpenDataSourceAction openDataSourceAction;
+	public OpenDataSourceAction openDataSourceAction;
 	public CloseDataSourceAction closeDataSourceAction;
-	SaveDataSourceAction saveDataSourceAction;
+	public SaveDataSourceAction saveDataSourceAction;
 	public SaveAsDataSourceAction saveAsDataSourceAction;
 	Map<String, NewDataSourceAction> newDataSourceActionMap;
-	ExitAction exitAction;
+	public ExitAction exitAction;
 
-	SignInAction signInAction;
-	SignOutAction signOutAction;
-	NewUserAction newUserAction;
+	public SignInAction signInAction;
+	public SignOutAction signOutAction;
+	public NewUserAction newUserAction;
 
-	SelectAllAction selectAllAction;
-	CopyAction copyAction;
-	PasteAction pasteAction;
-	CommitAction commitAction;
-	CheckOutAction checkOutAction;
-	EditPreferencesAction preferenceAction;
+	public SelectAllAction selectAllAction;
+	public CopyAction copyAction;
+	public PasteAction pasteAction;
+	public CommitAction commitAction;
+	public CheckOutAction checkOutAction;
+	public EditPreferencesAction preferenceAction;
 
 	public ViewDataModelAction viewExplorerAction;
 
-	DebugAction debugAction;
+	public DebugAction debugAction;
 
-	AboutAction aboutAction;
-	HelpAction helpAction;
+	public AboutAction aboutAction;
+	public HelpAction helpAction;
 
 	public DataSource ds;
 	public Context context;

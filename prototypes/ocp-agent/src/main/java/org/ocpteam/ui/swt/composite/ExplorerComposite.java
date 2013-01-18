@@ -1,4 +1,4 @@
-package org.ocpteam.ui.swt;
+package org.ocpteam.ui.swt.composite;
 
 import java.io.File;
 import java.nio.file.FileSystems;
@@ -50,6 +50,7 @@ import org.ocpteam.interfaces.IFileSystem;
 import org.ocpteam.misc.JLG;
 import org.ocpteam.misc.LOG;
 import org.ocpteam.misc.swt.QuickMessage;
+import org.ocpteam.ui.swt.DataSourceWindow;
 import org.ocpteam.ui.swt.action.CheckOutAction;
 import org.ocpteam.ui.swt.action.CommitAction;
 import org.ocpteam.ui.swt.action.CreateNewDirAction;

@@ -1,11 +1,11 @@
-package org.ocpteam.ui.swt;
+package org.ocpteam.ui.swt.action;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.program.Program;
 import org.ocpteam.misc.LOG;
-
+import org.ocpteam.ui.swt.DataSourceWindow;
 
 public class HelpAction extends Action {
 
@@ -16,7 +16,9 @@ public class HelpAction extends Action {
 		setText("&Help@F1");
 		setToolTipText("Help");
 		try {
-			ImageDescriptor i = ImageDescriptor.createFromImageData(new ImageData(HelpAction.class.getResourceAsStream("linkto_help.gif")));
+			ImageDescriptor i = ImageDescriptor
+					.createFromImageData(new ImageData(DataSourceWindow.class
+							.getResourceAsStream("linkto_help.gif")));
 			setImageDescriptor(i);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -26,7 +28,7 @@ public class HelpAction extends Action {
 	@Override
 	public void run() {
 		LOG.debug("Starting help in OS default browser...");
-			Program.launch(window.getHelpURL());
-		}
+		Program.launch(window.getHelpURL());
+	}
 
 }

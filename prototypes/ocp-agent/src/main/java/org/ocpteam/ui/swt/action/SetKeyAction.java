@@ -3,7 +3,7 @@ package org.ocpteam.ui.swt.action;
 import org.eclipse.jface.action.Action;
 import org.ocpteam.misc.LOG;
 import org.ocpteam.ui.swt.DataSourceWindow;
-import org.ocpteam.ui.swt.SetKeyWizard;
+import org.ocpteam.ui.swt.wizard.SetKeyWizard;
 
 
 public class SetKeyAction extends Action {

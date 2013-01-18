@@ -10,8 +10,8 @@ import org.ocpteam.misc.LOG;
 import org.ocpteam.misc.swt.QuickMessage;
 import org.ocpteam.ui.swt.DataSourceWindow;
 import org.ocpteam.ui.swt.IScenario;
-import org.ocpteam.ui.swt.SignInWithAuthenticationWizard;
-import org.ocpteam.ui.swt.SignInWizard;
+import org.ocpteam.ui.swt.wizard.SignInWithAuthenticationWizard;
+import org.ocpteam.ui.swt.wizard.SignInWizard;
 
 public class SignInAction extends Action {
 	private DataSourceWindow window;

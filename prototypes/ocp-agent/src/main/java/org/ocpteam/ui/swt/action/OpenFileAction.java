@@ -3,7 +3,7 @@ package org.ocpteam.ui.swt.action;
 import org.eclipse.jface.action.Action;
 import org.eclipse.swt.widgets.TableItem;
 import org.ocpteam.misc.LOG;
-import org.ocpteam.ui.swt.ExplorerComposite;
+import org.ocpteam.ui.swt.composite.ExplorerComposite;
 
 
 public class OpenFileAction extends Action {

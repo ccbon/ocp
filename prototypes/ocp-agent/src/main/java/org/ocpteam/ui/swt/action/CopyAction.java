@@ -15,7 +15,7 @@ import org.eclipse.swt.widgets.TableItem;
 import org.ocpteam.misc.JLG;
 import org.ocpteam.misc.LOG;
 import org.ocpteam.ui.swt.DataSourceWindow;
-import org.ocpteam.ui.swt.ExplorerComposite;
+import org.ocpteam.ui.swt.composite.ExplorerComposite;
 
 public class CopyAction extends Action {
 

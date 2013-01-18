@@ -9,7 +9,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.ocpteam.misc.LOG;
 import org.ocpteam.ui.swt.DataSourceWindow;
-import org.ocpteam.ui.swt.ExplorerComposite;
+import org.ocpteam.ui.swt.composite.ExplorerComposite;
 
 public class PasteAction extends Action {
 

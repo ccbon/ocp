@@ -1,4 +1,4 @@
-package org.ocpteam.ui.swt;
+package org.ocpteam.ui.swt.composite;
 
 import java.io.File;
 import java.util.Set;
@@ -35,6 +35,7 @@ import org.ocpteam.misc.JLG;
 import org.ocpteam.misc.LOG;
 import org.ocpteam.misc.swt.QuickMessage;
 import org.ocpteam.serializable.Address;
+import org.ocpteam.ui.swt.DataSourceWindow;
 import org.ocpteam.ui.swt.action.OpenDataStoreFolderAction;
 
 public class DataStoreComposite extends Composite {

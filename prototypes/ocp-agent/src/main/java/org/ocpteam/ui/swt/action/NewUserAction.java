@@ -5,7 +5,7 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.graphics.ImageData;
 import org.ocpteam.misc.LOG;
 import org.ocpteam.ui.swt.DataSourceWindow;
-import org.ocpteam.ui.swt.NewUserWizard;
+import org.ocpteam.ui.swt.wizard.NewUserWizard;
 
 
 public class NewUserAction extends Action {

@@ -10,7 +10,7 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.ocpteam.misc.LOG;
 import org.ocpteam.ui.swt.DataSourceWindow;
-import org.ocpteam.ui.swt.DataStoreComposite;
+import org.ocpteam.ui.swt.composite.DataStoreComposite;
 
 public class ViewDataStoreAction extends Action {
 	private DataSourceWindow window;

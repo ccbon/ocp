@@ -9,7 +9,7 @@ import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 import org.ocpteam.misc.LOG;
-import org.ocpteam.ui.swt.ExplorerComposite;
+import org.ocpteam.ui.swt.composite.ExplorerComposite;
 
 
 public class RenameFileAction extends Action {

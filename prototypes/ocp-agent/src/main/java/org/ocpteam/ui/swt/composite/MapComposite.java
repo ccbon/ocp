@@ -1,4 +1,4 @@
-package org.ocpteam.ui.swt;
+package org.ocpteam.ui.swt.composite;
 
 import java.util.Set;
 
@@ -22,6 +22,7 @@ import org.eclipse.swt.widgets.TableItem;
 import org.ocpteam.interfaces.IDataModel;
 import org.ocpteam.interfaces.IMapDataModel;
 import org.ocpteam.misc.LOG;
+import org.ocpteam.ui.swt.DataSourceWindow;
 import org.ocpteam.ui.swt.action.RemoveKeyAction;
 import org.ocpteam.ui.swt.action.SetKeyAction;
 
