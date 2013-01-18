@@ -6,6 +6,8 @@ import java.util.Set;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
+import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
@@ -17,18 +19,87 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.program.Program;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Item;
 import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
+import org.eclipse.swt.widgets.Text;
 import org.ocpteam.interfaces.IDataStore;
 import org.ocpteam.misc.JLG;
 import org.ocpteam.misc.LOG;
 import org.ocpteam.misc.swt.QuickMessage;
 import org.ocpteam.serializable.Address;
+import org.eclipse.wb.swt.SWTResourceManager;
 
 public class DataStoreComposite extends Composite {
+
+	public class FileReaderDialog extends Dialog {
+		private Text text;
+		private String title;
+		private String content;
+
+		/**
+		 * Create the dialog.
+		 * 
+		 * @param parentShell
+		 * @param content
+		 */
+		public FileReaderDialog(Shell parentShell, String title, String content) {
+			super(parentShell);
+			setShellStyle(SWT.RESIZE | SWT.TITLE | SWT.CLOSE);
+			this.title = title;
+			this.content = content;
+		}
+
+		@Override
+		protected void configureShell(Shell newShell) {
+			super.configureShell(newShell);
+			newShell.setText(title);
+		}
+
+		/**
+		 * Create contents of the dialog.
+		 * 
+		 * @param parent
+		 */
+		@Override
+		protected Control createDialogArea(Composite parent) {
+			Composite container = (Composite) super.createDialogArea(parent);
+			container.setLayout(new FillLayout(SWT.HORIZONTAL));
+
+			text = new Text(container, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL
+					| SWT.CANCEL | SWT.READ_ONLY | SWT.MULTI);
+			text.setText(content);
+			text.setFont(SWTResourceManager.getFont("Courier New", 9,
+					SWT.NORMAL));
+			return container;
+		}
+
+		/**
+		 * Create contents of the button bar.
+		 * 
+		 * @param parent
+		 */
+		@Override
+		protected void createButtonsForButtonBar(Composite parent) {
+			createButton(parent, IDialogConstants.OK_ID,
+					IDialogConstants.OK_LABEL, true);
+		}
+
+		/**
+		 * Return the initial size of the dialog.
+		 */
+		@Override
+		protected Point getInitialSize() {
+			return new Point(450, 300);
+		}
+
+	}
+
 	public class RefreshAction extends Action {
 		public RefreshAction() {
 			setText("&Refresh@F5");
@@ -55,6 +126,10 @@ public class DataStoreComposite extends Composite {
 					LOG.debug("name=" + address);
 					byte[] content = mdm.get(address);
 					LOG.debug("content=" + new String(content));
+					Display display = dsw.getShell().getDisplay();
+					FileReaderDialog dialog = new FileReaderDialog(new Shell(
+							display), address.toString(), new String(content));
+					dialog.open();
 				}
 			} catch (Exception e) {
 				e.printStackTrace();

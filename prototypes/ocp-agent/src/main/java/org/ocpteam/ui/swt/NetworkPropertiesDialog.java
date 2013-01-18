@@ -27,6 +27,7 @@ public class NetworkPropertiesDialog extends Dialog {
 	 */
 	public NetworkPropertiesDialog(Shell parentShell, DataSourceWindow window) {
 		super(parentShell);
+		setShellStyle(SWT.RESIZE);
 		this.w = window;
 	}
 
