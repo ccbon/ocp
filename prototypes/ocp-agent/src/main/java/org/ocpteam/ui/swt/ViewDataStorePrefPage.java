@@ -5,14 +5,11 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.RowLayout;
-import org.eclipse.swt.program.Program;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.ocpteam.component.PersistentFileMap;
-import org.ocpteam.interfaces.IDataStore;
-import org.ocpteam.misc.LOG;
 import org.ocpteam.ui.swt.DataSourceWindow.MyPreferenceStore;
+import org.ocpteam.ui.swt.action.OpenDataStoreFolderAction;
 
 public class ViewDataStorePrefPage extends PreferencePage {
 	public ViewDataStorePrefPage() {
@@ -31,13 +28,7 @@ public class ViewDataStorePrefPage extends PreferencePage {
 		btn.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				try {
-					PersistentFileMap fs = (PersistentFileMap) ps.w.ds.getComponent(IDataStore.class);
-					LOG.debug("root path=" + fs.getURI());
-					Program.launch(fs.getURI());
-				} catch (Exception e1) {
-					e1.printStackTrace();
-				}
+				new OpenDataStoreFolderAction(ps.w).run();
 			}
 			
 		});

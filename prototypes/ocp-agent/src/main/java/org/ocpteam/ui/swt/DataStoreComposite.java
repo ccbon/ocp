@@ -28,12 +28,14 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.wb.swt.SWTResourceManager;
 import org.ocpteam.interfaces.IDataStore;
+import org.ocpteam.interfaces.IPersistentMap;
 import org.ocpteam.misc.JLG;
 import org.ocpteam.misc.LOG;
 import org.ocpteam.misc.swt.QuickMessage;
 import org.ocpteam.serializable.Address;
-import org.eclipse.wb.swt.SWTResourceManager;
+import org.ocpteam.ui.swt.action.OpenDataStoreFolderAction;
 
 public class DataStoreComposite extends Composite {
 
@@ -50,7 +52,7 @@ public class DataStoreComposite extends Composite {
 		 */
 		public FileReaderDialog(Shell parentShell, String title, String content) {
 			super(parentShell);
-			setShellStyle(SWT.RESIZE | SWT.TITLE | SWT.CLOSE);
+			setShellStyle(SWT.RESIZE | SWT.TITLE | SWT.CLOSE | SWT.MAX);
 			this.title = title;
 			this.content = content;
 		}
@@ -73,6 +75,7 @@ public class DataStoreComposite extends Composite {
 
 			text = new Text(container, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL
 					| SWT.CANCEL | SWT.READ_ONLY | SWT.MULTI);
+			text.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
 			text.setText(content);
 			text.setFont(SWTResourceManager.getFont("Courier New", 9,
 					SWT.NORMAL));
@@ -201,7 +204,11 @@ public class DataStoreComposite extends Composite {
 				menu.setEnabled(true);
 				myMenu.setVisible(true);
 				menu.setVisible(true);
-
+				if (mdm instanceof IPersistentMap) {
+					myMenu.add(new Separator());
+					OpenDataStoreFolderAction opendsAction = new OpenDataStoreFolderAction(dsw);
+					myMenu.add(opendsAction);
+				}
 			}
 		});
 		table.addKeyListener(new KeyAdapter() {
