@@ -5,18 +5,20 @@ import java.io.Serializable;
 import java.net.Socket;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
-import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
 import org.ocpteam.component.DSPDataSource;
+import org.ocpteam.component.DataStore;
 import org.ocpteam.component.MessageDigest;
 import org.ocpteam.component.NodeMap;
 import org.ocpteam.component.Random;
 import org.ocpteam.component.RingNodeMap;
 import org.ocpteam.exception.NotAvailableContactException;
 import org.ocpteam.interfaces.IDataModel;
+import org.ocpteam.interfaces.IDataStore;
 import org.ocpteam.interfaces.INodeMap;
 import org.ocpteam.misc.Id;
 import org.ocpteam.misc.JLG;
@@ -45,7 +47,7 @@ import org.ocpteam.serializable.Node;
  */
 public class DHT2DataSource extends DSPDataSource {
 
-	private Map<String, String> map;
+	private IDataStore map;
 	public DHT2DataModel dm;
 	public RingNodeMap ringNodeMap;
 	private MessageDigest md;
@@ -58,12 +60,13 @@ public class DHT2DataSource extends DSPDataSource {
 		addComponent(DHT2Module.class);
 		addComponent(MessageDigest.class);
 		addComponent(Random.class);
+		addComponent(IDataStore.class, new DataStore());
 	}
 
 	@Override
 	public void init() throws Exception {
 		super.init();
-		map = Collections.synchronizedMap(new HashMap<String, String>());
+		map = getComponent(IDataStore.class);
 		dm = (DHT2DataModel) getComponent(IDataModel.class);
 		ringNodeMap = (RingNodeMap) getComponent(INodeMap.class);
 		md = getComponent(MessageDigest.class);
@@ -78,7 +81,8 @@ public class DHT2DataSource extends DSPDataSource {
 	@Override
 	protected void askForNode() throws Exception {
 		super.askForNode();
-		setNode(new Node(new Id(md.hash(random.generate())), ringNodeMap.getLessPopulatedRing()));
+		setNode(new Node(new Id(md.hash(random.generate())),
+				ringNodeMap.getLessPopulatedRing()));
 	}
 
 	@Override
@@ -135,7 +139,10 @@ public class DHT2DataSource extends DSPDataSource {
 					continue;
 				}
 				Map<String, String> localMap = dm.localMap(c);
-				map.putAll(localMap);
+				for (String key : localMap.keySet()) {
+					map.put(new Address(key.getBytes()), localMap.get(key)
+							.getBytes());
+				}
 			}
 		}
 	}
@@ -156,9 +163,10 @@ public class DHT2DataSource extends DSPDataSource {
 		try {
 
 			socket = contactMap.getTcpClient(predecessor).borrowSocket(message);
-			for (String key : map.keySet()) {
+			for (Address a : map.keySet()) {
+				String key = new String(a.getBytes());
 				protocol.getStreamSerializer().writeObject(socket, key);
-				protocol.getStreamSerializer().writeObject(socket, map.get(key));
+				protocol.getStreamSerializer().writeObject(socket, map.get(a));
 				// read an acknowledgement for avoiding to sent to much on the
 				// stream.
 				Serializable serializable = protocol.getStreamSerializer()
@@ -181,27 +189,35 @@ public class DHT2DataSource extends DSPDataSource {
 			}
 		}
 	}
-	
+
 	public Address getAddress(String key) throws Exception {
 		return new Address(md.hash(key.getBytes()));
 	}
 
-	public void store(String key, String value) {
+	public void store(String key, String value) throws Exception {
 		LOG.debug("local store: " + key + "->" + value);
-		map.put(key, value);
+		Address a = new Address(key.getBytes());
+		map.put(a, value.getBytes());
 	}
 
-	public String retrieve(String key) {
+	public String retrieve(String key) throws Exception {
 		LOG.debug("local retrieve: " + key);
-		return map.get(key);
+		Address a = new Address(key.getBytes());
+		return new String(map.get(a));
 	}
 
-	public void destroy(String key) {
-		map.remove(key);
+	public void destroy(String key) throws Exception {
+		Address a = new Address(key.getBytes());
+		map.remove(a);
 	}
 
-	public Set<String> keySet() {
-		return map.keySet();
+	public Set<String> keySet() throws Exception {
+		Set<Address> set = map.keySet();
+		HashSet<String> result = new HashSet<String>();
+		for (Address a : set) {
+			result.add(new String(a.getBytes()));
+		}
+		return result;
 	}
 
 	public void networkPicture() throws Exception {
@@ -220,8 +236,12 @@ public class DHT2DataSource extends DSPDataSource {
 		}
 	}
 
-	public Map<String, String> getMap() {
-		return map;
+	public Map<String, String> getMap() throws Exception {
+		HashMap<String, String> result = new HashMap<String, String>();
+		for (Address a : map.keySet()) {
+			result.put(new String(a.getBytes()), new String(map.get(a)));
+		}
+		return result;
 	}
 
 	public synchronized void disconnectHard() throws Exception {
@@ -238,9 +258,10 @@ public class DHT2DataSource extends DSPDataSource {
 			Contact successor = ringNodeMap.getSuccessor(contact.getNode());
 			Contact predecessor = ringNodeMap.getPredecessor(contact.getNode());
 			DHT2Module m = getComponent(DHT2Module.class);
-			InputMessage message = new InputMessage(m.restore(), contact.getNode().getNodeId(), successor.getNode().getNodeId());
+			InputMessage message = new InputMessage(m.restore(), contact
+					.getNode().getNodeId(), successor.getNode().getNodeId());
 			client.send(predecessor, message);
-			
+
 		} catch (Exception e) {
 
 		}
@@ -252,7 +273,8 @@ public class DHT2DataSource extends DSPDataSource {
 		if (r == 0) {
 			backupRing = 1;
 		}
-		for (Contact c : ringNodeMap.getNodeMaps()[backupRing].getNodeMap().values()) {
+		for (Contact c : ringNodeMap.getNodeMaps()[backupRing].getNodeMap()
+				.values()) {
 			DHT2Module m = getComponent(DHT2Module.class);
 			InputFlow message = new InputFlow(m.getLocalMap());
 			Socket socket = null;
@@ -269,7 +291,8 @@ public class DHT2DataSource extends DSPDataSource {
 					String value = (String) protocol.getStreamSerializer()
 							.readObject(socket);
 					Id address = getAddress(key);
-					if ((address.compareTo(startNodeId) > 0) && (address.compareTo(endNodeId) < 0)) {
+					if ((address.compareTo(startNodeId) > 0)
+							&& (address.compareTo(endNodeId) < 0)) {
 						store(key, value);
 					}
 				}
