@@ -28,7 +28,7 @@ public class ViewDataStoreAction extends Action {
 	}
 
 	public void addDataStoreTab() {
-		// if one contact tab is already present, then just select it.
+		// if one datastore tab is already present, then just select it.
 		CTabFolder tabFolder = window.tabFolder;
 		CTabItem[] items = tabFolder.getItems();
 		for (CTabItem item : items) {

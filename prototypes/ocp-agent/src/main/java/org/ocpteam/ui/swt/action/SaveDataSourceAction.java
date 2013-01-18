@@ -15,7 +15,7 @@ public class SaveDataSourceAction extends Action {
 		setToolTipText("Save File");
 		try {
 			ImageDescriptor i = ImageDescriptor
-					.createFromImageData(new ImageData(ExitAction.class
+					.createFromImageData(new ImageData(DataSourceWindow.class
 							.getResourceAsStream("save_edit.gif")));
 			setImageDescriptor(i);
 		} catch (Exception e) {

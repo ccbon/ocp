@@ -19,7 +19,7 @@ public class ExitAction extends Action {
 		setToolTipText("Exit from the application");
 		try {
 			ImageDescriptor i = ImageDescriptor
-					.createFromImageData(new ImageData(ExitAction.class
+					.createFromImageData(new ImageData(DataSourceWindow.class
 							.getResourceAsStream("exit.png")));
 			setImageDescriptor(i);
 		} catch (Exception e) {

@@ -21,7 +21,7 @@ public class OpenDataSourceAction extends Action {
 		setToolTipText("Open File");
 		try {
 			ImageDescriptor i = ImageDescriptor
-					.createFromImageData(new ImageData(OpenDataSourceAction.class
+					.createFromImageData(new ImageData(DataSourceWindow.class
 							.getResourceAsStream("open.gif")));
 			setImageDescriptor(i);
 		} catch (Exception e) {

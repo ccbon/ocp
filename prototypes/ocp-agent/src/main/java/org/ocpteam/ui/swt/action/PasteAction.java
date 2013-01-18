@@ -21,7 +21,7 @@ public class PasteAction extends Action {
 		setToolTipText("Paste");
 		try {
 			ImageDescriptor i = ImageDescriptor
-					.createFromImageData(new ImageData(PasteAction.class
+					.createFromImageData(new ImageData(DataSourceWindow.class
 							.getResourceAsStream("paste.gif")));
 			setImageDescriptor(i);
 		} catch (Exception e) {

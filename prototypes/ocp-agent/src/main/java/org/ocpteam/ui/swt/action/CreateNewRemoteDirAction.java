@@ -16,7 +16,7 @@ public class CreateNewRemoteDirAction extends Action {
 		setToolTipText("New folder");
 //		try {
 //			ImageDescriptor i = ImageDescriptor
-//					.createFromImageData(new ImageData(OpenFileAction.class
+//					.createFromImageData(new ImageData(DataSourceWindow.class
 //							.getResourceAsStream("about.png")));
 //			setImageDescriptor(i);
 //		} catch (Exception e) {

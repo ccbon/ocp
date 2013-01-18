@@ -18,7 +18,7 @@ public class RemoveFileAction extends Action {
 		setToolTipText("Delete");
 //		try {
 //			ImageDescriptor i = ImageDescriptor
-//					.createFromImageData(new ImageData(OpenFileAction.class
+//					.createFromImageData(new ImageData(DataSourceWindow.class
 //							.getResourceAsStream("about.png")));
 //			setImageDescriptor(i);
 //		} catch (Exception e) {

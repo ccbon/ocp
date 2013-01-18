@@ -13,7 +13,7 @@ import org.ocpteam.ui.swt.GeneralPreferencePage;
 
 public class EditPreferencesAction extends Action {
 	public static ResourceBundle defaultPreferences = ResourceBundle
-			.getBundle(EditPreferencesAction.class.getPackage().getName()
+			.getBundle(DataSourceWindow.class.getPackage().getName()
 					+ ".preferences");
 
 	private DataSourceWindow w;

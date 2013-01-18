@@ -17,7 +17,7 @@ public class CloseDataSourceAction extends Action {
 		try {
 			ImageDescriptor i = ImageDescriptor
 					.createFromImageData(new ImageData(
-							CloseDataSourceAction.class
+							DataSourceWindow.class
 									.getResourceAsStream("close.gif")));
 			setImageDescriptor(i);
 		} catch (Exception e) {

@@ -17,7 +17,7 @@ public class NewUserAction extends Action {
 		setToolTipText("Create a new user");
 		try {
 			ImageDescriptor i = ImageDescriptor
-					.createFromImageData(new ImageData(ExitAction.class
+					.createFromImageData(new ImageData(DataSourceWindow.class
 							.getResourceAsStream("new_user.png")));
 			setImageDescriptor(i);
 		} catch (Exception e) {

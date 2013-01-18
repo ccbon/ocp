@@ -16,7 +16,7 @@ public class ViewDataModelAction extends Action {
 		setToolTipText("Data Model");
 		try {
 			ImageDescriptor i = ImageDescriptor
-					.createFromImageData(new ImageData(ViewDataModelAction.class
+					.createFromImageData(new ImageData(DataSourceWindow.class
 							.getResourceAsStream("view_user_explorer.png")));
 			setImageDescriptor(i);
 		} catch (Exception e) {

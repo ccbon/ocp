@@ -3,17 +3,24 @@ package org.ocpteam.ui.swt;
 import java.util.Set;
 
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.action.Separator;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.swt.events.MenuDetectEvent;
+import org.eclipse.swt.events.MenuDetectListener;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.ocpteam.interfaces.IDataStore;
 import org.ocpteam.misc.LOG;
 import org.ocpteam.serializable.Address;
+import org.ocpteam.ui.swt.action.RemoveKeyAction;
+import org.ocpteam.ui.swt.action.SetKeyAction;
 
 public class DataStoreComposite extends Composite {
 	public class RefreshAction extends Action {
@@ -46,6 +53,31 @@ public class DataStoreComposite extends Composite {
 		setLayout(new FillLayout(SWT.HORIZONTAL));
 
 		table = new Table(this, SWT.BORDER | SWT.FULL_SELECTION);
+		table.addMenuDetectListener(new MenuDetectListener() {
+			@Override
+			public void menuDetected(MenuDetectEvent arg0) {
+				LOG.debug("opening context menu");
+				final MenuManager myMenu = new MenuManager("xxx");
+				final Menu menu = myMenu
+						.createContextMenu(DataStoreComposite.this.dsw.getShell());
+
+				int sel = table.getSelection().length;
+				if (sel > 0) {
+					RemoveKeyAction removeKeyAction = new RemoveKeyAction(
+							DataStoreComposite.this.dsw);
+					myMenu.add(removeKeyAction);
+				}
+				if (sel == 0) {
+					myMenu.add(new SetKeyAction(DataStoreComposite.this.dsw));
+				}
+				myMenu.add(new Separator());
+				myMenu.add(new RefreshAction());
+				menu.setEnabled(true);
+				myMenu.setVisible(true);
+				menu.setVisible(true);
+
+			}
+		});
 
 		table.addKeyListener(new KeyAdapter() {
 			@Override

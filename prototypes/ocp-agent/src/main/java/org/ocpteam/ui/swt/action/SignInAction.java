@@ -22,7 +22,7 @@ public class SignInAction extends Action {
 		setToolTipText("Sign in");
 		try {
 			ImageDescriptor i = ImageDescriptor
-					.createFromImageData(new ImageData(ExitAction.class
+					.createFromImageData(new ImageData(DataSourceWindow.class
 							.getResourceAsStream("sign_in.png")));
 			setImageDescriptor(i);
 		} catch (Exception e) {

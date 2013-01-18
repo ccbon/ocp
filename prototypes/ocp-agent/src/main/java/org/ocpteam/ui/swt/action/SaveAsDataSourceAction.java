@@ -22,7 +22,7 @@ public class SaveAsDataSourceAction extends Action {
 		setToolTipText("Save As File");
 		try {
 			ImageDescriptor i = ImageDescriptor
-					.createFromImageData(new ImageData(ExitAction.class
+					.createFromImageData(new ImageData(DataSourceWindow.class
 							.getResourceAsStream("saveas_edit.gif")));
 			setImageDescriptor(i);
 		} catch (Exception e) {

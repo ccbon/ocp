@@ -17,7 +17,7 @@ public class OpenConsoleAction extends Action {
 		setToolTipText("Open the OCP Agent Administration Console");
 		try {
 			ImageDescriptor i = ImageDescriptor
-					.createFromImageData(new ImageData(ExitAction.class
+					.createFromImageData(new ImageData(DataSourceWindow.class
 							.getResourceAsStream("console.png")));
 			setImageDescriptor(i);
 		} catch (Exception e) {

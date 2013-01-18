@@ -17,7 +17,7 @@ public class OpenRemoteFileAction extends Action {
 		setToolTipText("Open remote file");
 //		try {
 //			ImageDescriptor i = ImageDescriptor
-//					.createFromImageData(new ImageData(OpenFileAction.class
+//					.createFromImageData(new ImageData(DataSourceWindow.class
 //							.getResourceAsStream("about.png")));
 //			setImageDescriptor(i);
 //		} catch (Exception e) {

@@ -21,7 +21,7 @@ public class AboutAction extends Action {
 		setToolTipText("About");
 		try {
 			ImageDescriptor i = ImageDescriptor
-					.createFromImageData(new ImageData(AboutAction.class
+					.createFromImageData(new ImageData(DataSourceWindow.class
 							.getResourceAsStream("about.png")));
 			setImageDescriptor(i);
 		} catch (Exception e) {

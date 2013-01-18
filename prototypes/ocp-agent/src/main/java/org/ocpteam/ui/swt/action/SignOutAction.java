@@ -15,7 +15,7 @@ public class SignOutAction extends Action {
 		setToolTipText("Sign out");
 		try {
 			ImageDescriptor i = ImageDescriptor
-					.createFromImageData(new ImageData(ExitAction.class
+					.createFromImageData(new ImageData(DataSourceWindow.class
 							.getResourceAsStream("sign_out.png")));
 			setImageDescriptor(i);
 		} catch (Exception e) {

@@ -27,7 +27,7 @@ public class CopyAction extends Action {
 		setToolTipText("Copy");
 		try {
 			ImageDescriptor i = ImageDescriptor
-					.createFromImageData(new ImageData(CopyAction.class
+					.createFromImageData(new ImageData(DataSourceWindow.class
 							.getResourceAsStream("copy.gif")));
 			setImageDescriptor(i);
 		} catch (Exception e) {
