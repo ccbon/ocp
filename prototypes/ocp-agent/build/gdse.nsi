@@ -12,7 +12,7 @@ Function .onInit
 	  StrCpy $gdseprog "gdse_x64.exe"
 	${Else}
 	  StrCpy $InstDir "$PROGRAMFILES\${NAME}"
-	  StrCpy $gdseprog "gdse.exe"
+	  StrCpy $gdseprog "gdse_x32.exe"
 	${EndIf}
   ${Else}
 	MessageBox MB_OK "Java is required to run the installer. Please install a Java 1.7 or later."
