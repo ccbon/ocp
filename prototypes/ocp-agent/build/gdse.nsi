@@ -73,8 +73,10 @@ Section "Uninstall"
   DeleteRegKey HKLM SOFTWARE\${NAME}
 
   ; Remove files and uninstaller
-  Delete $INSTDIR\$gdseprog
-  Delete $INSTDIR\uninstall.exe
+  Delete "$INSTDIR\gdse_*.exe"
+  Delete "$INSTDIR\uninstall.exe"
+  Delete "$INSTDIR\soccer.ico"
+  Delete "$INSTDIR"
   
   Delete "$SMPROGRAMS\${NAME}\*.*"
   Delete "$DESKTOP\${NAME}.lnk"
