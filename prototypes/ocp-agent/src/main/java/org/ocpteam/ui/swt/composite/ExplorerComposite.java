@@ -72,9 +72,9 @@ public class ExplorerComposite extends Composite {
 	private static final String DIRECTORY_NEW = "New Folder";
 	private static final String FILE_TYPE = "File";
 	private static final Image DIRECTORY_ICON = SWTResourceManager.getImage(
-			ExplorerComposite.class, "directory.png");
+			DataSourceWindow.class, "directory.png");
 	private static final Image FILE_ICON = SWTResourceManager.getImage(
-			ExplorerComposite.class, "file.png");
+			DataSourceWindow.class, "file.png");
 
 	public Table localDirectoryTable;
 	public Table remoteDirectoryTable;
@@ -587,8 +587,7 @@ public class ExplorerComposite extends Composite {
 					SWT.NONE);
 			parentDirtableItem.setText(new String[] { DIRECTORY_PARENT,
 					DIRECTORY_TYPE, DIRECTORY_SIZE });
-			parentDirtableItem.setImage(SWTResourceManager.getImage(
-					ExplorerComposite.class, "directory.png"));
+			parentDirtableItem.setImage(DIRECTORY_ICON);
 		}
 
 		File[] children = null;
