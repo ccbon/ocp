@@ -9,6 +9,10 @@ import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.CTabFolder;
+import org.eclipse.swt.custom.CTabItem;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.MenuDetectEvent;
@@ -20,8 +24,9 @@ import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.program.Program;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Item;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
@@ -130,10 +135,45 @@ public class DataStoreComposite extends Composite {
 					LOG.debug("name=" + address);
 					byte[] content = mdm.get(address);
 					LOG.debug("content=" + new String(content));
-					Display display = dsw.getShell().getDisplay();
-					FileReaderDialog dialog = new FileReaderDialog(new Shell(
-							display), address.toString(), new String(content));
-					dialog.open();
+
+					CTabFolder tabFolder = dsw.tabFolder;
+					CTabItem[] items = tabFolder.getItems();
+					for (CTabItem tabItem : items) {
+						if (tabItem.getControl().getClass() == DataStoreValueComposite.class) {
+							if (tabItem.getData().equals(address.toString())) {
+								tabFolder.setSelection(tabItem);
+								return;
+							}
+						}
+					}
+
+					final CTabItem datastoreValueCTabItem = new CTabItem(
+							tabFolder, SWT.NONE);
+					datastoreValueCTabItem.setShowClose(true);
+					datastoreValueCTabItem.setText(address.toString().substring(0, 5) + "...");
+					datastoreValueCTabItem.setData(address.toString());
+					datastoreValueCTabItem
+							.addDisposeListener(new DisposeListener() {
+								@Override
+								public void widgetDisposed(DisposeEvent arg0) {
+									LOG.debug("dispose");
+								}
+							});
+
+					DataStoreValueComposite datastoreValueComposite = new DataStoreValueComposite(
+							tabFolder, SWT.NONE, new String(content));
+					datastoreValueCTabItem.setControl(datastoreValueComposite);
+					tabFolder.setSelection(datastoreValueCTabItem);
+
+					dsw.addListener(DataSourceWindow.ON_DS_CLOSE,
+							new Listener() {
+
+								@Override
+								public void handleEvent(Event event) {
+									LOG.debug("closing contact list");
+									datastoreValueCTabItem.dispose();
+								}
+							});
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -207,7 +247,8 @@ public class DataStoreComposite extends Composite {
 				menu.setVisible(true);
 				if (mdm instanceof IPersistentMap) {
 					myMenu.add(new Separator());
-					OpenDataStoreFolderAction opendsAction = new OpenDataStoreFolderAction(dsw);
+					OpenDataStoreFolderAction opendsAction = new OpenDataStoreFolderAction(
+							dsw);
 					myMenu.add(opendsAction);
 				}
 			}
