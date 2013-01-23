@@ -10,6 +10,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.ocpteam.misc.LOG;
+import org.ocpteam.ui.swt.DataSourceWindow;
 
 public class NewUserCaptchaWizardPage extends WizardPage {
 	public Text captchaAnswerText;
@@ -40,7 +41,7 @@ public class NewUserCaptchaWizardPage extends WizardPage {
 
 		Label lblNewLabel = new Label(container, SWT.NONE);
 		lblNewLabel.setImage(new Image(parent.getDisplay(),
-				NewUserFormWizardPage.class
+				DataSourceWindow.class
 						.getResourceAsStream("captcha_fake.png")));
 		lblNewLabel.setBounds(85, 58, 163, 69);
 

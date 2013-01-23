@@ -1,6 +1,5 @@
 package org.ocpteamx.protocol.ocp;
 
-import java.io.File;
 import java.security.KeyFactory;
 import java.security.KeyPair;
 import java.security.PrivateKey;
@@ -29,12 +28,16 @@ public class OCPUser extends User {
 
 	private SecretKey secretKey;
 	private String cipherAlgo = "AES";
+	private String keyPairAlgo = "DSA";
 	private int keySize = 128;
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+
+	public OCPUser() {
+	}
 
 	public OCPUser(OCPAgent agent, String username, int backupNbr)
 			throws Exception {
@@ -139,8 +142,7 @@ public class OCPUser extends User {
 	}
 
 	public String getDefaultLocalDir() {
-		return System.getProperty("user.home") + File.separator + "ocp"
-				+ File.separator + getUsername();
+		return System.getProperty("user.home");
 	}
 
 	@Override
@@ -196,18 +198,18 @@ public class OCPUser extends User {
 		backupNbr = s.getIntField("backupNbr");
 		keySize = s.getIntField("keySize");
 		cipherAlgo = s.getStringField("cipherAlgo");
-		
+
 		KeyGenerator keyGen = KeyGenerator.getInstance(cipherAlgo);
 		keyGen.init(keySize);
 		secretKey = keyGen.generateKey();
-		
+
 		indexKey = new Key(s.getBinField("indexKey"));
 		rootKey = new Key(s.getBinField("rootKey"));
 
 		byte[] publicKeyEncoded = s.getBinField("publicKey");
 		byte[] privateKeyEncoded = s.getBinField("privateKey");
 		if (publicKeyEncoded != null && privateKeyEncoded != null) {
-			KeyFactory keyFactory = KeyFactory.getInstance(cipherAlgo);
+			KeyFactory keyFactory = KeyFactory.getInstance(keyPairAlgo);
 			X509EncodedKeySpec publicKeySpec = new X509EncodedKeySpec(
 					s.getBinField("publicKey"));
 			PublicKey publicKey = keyFactory.generatePublic(publicKeySpec);

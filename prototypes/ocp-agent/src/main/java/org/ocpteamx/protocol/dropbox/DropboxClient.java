@@ -8,7 +8,6 @@ import org.ocpteam.interfaces.IAuthenticable;
 import org.ocpteam.interfaces.IDataModel;
 import org.ocpteam.misc.JLG;
 import org.ocpteam.misc.LOG;
-import org.ocpteam.ui.swt.DataSourceWindow;
 
 import com.dropbox.client2.DropboxAPI;
 import com.dropbox.client2.exception.DropboxException;
@@ -20,8 +19,6 @@ import com.dropbox.client2.session.WebAuthSession;
 
 public class DropboxClient extends DSContainer<DropboxDataSource> implements
 		IAuthenticable {
-	public static final String TOKEN_FILENAME = DataSourceWindow.GDSE_DIR
-			+ "/dropbox_tokens.properties";
 	final static private String APP_KEY = "1s2uo2miptnr9sq";
 	final static private String APP_SECRET = "tk88gf7o4gi8bxx";
 
@@ -34,10 +31,9 @@ public class DropboxClient extends DSContainer<DropboxDataSource> implements
 	private boolean bRememberMe;
 
 	public DropboxClient() {
-		setup();
 	}
 
-	private void setup() {
+	public void setup() {
 		loadTokens();
 
 		AppKeyPair appKeys = new AppKeyPair(APP_KEY, APP_SECRET);
@@ -60,6 +56,7 @@ public class DropboxClient extends DSContainer<DropboxDataSource> implements
 		}
 
 		LOG.debug("username=" + username);
+		LOG.debug(properties.toString());
 		if (properties.containsKey(username)) {
 			reAuth();
 		} else {
@@ -68,7 +65,7 @@ public class DropboxClient extends DSContainer<DropboxDataSource> implements
 
 		if (!isLogged()) {
 			properties.remove(username);
-			JLG.storeConfig(properties, TOKEN_FILENAME);
+			JLG.storeConfig(properties, ds().tokenFilename);
 			setup();
 
 			throw new Exception("Problem while log in.");
@@ -78,7 +75,7 @@ public class DropboxClient extends DSContainer<DropboxDataSource> implements
 			properties.setProperty(username, format(tokenKey, tokenSecret));
 		}
 
-		JLG.storeConfig(properties, TOKEN_FILENAME);
+		JLG.storeConfig(properties, ds().tokenFilename);
 
 		IDataModel dm = ds().getComponent(IDataModel.class);
 		ds().setContext(new Context(dm, "/"));
@@ -90,8 +87,10 @@ public class DropboxClient extends DSContainer<DropboxDataSource> implements
 
 	private void loadTokens() {
 		try {
-			properties = JLG.loadConfig(TOKEN_FILENAME);
+			LOG.debug(ds().tokenFilename);
+			properties = JLG.loadConfig(ds().tokenFilename);
 		} catch (Exception e) {
+			LOG.debug("Cant load tokens");
 			properties = new Properties();
 		}
 

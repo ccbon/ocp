@@ -14,6 +14,7 @@ import org.ocpteam.interfaces.IDataStore;
 import org.ocpteam.interfaces.IFileSystem;
 import org.ocpteam.interfaces.IUserCreation;
 import org.ocpteam.interfaces.IUserManagement;
+import org.ocpteam.misc.Application;
 import org.ocpteam.misc.Id;
 import org.ocpteam.misc.JLG;
 import org.ocpteam.misc.LOG;
@@ -24,6 +25,7 @@ public class DHT5Test {
 
 	@Test
 	public void mytest() {
+		Application.setAppDir(Application.TESTDIR);
 		test();
 	}
 

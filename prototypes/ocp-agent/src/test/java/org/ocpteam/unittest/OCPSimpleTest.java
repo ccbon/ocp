@@ -4,9 +4,9 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.Properties;
 
+import org.ocpteam.misc.Application;
 import org.ocpteam.misc.JLG;
 import org.ocpteam.misc.LOG;
-import org.ocpteam.ui.swt.DataSourceWindow;
 import org.ocpteamx.protocol.ocp.Captcha;
 import org.ocpteamx.protocol.ocp.OCPAgent;
 import org.ocpteamx.protocol.ocp.OCPDataSource;
@@ -16,6 +16,7 @@ public class OCPSimpleTest {
 	@org.junit.Test
 	public void test() {
 		try {
+			Application.setAppDir(Application.TESTDIR);
 			//assertTrue(new OCPSimpleTest().simple());
 			assertTrue(new OCPSimpleTest().twin());
 		} catch (Exception e) {
@@ -27,7 +28,7 @@ public class OCPSimpleTest {
 		LOG.debug_on();	
 		LOG.debug("starting 2 agents");
 		LOG.debug("working directory = " + System.getProperty("user.dir"));
-		JLG.rm(DataSourceWindow.GDSE_DIR + "/datastore/ocp/");
+		JLG.rm(Application.TESTDIR + "/datastore/ocp/");
 		try {
 
 			// start 2 agents

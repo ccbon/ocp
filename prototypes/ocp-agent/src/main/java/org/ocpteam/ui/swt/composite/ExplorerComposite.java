@@ -591,6 +591,7 @@ public class ExplorerComposite extends Composite {
 		}
 
 		File[] children = null;
+		LOG.debug("currentLocalDirectory=" + currentLocalDirectory);
 		if (currentLocalDirectory != null) {
 			children = currentLocalDirectory.listFiles();
 			if (Platform.isWindows()) {

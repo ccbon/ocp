@@ -22,14 +22,14 @@ public class OCPClient extends Client implements IAuthenticable {
 	public OCPClient() throws Exception {
 		super();
 	}
-	
+
 	@Override
 	public void init() throws Exception {
 		super.init();
 		agent = ds().getComponent(OCPAgent.class);
 		protocol = (OCPProtocol) ds().getComponent(Protocol.class);
 	}
-	
+
 	@Override
 	public OCPDataSource ds() {
 		return (OCPDataSource) super.ds();
@@ -52,8 +52,10 @@ public class OCPClient extends Client implements IAuthenticable {
 	}
 
 	public Captcha askCaptcha(Queue<Contact> contactQueue) throws Exception {
-		Response r = requestByPriority(contactQueue, OCPProtocol.GENERATE_CAPTCHA.getBytes());
-		Captcha captcha = (Captcha) ds().serializer.deserialize((byte[]) r.getObject());
+		Response r = requestByPriority(contactQueue,
+				OCPProtocol.GENERATE_CAPTCHA.getBytes());
+		Captcha captcha = (Captcha) ds().serializer.deserialize((byte[]) r
+				.getObject());
 		LOG.debug("captcha content = " + captcha);
 		// if (!captcha.checkSignature(r.getContact())) {
 		// throw new Exception("captcha signature not consistant");
@@ -98,8 +100,9 @@ public class OCPClient extends Client implements IAuthenticable {
 
 	public void remove(Address address, byte[] addressSignature)
 			throws Exception {
-		Response r = requestByPriority(agent.makeContactQueue(address), protocol.message(
-				OCPProtocol.REMOVE_ADDRESS, address, addressSignature));
+		Response r = requestByPriority(agent.makeContactQueue(address),
+				protocol.message(OCPProtocol.REMOVE_ADDRESS, address,
+						addressSignature));
 		r.checkForError();
 	}
 
@@ -139,7 +142,7 @@ public class OCPClient extends Client implements IAuthenticable {
 				content = getUser(key);
 			} catch (Exception e) {
 			}
-			if (content == null) {
+			if (content == null || new String(content).equals("ERROR")) {
 				throw new Exception("user unknown");
 			}
 			OCPUser user = (OCPUser) ds().serializer.deserialize(agent
@@ -161,7 +164,7 @@ public class OCPClient extends Client implements IAuthenticable {
 
 	@Override
 	public void setChallenge(Object challenge) {
-		this.password = (String) challenge;		
+		this.password = (String) challenge;
 	}
 
 	@Override
@@ -172,5 +175,5 @@ public class OCPClient extends Client implements IAuthenticable {
 	@Override
 	public void unauthenticate() throws Exception {
 		setChallenge(null);
-	}	
+	}
 }

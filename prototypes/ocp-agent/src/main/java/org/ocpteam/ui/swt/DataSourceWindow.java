@@ -61,6 +61,7 @@ import org.ocpteam.interfaces.IFileSystem;
 import org.ocpteam.interfaces.IMapDataModel;
 import org.ocpteam.interfaces.IUserCreation;
 import org.ocpteam.interfaces.IUserManagement;
+import org.ocpteam.misc.Application;
 import org.ocpteam.misc.JLG;
 import org.ocpteam.misc.LOG;
 import org.ocpteam.misc.swt.QuickMessage;
@@ -773,7 +774,8 @@ public class DataSourceWindow extends ApplicationWindow implements IComponent {
 	}
 
 	public void start() throws Exception {
-		JLG.mkdir(GDSE_DIR);
+		Application.setAppDir(GDSE_DIR);
+		JLG.mkdir(Application.getAppDir());
 		LOG.checkInit();
 		init();
 		refreshPreference();

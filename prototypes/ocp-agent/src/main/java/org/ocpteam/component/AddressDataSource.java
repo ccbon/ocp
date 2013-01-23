@@ -11,13 +11,13 @@ import org.ocpteam.interfaces.IAddressMap;
 import org.ocpteam.interfaces.IDataStore;
 import org.ocpteam.interfaces.INodeMap;
 import org.ocpteam.interfaces.IPersistentMap;
+import org.ocpteam.misc.Application;
 import org.ocpteam.misc.JLG;
 import org.ocpteam.misc.LOG;
 import org.ocpteam.serializable.Address;
 import org.ocpteam.serializable.Contact;
 import org.ocpteam.serializable.EOMObject;
 import org.ocpteam.serializable.InputFlow;
-import org.ocpteam.ui.swt.DataSourceWindow;
 
 public abstract class AddressDataSource extends DSPDataSource {
 
@@ -54,7 +54,7 @@ public abstract class AddressDataSource extends DSPDataSource {
 	public void readConfig() throws Exception {
 		super.readConfig();
 		if (getComponent(IDataStore.class) instanceof IPersistentMap) {
-			String dir = getProperty("uri", DataSourceWindow.GDSE_DIR
+			String dir = getProperty("uri", Application.getAppDir()
 					+ "/datastore/" + getProtocolName() + "/" + getName());
 			LOG.debug("dir=" + dir);
 			String uri = getProperty("datastore.uri", dir);
