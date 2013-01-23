@@ -473,7 +473,7 @@ public class DataSourceWindow extends ApplicationWindow implements IComponent {
 	 */
 	@Override
 	protected void configureShell(Shell newShell) {
-		newShell.setSize(new Point(600, 600));
+		newShell.setSize(new Point(670, 600));
 		newShell.setImage(SWTResourceManager.getImage(DataSourceWindow.class,
 				"ocp_icon.png"));
 		super.configureShell(newShell);

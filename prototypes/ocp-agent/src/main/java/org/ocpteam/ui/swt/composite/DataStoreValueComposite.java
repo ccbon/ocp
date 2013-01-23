@@ -8,7 +8,7 @@ import org.eclipse.wb.swt.SWTResourceManager;
 
 public class DataStoreValueComposite extends Composite {
 
-	private Text text_1;
+	private Text text;
 
 	/**
 	 * Create the composite.
@@ -20,9 +20,10 @@ public class DataStoreValueComposite extends Composite {
 		super(parent, style);
 		setLayout(new FillLayout(SWT.HORIZONTAL));
 
-		text_1 = new Text(this, SWT.BORDER | SWT.READ_ONLY | SWT.H_SCROLL
+		text = new Text(this, SWT.BORDER | SWT.READ_ONLY | SWT.H_SCROLL
 				| SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
-		text_1.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
-		text_1.setText(content);
+		text.setFont(SWTResourceManager.getFont("Courier New", 9, SWT.NORMAL));
+		text.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
+		text.setText(content);
 	}
 }
