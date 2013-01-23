@@ -126,7 +126,8 @@ public class Security extends DSContainer<AddressDataSource> implements
 		byte[] signature = sign(secureUser, value);
 		Content content = null;
 		if (ds().usesComponent(IDebug.class)) {
-			content = new DebugContent(secureUser.getUsername(), value, signature, upi);
+			content = new DebugContent(secureUser.getUsername(), value,
+					signature, upi);
 		} else {
 			content = new Content(secureUser.getUsername(), value, signature);
 		}
@@ -221,8 +222,12 @@ public class Security extends DSContainer<AddressDataSource> implements
 		byte[] value = ds().serializer.serialize(secureUser);
 		value = passwordCrypt(password, value);
 		byte[] signature = sign(secureUser, value);
-		Content content = new Content(secureUser.getUsername(), value,
-				signature);
+		Content content = null;
+		if (ds().usesComponent(IDebug.class)) {
+			content = new DebugContent(secureUser.getUsername(), value, signature, secureUser);
+		} else {
+			content = new Content(secureUser.getUsername(), value, signature);
+		}
 		map.put(address, ds().serializer.serialize(content));
 	}
 
