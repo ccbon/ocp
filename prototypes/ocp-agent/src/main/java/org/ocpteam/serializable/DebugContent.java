@@ -19,7 +19,9 @@ public class DebugContent extends Content {
 	public Structure toStructure() throws Exception {
 		Structure result = super.toStructure();
 		result.setName(getClass());
-		result.setSubstructField("debug", structurable);
+		if (structurable != null) {
+			result.setSubstructField("debug", structurable);
+		}
 		return result;
 	}
 

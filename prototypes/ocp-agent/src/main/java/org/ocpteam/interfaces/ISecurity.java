@@ -32,7 +32,7 @@ public interface ISecurity {
 	
 	SecureUser getUser(String username, String password) throws Exception;
 
-	void put(SecureUser secureUser, Address address, byte[] value) throws Exception;
+	void put(SecureUser secureUser, Address address, byte[] value, IStructurable structurable) throws Exception;
 	
 	byte[] get(SecureUser secureUser, Address address) throws Exception;
 

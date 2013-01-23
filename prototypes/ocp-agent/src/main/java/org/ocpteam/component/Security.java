@@ -14,6 +14,7 @@ import javax.crypto.spec.PBEParameterSpec;
 import org.ocpteam.interfaces.IAddressMap;
 import org.ocpteam.interfaces.IDebug;
 import org.ocpteam.interfaces.ISecurity;
+import org.ocpteam.interfaces.IStructurable;
 import org.ocpteam.interfaces.IUserBackup;
 import org.ocpteam.misc.LOG;
 import org.ocpteam.serializable.Address;
@@ -167,12 +168,16 @@ public class Security extends DSContainer<AddressDataSource> implements
 	}
 
 	@Override
-	public void put(SecureUser secureUser, Address address, byte[] value)
-			throws Exception {
+	public void put(SecureUser secureUser, Address address, byte[] value,
+			IStructurable structurable) throws Exception {
 		byte[] crypted = crypt(secureUser, value);
 		byte[] signature = sign(secureUser, crypted);
-		Content content = new Content(secureUser.getUsername(), crypted,
-				signature);
+		Content content = null;
+		if (ds().usesComponent(IDebug.class)) {
+			content = new DebugContent(secureUser.getUsername(), crypted, signature, structurable);
+		} else {
+			content = new Content(secureUser.getUsername(), crypted, signature);
+		}
 		byte[] s = ds().serializer.serialize(content);
 		if (ds().usesComponent(IUserBackup.class)) {
 			IUserBackup userBackup = ds().getComponent(IUserBackup.class);
@@ -224,7 +229,8 @@ public class Security extends DSContainer<AddressDataSource> implements
 		byte[] signature = sign(secureUser, value);
 		Content content = null;
 		if (ds().usesComponent(IDebug.class)) {
-			content = new DebugContent(secureUser.getUsername(), value, signature, secureUser);
+			content = new DebugContent(secureUser.getUsername(), value,
+					signature, secureUser);
 		} else {
 			content = new Content(secureUser.getUsername(), value, signature);
 		}

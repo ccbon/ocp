@@ -12,6 +12,7 @@ import org.ocpteam.interfaces.IAddressMap;
 import org.ocpteam.interfaces.IFile;
 import org.ocpteam.interfaces.IFileSystem;
 import org.ocpteam.interfaces.ISecurity;
+import org.ocpteam.interfaces.IStructurable;
 import org.ocpteam.interfaces.IUser;
 import org.ocpteam.misc.JLG;
 import org.ocpteam.misc.LOG;
@@ -114,7 +115,7 @@ public class BFSDataModel extends DSContainer<AddressDataSource> implements
 	private void setRootPointer(Pointer p) throws Exception {
 		byte[] value = null;
 		value = ds().serializer.serialize(p);
-		put(getRootAddress(), value);
+		put(getRootAddress(), value, null);
 	}
 
 	private Pointer commit(File file) throws Exception {
@@ -131,7 +132,7 @@ public class BFSDataModel extends DSContainer<AddressDataSource> implements
 					tree.addFile(child.getName(), p);
 				}
 			}
-			result = set(ds().serializer.serialize(tree));
+			result = set(tree);
 		} else { // file
 			result = createRemoteFile(file);
 		}
@@ -154,7 +155,7 @@ public class BFSDataModel extends DSContainer<AddressDataSource> implements
 			int n = fis.read(buffer);
 			while (n >= 0) {
 				Address address = new Address(ds().md.hash(buffer));
-				put(address, Arrays.copyOf(buffer, n));
+				put(address, Arrays.copyOf(buffer, n), null);
 				pointer.add(address);
 				n = fis.read(buffer);
 			}
@@ -165,20 +166,14 @@ public class BFSDataModel extends DSContainer<AddressDataSource> implements
 		return pointer;
 	}
 
-	private void put(Address address, byte[] value) throws Exception {
+	private void put(Address address, byte[] value, IStructurable structurable) throws Exception {
 		if (ds().usesComponent(ISecurity.class)) {
 			ISecurity security = ds().getComponent(ISecurity.class);
 			SecureUser secureUser = (SecureUser) ds().getContext().getUser();
-			security.put(secureUser, address, value);
+			security.put(secureUser, address, value, structurable);
 		} else {
 			map.put(address, value);
 		}
-	}
-
-	private Pointer set(byte[] value) throws Exception {
-		Address address = new Address(ds().md.hash(value));
-		put(address, value);
-		return new Pointer(address);
 	}
 
 	@Override
@@ -204,13 +199,20 @@ public class BFSDataModel extends DSContainer<AddressDataSource> implements
 		} else {
 			tree.addFile(file.getName(), p);
 		}
-		p = set(ds().serializer.serialize(tree));
+		p = set(tree);
 		for (int i = dirnames.length - 2; i >= 0; i--) {
 			tree = trees[i];
 			tree.addTree(dirnames[i + 1], p);
-			p = set(ds().serializer.serialize(tree));
+			p = set(tree);
 		}
 		setRootPointer(p);
+	}
+
+	private Pointer set(Tree tree) throws Exception {
+		byte[] value = ds().serializer.serialize(tree);
+		Address address = new Address(ds().md.hash(value));
+		put(address, value, tree);
+		return new Pointer(address);
 	}
 
 	@Override
@@ -227,14 +229,14 @@ public class BFSDataModel extends DSContainer<AddressDataSource> implements
 		}
 		LOG.debug("dirnames.length = " + dirnames.length);
 		Tree[] trees = getTreeStack(dirnames);
-		Pointer p = set(ds().serializer.serialize(new Tree()));
+		Pointer p = set(new Tree());
 		Tree tree = trees[trees.length - 1];
 		tree.addTree(newDir, p);
-		p = set(ds().serializer.serialize(tree));
+		p = set(tree);
 		for (int i = dirnames.length - 2; i >= 0; i--) {
 			tree = trees[i];
 			tree.addTree(dirnames[i + 1], p);
-			p = set(ds().serializer.serialize(tree));
+			p = set(tree);
 		}
 		setRootPointer(p);
 	}
@@ -251,11 +253,11 @@ public class BFSDataModel extends DSContainer<AddressDataSource> implements
 
 		Tree tree = trees[trees.length - 1];
 		tree.removeEntry(name);
-		Pointer p = set(ds().serializer.serialize(tree));
+		Pointer p = set(tree);
 		for (int i = dirnames.length - 2; i >= 0; i--) {
 			tree = trees[i];
 			tree.addTree(dirnames[i + 1], p);
-			p = set(ds().serializer.serialize(tree));
+			p = set(tree);
 		}
 		setRootPointer(p);
 	}
@@ -273,11 +275,11 @@ public class BFSDataModel extends DSContainer<AddressDataSource> implements
 
 		Tree tree = trees[trees.length - 1];
 		tree.renameEntry(oldName, newName);
-		Pointer p = set(ds().serializer.serialize(tree));
+		Pointer p = set(tree);
 		for (int i = dirnames.length - 2; i >= 0; i--) {
 			tree = trees[i];
 			tree.addTree(dirnames[i + 1], p);
-			p = set(ds().serializer.serialize(tree));
+			p = set(tree);
 		}
 		setRootPointer(p);
 	}
