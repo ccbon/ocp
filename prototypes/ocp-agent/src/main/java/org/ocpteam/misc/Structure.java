@@ -305,6 +305,15 @@ public class Structure implements Serializable {
 		}
 		return (byte[]) getField(name).getValue();
 	}
+	
+	public IStructurable getSubstructField(String name) throws Exception {
+		SField f = getField(name);
+		if (f == null) {
+			return null;
+		}
+		Structure s = (Structure) f.getValue();
+		return s.toStructurable();
+	}
 
 	public Serializable[] getListField(String name) throws Exception {
 		LOG.debug("this=" + this);

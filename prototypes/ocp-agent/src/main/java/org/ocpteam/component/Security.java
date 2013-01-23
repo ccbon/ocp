@@ -12,11 +12,13 @@ import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.PBEParameterSpec;
 
 import org.ocpteam.interfaces.IAddressMap;
+import org.ocpteam.interfaces.IDebug;
 import org.ocpteam.interfaces.ISecurity;
 import org.ocpteam.interfaces.IUserBackup;
 import org.ocpteam.misc.LOG;
 import org.ocpteam.serializable.Address;
 import org.ocpteam.serializable.Content;
+import org.ocpteam.serializable.DebugContent;
 import org.ocpteam.serializable.SecureUser;
 import org.ocpteam.serializable.UserPublicInfo;
 
@@ -42,8 +44,8 @@ public class Security extends DSContainer<AddressDataSource> implements
 		userCipher = Cipher.getInstance(ds().network.getProperty(
 				"user.cipher.algo", "PBEWithMD5AndDES"));
 
-		cipher = Cipher.getInstance(ds().network
-				.getProperty("user.crypt.algo", "AES"));
+		cipher = Cipher.getInstance(ds().network.getProperty("user.crypt.algo",
+				"AES"));
 
 		// user cipher
 		byte[] salt = { 1, 1, 1, 2, 2, 2, 3, 3 };
@@ -122,8 +124,12 @@ public class Security extends DSContainer<AddressDataSource> implements
 				.getBytes())));
 		byte[] value = ds().serializer.serialize(upi);
 		byte[] signature = sign(secureUser, value);
-		Content content = new Content(secureUser.getUsername(), value,
-				signature);
+		Content content = null;
+		if (ds().usesComponent(IDebug.class)) {
+			content = new DebugContent(secureUser.getUsername(), value, signature, upi);
+		} else {
+			content = new Content(secureUser.getUsername(), value, signature);
+		}
 		map.put(a, ds().serializer.serialize(content));
 	}
 
@@ -181,7 +187,7 @@ public class Security extends DSContainer<AddressDataSource> implements
 	@Override
 	public byte[] get(SecureUser secureUser, Address address) throws Exception {
 		byte[] value = null;
-		
+
 		if (ds().usesComponent(IUserBackup.class)) {
 			IUserBackup userBackup = ds().getComponent(IUserBackup.class);
 			Address[] addresses = userBackup.getAddresses(secureUser, address);
@@ -194,7 +200,7 @@ public class Security extends DSContainer<AddressDataSource> implements
 		} else {
 			value = map.get(address);
 		}
-		
+
 		if (value == null) {
 			return null;
 		}
