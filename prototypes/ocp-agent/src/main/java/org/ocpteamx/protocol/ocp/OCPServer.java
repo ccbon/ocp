@@ -4,7 +4,6 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import org.ocpteam.component.Agent;
 import org.ocpteam.component.HTTPListener;
 import org.ocpteam.component.Protocol;
 import org.ocpteam.component.Server;
@@ -19,7 +18,7 @@ public class OCPServer extends Server {
 
 	public void configure() throws Exception {
 		LOG.debug("ds = " + ds());
-		this.agent = (OCPAgent) ds().getComponent(Agent.class);
+		this.agent = ds().getComponent(OCPAgent.class);
 
 		boolean bFound = false;
 		listenerList = new ArrayList<IListener>();

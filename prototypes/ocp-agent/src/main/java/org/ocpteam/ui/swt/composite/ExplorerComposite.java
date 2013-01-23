@@ -44,7 +44,6 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.wb.swt.SWTResourceManager;
-import org.ocpteam.component.Agent;
 import org.ocpteam.interfaces.IFile;
 import org.ocpteam.interfaces.IFileSystem;
 import org.ocpteam.misc.JLG;
@@ -81,7 +80,6 @@ public class ExplorerComposite extends Composite {
 	public File currentLocalDirectory;
 	public String currentRemoteDirString;
 
-	public Agent agent;
 	public IFileSystem fs;
 	private Label localDirectoryLabel;
 	private Label remoteDirectoryLabel;
@@ -161,10 +159,12 @@ public class ExplorerComposite extends Composite {
 					myMenu.add(openFileAction);
 
 					myMenu.add(new Separator());
-					CommitAction commitAction = new CommitAction(ExplorerComposite.this.w);
+					CommitAction commitAction = new CommitAction(
+							ExplorerComposite.this.w);
 					myMenu.add(commitAction);
 					myMenu.add(new Separator());
-					RemoveFileAction removeAction = new RemoveFileAction(ExplorerComposite.this);
+					RemoveFileAction removeAction = new RemoveFileAction(
+							ExplorerComposite.this);
 					myMenu.add(removeAction);
 					RenameFileAction renameFileAction = new RenameFileAction(
 							ExplorerComposite.this);

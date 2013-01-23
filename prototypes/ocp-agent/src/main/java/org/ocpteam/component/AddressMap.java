@@ -78,7 +78,7 @@ public class AddressMap extends DSContainer<AddressDataSource> implements IAddre
 	public void onNodeArrival() throws Exception {
 		Contact predecessor = nodeMap.getPredecessor(ds().getNode());
 		if (predecessor.isMyself()) {
-			if (ds().agent.isFirstAgent()) {
+			if (ds().isFirstAgent()) {
 				LOG.debug("first agent: ds=" + ds().getName());
 				return;
 			}

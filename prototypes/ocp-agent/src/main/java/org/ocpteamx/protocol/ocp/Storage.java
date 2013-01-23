@@ -17,8 +17,11 @@ public class Storage {
 	public NavigableSet<Id> nodeSet; // set of node referenced by their id
 	private IDataStore datastore;
 	public OCPAgent agent;
+	private OCPDataSource ds;
 
-	public Storage(OCPAgent agent) throws Exception {
+	public Storage(OCPDataSource ds) throws Exception {
+		this.ds = ds;
+		this.agent = ds.getComponent(OCPAgent.class);
 		nodeSet = new TreeSet<Id>();
 		String root = agent.ds()
 				.getProperty(
@@ -29,14 +32,13 @@ public class Storage {
 				.getComponent(IDataStore.class);
 		persistentMap.setURI(root);
 		datastore = persistentMap;
-		this.agent = agent;
 	}
 
 	public void attach() throws Exception {
 		// at least we must have one node
 		if (nodeSet.size() == 0) {
 			Id[] nodeIds = null;
-			if (agent.isFirstAgent()) {
+			if (ds.isFirstAgent()) {
 				nodeIds = new Id[1];
 				nodeIds[0] = agent.generateId();
 			} else {

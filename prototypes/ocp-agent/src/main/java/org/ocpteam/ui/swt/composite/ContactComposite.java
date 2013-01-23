@@ -12,13 +12,13 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.swt.widgets.TreeItem;
-import org.ocpteam.component.Agent;
 import org.ocpteam.component.ContactMap;
 import org.ocpteam.serializable.Contact;
+import org.ocpteam.ui.swt.DataSourceWindow;
 
 public class ContactComposite extends Composite {
 
-	private Agent agent;
+	private DataSourceWindow w;
 	private Tree tree;
 
 	/**
@@ -27,9 +27,9 @@ public class ContactComposite extends Composite {
 	 * @param parent
 	 * @param style
 	 */
-	public ContactComposite(Composite parent, int style, Agent agent) {
+	public ContactComposite(Composite parent, int style, DataSourceWindow w) {
 		super(parent, style);
-		this.agent = agent;
+		this.w = w;
 		setLayout(new GridLayout(1, false));
 
 		Composite composite = new Composite(this, SWT.NONE);
@@ -65,7 +65,7 @@ public class ContactComposite extends Composite {
 			@Override
 			public void run() {
 				try {
-					ContactMap contactMap = agent.ds().getComponent(
+					ContactMap contactMap = w.ds.getComponent(
 							ContactMap.class);
 					contactMap.refreshContactList();
 				} catch (Exception e) {
@@ -75,7 +75,7 @@ public class ContactComposite extends Composite {
 		}).start();
 		tree.removeAll();
 
-		ContactMap contactMap = agent.ds().getComponent(ContactMap.class);
+		ContactMap contactMap = w.ds.getComponent(ContactMap.class);
 		Iterator<Contact> it = contactMap.getContactSnapshotList().iterator();
 		while (it.hasNext()) {
 			Contact contact = it.next();
@@ -86,7 +86,7 @@ public class ContactComposite extends Composite {
 				if (contact.isMyself()) {
 					TreeItem urlTreeItem = new TreeItem(contactTreeItem,
 							SWT.NONE);
-					int port = Integer.parseInt(agent.ds().getProperty("server.port", "22222"));
+					int port = Integer.parseInt(w.ds.getProperty("server.port", "22222"));
 					urlTreeItem.setText("<myself> (Port: " + port + ")");
 					contactTreeItem.setExpanded(true);
 				} else if (contact.getTcpPort() > 0) {

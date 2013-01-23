@@ -22,10 +22,10 @@ import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.PBEParameterSpec;
 
-import org.ocpteam.component.Agent;
 import org.ocpteam.component.Client;
 import org.ocpteam.component.ContactMap;
-import org.ocpteam.component.DSPDataSource;
+import org.ocpteam.component.DSContainer;
+import org.ocpteam.component.Server;
 import org.ocpteam.misc.ByteUtil;
 import org.ocpteam.misc.Cache;
 import org.ocpteam.misc.Id;
@@ -35,7 +35,7 @@ import org.ocpteam.serializable.Address;
 import org.ocpteam.serializable.Contact;
 import org.ocpteam.serializable.Pointer;
 
-public class OCPAgent extends Agent {
+public class OCPAgent extends DSContainer<OCPDataSource> {
 
 	public static final String DEFAULT_SPONSOR_SERVER_URL = "http://guenego.com/ocp/ocp.php";
 
@@ -60,11 +60,6 @@ public class OCPAgent extends Agent {
 	protected SecretKeyFactory userSecretKeyFactory;
 	protected Cipher userCipher;
 	protected PBEParameterSpec userParamSpec;
-
-	@Override
-	public DSPDataSource ds() {
-		return super.ds();
-	}
 
 	public byte[] ucrypt(String password, byte[] input) throws Exception,
 			BadPaddingException {
@@ -160,7 +155,7 @@ public class OCPAgent extends Agent {
 				"user.cipher.algo", "PBEWithMD5AndDES"));
 
 		if (ds().getProperty("server", "yes").equals("yes")) {
-			storage = new Storage(this);
+			storage = new Storage(ds());
 			storage.attach();
 		}
 		LOG.debug("end");
@@ -173,6 +168,9 @@ public class OCPAgent extends Agent {
 		}
 	}
 
+	private OCPServer getServer() {
+		return (OCPServer) ds().getComponent(Server.class);
+	}
 
 	@Override
 	public String toString() {
@@ -401,7 +399,8 @@ public class OCPAgent extends Agent {
 	}
 
 	private Pointer makePointer(OCPUser user, Key[] keys) throws Exception {
-		Data data = new Data(this, user, user.crypt(ds().serializer.serialize(keys)));
+		Data data = new Data(this, user, user.crypt(ds().serializer
+				.serialize(keys)));
 		Pointer pointer = new Pointer(set(data).getBytes());
 		return pointer;
 	}
@@ -509,7 +508,8 @@ public class OCPAgent extends Agent {
 
 	public void createUser(String login, String password, int backupNbr,
 			Captcha captcha, String answer) throws Exception {
-		LOG.debug("creating user: " + login + ", " + password + ", " + backupNbr + ", answer=" + answer);
+		LOG.debug("creating user: " + login + ", " + password + ", "
+				+ backupNbr + ", answer=" + answer);
 		LOG.debug("captcha=" + captcha);
 		OCPUser user = new OCPUser(this, login, backupNbr);
 		UserPublicInfo upi = user.getPublicInfo(this);
@@ -519,7 +519,8 @@ public class OCPAgent extends Agent {
 
 		// 1) create the public part of the user.
 		// catpcha is required in order to avoid massive fake user creation
-		Data publicUserData = new Data(this, user, ds().serializer.serialize(upi));
+		Data publicUserData = new Data(this, user,
+				ds().serializer.serialize(upi));
 		Link publicUserDataLink = new Link(user, this, UserPublicInfo.getKey(
 				this, login), publicUserData.getKey(this));
 
@@ -685,7 +686,6 @@ public class OCPAgent extends Agent {
 		storage.removeAll();
 	}
 
-	@Override
 	public OCPClient getClient() {
 		return (OCPClient) ds().getComponent(Client.class);
 	}

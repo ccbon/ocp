@@ -10,7 +10,6 @@ import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
-import org.ocpteam.component.Agent;
 import org.ocpteam.misc.LOG;
 import org.ocpteam.ui.swt.DataSourceWindow;
 import org.ocpteam.ui.swt.composite.ContactComposite;
@@ -63,7 +62,7 @@ public class ViewContactTabAction extends Action {
 		});
 
 		ContactComposite contactComposite = new ContactComposite(tabFolder,
-				SWT.NONE, window.ds.getComponent(Agent.class));
+				SWT.NONE, window);
 		contactCTabItem.setControl(contactComposite);
 		tabFolder.setSelection(contactCTabItem);
 

@@ -4,7 +4,6 @@ import java.util.Queue;
 
 import org.apache.xmlrpc.client.XmlRpcClient;
 import org.apache.xmlrpc.client.XmlRpcClientConfigImpl;
-import org.ocpteam.component.Agent;
 import org.ocpteam.component.Client;
 import org.ocpteam.component.Protocol;
 import org.ocpteam.entity.Context;
@@ -27,7 +26,7 @@ public class OCPClient extends Client implements IAuthenticable {
 	@Override
 	public void init() throws Exception {
 		super.init();
-		agent = (OCPAgent) ds().getComponent(Agent.class);
+		agent = ds().getComponent(OCPAgent.class);
 		protocol = (OCPProtocol) ds().getComponent(Protocol.class);
 	}
 	

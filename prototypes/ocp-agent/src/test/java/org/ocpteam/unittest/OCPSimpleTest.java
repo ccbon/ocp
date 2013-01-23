@@ -4,7 +4,6 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.Properties;
 
-import org.ocpteam.component.Agent;
 import org.ocpteam.misc.JLG;
 import org.ocpteam.misc.LOG;
 import org.ocpteam.ui.swt.DataSourceWindow;
@@ -69,7 +68,7 @@ public class OCPSimpleTest {
 			LOG.debug("contact map size:" + ds.contactMap.getContactSnapshotList().size());
 			LOG.debug("contact map: " + ds.contactMap.getContactSnapshotList().toString());
 
-			OCPAgent a2 = (OCPAgent) ds2.getComponent(Agent.class);
+			OCPAgent a2 = ds2.getComponent(OCPAgent.class);
 			String username = "jlguenego";
 			String password = "jlouis";
 			Captcha captcha = a2.wantToCreateUser(username, password);

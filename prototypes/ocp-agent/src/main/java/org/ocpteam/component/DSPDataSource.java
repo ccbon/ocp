@@ -18,7 +18,6 @@ public abstract class DSPDataSource extends DataSource {
 
 	private Node node;
 
-	public Agent agent;
 	public Client client;
 	protected Server server;
 
@@ -30,7 +29,6 @@ public abstract class DSPDataSource extends DataSource {
 	public ISerializer serializer;
 
 	public DSPDataSource() throws Exception {
-		addComponent(Agent.class);
 		addComponent(Client.class);
 		addComponent(Server.class);
 		addComponent(Protocol.class);
@@ -39,13 +37,12 @@ public abstract class DSPDataSource extends DataSource {
 		addComponent(ContactMap.class);
 		addComponent(DSPModule.class);
 		addComponent(ISerializer.class, new FListSerializer());
-//		addComponent(ISerializer.class, new JavaSerializer());
+		// addComponent(ISerializer.class, new JavaSerializer());
 	}
 
 	@Override
 	public void init() throws Exception {
 		super.init();
-		agent = getComponent(Agent.class);
 		client = getComponent(Client.class);
 		server = getComponent(Server.class);
 		protocol = getComponent(Protocol.class);
@@ -55,6 +52,10 @@ public abstract class DSPDataSource extends DataSource {
 		udplistener.setProtocol(protocol);
 		contactMap = getComponent(ContactMap.class);
 		serializer = getComponent(ISerializer.class);
+	}
+
+	public boolean isFirstAgent() {
+		return getProperty("agent.isFirst", "yes").equalsIgnoreCase("yes");
 	}
 
 	public Node getNode() {
@@ -68,7 +69,7 @@ public abstract class DSPDataSource extends DataSource {
 	@Override
 	public synchronized void connect() throws Exception {
 		super.connect();
-		if (agent.isFirstAgent()) {
+		if (isFirstAgent()) {
 			LOG.debug("This is the first agent on the network");
 			network = this.getNetworkProperties();
 		} else {
@@ -90,7 +91,7 @@ public abstract class DSPDataSource extends DataSource {
 		}
 
 		if (usesComponent(IDataModel.class)) {
-			
+
 			if (!usesComponent(IUserManagement.class)) {
 				// if no user management then attach the data model.
 				setContext(new Context(getComponent(IDataModel.class)));
@@ -115,7 +116,7 @@ public abstract class DSPDataSource extends DataSource {
 	}
 
 	protected void readNetworkConfig() throws Exception {
-		// TODO: Foreach component, if the component find a property for it,
+		// Foreach component, if the component find a property for it,
 		// then it has to take it.
 		for (Object component : components()) {
 			try {

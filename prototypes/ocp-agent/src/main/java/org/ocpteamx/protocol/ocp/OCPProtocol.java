@@ -10,7 +10,6 @@ import java.net.Socket;
 import java.util.Iterator;
 import java.util.LinkedList;
 
-import org.ocpteam.component.Agent;
 import org.ocpteam.component.Protocol;
 import org.ocpteam.entity.Session;
 import org.ocpteam.misc.Id;
@@ -49,7 +48,7 @@ public class OCPProtocol extends Protocol {
 
 	public OCPAgent getAgent() {
 		if (this.agent == null) {
-			this.agent = (OCPAgent) ds().getComponent(Agent.class);
+			this.agent = ds().getComponent(OCPAgent.class);
 		}
 		return this.agent;
 	}

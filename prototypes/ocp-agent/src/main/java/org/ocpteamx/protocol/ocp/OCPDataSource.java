@@ -2,7 +2,6 @@ package org.ocpteamx.protocol.ocp;
 
 import java.util.Iterator;
 
-import org.ocpteam.component.Agent;
 import org.ocpteam.component.Client;
 import org.ocpteam.component.ContactMap;
 import org.ocpteam.component.DSPDataSource;
@@ -25,12 +24,13 @@ public class OCPDataSource extends DSPDataSource {
 
 	public OCPDataSource() throws Exception {
 		super();
-		replaceComponent(Agent.class, new OCPAgent());
+
 		replaceComponent(Client.class, new OCPClient());
 		replaceComponent(Server.class, new OCPServer());
 		replaceComponent(Protocol.class, new OCPProtocol());
 		replaceComponent(ContactMap.class, new OCPContactMap());
 
+		addComponent(OCPAgent.class);
 		addComponent(IDataStore.class, new PersistentFileMap());
 		addComponent(IUserManagement.class, new UserManagement());
 		addComponent(IUserCreation.class, new OCPUserCreation());
@@ -40,7 +40,7 @@ public class OCPDataSource extends DSPDataSource {
 	@Override
 	public void init() throws Exception {
 		super.init();
-		agent = (OCPAgent) getComponent(Agent.class);
+		agent = getComponent(OCPAgent.class);
 		um = getComponent(IUserManagement.class);
 		contactClass = OCPContact.class;
 		addComponent(IAuthenticable.class, (IAuthenticable) client);
@@ -66,7 +66,7 @@ public class OCPDataSource extends DSPDataSource {
 
 	@Override
 	public void disconnect() throws Exception {
-		((OCPAgent) getComponent(Agent.class)).disconnect();
+		agent.disconnect();
 	}
 
 	@Override
@@ -75,8 +75,8 @@ public class OCPDataSource extends DSPDataSource {
 
 	@Override
 	public String getName() {
-		if (((OCPAgent) getComponent(Agent.class)).id != null) {
-			return ((OCPAgent) getComponent(Agent.class)).id.toString();
+		if (agent.id != null) {
+			return agent.id.toString();
 		}
 		return super.getName();
 	}
@@ -97,6 +97,10 @@ public class OCPDataSource extends DSPDataSource {
 		}
 		LOG.debug("toContact: " + c);
 		return c;
+	}
+
+	public OCPAgent getOCPAgent() {
+		return getComponent(OCPAgent.class);
 	}
 
 }

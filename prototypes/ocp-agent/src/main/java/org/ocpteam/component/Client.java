@@ -319,10 +319,6 @@ public class Client extends DSContainer<DSPDataSource> implements IClient, IStar
 		return ds().getComponent(Protocol.class);
 	}
 
-	public Agent getAgent() {
-		return ds().getComponent(Agent.class);
-	}
-
 	public void askForContact() throws Exception {
 		DSPModule m = ds().getComponent(DSPModule.class);
 		

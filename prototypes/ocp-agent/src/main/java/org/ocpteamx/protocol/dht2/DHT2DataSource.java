@@ -90,7 +90,7 @@ public class DHT2DataSource extends DSPDataSource {
 		super.onNodeArrival();
 		Contact predecessor = ringNodeMap.getPredecessor(getNode());
 		if (predecessor.isMyself()) {
-			if (agent.isFirstAgent()) {
+			if (isFirstAgent()) {
 				LOG.debug("first agent: ds=" + getName());
 				return;
 			}
