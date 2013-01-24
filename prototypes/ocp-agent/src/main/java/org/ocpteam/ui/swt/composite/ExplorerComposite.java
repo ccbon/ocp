@@ -84,6 +84,7 @@ public class ExplorerComposite extends Composite {
 	private Label localDirectoryLabel;
 	private Label remoteDirectoryLabel;
 	private DataSourceWindow w;
+	private Table table;
 
 	/**
 	 * Create the composite.
@@ -100,8 +101,10 @@ public class ExplorerComposite extends Composite {
 		currentRemoteDirString = "/";
 
 		setLayout(new FillLayout(SWT.HORIZONTAL));
+		
+		SashForm verticalSashForm = new SashForm(this, SWT.VERTICAL);
 
-		SashForm sashForm = new SashForm(this, SWT.NONE);
+		SashForm sashForm = new SashForm(verticalSashForm, SWT.NONE);
 
 		Composite leftComposite = new Composite(sashForm, SWT.NONE);
 		GridLayout gl_leftComposite = new GridLayout(1, false);
@@ -378,6 +381,12 @@ public class ExplorerComposite extends Composite {
 		remoteDND();
 		reloadRemoteDirectoryTable();
 		sashForm.setWeights(new int[] { 1, 1 });
+		
+		Composite composite = new Composite(verticalSashForm, SWT.NONE);
+		composite.setLayout(new FillLayout(SWT.HORIZONTAL));
+		
+		table = new Table(composite, SWT.BORDER | SWT.FULL_SELECTION);
+		verticalSashForm.setWeights(new int[] {6, 1});
 
 	}
 
@@ -787,5 +796,4 @@ public class ExplorerComposite extends Composite {
 		reloadLocalDirectoryTable();
 
 	}
-
 }
