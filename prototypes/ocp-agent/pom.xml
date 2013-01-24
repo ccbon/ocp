@@ -32,6 +32,16 @@
 			<organization>www.flexible-radio.com</organization>
 			<timezone>+2</timezone>
 		</developer>
+		<developer>
+			<id>yt</id>
+			<name>Yannis THOMIAS</name>
+			<email>thomias.yannis@gmail.com</email>
+			<roles>
+				<role>Developer</role>
+			</roles>
+			<organization>JLG-Consulting (France)</organization>
+			<timezone>+2</timezone>
+		</developer>
 	</developers>
 
 	<properties>

@@ -15,6 +15,7 @@ import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
+import org.eclipse.swt.custom.TableEditor;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.DragSource;
 import org.eclipse.swt.dnd.DragSourceAdapter;
@@ -40,6 +41,7 @@ import org.eclipse.swt.program.Program;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.ProgressBar;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
@@ -50,6 +52,7 @@ import org.ocpteam.misc.JLG;
 import org.ocpteam.misc.LOG;
 import org.ocpteam.misc.swt.QuickMessage;
 import org.ocpteam.ui.swt.DataSourceWindow;
+import org.ocpteam.ui.swt.action.CancelAction;
 import org.ocpteam.ui.swt.action.CheckOutAction;
 import org.ocpteam.ui.swt.action.CommitAction;
 import org.ocpteam.ui.swt.action.CreateNewDirAction;
@@ -101,7 +104,7 @@ public class ExplorerComposite extends Composite {
 		currentRemoteDirString = "/";
 
 		setLayout(new FillLayout(SWT.HORIZONTAL));
-		
+
 		SashForm verticalSashForm = new SashForm(this, SWT.VERTICAL);
 
 		SashForm sashForm = new SashForm(verticalSashForm, SWT.NONE);
@@ -385,16 +388,88 @@ public class ExplorerComposite extends Composite {
 		remoteDND();
 		reloadRemoteDirectoryTable();
 		sashForm.setWeights(new int[] { 1, 1 });
-		
+
 		Composite composite = new Composite(verticalSashForm, SWT.NONE);
 		GridLayout gl_composite = new GridLayout(1, false);
 		gl_composite.marginHeight = 0;
 		composite.setLayout(gl_composite);
-		
-		table = new Table(composite, SWT.BORDER | SWT.FULL_SELECTION);
-		table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		verticalSashForm.setWeights(new int[] {6, 1});
 
+		table = new Table(composite, SWT.BORDER | SWT.FULL_SELECTION);
+		table.setHeaderVisible(true);
+		table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+
+		TableColumn tblclmnName = new TableColumn(table, SWT.NONE);
+		tblclmnName.setWidth(100);
+		tblclmnName.setText("Name");
+
+		TableColumn tblclmnSize = new TableColumn(table, SWT.NONE);
+		tblclmnSize.setWidth(33);
+		tblclmnSize.setText("Size");
+
+		TableColumn tblclmnUd = new TableColumn(table, SWT.NONE);
+		tblclmnUd.setWidth(33);
+		tblclmnUd.setText("U/D");
+
+		TableColumn tblclmnProgress = new TableColumn(table, SWT.NONE);
+		tblclmnProgress.setWidth(135);
+		tblclmnProgress.setText("Progress");
+
+		TableColumn tblclmnSpeed = new TableColumn(table, SWT.NONE);
+		tblclmnSpeed.setWidth(50);
+		tblclmnSpeed.setText("Speed");
+
+		TableColumn tblclmnElapsed = new TableColumn(table, SWT.NONE);
+		tblclmnElapsed.setWidth(58);
+		tblclmnElapsed.setText("Elapsed");
+
+		TableColumn tblclmnEstimated = new TableColumn(table, SWT.NONE);
+		tblclmnEstimated.setWidth(65);
+		tblclmnEstimated.setText("Estimated");
+
+		TableItem item1 = new TableItem(table, SWT.NONE);
+		item1.setText(new String[] { "toto.txt", "10B", "U", "", "12ko/s",
+				"1s", "~1s" });
+		TableEditor editor = new TableEditor(table);
+		ProgressBar bar = new ProgressBar(table, SWT.SMOOTH);
+		bar.setMaximum(100);
+		bar.setSelection(50);
+		editor.grabHorizontal = true;
+		editor.horizontalAlignment = SWT.LEFT;
+		editor.setEditor(bar, item1, 3);
+		verticalSashForm.setWeights(new int[] {231, 66});
+
+		table.addMenuDetectListener(new MenuDetectListener() {
+
+			@Override
+			public void menuDetected(MenuDetectEvent e) {
+				final MenuManager myMenu = new MenuManager("xxx");
+				final Menu menu = myMenu
+						.createContextMenu(ExplorerComposite.this.w.getShell());
+
+				int sel = table.getSelection().length;
+				if (sel > 0) {
+					CancelAction cancelAction = new CancelAction(
+							ExplorerComposite.this.w);
+					myMenu.add(cancelAction);
+					myMenu.add(new Separator());
+				}
+				menu.setEnabled(true);
+				myMenu.setVisible(true);
+				menu.setVisible(true);
+			}
+		});
+
+		table.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseDown(MouseEvent e) {
+				LOG.debug("mouse down");
+				Point pt = new Point(e.x, e.y);
+				if (table.getItem(pt) == null) {
+					LOG.debug("cancel selection");
+					table.deselectAll();
+				}
+			}
+		});
 	}
 
 	private void remoteDND() {
