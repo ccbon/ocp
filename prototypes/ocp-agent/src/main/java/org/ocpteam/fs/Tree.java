@@ -87,5 +87,11 @@ public class Tree implements IStructurable, IFile {
 					TreeEntry.class);
 		}
 	}
+	
+	@Override
+	public long getSize() {
+		// TODO Auto-generated method stub
+		return -1;
+	}
 
 }

@@ -37,6 +37,7 @@ public class ZipDataSource extends DataSource {
 		file.delete();
 		getFile().renameTo(file);
 		bIsNew = false;
+		setFile(file);
 	}
 	
 	@Override

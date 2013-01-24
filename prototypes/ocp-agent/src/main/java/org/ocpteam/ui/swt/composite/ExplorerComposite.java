@@ -436,7 +436,7 @@ public class ExplorerComposite extends Composite {
 		editor.grabHorizontal = true;
 		editor.horizontalAlignment = SWT.LEFT;
 		editor.setEditor(bar, item1, 3);
-		verticalSashForm.setWeights(new int[] {231, 66});
+		verticalSashForm.setWeights(new int[] { 231, 66 });
 
 		table.addMenuDetectListener(new MenuDetectListener() {
 
@@ -634,7 +634,7 @@ public class ExplorerComposite extends Composite {
 					image = DIRECTORY_ICON;
 				} else {
 					type = FILE_TYPE;
-					size = ""; // not implemented yet
+					size = formatSize(ifile.getSize());
 					image = FILE_ICON;
 				}
 				tableItem.setText(new String[] { ifile.getName(), type, size });
@@ -717,11 +717,7 @@ public class ExplorerComposite extends Composite {
 				image = DIRECTORY_ICON;
 			} else {
 				type = FILE_TYPE;
-				if (f.length() > 1024) {
-					size = (f.length() / 1024) + " KB";
-				} else {
-					size = f.length() + " B";
-				}
+				size = formatSize(f.length());
 				image = FILE_ICON;
 			}
 			String name = null;
@@ -734,6 +730,21 @@ public class ExplorerComposite extends Composite {
 			tableItem.setImage(image);
 		}
 
+	}
+
+	private String formatSize(long size) {
+		String result = null;
+		if (size < 0) {
+			return "N/A";
+		}
+		if (size > 1024 * 1024) {
+			result = (size / (1024 * 1024)) + " MB";
+		} else if (size > 1024) {
+			result = (size / 1024) + " KB";
+		} else {
+			result = size + " B";
+		}
+		return result;
 	}
 
 	private File[] windowsFilter(File[] children) {

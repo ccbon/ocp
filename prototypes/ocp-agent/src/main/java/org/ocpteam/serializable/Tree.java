@@ -85,5 +85,10 @@ public class Tree implements Serializable, IFile, IStructurable {
 	public void fromStructure(Structure s) throws Exception {
 		entryMap = (Map<String, TreeEntry>) s.getMapField("entryMap", TreeEntry.class);
 	}
+	
+	@Override
+	public long getSize() {
+		return -1;
+	}
 
 }

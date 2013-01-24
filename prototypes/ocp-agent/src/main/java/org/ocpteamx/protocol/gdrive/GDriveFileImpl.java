@@ -43,4 +43,9 @@ public class GDriveFileImpl implements IFile {
 		set.add(gDriveFileImpl);
 	}
 
+	@Override
+	public long getSize() {
+		return f.getFileSize();
+	}
+
 }

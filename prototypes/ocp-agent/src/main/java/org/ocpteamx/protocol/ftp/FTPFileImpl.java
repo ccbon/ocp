@@ -6,7 +6,6 @@ import java.util.HashSet;
 import org.apache.commons.net.ftp.FTPFile;
 import org.ocpteam.interfaces.IFile;
 
-
 public class FTPFileImpl implements IFile {
 
 	private HashSet<FTPFileImpl> set;
@@ -15,9 +14,11 @@ public class FTPFileImpl implements IFile {
 	public FTPFileImpl() {
 		set = new HashSet<FTPFileImpl>();
 	}
+
 	public FTPFileImpl(FTPFile ftpFile) {
 		this.ftpFile = ftpFile;
 	}
+
 	@Override
 	public Collection<? extends IFile> listFiles() {
 		return set;
@@ -40,6 +41,11 @@ public class FTPFileImpl implements IFile {
 
 	public void add(FTPFileImpl ftpFileImpl) {
 		set.add(ftpFileImpl);
+	}
+
+	@Override
+	public long getSize() {
+		return ftpFile.getSize();
 	}
 
 }

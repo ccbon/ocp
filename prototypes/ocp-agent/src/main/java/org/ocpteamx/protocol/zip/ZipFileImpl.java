@@ -13,12 +13,14 @@ public class ZipFileImpl implements IFile {
 	private String path;
 	private boolean bIsDirectory;
 	private HashMap<String, ZipFileImpl> map;
+	private long size;
 
 	public ZipFileImpl(ZipEntry zipEntry) {
 		map = new HashMap<String, ZipFileImpl>();
 		this.path = zipEntry.getName();
 		LOG.debug("zipentry.path=" + path);
 		this.bIsDirectory = zipEntry.isDirectory();
+		this.size = zipEntry.getSize();
 	}
 
 	// root case
@@ -87,5 +89,14 @@ public class ZipFileImpl implements IFile {
 			return map.get(dir).get(path.substring(index + 1));
 		}
 	}
+
+	@Override
+	public long getSize() {
+		return size;
+	}
+
+	// public int getSize(String filePath) {
+	// return get(filePath).
+	// }
 
 }

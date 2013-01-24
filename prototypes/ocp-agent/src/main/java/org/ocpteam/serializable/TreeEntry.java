@@ -71,5 +71,10 @@ public class TreeEntry implements Serializable, IFile, IStructurable {
 		type = s.getIntField("type");
 		p = (Pointer) s.getStructureFromSubstructField("p").toStructurable();
 	}
+	
+	@Override
+	public long getSize() {
+		return -1;
+	}
 
 }

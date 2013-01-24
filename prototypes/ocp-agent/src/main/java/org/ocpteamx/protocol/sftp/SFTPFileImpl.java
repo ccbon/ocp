@@ -45,5 +45,11 @@ public class SFTPFileImpl implements IFile {
 		set.add(sftpFileImpl);
 	}
 
+	@Override
+	public long getSize() {
+		// TODO Auto-generated method stub
+		return -1;
+	}
+
 
 }

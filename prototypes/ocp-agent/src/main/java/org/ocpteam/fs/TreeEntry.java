@@ -72,5 +72,11 @@ public class TreeEntry implements IStructurable, IFile {
 		type = stype.equals("DIR") ? TREE : FILE; 
 		p = (Pointer) s.getStructureFromSubstructField("p").toStructurable();
 	}
+	
+	@Override
+	public long getSize() {
+		// TODO Auto-generated method stub
+		return -1;
+	}
 
 }

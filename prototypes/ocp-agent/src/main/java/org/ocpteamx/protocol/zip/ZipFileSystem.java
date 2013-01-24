@@ -1,11 +1,11 @@
 package org.ocpteamx.protocol.zip;
 
 import java.io.File;
-import java.io.FileInputStream;
+import java.util.Enumeration;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
+import java.util.zip.ZipFile;
 
 import org.ocpteam.core.Container;
 import org.ocpteam.interfaces.IFile;
@@ -99,7 +99,6 @@ public class ZipFileSystem extends Container<ZipDataSource> implements IFileSyst
 		}
 		ZipUtils.mkdir(ds().getFile(), existingParentDir + newDir);
 		refresh();
-
 	}
 
 	@Override
@@ -135,20 +134,33 @@ public class ZipFileSystem extends Container<ZipDataSource> implements IFileSyst
 
 	public void refresh() throws Exception {
 		this.root = new ZipFileImpl();
-		ZipInputStream zipInputStream = null;
+//		ZipInputStream zipInputStream = null;
+		ZipFile zip = null;
 		try {
-			zipInputStream = new ZipInputStream(new FileInputStream(ds().getFile()));
-			ZipEntry zipEntry = null;
-
-			while ((zipEntry = zipInputStream.getNextEntry()) != null) {
+			zip = new ZipFile(ds().getFile());
+			Enumeration<? extends ZipEntry> entries = zip.entries();
+			while (entries.hasMoreElements()) {
+				ZipEntry zipEntry = entries.nextElement();
 				LOG.debug("adding to fs " + zipEntry.getName());
 				this.root.add(zipEntry.getName(), zipEntry);
 			}
+			
+//			zipInputStream = new ZipInputStream(new FileInputStream(ds()
+//					.getFile()));
+//			ZipEntry zipEntry = null;
+//
+//			while ((zipEntry = zipInputStream.getNextEntry()) != null) {
+//				LOG.debug("adding to fs " + zipEntry.getName());
+//				this.root.add(zipEntry.getName(), zipEntry);
+//			}
 
 		} finally {
-			if (zipInputStream != null) {
-				zipInputStream.close();
+			if (zip != null) {
+				zip.close();
 			}
+//			if (zipInputStream != null) {
+//				zipInputStream.close();
+//			}
 		}
 	}
 

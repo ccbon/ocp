@@ -42,5 +42,10 @@ public class DropboxFileImpl implements IFile {
 	public void add(DropboxFileImpl dropboxFileImpl) {
 		set.add(dropboxFileImpl);
 	}
+	
+	@Override
+	public long getSize() {
+		return f.bytes;
+	}
 
 }

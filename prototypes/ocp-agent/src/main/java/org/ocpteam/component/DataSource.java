@@ -85,7 +85,7 @@ public abstract class DataSource extends TopContainer implements IComponent,
 		setConfig(new Properties());
 		bIsNew = true;
 
-		file = File.createTempFile("temp" + System.currentTimeMillis(), "tmp");
+		file = File.createTempFile("temp" + System.currentTimeMillis(), ".tmp");
 		file.delete();
 		file.deleteOnExit();
 	}
