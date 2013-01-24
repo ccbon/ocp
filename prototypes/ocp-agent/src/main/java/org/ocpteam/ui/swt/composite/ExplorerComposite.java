@@ -87,7 +87,7 @@ public class ExplorerComposite extends Composite {
 	private Label localDirectoryLabel;
 	private Label remoteDirectoryLabel;
 	private DataSourceWindow w;
-	private Table table;
+	public Table table;
 
 	/**
 	 * Create the composite.

@@ -29,23 +29,25 @@ public class CommitAction extends Action {
 			return;			
 		}
 
-		ExplorerComposite composite = (ExplorerComposite) w.explorerComposite;
+		final ExplorerComposite composite = (ExplorerComposite) w.explorerComposite;
 
 		if (composite == null) {
 			return;
 		}
 		for (TableItem item : composite.localDirectoryTable.getSelection()) {
-			String name = item.getText(0);
-			File file = new File(composite.currentLocalDirectory, name);
-			try {
-				composite.fs.commit(composite.currentRemoteDirString, file);
-				composite.reloadRemoteDirectoryTable();
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			
-
+			final String name = item.getText(0);
+//			new Thread(new Runnable() {
+//				@Override
+//				public void run() {
+					File file = new File(composite.currentLocalDirectory, name);
+					try {						
+						composite.fs.commit(composite.currentRemoteDirString, file);
+						composite.reloadRemoteDirectoryTable();
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+//				}
+//			}).start();
 		}
 		
 	}

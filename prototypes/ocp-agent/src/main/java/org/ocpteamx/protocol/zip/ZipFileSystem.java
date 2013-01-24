@@ -134,7 +134,6 @@ public class ZipFileSystem extends Container<ZipDataSource> implements IFileSyst
 
 	public void refresh() throws Exception {
 		this.root = new ZipFileImpl();
-//		ZipInputStream zipInputStream = null;
 		ZipFile zip = null;
 		try {
 			zip = new ZipFile(ds().getFile());
@@ -144,23 +143,10 @@ public class ZipFileSystem extends Container<ZipDataSource> implements IFileSyst
 				LOG.debug("adding to fs " + zipEntry.getName());
 				this.root.add(zipEntry.getName(), zipEntry);
 			}
-			
-//			zipInputStream = new ZipInputStream(new FileInputStream(ds()
-//					.getFile()));
-//			ZipEntry zipEntry = null;
-//
-//			while ((zipEntry = zipInputStream.getNextEntry()) != null) {
-//				LOG.debug("adding to fs " + zipEntry.getName());
-//				this.root.add(zipEntry.getName(), zipEntry);
-//			}
-
 		} finally {
 			if (zip != null) {
 				zip.close();
 			}
-//			if (zipInputStream != null) {
-//				zipInputStream.close();
-//			}
 		}
 	}
 
