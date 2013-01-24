@@ -108,6 +108,8 @@ public class ExplorerComposite extends Composite {
 
 		Composite leftComposite = new Composite(sashForm, SWT.NONE);
 		GridLayout gl_leftComposite = new GridLayout(1, false);
+		gl_leftComposite.marginTop = 5;
+		gl_leftComposite.marginHeight = 0;
 		gl_leftComposite.marginLeft = 5;
 		gl_leftComposite.marginWidth = 0;
 		gl_leftComposite.horizontalSpacing = 0;
@@ -246,6 +248,8 @@ public class ExplorerComposite extends Composite {
 
 		Composite rightComposite = new Composite(sashForm, SWT.NONE);
 		GridLayout gl_rightComposite = new GridLayout(1, false);
+		gl_rightComposite.marginHeight = 0;
+		gl_rightComposite.marginTop = 5;
 		gl_rightComposite.marginRight = 5;
 		gl_rightComposite.marginWidth = 0;
 		rightComposite.setLayout(gl_rightComposite);
@@ -383,9 +387,12 @@ public class ExplorerComposite extends Composite {
 		sashForm.setWeights(new int[] { 1, 1 });
 		
 		Composite composite = new Composite(verticalSashForm, SWT.NONE);
-		composite.setLayout(new FillLayout(SWT.HORIZONTAL));
+		GridLayout gl_composite = new GridLayout(1, false);
+		gl_composite.marginHeight = 0;
+		composite.setLayout(gl_composite);
 		
 		table = new Table(composite, SWT.BORDER | SWT.FULL_SELECTION);
+		table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		verticalSashForm.setWeights(new int[] {6, 1});
 
 	}
