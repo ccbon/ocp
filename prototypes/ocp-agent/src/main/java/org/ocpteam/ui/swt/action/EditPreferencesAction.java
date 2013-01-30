@@ -10,6 +10,7 @@ import org.ocpteam.misc.LOG;
 import org.ocpteam.ui.swt.DataSourceWindow;
 import org.ocpteam.ui.swt.DataSourcesPreferencePage;
 import org.ocpteam.ui.swt.GeneralPreferencePage;
+import org.ocpteam.ui.swt.MonitorPreferencePage;
 
 public class EditPreferencesAction extends Action {
 	public static ResourceBundle defaultPreferences = ResourceBundle
@@ -35,12 +36,16 @@ public class EditPreferencesAction extends Action {
 			PreferenceNode generalPrefNode = new PreferenceNode("General",
 					"General", null,
 					GeneralPreferencePage.class.getName());
+			PreferenceNode monitorPrefNode = new PreferenceNode("Monitor",
+					"Monitor", null,
+					MonitorPreferencePage.class.getName());
 			PreferenceNode dsPrefNode = new PreferenceNode("Datasources",
 					"Datasources", null,
 					DataSourcesPreferencePage.class.getName());
 
 			// Add the nodes
 			mgr.addToRoot(generalPrefNode);
+			mgr.addToRoot(monitorPrefNode);
 			mgr.addToRoot(dsPrefNode);
 
 			// Create the preferences dialog

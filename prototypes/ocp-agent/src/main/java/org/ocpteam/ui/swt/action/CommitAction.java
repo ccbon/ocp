@@ -6,13 +6,12 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.swt.widgets.TableItem;
 import org.ocpteam.misc.LOG;
 import org.ocpteam.ui.swt.DataSourceWindow;
+import org.ocpteam.ui.swt.Task;
 import org.ocpteam.ui.swt.composite.ExplorerComposite;
-
 
 public class CommitAction extends Action {
 
 	private DataSourceWindow w;
-
 
 	public CommitAction(DataSourceWindow w) {
 		this.w = w;
@@ -21,12 +20,11 @@ public class CommitAction extends Action {
 		setToolTipText("Commit");
 	}
 
-
 	@Override
 	public void run() {
 		LOG.debug("Commit");
 		if (!(w.explorerComposite instanceof ExplorerComposite)) {
-			return;			
+			return;
 		}
 
 		final ExplorerComposite composite = (ExplorerComposite) w.explorerComposite;
@@ -36,26 +34,32 @@ public class CommitAction extends Action {
 		}
 		for (TableItem item : composite.localDirectoryTable.getSelection()) {
 			final String name = item.getText(0);
-//			new Thread(new Runnable() {
-//				@Override
-//				public void run() {
+
+			w.getMonitor().monitor(new Task(name, new Runnable() {
+				@Override
+				public void run() {
 					File file = new File(composite.currentLocalDirectory, name);
-					try {						
-						composite.fs.commit(composite.currentRemoteDirString, file);
-						composite.reloadRemoteDirectoryTable();
+					try {
+						composite.fs.commit(composite.currentRemoteDirString,
+								file);
+						w.getShell().getDisplay().asyncExec(new Runnable() {
+							@Override
+							public void run() {
+								LOG.debug("Refresh");
+								composite.reloadRemoteDirectoryTable();
+							}
+						});
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
-//				}
-//			}).start();
+				}
+			}));
 		}
-		
 	}
-
 
 	public boolean canRun() {
 		if (!(w.explorerComposite instanceof ExplorerComposite)) {
-			return false;			
+			return false;
 		}
 
 		ExplorerComposite composite = (ExplorerComposite) w.explorerComposite;

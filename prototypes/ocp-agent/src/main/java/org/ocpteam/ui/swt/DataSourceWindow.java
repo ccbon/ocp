@@ -146,6 +146,8 @@ public class DataSourceWindow extends ApplicationWindow implements IComponent {
 
 	private int editionMode;
 
+	private AppMonitor m;
+
 	/**
 	 * Create the application window.
 	 */
@@ -156,7 +158,7 @@ public class DataSourceWindow extends ApplicationWindow implements IComponent {
 	public void init() throws Exception {
 		this.dsf = app.getComponent(DataSourceFactory.class);
 		initPreferenceStore();
-		
+
 		createActions();
 		addToolBar(SWT.FLAT | SWT.WRAP);
 		addMenuBar();
@@ -778,6 +780,8 @@ public class DataSourceWindow extends ApplicationWindow implements IComponent {
 		JLG.mkdir(Application.getAppDir());
 		LOG.checkInit();
 		init();
+		this.m = new AppMonitor(this);
+		m.start();
 		refreshPreference();
 		setBlockOnOpen(true);
 		JLG.mkdir(getTempDir());
@@ -789,6 +793,7 @@ public class DataSourceWindow extends ApplicationWindow implements IComponent {
 							+ e.getMessage(), "Error",
 					JOptionPane.ERROR_MESSAGE);
 		}
+		m.stop();
 		Display.getCurrent().dispose();
 		JLG.rm(getTempDir());
 	}
@@ -816,6 +821,10 @@ public class DataSourceWindow extends ApplicationWindow implements IComponent {
 
 	public String getTempDir() {
 		return System.getProperty("java.io.tmpdir") + "/gdse";
+	}
+
+	public AppMonitor getMonitor() {
+		return m;
 	}
 
 }

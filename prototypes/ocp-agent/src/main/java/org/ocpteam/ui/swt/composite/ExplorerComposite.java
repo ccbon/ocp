@@ -15,7 +15,6 @@ import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
-import org.eclipse.swt.custom.TableEditor;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.DragSource;
 import org.eclipse.swt.dnd.DragSourceAdapter;
@@ -41,7 +40,6 @@ import org.eclipse.swt.program.Program;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Menu;
-import org.eclipse.swt.widgets.ProgressBar;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
@@ -422,20 +420,25 @@ public class ExplorerComposite extends Composite {
 		tblclmnElapsed.setWidth(58);
 		tblclmnElapsed.setText("Elapsed");
 
+		TableColumn tblclmnStarted = new TableColumn(table, SWT.NONE);
+		tblclmnStarted.setWidth(58);
+		tblclmnStarted.setText("Started");
+
 		TableColumn tblclmnEstimated = new TableColumn(table, SWT.NONE);
 		tblclmnEstimated.setWidth(65);
 		tblclmnEstimated.setText("Estimated");
 
-		TableItem item1 = new TableItem(table, SWT.NONE);
-		item1.setText(new String[] { "toto.txt", "10B", "U", "", "12ko/s",
-				"1s", "~1s" });
-		TableEditor editor = new TableEditor(table);
-		ProgressBar bar = new ProgressBar(table, SWT.SMOOTH);
-		bar.setMaximum(100);
-		bar.setSelection(50);
-		editor.grabHorizontal = true;
-		editor.horizontalAlignment = SWT.LEFT;
-		editor.setEditor(bar, item1, 3);
+		// TableItem item1 = new TableItem(table, SWT.NONE);
+		// item1.setText(new String[] { "toto.txt", "10B", "U", "", "12ko/s",
+		// "1s", "~1s" });
+		// TableEditor editor = new TableEditor(table);
+		// ProgressBar bar = new ProgressBar(table, SWT.SMOOTH);
+		// bar.setMaximum(100);
+		// bar.setSelection(50);
+		// editor.grabHorizontal = true;
+		// editor.horizontalAlignment = SWT.LEFT;
+		// editor.setEditor(bar, item1, 3);
+
 		verticalSashForm.setWeights(new int[] { 231, 66 });
 
 		table.addMenuDetectListener(new MenuDetectListener() {
