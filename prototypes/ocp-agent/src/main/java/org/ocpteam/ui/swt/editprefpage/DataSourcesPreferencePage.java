@@ -1,4 +1,4 @@
-package org.ocpteam.ui.swt;
+package org.ocpteam.ui.swt.editprefpage;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -13,6 +13,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.ocpteam.component.DataSource;
 import org.ocpteam.misc.LOG;
+import org.ocpteam.ui.swt.DataSourceWindow;
 import org.ocpteam.ui.swt.DataSourceWindow.MyPreferenceStore;
 import org.ocpteam.ui.swt.action.EditPreferencesAction;
 
@@ -37,7 +38,7 @@ public class DataSourcesPreferencePage extends PreferencePage {
 		list = new ArrayList<Button>();
 		this.ps = (MyPreferenceStore) getPreferenceStore();
 		LOG.info("ps=" + ps);
-				
+
 		for (DataSource ds : ps.w.dsf.getDataSourceOrderedList()) {
 			Button btn = new Button(composite, SWT.CHECK);
 			btn.setText(ds.getProtocolName());
@@ -78,6 +79,10 @@ public class DataSourcesPreferencePage extends PreferencePage {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		applyPS(ps.w, ps);
+	}
+
+	public static void applyPS(DataSourceWindow w, MyPreferenceStore ps) {
 		ps.w.refreshNewMenuManager();
 	}
 

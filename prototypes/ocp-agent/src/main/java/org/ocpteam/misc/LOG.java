@@ -18,6 +18,7 @@ public class LOG {
 	private static Logger logger = null;
 	private static StreamHandler fh;
 	private static FileHandler fileHandler;
+	private static String file;
 
 	public static void severe(String input) {
 		log(Level.SEVERE, input);
@@ -146,12 +147,16 @@ public class LOG {
 	}
 
 	public static void logInFile(String logfile) throws Exception {
-		logger.removeHandler(fileHandler);
-		if (JLG.isNullOrEmpty(logfile)) {
+		if (file != null && file.equals(logfile)) {
 			return;
 		}
-		JLG.mkdir(JLG.dirname(escape(logfile)));
-		fileHandler = new FileHandler(logfile);
+		file = logfile;
+		logger.removeHandler(fileHandler);
+		if (JLG.isNullOrEmpty(file)) {
+			return;
+		}
+		JLG.mkdir(JLG.dirname(escape(file)));
+		fileHandler = new FileHandler(file);
 		fileHandler.setFormatter(new DebugFormatter());
 		logger.addHandler(fileHandler);
 

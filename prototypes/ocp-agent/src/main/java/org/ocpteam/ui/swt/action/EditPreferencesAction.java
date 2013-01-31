@@ -8,7 +8,7 @@ import org.eclipse.jface.preference.PreferenceManager;
 import org.eclipse.jface.preference.PreferenceNode;
 import org.ocpteam.misc.LOG;
 import org.ocpteam.ui.swt.DataSourceWindow;
-import org.ocpteam.ui.swt.DataSourcesPreferencePage;
+import org.ocpteam.ui.swt.editprefpage.DataSourcesPreferencePage;
 import org.ocpteam.ui.swt.editprefpage.GeneralPreferencePage;
 import org.ocpteam.ui.swt.editprefpage.MonitorPreferencePage;
 
@@ -56,7 +56,7 @@ public class EditPreferencesAction extends Action {
 			dlg.open();
 			// Save the preferences
 			w.ps.save();
-			w.applyPreference();
+			w.applyPreferences();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

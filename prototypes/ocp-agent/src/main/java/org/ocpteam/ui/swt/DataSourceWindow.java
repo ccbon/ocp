@@ -88,7 +88,9 @@ import org.ocpteam.ui.swt.action.SignOutAction;
 import org.ocpteam.ui.swt.action.ViewDataModelAction;
 import org.ocpteam.ui.swt.composite.ExplorerComposite;
 import org.ocpteam.ui.swt.composite.MapComposite;
+import org.ocpteam.ui.swt.editprefpage.DataSourcesPreferencePage;
 import org.ocpteam.ui.swt.editprefpage.GeneralPreferencePage;
+import org.ocpteam.ui.swt.editprefpage.MonitorPreferencePage;
 
 public class DataSourceWindow extends ApplicationWindow implements IComponent {
 
@@ -224,7 +226,7 @@ public class DataSourceWindow extends ApplicationWindow implements IComponent {
 		ps = new MyPreferenceStore(PROPERTIES_FILENAME, this);
 		setDefaultPrefecences();
 		ps.load();
-		applyPreference();
+		applyPreferences();
 	}
 
 	public void refresh() {
@@ -419,6 +421,9 @@ public class DataSourceWindow extends ApplicationWindow implements IComponent {
 	}
 
 	public void refreshNewMenuManager() {
+		if (menuManager == null) {
+			return;
+		}
 		menuManager.removeAll();
 		List<DataSource> list = dsf.getDataSourceOrderedList();
 		for (DataSource ds : list) {
@@ -814,18 +819,17 @@ public class DataSourceWindow extends ApplicationWindow implements IComponent {
 		return this.editionMode;
 	}
 
-	public void applyPreference() {
-		try {
-			LOG.setLevel(Level.parse(ps
-					.getString(GeneralPreferencePage.LOG_LEVEL)));
-			LOG.logInFile(ps.getString(GeneralPreferencePage.LOGFILE));
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+	public void applyPreferences() {
+		DataSourcesPreferencePage.applyPS(this, ps);
+		GeneralPreferencePage.applyPS(this, ps);
+		MonitorPreferencePage.applyPS(this, ps);
 	}
 
 	private void setDefaultPrefecences() {
 		ps.setDefault(GeneralPreferencePage.LOG_LEVEL, Level.INFO.getName());
+		ps.setDefault(GeneralPreferencePage.CONFIRM_ON_EXIT, true);
+		ps.setDefault(MonitorPreferencePage.MAXTHREAD, 1);
+		ps.setDefault(MonitorPreferencePage.REFRESHRATE, 1000);
 	}
 
 	public String getTempDir() {

@@ -12,6 +12,8 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.ocpteam.misc.swt.QuickMessage;
+import org.ocpteam.ui.swt.AppMonitor;
+import org.ocpteam.ui.swt.DataSourceWindow;
 import org.ocpteam.ui.swt.DataSourceWindow.MyPreferenceStore;
 
 public class MonitorPreferencePage extends PreferencePage {
@@ -84,11 +86,7 @@ public class MonitorPreferencePage extends PreferencePage {
 					"Refresh rate and max thread must be superior than 1.");
 			return;
 		}
-		if (thread != ps.getInt(MAXTHREAD)) {
-			ThreadPoolExecutor pool = ps.w.getMonitor().getPool();
-			pool.setCorePoolSize(thread);
-			pool.setMaximumPoolSize(thread);
-		}
+
 		ps.setValue(REFRESHRATE, rate);
 		ps.setValue(MAXTHREAD, thread);
 		try {
@@ -96,5 +94,16 @@ public class MonitorPreferencePage extends PreferencePage {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		applyPS(ps.w, ps);
+	}
+
+	public static void applyPS(DataSourceWindow w, MyPreferenceStore ps) {
+		AppMonitor a = ps.w.getMonitor();
+		if (a == null) {
+			return;
+		}
+		ThreadPoolExecutor pool = a.getPool();
+		pool.setCorePoolSize(ps.getInt(MAXTHREAD));
+		pool.setMaximumPoolSize(ps.getInt(MAXTHREAD));
 	}
 }

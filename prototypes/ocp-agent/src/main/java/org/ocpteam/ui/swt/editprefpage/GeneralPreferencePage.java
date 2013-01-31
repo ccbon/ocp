@@ -149,7 +149,6 @@ public class GeneralPreferencePage extends PreferencePage {
 		ps.setValue(NEVER_STICKY, btnDatasourceNeverSticky.getSelection());
 		ps.setValue(NO_NAT_TRAVERSAL, btnDoNotUse.getSelection());
 		ps.setValue(LOG_LEVEL, combo.getText());
-		LOG.setLevel(Level.parse(combo.getText()));
 		if (btnSaveLogsIn.getSelection()) {
 			ps.setValue(LOGFILE, text.getText());
 		} else {
@@ -158,6 +157,16 @@ public class GeneralPreferencePage extends PreferencePage {
 		try {
 			ps.save();
 		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		applyPS(ps.w, ps);
+	}
+
+	public static void applyPS(DataSourceWindow w, MyPreferenceStore ps) {
+		LOG.setLevel(Level.parse(ps.getString(LOG_LEVEL)));
+		try {
+			LOG.logInFile(ps.getString(LOGFILE));
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
