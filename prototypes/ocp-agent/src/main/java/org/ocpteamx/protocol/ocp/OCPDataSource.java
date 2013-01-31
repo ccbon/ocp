@@ -49,7 +49,7 @@ public class OCPDataSource extends DSPDataSource {
 
 	@Override
 	public String getProtocolName() {
-		return "OCP";
+		return "OLD_OCP";
 	}
 
 	@Override
