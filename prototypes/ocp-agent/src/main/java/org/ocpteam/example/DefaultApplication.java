@@ -2,7 +2,6 @@ package org.ocpteam.example;
 
 import org.ocpteam.component.DataSourceFactory;
 import org.ocpteam.core.TopContainer;
-import org.ocpteam.misc.LOG;
 import org.ocpteam.ui.swt.DataSourceWindow;
 import org.ocpteamx.protocol.dht0.DHTDataSource;
 import org.ocpteamx.protocol.dht1.DHT1DataSource;
@@ -22,7 +21,7 @@ import org.ocpteamx.protocol.sftp.SFTPDataSource;
 import org.ocpteamx.protocol.zip.ZipDataSource;
 
 public class DefaultApplication extends TopContainer {
-	
+
 	public static void main(String args[]) {
 		try {
 			DefaultApplication app = new DefaultApplication();
@@ -52,12 +51,11 @@ public class DefaultApplication extends TopContainer {
 		dsf.addComponent(DHT6DataSource.class);
 		dsf.addComponent(GDriveDataSource.class);
 		dsf.addComponent(DropboxDataSource.class);
-		
+
 		addComponent(DataSourceWindow.class);
 	}
 
 	public void start() {
-		LOG.debug_on();
 		try {
 			getComponent(DataSourceWindow.class).start();
 		} catch (Exception e) {

@@ -222,7 +222,9 @@ public class DataSourceWindow extends ApplicationWindow implements IComponent {
 			}
 		}
 		ps = new MyPreferenceStore(PROPERTIES_FILENAME, this);
+		setDefaultPrefecences();
 		ps.load();
+		applyPreference();
 	}
 
 	public void refresh() {
@@ -784,7 +786,6 @@ public class DataSourceWindow extends ApplicationWindow implements IComponent {
 		init();
 		this.m = new AppMonitor(this);
 		m.start();
-		refreshPreference();
 		setBlockOnOpen(true);
 		JLG.mkdir(getTempDir());
 		try {
@@ -813,10 +814,10 @@ public class DataSourceWindow extends ApplicationWindow implements IComponent {
 		return this.editionMode;
 	}
 
-	public void refreshPreference() {
+	public void applyPreference() {
 		try {
-			setDefaultPrefecences();
-			LOG.setLevel(Level.parse(ps.getString(GeneralPreferencePage.LOG_LEVEL)));
+			LOG.setLevel(Level.parse(ps
+					.getString(GeneralPreferencePage.LOG_LEVEL)));
 			LOG.logInFile(ps.getString(GeneralPreferencePage.LOGFILE));
 		} catch (Exception e) {
 			e.printStackTrace();

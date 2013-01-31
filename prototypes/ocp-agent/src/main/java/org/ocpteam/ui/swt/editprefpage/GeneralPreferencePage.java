@@ -100,11 +100,11 @@ public class GeneralPreferencePage extends PreferencePage {
 		lblLogLevel.setText("Log level");
 
 		combo = new Combo(composite, SWT.NONE);
-		combo.setItems(new String[] { Level.ALL.getName(),
+		combo.setItems(new String[] { Level.OFF.getName(),
 				Level.SEVERE.getName(), Level.WARNING.getName(),
 				Level.INFO.getName(), Level.CONFIG.getName(),
 				Level.FINE.getName(), Level.FINER.getName(),
-				Level.FINEST.getName(), Level.OFF.getName() });
+				Level.FINEST.getName(), Level.ALL.getName() });
 		combo.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, false, 1,
 				1));
 		int lvl = lvl2case(ps.getString(LOG_LEVEL));
@@ -114,10 +114,8 @@ public class GeneralPreferencePage extends PreferencePage {
 	}
 
 	private int lvl2case(String lvl) {
-		int result = 8;
-		if (lvl.equals(Level.ALL.getName())) {
-			result = 0;
-		} else if (lvl.equals(Level.SEVERE.getName())) {
+		int result = 0;
+		if (lvl.equals(Level.SEVERE.getName())) {
 			result = 1;
 		} else if (lvl.equals(Level.WARNING.getName())) {
 			result = 2;
@@ -131,6 +129,8 @@ public class GeneralPreferencePage extends PreferencePage {
 			result = 6;
 		} else if (lvl.equals(Level.FINEST.getName())) {
 			result = 7;
+		} else if (lvl.equals(Level.ALL.getName())) {
+			result = 8;
 		}
 		return result;
 	}

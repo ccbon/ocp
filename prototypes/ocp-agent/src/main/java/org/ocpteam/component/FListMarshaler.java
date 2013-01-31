@@ -24,10 +24,10 @@ public class FListMarshaler implements IMarshaler {
 		private int maxField = 0;
 
 		public TabInfo(Structure s) throws Exception {
-			LOG.info("Call TabInfo with s.name=" + s.getName());
+			LOG.finest("Call TabInfo with s.name=" + s.getName());
 			initMaxLevel(s, 0);
 			init(s, 0);
-			LOG.info("maxlevel=" + maxLevel);
+			LOG.finest("maxlevel=" + maxLevel);
 			tabeltid = maxLevel + 1 + maxField + 2;
 		}
 
@@ -65,7 +65,7 @@ public class FListMarshaler implements IMarshaler {
 			if (s == null) {
 				return;
 			}
-			LOG.info("structure name = " + s.getName());
+			LOG.finest("structure name = " + s.getName());
 			if (s.getName() == null) {
 				throw new Exception("Struture without name.");
 			}
@@ -109,7 +109,7 @@ public class FListMarshaler implements IMarshaler {
 		public String fieldeltid;
 
 		public FListLine(String buffer) {
-			LOG.info("buffer=" + buffer);
+			LOG.finest("buffer=" + buffer);
 			String[] sa = buffer.split("\\s+", 5);
 			level = Integer.parseInt(sa[0]);
 			fieldname = sa[1];
@@ -118,11 +118,11 @@ public class FListMarshaler implements IMarshaler {
 			if (sa.length > 4) {
 				fieldvalue = sa[4];
 			}
-			LOG.info("level=" + level);
-			LOG.info("fieldname=" + fieldname);
-			LOG.info("fieldtype=" + fieldtype);
-			LOG.info("fieldeltid=" + fieldeltid);
-			LOG.info("fieldvalue=" + fieldvalue);
+			LOG.finest("level=" + level);
+			LOG.finest("fieldname=" + fieldname);
+			LOG.finest("fieldtype=" + fieldtype);
+			LOG.finest("fieldeltid=" + fieldeltid);
+			LOG.finest("fieldvalue=" + fieldvalue);
 		}
 
 		public boolean hasNullValue() {
@@ -154,17 +154,17 @@ public class FListMarshaler implements IMarshaler {
 
 	@Override
 	public Structure unmarshal(byte[] array) throws Exception {
-		LOG.info("array=" + new String(array));
+		LOG.finest("array=" + new String(array));
 		return fromFList(new String(array));
 	}
 
 	private Structure fromFList(String string) throws Exception {
-		LOG.info("string=" + JLG.NL + string);
+		LOG.finest("string=" + JLG.NL + string);
 		Structure s = new Structure();
 		BufferedReader br = new BufferedReader(new StringReader(string));
 		fromFList(s, br, 0);
 		br.close();
-		LOG.info("structure=" + s);
+		LOG.finest("structure=" + s);
 		return s;
 
 	}
@@ -300,7 +300,7 @@ public class FListMarshaler implements IMarshaler {
 		try {
 			String result = new String();
 			result += format(level, "[" + s.getName() + "]", "", 0, "", tabInfo);
-			LOG.info("Object=" + s.getName() + " | Fields="
+			LOG.finest("Object=" + s.getName() + " | Fields="
 					+ s.getFields().keySet());
 			String[] set = (String[]) s.getFields().keySet()
 					.toArray(new String[0]);
@@ -324,7 +324,7 @@ public class FListMarshaler implements IMarshaler {
 					result += format(level, name, type, 0, value, tabInfo);
 				} else if (type.equals(Structure.TYPE_SUBSTRUCT)) {
 					Structure value = (Structure) s.getField(name).getValue();
-					LOG.info("Field=" + name + " | type=" + type + " | value="
+					LOG.finest("Field=" + name + " | type=" + type + " | value="
 							+ value);
 					if (value == null) {
 						result += format(level, name, type, 0, VALUE_NULL,

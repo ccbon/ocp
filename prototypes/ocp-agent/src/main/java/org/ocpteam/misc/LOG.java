@@ -112,6 +112,8 @@ public class LOG {
 	}
 
 	public static boolean getDebugStatus() {
+		info("logger=" + logger);
+		info("logger.getLevel()=" + logger.getLevel());
 		return logger.getLevel().intValue() <= Level.INFO.intValue();
 	}
 
