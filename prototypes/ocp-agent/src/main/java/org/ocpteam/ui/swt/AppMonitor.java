@@ -113,10 +113,13 @@ public class AppMonitor implements Runnable {
 				showTask(task);
 
 				if (task.isComplete() || map.get(task).future.isCancelled()) {
-					map.get(task).te.getEditor().dispose();
-					map.get(task).te.getItem().dispose();
-					map.get(task).te.dispose();
-					map.remove(task);
+					try {
+						map.get(task).te.getEditor().dispose();
+						map.get(task).te.getItem().dispose();
+						map.get(task).te.dispose();
+						map.remove(task);
+					} catch (Exception e) {
+					}
 					for (MonitoredTask mt : map.values()) {
 						mt.te.layout();
 					}

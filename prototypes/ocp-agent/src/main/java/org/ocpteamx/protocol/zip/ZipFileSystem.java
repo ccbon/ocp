@@ -87,7 +87,11 @@ public class ZipFileSystem extends Container<ZipDataSource> implements
 	@Override
 	public IFile getFile(String dir) throws Exception {
 		refresh();
-		return root.get(dir);
+		IFile result = root.get(dir);
+		if (result == null) {
+			throw new Exception("File " + dir + " is null.");
+		}
+		return result;
 	}
 
 	@Override
