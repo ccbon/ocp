@@ -583,8 +583,8 @@ public class ExplorerComposite extends Composite {
 						currentRemoteDirString += "/";
 					}
 					currentRemoteDirString += name;
+					reloadRemoteDirectoryTable();
 				}
-				reloadRemoteDirectoryTable();
 			}
 		} catch (Exception e) {
 			// TODO: handle exception
