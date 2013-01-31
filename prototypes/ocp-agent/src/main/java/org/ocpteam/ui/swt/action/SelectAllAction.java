@@ -19,7 +19,7 @@ public class SelectAllAction extends Action {
 
 	@Override
 	public void run() {
-		LOG.debug("Select All");
+		LOG.info("Select All");
 		Control c = window.getShell().getDisplay().getFocusControl();
 		if (c.getClass() == Table.class) {
 			Table t = (Table) c;

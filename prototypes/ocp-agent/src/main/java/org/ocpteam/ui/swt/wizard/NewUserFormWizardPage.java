@@ -69,7 +69,7 @@ public class NewUserFormWizardPage extends WizardPage {
 	
 	@Override
 	public boolean isPageComplete() {
-		LOG.debug("isPageComplete");
+		LOG.info("isPageComplete");
 		if (usernameText.getText().equals("")) {
 			return false;
 		}
@@ -81,7 +81,7 @@ public class NewUserFormWizardPage extends WizardPage {
 	}
 	
 	public void onNextPage() throws Exception {
-		LOG.debug("onNextPage");
+		LOG.info("onNextPage");
 		NewUserWizard wizard = (NewUserWizard) getWizard();
 		DataSource ds = wizard.window.ds;
 		IUserCreation uc = ds.getComponent(IUserCreation.class);

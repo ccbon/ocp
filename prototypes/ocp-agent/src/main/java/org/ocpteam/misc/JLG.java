@@ -87,7 +87,7 @@ public class JLG {
 			}
 			return result;
 		} catch (Exception e) {
-			LOG.debug("string = " + string);
+			LOG.info("string = " + string);
 			throw e;
 		}
 	}
@@ -155,7 +155,7 @@ public class JLG {
 	}
 
 	public static void rm(String path) {
-		LOG.debug("removing " + path);
+		LOG.info("removing " + path);
 		rm(new File(path));
 	}
 
@@ -165,7 +165,7 @@ public class JLG {
 				rm(child);
 			}
 		}
-		LOG.debug("About to delete " + file.getAbsolutePath());
+		LOG.info("About to delete " + file.getAbsolutePath());
 		file.delete();
 	}
 
@@ -331,18 +331,18 @@ public class JLG {
 
 	public static void showActiveThreads() {
 		while (true) {
-			LOG.debug("active threads:");
+			LOG.info("active threads:");
 			ThreadGroup tg = Thread.currentThread().getThreadGroup();
 			Thread[] list = new Thread[tg.activeCount()];
 			tg.enumerate(list);
 			for (Thread t : list) {
-				LOG.debug("running thread: " + t.getName());
+				LOG.info("running thread: " + t.getName());
 			}
 
 			ThreadGroup[] glist = new ThreadGroup[tg.activeGroupCount()];
 			tg.enumerate(glist);
 			for (ThreadGroup t : glist) {
-				LOG.debug("running threadgroup: " + t.getName());
+				LOG.info("running threadgroup: " + t.getName());
 			}
 			try {
 				Thread.sleep(1000);

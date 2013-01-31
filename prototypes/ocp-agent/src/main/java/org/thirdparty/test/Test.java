@@ -15,7 +15,7 @@ public class Test {
 			dsf.replaceComponent(OCPDataSource.class, new OCP2DataSource());
 			dsf.removeComponent(FTPDataSource.class);
 			LOG.debug_on();
-			LOG.debug("test");
+			LOG.info("test");
 			app.start();
 		} catch (Exception e) {
 			e.printStackTrace();

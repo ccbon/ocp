@@ -27,11 +27,11 @@ public class Captcha implements ICaptcha {
 		this.challengeObject = "the answer is :didounette";
 		this.created = System.currentTimeMillis();
 		cryptedAnswer = agent.crypt("didounette".getBytes());
-		LOG.debug("cryptedAnswer = " + cryptedAnswer);
-		LOG.debug("decryptedAnswer = "
+		LOG.info("cryptedAnswer = " + cryptedAnswer);
+		LOG.info("decryptedAnswer = "
 				+ new String(agent.decrypt(cryptedAnswer)));
 		contactId = agent.id.toString();
-		LOG.debug("contactId = " + contactId);
+		LOG.info("contactId = " + contactId);
 		signatureAlgo = agent.signatureAlgorithm;
 		Signature s = Signature.getInstance(signatureAlgo);
 		s.initSign(agent.keyPair.getPrivate());

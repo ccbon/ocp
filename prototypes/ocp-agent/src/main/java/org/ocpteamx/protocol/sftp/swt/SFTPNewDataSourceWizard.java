@@ -36,7 +36,7 @@ public class SFTPNewDataSourceWizard extends Wizard implements IScenario {
 
 	@Override
 	public boolean performFinish() {
-		LOG.debug("sign in user");
+		LOG.info("sign in user");
 		try {
 			w.ds = new SFTPDataSource();
 			SSHChallenge c = new SSHChallenge();

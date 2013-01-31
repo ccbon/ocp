@@ -16,10 +16,10 @@ public class DebugAction extends Action {
 	public void run() {
 
 		if (isChecked()) {
-			LOG.debug("Debug switch on");
+			LOG.info("Debug switch on");
 			LOG.debug_on();
 		} else {
-			LOG.debug("Debug switch off");
+			LOG.info("Debug switch off");
 			LOG.debug_off();
 		}
 	}

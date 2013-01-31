@@ -190,7 +190,7 @@ public class NetworkPrefPage extends PreferencePage {
 		btnSet.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				LOG.debug("Add entry");
+				LOG.info("Add entry");
 				InsertKeyDialog dialog = new InsertKeyDialog(getShell());
 				dialog.open();
 				refreshTable();
@@ -255,7 +255,7 @@ public class NetworkPrefPage extends PreferencePage {
 
 	@Override
 	public boolean performOk() {
-		LOG.debug("Network performApply");
+		LOG.info("Network performApply");
 		MyPreferenceStore ps = (MyPreferenceStore) getPreferenceStore();
 		if (btnJoinAnExisting.getSelection()) {
 			ps.w.ds.setProperty("sponsor.1", text.getText());

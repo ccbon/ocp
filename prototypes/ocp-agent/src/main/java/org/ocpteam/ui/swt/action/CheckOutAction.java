@@ -23,7 +23,7 @@ public class CheckOutAction extends Action {
 
 	@Override
 	public void run() {
-		LOG.debug("Check Out");
+		LOG.info("Check Out");
 		if (!(w.explorerComposite instanceof ExplorerComposite)) {
 			return;
 		}
@@ -45,7 +45,7 @@ public class CheckOutAction extends Action {
 						w.getShell().getDisplay().asyncExec(new Runnable() {
 							@Override
 							public void run() {
-								LOG.debug("Refresh");
+								LOG.info("Refresh");
 								composite.reloadLocalDirectoryTable();
 							}
 						});

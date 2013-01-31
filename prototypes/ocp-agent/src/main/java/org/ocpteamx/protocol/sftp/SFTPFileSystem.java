@@ -46,7 +46,7 @@ public class SFTPFileSystem implements IFileSystem {
 			JLG.mkdir(dir);
 			IFile d = getFile(path);
 			for (IFile child : d.listFiles()) {
-				LOG.debug("child: " + child.getName());
+				LOG.info("child: " + child.getName());
 				checkout(path, child.getName(), dir);
 			}
 		} else { // file
@@ -63,7 +63,7 @@ public class SFTPFileSystem implements IFileSystem {
 		if (file.isDirectory()) {
 			mkdir(remoteDir, file.getName());
 			for (File child : file.listFiles()) {
-				LOG.debug("child: " + child.getName());
+				LOG.info("child: " + child.getName());
 				commit(remoteDir + file.getName(), child);
 			}
 		} else {

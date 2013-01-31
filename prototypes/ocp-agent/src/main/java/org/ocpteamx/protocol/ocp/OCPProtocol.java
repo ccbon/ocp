@@ -55,12 +55,12 @@ public class OCPProtocol extends Protocol {
 	
 	@Override
 	public void process(Socket clientSocket) throws Exception {
-		LOG.debug("about to read object");
+		LOG.info("about to read object");
 		Serializable o = getStreamSerializer().readObject(clientSocket);
 		if (o instanceof InputMessage) {
 			InputMessage inputMessage = (InputMessage) o;
 			Session session = new Session(ds(), clientSocket);
-			LOG.debug("inputMessage.transid=" + inputMessage.transid);
+			LOG.info("inputMessage.transid=" + inputMessage.transid);
 			inputMessage.transaction = getMap().get(inputMessage.transid);
 			if (inputMessage.transaction == null) {
 				throw new Exception("transaction unknown: " + inputMessage.transid);

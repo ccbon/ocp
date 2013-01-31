@@ -55,7 +55,7 @@ public class HTTPListener extends DSContainer<DataSource> implements IListener {
 
 	@Override
 	public void stop() {
-		LOG.debug("stopping http server");
+		LOG.info("stopping http server");
 		if (usesComponent(NATTraversal.class)) {
 			getComponent(NATTraversal.class).unmap();
 		}

@@ -20,7 +20,7 @@ public class OCPContactMap extends ContactMap {
 		Iterator<Id> it = contact.nodeIdSet.iterator();
 		while (it.hasNext()) {
 			Id id = it.next();
-			LOG.debug("adding node to nodeMap");
+			LOG.info("adding node to nodeMap");
 			agent.nodeMap.put(id, contact);
 		}
 		return c;
@@ -37,7 +37,7 @@ public class OCPContactMap extends ContactMap {
 		Iterator<Id> it = contact.nodeIdSet.iterator();
 		while (it.hasNext()) {
 			Id id = it.next();
-			LOG.debug("adding node to nodeMap");
+			LOG.info("adding node to nodeMap");
 			agent.nodeMap.put(id, contact);
 		}
 	}

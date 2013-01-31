@@ -38,7 +38,7 @@ public class Protocol extends DSContainer<DataSource> implements IProtocol {
 		super.init();
 		streamSerializer.setSerializer(ds().getComponent(ISerializer.class));
 		// load all module
-		LOG.debug("components: " + this.getDesigner().getMap());
+		LOG.info("components: " + this.getDesigner().getMap());
 		Iterator<Object> it = ds().iteratorComponent();
 		while (it.hasNext()) {
 			Object o = it.next();
@@ -49,7 +49,7 @@ public class Protocol extends DSContainer<DataSource> implements IProtocol {
 	}
 
 	public void load(IModule m) throws Exception {
-		LOG.debug("loading module: " + m.getClass());
+		LOG.info("loading module: " + m.getClass());
 		for (Method f : m.getClass().getMethods()) {
 			Object o = f.getReturnType();
 			if (o == ITransaction.class) {
@@ -61,7 +61,7 @@ public class Protocol extends DSContainer<DataSource> implements IProtocol {
 				activityMap.put(t.getId(), t);
 			}
 		}
-		LOG.debug("map: " + map);
+		LOG.info("map: " + map);
 	}
 
 	@Override
@@ -72,7 +72,7 @@ public class Protocol extends DSContainer<DataSource> implements IProtocol {
 	@Override
 	public void process(Socket clientSocket) throws Exception {
 		// read the first object
-		LOG.debug("about to read object");
+		LOG.info("about to read object");
 		Serializable o = getStreamSerializer().readObject(clientSocket);
 		if (o instanceof InputMessage) {
 			InputMessage inputMessage = (InputMessage) o;
@@ -92,15 +92,15 @@ public class Protocol extends DSContainer<DataSource> implements IProtocol {
 			inputFlow.activity.run(session, inputFlow.objects, clientSocket, this);
 			getStreamSerializer().writeObject(clientSocket, new EOMObject());
 		}
-		LOG.debug("end process");
+		LOG.info("end process");
 	}
 
 	@Override
 	public void process(DatagramPacket packet) {
 		byte[] input = Arrays.copyOf(packet.getData(), packet.getLength());
 		String s = new String(input);
-		LOG.debug("length=" + packet.getLength());
-		LOG.debug("message=" + s);
+		LOG.info("length=" + packet.getLength());
+		LOG.info("message=" + s);
 	}
 
 	public Map<Integer, ITransaction> getMap() {

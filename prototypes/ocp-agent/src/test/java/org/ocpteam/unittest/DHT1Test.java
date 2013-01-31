@@ -62,7 +62,7 @@ public class DHT1Test {
 			for (int i = 1; i < n; i++) {
 				ds[i].connect();
 				ContactMap cm = ds[i].getComponent(ContactMap.class);
-				LOG.debug("ds[" + i + "] contact map size: " + cm.size());
+				LOG.info("ds[" + i + "] contact map size: " + cm.size());
 				assertEquals(i + 1, cm.size());
 			}
 			
@@ -73,7 +73,7 @@ public class DHT1Test {
 			
 			dm = (IMapDataModel) ds[n-1].getContext().getDataModel();
 			String value = dm.get("hello");
-			LOG.debug("hello->" + value);
+			LOG.info("hello->" + value);
 			assertEquals("world", value);
 			ds[n-1].disconnect();
 		} catch (Exception e) {
@@ -123,21 +123,21 @@ public class DHT1Test {
 			for (int i = 0; i < n; i++) {
 				ds[i].connect();
 				ContactMap cm = ds[i].getComponent(ContactMap.class);
-				LOG.debug("ds[" + i + "] contact map size: " + cm.size());
+				LOG.info("ds[" + i + "] contact map size: " + cm.size());
 				assertEquals(i + 1, cm.size());
 			}
 			for (int i = 0; i < n; i++) {
 				NodeMap nm = ds[i].getComponent(NodeMap.class);
-				LOG.debug("nodeMap size:" + nm.getNodeMap().size());
-				LOG.debug("nodeMap:" + nm.getNodeMap());
+				LOG.info("nodeMap size:" + nm.getNodeMap().size());
+				LOG.info("nodeMap:" + nm.getNodeMap());
 			}
 
 			IMapDataModel dm = (IMapDataModel) ds[4].getContext()
 					.getDataModel();
 			dm.set("hello", "world");
 			String value = dm.get("hello");
-			LOG.debug("hello->" + value);
-			LOG.debug("hash(hello) = " + ds[4].hash("hello".getBytes()));
+			LOG.info("hello->" + value);
+			LOG.info("hash(hello) = " + ds[4].hash("hello".getBytes()));
 
 			dm.set("coucou", "Suzana");
 			for (int i = 0; i < 100; i++) {
@@ -145,8 +145,8 @@ public class DHT1Test {
 			}
 
 			Set<String> keyset = dm.keySet();
-			LOG.debug("keyset: " + keyset);
-			LOG.debug("keyset size: " + keyset.size());
+			LOG.info("keyset: " + keyset);
+			LOG.info("keyset size: " + keyset.size());
 			LOG.debug_off();
 			for (int i = 0; i < n; i++) {
 				ds[i].disconnect();

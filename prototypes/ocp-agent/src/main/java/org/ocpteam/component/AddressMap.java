@@ -79,7 +79,7 @@ public class AddressMap extends DSContainer<AddressDataSource> implements IAddre
 		Contact predecessor = nodeMap.getPredecessor(ds().getNode());
 		if (predecessor.isMyself()) {
 			if (ds().isFirstAgent()) {
-				LOG.debug("first agent: ds=" + ds().getName());
+				LOG.info("first agent: ds=" + ds().getName());
 				return;
 			}
 		}

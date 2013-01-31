@@ -21,7 +21,7 @@ public class RingMapModule implements IModule {
 			@Override
 			public Serializable run(Session session, Serializable[] objects)
 					throws Exception {
-				LOG.debug("GET_ON_RING...");
+				LOG.info("GET_ON_RING...");
 				int ring = (Integer) objects[0];
 				Address address = (Address) objects[1];
 				RingAddressMap map = (RingAddressMap) session.ds().getComponent(IAddressMap.class);
@@ -46,7 +46,7 @@ public class RingMapModule implements IModule {
 			@Override
 			public Serializable run(Session session, Serializable[] objects)
 					throws Exception {
-				LOG.debug("PUT_ON_RING...");
+				LOG.info("PUT_ON_RING...");
 				int ring = (Integer) objects[0];
 				Address address = (Address) objects[1];
 				byte[] value = (byte[]) objects[2];
@@ -73,7 +73,7 @@ public class RingMapModule implements IModule {
 			@Override
 			public Serializable run(Session session, Serializable[] objects)
 					throws Exception {
-				LOG.debug("REMOVE_ON_RING...");
+				LOG.info("REMOVE_ON_RING...");
 				int ring = (Integer) objects[0];
 				Address address = (Address) objects[1];
 				RingAddressMap map = (RingAddressMap) session.ds().getComponent(IAddressMap.class);

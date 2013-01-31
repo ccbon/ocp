@@ -27,7 +27,7 @@ public class CloseDataSourceAction extends Action {
 
 	@Override
 	public void run() {
-		LOG.debug("Close DataSource");
+		LOG.info("Close DataSource");
 
 		try {
 			if (w.ds == null) {

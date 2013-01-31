@@ -132,9 +132,9 @@ public class DataStoreComposite extends Composite {
 			try {
 				for (Item item : table.getSelection()) {
 					Address address = new Address(item.getText());
-					LOG.debug("name=" + address);
+					LOG.info("name=" + address);
 					byte[] content = mdm.get(address);
-					LOG.debug("content=" + new String(content));
+					LOG.info("content=" + new String(content));
 
 					CTabFolder tabFolder = dsw.tabFolder;
 					CTabItem[] items = tabFolder.getItems();
@@ -156,7 +156,7 @@ public class DataStoreComposite extends Composite {
 							.addDisposeListener(new DisposeListener() {
 								@Override
 								public void widgetDisposed(DisposeEvent arg0) {
-									LOG.debug("dispose");
+									LOG.info("dispose");
 								}
 							});
 
@@ -170,7 +170,7 @@ public class DataStoreComposite extends Composite {
 
 								@Override
 								public void handleEvent(Event event) {
-									LOG.debug("closing contact list");
+									LOG.info("closing contact list");
 									datastoreValueCTabItem.dispose();
 								}
 							});
@@ -192,9 +192,9 @@ public class DataStoreComposite extends Composite {
 			try {
 				for (Item item : table.getSelection()) {
 					Address address = new Address(item.getText());
-					LOG.debug("name=" + address);
+					LOG.info("name=" + address);
 					byte[] content = mdm.get(address);
-					LOG.debug("content=" + new String(content));
+					LOG.info("content=" + new String(content));
 					File file = new File(dsw.getTempDir() + "/" + address
 							+ ".txt");
 					JLG.setBinaryFile(file, content);
@@ -227,7 +227,7 @@ public class DataStoreComposite extends Composite {
 		table.addMenuDetectListener(new MenuDetectListener() {
 			@Override
 			public void menuDetected(MenuDetectEvent arg0) {
-				LOG.debug("opening context menu");
+				LOG.info("opening context menu");
 				final MenuManager myMenu = new MenuManager("xxx");
 				final Menu menu = myMenu
 						.createContextMenu(DataStoreComposite.this.dsw
@@ -265,7 +265,7 @@ public class DataStoreComposite extends Composite {
 					break;
 				default:
 				}
-				LOG.debug("keypressed: keycode:" + e.keyCode
+				LOG.info("keypressed: keycode:" + e.keyCode
 						+ " and character = '" + e.character + "'");
 				DataStoreComposite.this.dsw.refresh();
 			}
@@ -274,17 +274,17 @@ public class DataStoreComposite extends Composite {
 		table.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseDoubleClick(MouseEvent e) {
-				LOG.debug("double click");
+				LOG.info("double click");
 				new InternalViewAction().run();
-				LOG.debug("table item:" + e.widget.getClass());
+				LOG.info("table item:" + e.widget.getClass());
 			}
 
 			@Override
 			public void mouseDown(MouseEvent e) {
-				LOG.debug("mouse down");
+				LOG.info("mouse down");
 				Point pt = new Point(e.x, e.y);
 				if (table.getItem(pt) == null) {
-					LOG.debug("cancel selection");
+					LOG.info("cancel selection");
 					table.deselectAll();
 				}
 				DataStoreComposite.this.dsw.refresh();

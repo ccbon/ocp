@@ -18,7 +18,7 @@ public class ZipFileImpl implements IFile {
 	public ZipFileImpl(ZipEntry zipEntry) {
 		map = new HashMap<String, ZipFileImpl>();
 		this.path = zipEntry.getName();
-		LOG.debug("zipentry.path=" + path);
+		LOG.info("zipentry.path=" + path);
 		this.bIsDirectory = zipEntry.isDirectory();
 		this.size = zipEntry.getSize();
 	}

@@ -24,7 +24,7 @@ public class RenameRemoteFileAction extends Action {
 
 	@Override
 	public void run() {
-		LOG.debug("Rename");
+		LOG.info("Rename");
 		final TableItem item = composite.remoteDirectoryTable.getSelection()[0];
 		final String name = item.getText(0);
 		final Text text = new Text(item.getParent(), SWT.BORDER);
@@ -50,7 +50,7 @@ public class RenameRemoteFileAction extends Action {
 					break;
 				default:
 				}
-				LOG.debug("keypressed: keycode:" + e.keyCode
+				LOG.info("keypressed: keycode:" + e.keyCode
 						+ " and character = '" + e.character + "'");
 			};
 		});

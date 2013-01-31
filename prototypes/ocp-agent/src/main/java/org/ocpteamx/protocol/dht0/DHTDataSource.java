@@ -51,20 +51,20 @@ public class DHTDataSource extends DSPDataSource {
 		for (String s : set) {
 			Address a = new Address(s.getBytes());
 			if (!map.containsKey(a)) {
-				LOG.debug("synchronize " + s);
+				LOG.info("synchronize " + s);
 				map.put(a, dm.get(s).getBytes());
 			}
 		}
 	}
 
 	public void store(String key, String value) throws Exception {
-		LOG.debug("local store: " + key + "->" + value);
+		LOG.info("local store: " + key + "->" + value);
 		Address a = new Address(key.getBytes());
 		map.put(a, value.getBytes());
 	}
 
 	public String retrieve(String key) throws Exception {
-		LOG.debug("local retrieve: " + key);
+		LOG.info("local retrieve: " + key);
 		Address a = new Address(key.getBytes());
 		byte[] b = map.get(a);
 		if (b == null) {

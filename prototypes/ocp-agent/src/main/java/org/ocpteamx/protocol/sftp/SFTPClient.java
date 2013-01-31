@@ -49,10 +49,10 @@ public class SFTPClient extends DSContainer<SFTPDataSource> implements
 				session.setUserInfo(ui);
 			} else if (c.getType() == SSHChallenge.PRIVATE_KEY) {
 				if (c.getPassphrase() == null) {
-					LOG.debug("passphrase is null");
+					LOG.info("passphrase is null");
 					jsch.addIdentity(c.getPrivateKeyFile().getAbsolutePath());
 				} else {
-					LOG.debug("passphrase is set");
+					LOG.info("passphrase is set");
 					jsch.addIdentity(c.getPrivateKeyFile().getAbsolutePath(),
 							c.getPassphrase());
 				}
@@ -64,9 +64,9 @@ public class SFTPClient extends DSContainer<SFTPDataSource> implements
 			channel.connect();
 			User user = new SFTPUser(login, c);
 			IDataModel dm = new SFTPFileSystem(user, this);
-			LOG.debug("setting context");
+			LOG.info("setting context");
 			ds().setContext(new Context(user, dm, "/"));
-			LOG.debug("dm=" + ds().getContext().getDataModel().getClass());
+			LOG.info("dm=" + ds().getContext().getDataModel().getClass());
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new Exception("Cannot login");

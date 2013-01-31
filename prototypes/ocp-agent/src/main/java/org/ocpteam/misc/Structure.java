@@ -241,7 +241,7 @@ public class Structure implements Serializable {
 	public void addStructureToListField(String name, Structure substr, int eltid) {
 		List<Structure> list = getStructureFromListField(name);
 		if (list == null) {
-			LOG.debug("List is null");
+			LOG.info("List is null");
 			list = new ArrayList<Structure>();
 			setStructureToListField(name, list);
 		}
@@ -252,7 +252,7 @@ public class Structure implements Serializable {
 	public void addStructureToMapField(String name, Structure substr, String key) {
 		Map<String, Structure> map = getStructureFromMapField(name);
 		if (map == null) {
-			LOG.debug("map is null");
+			LOG.info("map is null");
 			map = new HashMap<String, Structure>();
 			setStructureToMapField(name, map);
 		}
@@ -316,7 +316,7 @@ public class Structure implements Serializable {
 	}
 
 	public Serializable[] getListField(String name) throws Exception {
-		LOG.debug("this=" + this);
+		LOG.info("this=" + this);
 		List<Structure> value = getStructureFromListField(name);
 		if (value == null) {
 			return null;
@@ -328,7 +328,7 @@ public class Structure implements Serializable {
 				result[i] = null;
 			} else if (s.getName().equals(NAME_SIMPLE)) {
 				SField f = value.get(i).getField(FIELDNAME_SIMPLE);
-				LOG.debug("field=" + f);
+				LOG.info("field=" + f);
 				String type = f.getType();
 				if (type.equals(TYPE_STRING)) {
 					result[i] = (Serializable) f.getValue();
@@ -405,10 +405,10 @@ public class Structure implements Serializable {
 			IStructurable result = null;
 			result = StructureMap.getClassFromName(name).newInstance();
 			result.fromStructure(this);
-			LOG.debug("result=" + result);
+			LOG.info("result=" + result);
 			return result;
 		} catch (Exception e) {
-			LOG.debug("ERROR=" + e);
+			LOG.info("ERROR=" + e);
 			e.printStackTrace();
 			throw e;
 		}
@@ -428,12 +428,12 @@ public class Structure implements Serializable {
 	@Override
 	public boolean equals(Object obj) {
 		if (!(obj instanceof Structure)) {
-			LOG.debug("Not a Structure");
+			LOG.info("Not a Structure");
 			return false;
 		}
 		Structure s = (Structure) obj;
 		if (!this.getName().equals(s.getName())) {
-			LOG.debug("Not same Name");
+			LOG.info("Not same Name");
 			return false;
 		}
 		return this.contains(s) && s.contains(this);
@@ -441,21 +441,21 @@ public class Structure implements Serializable {
 
 	public boolean contains(Structure s) {
 		if (s == null) {
-			LOG.debug("Not a Structure");
+			LOG.info("Not a Structure");
 			return false;
 		}
 		if (!this.getName().equals(s.getName())) {
-			LOG.debug("Not same Name");
+			LOG.info("Not same Name");
 			return false;
 		}
 		for (String fname : s.getFields().keySet()) {
-			LOG.debug("Testing the field " + fname);
+			LOG.info("Testing the field " + fname);
 			SField f1 = this.getField(fname);
-			LOG.debug("f1=" + f1);
+			LOG.info("f1=" + f1);
 			SField f2 = s.getField(fname);
-			LOG.debug("f2=" + f2);
+			LOG.info("f2=" + f2);
 			if (!f2.equals(f1)) {
-				LOG.debug("Fields are not equal");
+				LOG.info("Fields are not equal");
 				return false;
 			}
 		}

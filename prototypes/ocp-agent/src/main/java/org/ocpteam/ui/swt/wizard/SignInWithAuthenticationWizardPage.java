@@ -89,11 +89,11 @@ public class SignInWithAuthenticationWizardPage extends WizardPage {
 			btnCreateAnNew.addSelectionListener(new SelectionAdapter() {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
-					LOG.debug("Create an account");
+					LOG.info("Create an account");
 					SignInWithAuthenticationWizard wizard = (SignInWithAuthenticationWizard) getWizard();
 					wizard.getWizardDialog().close();
 					window.newUserAction.run();
-					LOG.debug("Create an account 2");
+					LOG.info("Create an account 2");
 				}
 			});
 			btnCreateAnNew.setBounds(10, 10, 152, 25);
@@ -107,7 +107,7 @@ public class SignInWithAuthenticationWizardPage extends WizardPage {
 
 	@Override
 	public boolean isPageComplete() {
-		LOG.debug("isPageComplete");
+		LOG.info("isPageComplete");
 		if (usernameText.getText().equals("")) {
 			return false;
 		}

@@ -22,7 +22,7 @@ public class CommitAction extends Action {
 
 	@Override
 	public void run() {
-		LOG.debug("Commit");
+		LOG.info("Commit");
 		if (!(w.explorerComposite instanceof ExplorerComposite)) {
 			return;
 		}
@@ -45,7 +45,7 @@ public class CommitAction extends Action {
 						w.getShell().getDisplay().asyncExec(new Runnable() {
 							@Override
 							public void run() {
-								LOG.debug("Refresh");
+								LOG.info("Refresh");
 								composite.reloadRemoteDirectoryTable();
 							}
 						});

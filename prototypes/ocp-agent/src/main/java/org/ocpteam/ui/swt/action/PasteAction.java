@@ -31,7 +31,7 @@ public class PasteAction extends Action {
 
 	@Override
 	public void run() {
-		LOG.debug("Paste");
+		LOG.info("Paste");
 		if (window.explorerComposite == null) {
 			return;
 		}

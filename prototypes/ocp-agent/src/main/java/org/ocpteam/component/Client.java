@@ -53,7 +53,7 @@ public class Client extends DSContainer<DSPDataSource> implements IClient, IStar
 	 */
 	public Properties getNetworkProperties() throws Exception {
 		DSPModule m = ds().getComponent(DSPModule.class);
-		LOG.debug("module class: " + m.getClass());
+		LOG.info("module class: " + m.getClass());
 		Response response = request(new InputMessage(m.getNetworkProperties()));
 		Properties network = (Properties) response.getObject();
 		return network;
@@ -68,7 +68,7 @@ public class Client extends DSContainer<DSPDataSource> implements IClient, IStar
 
 			Contact sponsor = getContact(url);
 			if (sponsor != null) {
-				LOG.debug("we found a pingable sponsor");
+				LOG.info("we found a pingable sponsor");
 				contactMap.add(sponsor);
 			} else {
 				LOG.warn("url not pingable: " + url);
@@ -98,7 +98,7 @@ public class Client extends DSContainer<DSPDataSource> implements IClient, IStar
 				for (int i = 0; i < result.length; i++) {
 					@SuppressWarnings("unchecked")
 					Map<String, String> map = (Map<String, String>) result[i];
-					LOG.debug("url = " + map.get("url"));
+					LOG.info("url = " + map.get("url"));
 					list.add(map.get("url"));
 				}
 			} catch (Exception e) {
@@ -127,7 +127,7 @@ public class Client extends DSContainer<DSPDataSource> implements IClient, IStar
 	}
 
 	public Contact getContact(URI url) throws Exception {
-		LOG.debug("getContact");
+		LOG.info("getContact");
 		try {
 			TCPClient tcpClient = new TCPClient(url.getHost(), url.getPort(),
 					getProtocol());
@@ -158,12 +158,12 @@ public class Client extends DSContainer<DSPDataSource> implements IClient, IStar
 	public Response requestByPriority(Queue<Contact> contactQueue, Serializable input)
 			throws Exception {
 		Serializable output = null;
-		LOG.debug("contact queue size: " + contactQueue.size());
+		LOG.info("contact queue size: " + contactQueue.size());
 		Contact contact = null;
 		boolean done = false;
 		while (!contactQueue.isEmpty()) {
 			contact = contactQueue.poll();
-			LOG.debug("contact: " + contact);
+			LOG.info("contact: " + contact);
 			try {
 				output = request(contact, input);
 				done = true;
@@ -185,9 +185,9 @@ public class Client extends DSContainer<DSPDataSource> implements IClient, IStar
 			throws Exception {
 		if (input instanceof InputMessage) {
 			InputMessage im = (InputMessage) input;
-			LOG.debug(ds().getName() + " sending message (" + im.transaction.getName() + ") on contact: " + contact);
+			LOG.info(ds().getName() + " sending message (" + im.transaction.getName() + ") on contact: " + contact);
 		} else {
-			LOG.debug("sending request on contact: " + contact);
+			LOG.info("sending request on contact: " + contact);
 		}
 		Serializable output = null;
 		// use the TCP connection.
@@ -197,17 +197,17 @@ public class Client extends DSContainer<DSPDataSource> implements IClient, IStar
 			output = tcpClient.request(input);
 			return output;
 		} catch (java.net.SocketTimeoutException e) {
-			LOG.debug("SocketTimeoutException on contact " + contact);
+			LOG.info("SocketTimeoutException on contact " + contact);
 
 		} catch (java.net.ConnectException e) {
-			LOG.debug("ConnectException on contact " + contact);
+			LOG.info("ConnectException on contact " + contact);
 
 		} catch (SocketException e) {
-			LOG.debug("SocketException on contact " + contact);
+			LOG.info("SocketException on contact " + contact);
 
 		}
 
-		LOG.debug("about to throw a not available exception regarding contact "
+		LOG.info("about to throw a not available exception regarding contact "
 				+ contact);
 		detach(contact);
 		throw new NotAvailableContactException();
@@ -216,13 +216,13 @@ public class Client extends DSContainer<DSPDataSource> implements IClient, IStar
 	public void declareContact() throws Exception {
 		Contact contact = ds().toContact();
 		DSPModule m = ds().getComponent(DSPModule.class);
-		LOG.debug(ds().getName() + " declares contact: " + contact);
+		LOG.info(ds().getName() + " declares contact: " + contact);
 		sendAll(new InputMessage(m.declareContact(), contact));
 		waitForCompletion();
 	}
 
 	public void sendAll(final Serializable message) throws Exception {
-		LOG.debug("send all");
+		LOG.info("send all");
 		Collection<Callable<Object>> tasks = new LinkedList<Callable<Object>>();
 		for (final Contact c : contactMap.getOtherContacts()) {
 			tasks.add(Executors.callable(new Runnable() {
@@ -232,7 +232,7 @@ public class Client extends DSContainer<DSPDataSource> implements IClient, IStar
 						// we do not care about the response
 						send(c, message);
 					} catch (NotAvailableContactException e) {
-						LOG.debug("detach");
+						LOG.info("detach");
 						try {
 							detach(c);
 						} catch (Exception e1) {
@@ -243,7 +243,7 @@ public class Client extends DSContainer<DSPDataSource> implements IClient, IStar
 						// we don't care for agent that don't understand the
 						// sent
 						// message.
-						LOG.debug("Contact answered with error: "
+						LOG.info("Contact answered with error: "
 								+ e.getMessage());
 					}
 				}
@@ -253,16 +253,16 @@ public class Client extends DSContainer<DSPDataSource> implements IClient, IStar
 			try {
 				completionService.submit(task);
 				remainingTasks++;
-				LOG.debug("increasing remainingTasks = " + remainingTasks);
+				LOG.info("increasing remainingTasks = " + remainingTasks);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
-		LOG.debug("last remainingTasks = " + remainingTasks);
+		LOG.info("last remainingTasks = " + remainingTasks);
 	}
 
 	public void detach(Contact contact) throws Exception {
-		LOG.debug("detaching contact: " + contact);
+		LOG.info("detaching contact: " + contact);
 		
 		contactMap.remove(contact);
 		ds().onDetach(contact);
@@ -286,11 +286,11 @@ public class Client extends DSContainer<DSPDataSource> implements IClient, IStar
 	}
 
 	public void sendQuick(Contact c, byte[] message) throws Exception {
-		LOG.debug(ds().getName() + " sends a message to " + c);
+		LOG.info(ds().getName() + " sends a message to " + c);
 
 		UDPClient udpClient = contactMap.getUdpClient(c);
 		if (udpClient == null) {
-			LOG.debug("no udp client found");
+			LOG.info("no udp client found");
 			try {
 				request(c, message);
 			} catch (Exception e) {
@@ -299,7 +299,7 @@ public class Client extends DSContainer<DSPDataSource> implements IClient, IStar
 		}
 
 		try {
-			LOG.debug("udp client found");
+			LOG.info("udp client found");
 			udpClient.send(message);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -307,7 +307,7 @@ public class Client extends DSContainer<DSPDataSource> implements IClient, IStar
 	}
 
 	public void send(Contact c, Serializable message) throws Exception {
-		LOG.debug("send");
+		LOG.info("send");
 		try {
 			request(c, message);
 		} catch (NotAvailableContactException e) {
@@ -325,16 +325,16 @@ public class Client extends DSContainer<DSPDataSource> implements IClient, IStar
 		
 		for (Contact c : contactMap.getOtherContacts()) {
 			try {
-				LOG.debug(ds().getName() + " requests askForContact");
+				LOG.info(ds().getName() + " requests askForContact");
 				ContactList contactsOfContact = (ContactList) request(c,
 						new InputMessage(m.askForContact()));
 				// strategy : friends of my friends are my friends.
-				LOG.debug(ds().getName() + " received "
+				LOG.info(ds().getName() + " received "
 						+ contactsOfContact.getList().size() + " contact(s).");
 				for (Contact nc : contactsOfContact.getList()) {
-					LOG.debug("nc: " + nc);
+					LOG.info("nc: " + nc);
 					if (nc.getName().equals(ds().getName())) {
-						LOG.debug("skipping");
+						LOG.info("skipping");
 						continue;
 					}
 					contactMap.add(nc);
@@ -349,7 +349,7 @@ public class Client extends DSContainer<DSPDataSource> implements IClient, IStar
 		executor = Executors.newCachedThreadPool();
 		completionService = new ExecutorCompletionService<Object>(executor);
 		remainingTasks = 0;
-		LOG.debug("client started");
+		LOG.info("client started");
 	}
 
 	@Override
@@ -373,9 +373,9 @@ public class Client extends DSContainer<DSPDataSource> implements IClient, IStar
 
 	public void waitForCompletion() {
 		try {
-			LOG.debug("remainingTasks = " + remainingTasks);
+			LOG.info("remainingTasks = " + remainingTasks);
 			while (remainingTasks > 0) {
-				LOG.debug("remainingTasks = " + remainingTasks);
+				LOG.info("remainingTasks = " + remainingTasks);
 				completionService.take();
 				remainingTasks--;
 			}

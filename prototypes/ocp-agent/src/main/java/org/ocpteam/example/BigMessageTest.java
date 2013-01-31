@@ -28,7 +28,7 @@ public class BigMessageTest {
 
 			Socket socket = c.borrowSocket();
 			int bufferSize = socket.getSendBufferSize();
-			LOG.debug("bufferSize=" + bufferSize);
+			LOG.info("bufferSize=" + bufferSize);
 			DataInputStream in = new DataInputStream(socket.getInputStream());
 			DataOutputStream out = new DataOutputStream(
 					socket.getOutputStream());
@@ -37,9 +37,9 @@ public class BigMessageTest {
 			int n = 10000;
 			out.writeInt(n);
 			out.flush();
-			LOG.debug("big message sent.");
+			LOG.info("big message sent.");
 			int nbr = in.readInt();
-			LOG.debug("new length received: " + nbr);
+			LOG.info("new length received: " + nbr);
 
 			if (n != nbr) {
 				throw new Exception("length differs");
@@ -49,11 +49,11 @@ public class BigMessageTest {
 				out.flush();
 
 				int size = in.readInt();
-				LOG.debug("object length: " + size);
+				LOG.info("object length: " + size);
 				byte[] buffer = new byte[size];
 				in.read(buffer, 0, size);
 				Serializable s = JLG.deserialize(buffer);
-				LOG.debug("serializable=" + s);
+				LOG.info("serializable=" + s);
 			}
 			l.stop();
 			c.returnSocket(socket);
@@ -70,21 +70,21 @@ class MyProtocol extends Protocol {
 		DataInputStream in = new DataInputStream(clientSocket.getInputStream());
 		DataOutputStream out = new DataOutputStream(clientSocket.getOutputStream());
 		// read the first object
-		LOG.debug("about to read object");
+		LOG.info("about to read object");
 		int n = in.readInt();
-		LOG.debug("n = " + n);
+		LOG.info("n = " + n);
 		out.writeInt(n);
 		out.flush();
-		LOG.debug("length sent");
+		LOG.info("length sent");
 		for (int i = 0; i < n; i++) {
 			int x = in.readInt();
 			byte[] s = JLG.serialize(new MyObject(x));
 			out.writeInt(s.length);
 			out.write(s);
 			out.flush();
-			LOG.debug("object sent: " + x);
+			LOG.info("object sent: " + x);
 		}
-		LOG.debug("end process");
+		LOG.info("end process");
 	}
 }
 

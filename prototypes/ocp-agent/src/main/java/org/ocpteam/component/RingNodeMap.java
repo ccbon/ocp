@@ -23,7 +23,7 @@ public class RingNodeMap extends DSContainer<DSPDataSource> implements INodeMap 
 
 	public void readNetworkConfig() throws Exception {
 		setRingNbr(Integer.parseInt(ds().network.getProperty("ringNbr", "3")));
-		LOG.debug("ringNbr=" + ringNbr);
+		LOG.info("ringNbr=" + ringNbr);
 	}
 	
 	@Override
@@ -39,8 +39,8 @@ public class RingNodeMap extends DSContainer<DSPDataSource> implements INodeMap 
 			rings.put(r, nodeMap);
 		}
 		rings.get(r).put(node, c);
-		LOG.debug("ringNodeMap contains " + getRoot().getName());
-		LOG.debug("ringNodeMap " + this);
+		LOG.info("ringNodeMap contains " + getRoot().getName());
+		LOG.info("ringNodeMap " + this);
 	}
 
 	@Override
@@ -103,17 +103,17 @@ public class RingNodeMap extends DSContainer<DSPDataSource> implements INodeMap 
 
 	public int getLessPopulatedRing() {
 		int size = rings.get(0).size();
-		LOG.debug("ring.size[0]=" + size);
+		LOG.info("ring.size[0]=" + size);
 		int result = 0;
 		for (int i = 1; i < rings.size(); i++) {
 			int newSize = Math.min(size, rings.get(i).size());
-			LOG.debug("ring.size[" + i + "]=" + rings.get(i).size());
+			LOG.info("ring.size[" + i + "]=" + rings.get(i).size());
 			if (newSize < size) {
 				result = i;
 				size = newSize;
 			}
 		}
-		LOG.debug("lessPopulatedRing=" + result);
+		LOG.info("lessPopulatedRing=" + result);
 		return result;
 	}
 

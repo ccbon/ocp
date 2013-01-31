@@ -58,7 +58,7 @@ public class FListSerializer implements ISerializer {
 	@Override
 	public Serializable deserialize(byte[] input) throws Exception {
 		if (input == null) {
-			LOG.debug("Want to dezerialize null input");
+			LOG.info("Want to dezerialize null input");
 		}
 		Structure s = new FListMarshaler().unmarshal(input);
 		return toSerializable(s);

@@ -45,7 +45,7 @@ public class TCPListener extends DSContainer<DataSource> implements IListener {
 
 	@Override
 	public void stop() {
-		LOG.debug("stopping tcp listener");
+		LOG.info("stopping tcp listener");
 		if (usesComponent(NATTraversal.class)) {
 			getComponent(NATTraversal.class).unmap();
 		}

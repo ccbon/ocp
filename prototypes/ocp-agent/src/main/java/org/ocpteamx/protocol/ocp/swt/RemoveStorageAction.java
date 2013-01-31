@@ -26,7 +26,7 @@ public class RemoveStorageAction extends Action {
 
 	@Override
 	public void run() {
-		LOG.debug("Removing storage...");
+		LOG.info("Removing storage...");
 		if (QuickMessage.confirm(window.getShell(), "This will destroy the storage of this agent. Are you sure ?")) {
 			OCPAgent agent = window.ds.getComponent(OCPAgent.class);
 			try {

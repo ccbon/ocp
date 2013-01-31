@@ -77,10 +77,10 @@ public class StructTest extends TopContainer {
 		Address addr2 = new Address("1234");
 		rc.getMap().put("key2", addr2  );
 		byte[] array = new FListSerializer().serialize(rc);
-		LOG.debug("array=" + JLG.NL + new String(array));
+		LOG.info("array=" + JLG.NL + new String(array));
 		RootContent rc2 = (RootContent) new FListSerializer().deserialize(array);
-		LOG.debug("rc2=" + rc2);
-		LOG.debug("b=" + rc2.getMap().equals(rc.getMap()));
+		LOG.info("rc2=" + rc2);
+		LOG.info("b=" + rc2.getMap().equals(rc.getMap()));
 	}
 
 	public void testProperties() throws Exception {
@@ -88,10 +88,10 @@ public class StructTest extends TopContainer {
 		p.setProperty("hello", "world");
 		p.setProperty("key1", "value1");
 		byte[] array = new FListSerializer().serialize(p);
-		LOG.debug("array=" + JLG.NL + new String(array));
+		LOG.info("array=" + JLG.NL + new String(array));
 		Properties p2 = (Properties) new FListSerializer().deserialize(array);
-		LOG.debug("p2=" + p2);
-		LOG.debug("b=" + p2.equals(p));
+		LOG.info("p2=" + p2);
+		LOG.info("b=" + p2.equals(p));
 	}
 
 	public void testUser() throws Exception {
@@ -100,13 +100,13 @@ public class StructTest extends TopContainer {
 		u.setProperty("hello", "world");
 		u.setProperty("key1", "value1");
 		Structure s = u .toStructure();
-		LOG.debug("s=" + s);
+		LOG.info("s=" + s);
 		byte[] array = marshaler.marshal(s);
-		LOG.debug("array=" + JLG.NL + new String(array));
+		LOG.info("array=" + JLG.NL + new String(array));
 		Structure s2 = marshaler.unmarshal(array);
-		LOG.debug("s2=" + s2);
+		LOG.info("s2=" + s2);
 		IStructurable b = s2.toStructurable();
-		LOG.debug("b=" + b.toStructure().equals(u.toStructure()));
+		LOG.info("b=" + b.toStructure().equals(u.toStructure()));
 	}
 
 	public void testSecureUser() throws Exception {
@@ -128,13 +128,13 @@ public class StructTest extends TopContainer {
 		su.setProperty("key3", "");
 
 		Structure s = su.toStructure();
-		LOG.debug("s=" + s);
+		LOG.info("s=" + s);
 		byte[] array = marshaler.marshal(s);
-		LOG.debug("array=" + JLG.NL + new String(array));
+		LOG.info("array=" + JLG.NL + new String(array));
 		Structure s2 = marshaler.unmarshal(array);
-		LOG.debug("s2=" + s2);
+		LOG.info("s2=" + s2);
 		IStructurable b = s2.toStructurable();
-		LOG.debug("b=" + b.toStructure().equals(su.toStructure()));
+		LOG.info("b=" + b.toStructure().equals(su.toStructure()));
 	}
 
 	public void testStructure() throws Exception {
@@ -164,37 +164,37 @@ public class StructTest extends TopContainer {
 		map2.put("Yannis", "Thomias");
 		s2.setMapField("map1", map2);
 
-		LOG.debug("Same? " + s1.equals(s2));
+		LOG.info("Same? " + s1.equals(s2));
 	}
 
 	public void testFields() throws Exception {
-		LOG.debug("String test");
+		LOG.info("String test");
 		SField t = new SField("string", "Hello World");
 		SField b = new SField("string", "Hello World");
-		LOG.debug("b=" + b.equals(t));
-		LOG.debug("----------------------------");
-		LOG.debug("int test");
+		LOG.info("b=" + b.equals(t));
+		LOG.info("----------------------------");
+		LOG.info("int test");
 		t = new SField("int", 123456);
 		b = new SField("int", 123456);
-		LOG.debug("b=" + b.equals(t));
-		LOG.debug("----------------------------");
-		LOG.debug("byte[] test");
+		LOG.info("b=" + b.equals(t));
+		LOG.info("----------------------------");
+		LOG.info("byte[] test");
 		t = new SField("bytes", new byte[] { 12, 34, 56 });
 		b = new SField("bytes", new byte[] { 12, 34, 56 });
-		LOG.debug("b=" + b.equals(t));
+		LOG.info("b=" + b.equals(t));
 	}
 
 	public void testEqual() throws Exception {
 		IMarshaler marshaler = new FListMarshaler();
 		org.ocpteam.serializable.TestObject t = new org.ocpteam.serializable.TestObject();
 		Structure s = t.toStructure();
-		LOG.debug("s=" + s);
+		LOG.info("s=" + s);
 		byte[] array = marshaler.marshal(s);
-		LOG.debug("array=" + new String(array));
+		LOG.info("array=" + new String(array));
 		Structure s2 = marshaler.unmarshal(array);
-		LOG.debug("s2=" + s2);
+		LOG.info("s2=" + s2);
 		IStructurable b = s2.toStructurable();
-		LOG.debug("b=" + b.toStructure().equals(t.toStructure()));
+		LOG.info("b=" + b.toStructure().equals(t.toStructure()));
 	}
 
 	public void testInputMessage() throws Exception {
@@ -218,13 +218,13 @@ public class StructTest extends TopContainer {
 			}
 		});
 		Structure s = t.toStructure();
-		LOG.debug("s=" + s);
+		LOG.info("s=" + s);
 		byte[] array = marshaler.marshal(s);
-		LOG.debug("array=" + new String(array));
+		LOG.info("array=" + new String(array));
 		Structure s2 = marshaler.unmarshal(array);
-		LOG.debug("s2=" + s2);
+		LOG.info("s2=" + s2);
 		IStructurable b = s2.toStructurable();
-		LOG.debug("b=" + b.toStructure().equals(t.toStructure()));
+		LOG.info("b=" + b.toStructure().equals(t.toStructure()));
 	}
 
 	public void testInputFlow() throws Exception {
@@ -242,13 +242,13 @@ public class StructTest extends TopContainer {
 			}
 		}, new TreeEntry("coucou", new Pointer("0123"), TreeEntry.FILE));
 		Structure s = t.toStructure();
-		LOG.debug("s=" + s);
+		LOG.info("s=" + s);
 		byte[] array = marshaler.marshal(s);
-		LOG.debug("array=" + new String(array));
+		LOG.info("array=" + new String(array));
 		Structure s2 = marshaler.unmarshal(array);
-		LOG.debug("s2=" + s2);
+		LOG.info("s2=" + s2);
 		IStructurable b = s2.toStructurable();
-		LOG.debug("b=" + b.toStructure().equals(t.toStructure()));
+		LOG.info("b=" + b.toStructure().equals(t.toStructure()));
 	}
 
 	public void testTree() throws Exception {
@@ -257,26 +257,26 @@ public class StructTest extends TopContainer {
 		t.addFile("file1", new Pointer("0123"));
 		t.addFile("file2", new Pointer("4567"));
 		Structure s = t.toStructure();
-		LOG.debug("s=" + s);
+		LOG.info("s=" + s);
 		byte[] array = marshaler.marshal(s);
-		LOG.debug("array=" + new String(array));
+		LOG.info("array=" + new String(array));
 		Structure s2 = marshaler.unmarshal(array);
-		LOG.debug("s2=" + s2);
+		LOG.info("s2=" + s2);
 		IStructurable b = s2.toStructurable();
-		LOG.debug("b=" + b.toStructure().equals(t.toStructure()));
+		LOG.info("b=" + b.toStructure().equals(t.toStructure()));
 	}
 
 	public void testTreeEntry() throws Exception {
 		IMarshaler marshaler = new FListMarshaler();
 		TreeEntry t = new TreeEntry("file", new Pointer("0123"), TreeEntry.FILE);
 		Structure s = t.toStructure();
-		LOG.debug("s=" + s);
+		LOG.info("s=" + s);
 		byte[] array = marshaler.marshal(s);
-		LOG.debug("array=" + new String(array));
+		LOG.info("array=" + new String(array));
 		Structure s2 = marshaler.unmarshal(array);
-		LOG.debug("s2=" + s2);
+		LOG.info("s2=" + s2);
 		IStructurable b = s2.toStructurable();
-		LOG.debug("b=" + b.toStructure().equals(t.toStructure()));
+		LOG.info("b=" + b.toStructure().equals(t.toStructure()));
 	}
 
 	public void testEmptySecureUser() throws Exception {
@@ -285,38 +285,38 @@ public class StructTest extends TopContainer {
 		SecureUser su = new SecureUser();
 		su.setSecretKey(secretKey);
 		Structure s = su.toStructure();
-		LOG.debug("s=" + s);
+		LOG.info("s=" + s);
 		byte[] array = marshaler.marshal(s);
-		LOG.debug("array=" + new String(array));
+		LOG.info("array=" + new String(array));
 		Structure s2 = marshaler.unmarshal(array);
-		LOG.debug("s2=" + s2);
-		LOG.debug("b=" + s.equals(s2));
+		LOG.info("s2=" + s2);
+		LOG.info("b=" + s.equals(s2));
 	}
 
 	public void testPointer() throws Exception {
 		IMarshaler marshaler = new FListMarshaler();
 		Pointer p = new Pointer(new Id("0123"));
 		Structure s = p.toStructure();
-		LOG.debug("s=" + s);
+		LOG.info("s=" + s);
 		byte[] array = marshaler.marshal(s);
-		LOG.debug("array=" + new String(array));
+		LOG.info("array=" + new String(array));
 		Structure s2 = marshaler.unmarshal(array);
-		LOG.debug("s2=" + s2);
+		LOG.info("s2=" + s2);
 		IStructurable b = s2.toStructurable();
-		LOG.debug("b=" + b.toStructure().equals(p.toStructure()));
+		LOG.info("b=" + b.toStructure().equals(p.toStructure()));
 	}
 
 	public void testEOMObject() throws Exception {
 		IMarshaler marshaler = new FListMarshaler();
 		EOMObject eom = new EOMObject();
 		Structure s = eom.toStructure();
-		LOG.debug("s=" + s);
+		LOG.info("s=" + s);
 		byte[] array = marshaler.marshal(s);
-		LOG.debug("array=" + new String(array));
+		LOG.info("array=" + new String(array));
 		Structure s2 = marshaler.unmarshal(array);
-		LOG.debug("s2=" + s2);
+		LOG.info("s2=" + s2);
 		IStructurable b = s2.toStructurable();
-		LOG.debug("b=" + b.toStructure().equals(eom.toStructure()));
+		LOG.info("b=" + b.toStructure().equals(eom.toStructure()));
 	}
 
 	public void testContent() throws Exception {
@@ -324,13 +324,13 @@ public class StructTest extends TopContainer {
 		Content c = new Content("Yannis", new byte[] { 01, 23 }, new byte[] {
 				98, 76 });
 		Structure s = c.toStructure();
-		LOG.debug("s=" + s);
+		LOG.info("s=" + s);
 		byte[] array = marshaler.marshal(s);
-		LOG.debug("array=" + new String(array));
+		LOG.info("array=" + new String(array));
 		Structure s2 = marshaler.unmarshal(array);
-		LOG.debug("s2=" + s2);
+		LOG.info("s2=" + s2);
 		IStructurable b = s2.toStructurable();
-		LOG.debug("b=" + b.toStructure().equals(c.toStructure()));
+		LOG.info("b=" + b.toStructure().equals(c.toStructure()));
 	}
 
 	public void testContact() throws Exception {
@@ -342,27 +342,27 @@ public class StructTest extends TopContainer {
 		c.setNode(n);
 		c.setTcpPort(12345);
 		c.setUdpPort(67890);
-		LOG.debug("contact=" + c.toString());
+		LOG.info("contact=" + c.toString());
 		Structure s = c.toStructure();
-		LOG.debug("s=" + s);
+		LOG.info("s=" + s);
 		byte[] array = marshaler.marshal(s);
-		LOG.debug("array=" + new String(array));
+		LOG.info("array=" + new String(array));
 		Structure s2 = marshaler.unmarshal(array);
-		LOG.debug("s2=" + s2);
+		LOG.info("s2=" + s2);
 		IStructurable b = s2.toStructurable();
-		LOG.debug("b=" + b.toStructure().equals(c.toStructure()));
+		LOG.info("b=" + b.toStructure().equals(c.toStructure()));
 	}
 
 	public void testNode() throws Exception {
 		IMarshaler marshaler = new FListMarshaler();
 		Node n = new Node(new Id("0123"), 3);
 		Structure s = n.toStructure();
-		LOG.debug("s=" + s);
+		LOG.info("s=" + s);
 		byte[] array = marshaler.marshal(s);
-		LOG.debug("array=" + new String(array));
+		LOG.info("array=" + new String(array));
 		Structure s2 = marshaler.unmarshal(array);
-		LOG.debug("s2=" + s2);
+		LOG.info("s2=" + s2);
 		IStructurable b = s2.toStructurable();
-		LOG.debug("b=" + b.toStructure().equals(n.toStructure()));
+		LOG.info("b=" + b.toStructure().equals(n.toStructure()));
 	}
 }

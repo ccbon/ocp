@@ -17,8 +17,8 @@ import org.ocpteamx.protocol.ocp.OCPUser;
 public class TestAgent {
 	public static void main(String[] args) {
 		LOG.debug_on();
-		LOG.debug("starting the test agent");
-		LOG.debug("working directory = " + System.getProperty("user.dir"));
+		LOG.info("starting the test agent");
+		LOG.info("working directory = " + System.getProperty("user.dir"));
 
 		try {
 			JLG.rm(System.getenv("TEMP") + "/ocp_agent_storage");
@@ -41,7 +41,7 @@ public class TestAgent {
 			// UserInterface ui = new CommandLine(agent);
 			// (new Thread(ui)).start();
 			Thread.sleep(2000);
-			LOG.debug(a1.toString());
+			LOG.info(a1.toString());
 
 			// starting second agent
 			OCPDataSource ds2 = new OCPDataSource();
@@ -54,8 +54,8 @@ public class TestAgent {
 			p2.setProperty("sponsor.2", "xxx://localhost:22223");
 			a2.connect();
 			Thread.sleep(2000);
-			LOG.debug(a1.toString());
-			LOG.debug(a2.toString());
+			LOG.info(a1.toString());
+			LOG.info(a2.toString());
 			// System.exit(0);
 
 			String username = "jlguenego";
@@ -66,17 +66,17 @@ public class TestAgent {
 			// captcha.challengeObject + "> ");
 			String answer = "didounette";
 			a2.createUser(username, password, 2, captcha, answer);
-			LOG.debug(a1.toString());
-			LOG.debug(a2.toString());
+			LOG.info(a1.toString());
+			LOG.info(a2.toString());
 			// System.exit(0);
 
 			// test ucrypt and udecrypt
 			String message = "this is my message";
-			LOG.debug(message);
+			LOG.info(message);
 			byte[] ciphertext = a2.ucrypt(password, message.getBytes());
 			String decryptedMessage = new String(a2.udecrypt(password,
 					ciphertext));
-			LOG.debug(decryptedMessage);
+			LOG.info(decryptedMessage);
 			// System.exit(0);
 
 			IUserManagement um = ds2.getComponent(IUserManagement.class);
@@ -85,38 +85,38 @@ public class TestAgent {
 			auth.setChallenge(password);
 			um.login();
 			OCPUser user = (OCPUser) ds2.getContext().getUser();
-			LOG.debug(user.toString());
+			LOG.info(user.toString());
 
 			String str = "This is my object";
 			Pointer pointer = a2.set(user, str);
-			LOG.debug(a1.toString());
-			LOG.debug(a2.toString());
+			LOG.info(a1.toString());
+			LOG.info(a2.toString());
 			// System.exit(0);
 
 			str = "This is my second object";
 			a2.set(user, str);
 
 			String str2 = (String) a2.get(user, pointer);
-			LOG.debug("str2 = " + str2);
+			LOG.info("str2 = " + str2);
 			Iterator<Pointer> it = user.getUserIndex(a2).iterator();
 			while (it.hasNext()) {
 				Pointer p = it.next();
-				LOG.debug("pointer p = " + p);
+				LOG.info("pointer p = " + p);
 				String str3 = (String) a2.get(user, p);
-				LOG.debug("str3 = " + str3);
+				LOG.info("str3 = " + str3);
 			}
 			a2.remove(user, pointer);
 			it = user.getUserIndex(a2).iterator();
 			while (it.hasNext()) {
 				Pointer p = it.next();
-				LOG.debug("pointer p = " + p);
+				LOG.info("pointer p = " + p);
 				String str3 = (String) a2.get(user, p);
-				LOG.debug("str3 = " + str3);
+				LOG.info("str3 = " + str3);
 				a2.remove(user, p);
 			}
 
-			LOG.debug(a1.toString());
-			LOG.debug(a2.toString());
+			LOG.info(a1.toString());
+			LOG.info(a2.toString());
 
 			OCPFileSystem fs = new OCPFileSystem(user, a2);
 			fs.checkoutAll("C:/jlouis/ocp_dir");
@@ -136,7 +136,7 @@ public class TestAgent {
 			e.printStackTrace();
 			System.exit(1);
 		}
-		LOG.debug("finished.");
+		LOG.info("finished.");
 	}
 
 }

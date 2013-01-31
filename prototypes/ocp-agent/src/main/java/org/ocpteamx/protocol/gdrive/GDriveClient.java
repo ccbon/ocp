@@ -56,16 +56,16 @@ public class GDriveClient extends DSContainer<GDriveDataSource> implements
 		// Create a new authorized API client
 		service = new Drive.Builder(httpTransport, jsonFactory, credential)
 				.build();
-		LOG.debug("GDrive logged in.");
+		LOG.info("GDrive logged in.");
 		Get get = service.about().get();
 		com.google.api.services.drive.model.About r = get.execute();
 		String username = r.getName();
 		ds().getComponent(IUserManagement.class).setUsername(username);
-		LOG.debug("username=" + username);
+		LOG.info("username=" + username);
 		IDataModel dm = ds().getComponent(IDataModel.class);
 		ds().setContext(new Context(dm, "/"));
 		
-		LOG.debug("isConnected=" + ds().isConnected());
+		LOG.info("isConnected=" + ds().isConnected());
 	}
 
 	@Override

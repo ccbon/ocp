@@ -29,13 +29,13 @@ public class JSONTest extends TopContainer {
 		LOG.debug_on();
 		Node a = new Node(new Id("0123"), 3);
 		Structure s = a.toStructure();
-		LOG.debug("s=" + s);
+		LOG.info("s=" + s);
 		byte[] array = getComponent(IMarshaler.class).marshal(s);
-		LOG.debug("array=" + new String(array));
+		LOG.info("array=" + new String(array));
 		Structure s2 = getComponent(IMarshaler.class).unmarshal(array);
-		LOG.debug("s2=" + s2);
+		LOG.info("s2=" + s2);
 		IStructurable b = s2.toStructurable();
-		LOG.debug("b=" + b);
+		LOG.info("b=" + b);
 	}
 
 }

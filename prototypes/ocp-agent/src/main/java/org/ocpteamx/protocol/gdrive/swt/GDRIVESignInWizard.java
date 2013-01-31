@@ -34,7 +34,7 @@ public class GDRIVESignInWizard extends Wizard implements IScenario {
 
 	@Override
 	public boolean performFinish() {
-		LOG.debug("sign in user");
+		LOG.info("sign in user");
 		try {
 			String code = p1.codeText.getText();
 			URI uri = new URI("gdrive://" + code);

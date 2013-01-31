@@ -26,7 +26,7 @@ public class SignInWizard extends Wizard {
 		};
 		wizard.setWizardDialog(dialog);
 		dialog.open();
-		LOG.debug("about to dispose shell");
+		LOG.info("about to dispose shell");
 		shell.dispose();
 	}
 
@@ -56,7 +56,7 @@ public class SignInWizard extends Wizard {
 
 	@Override
 	public boolean performFinish() {
-		LOG.debug("sign in user");
+		LOG.info("sign in user");
 		try {
 			IUserManagement a = window.ds.getComponent(IUserManagement.class);
 			a.setUsername(p1.usernameText.getText());

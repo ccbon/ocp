@@ -36,10 +36,10 @@ public class DHTConnectStress extends TopContainer {
 		
 		TCPClient tcpClient = new TCPClient("localhost", 12345, protocol);
 		String response = (String) tcpClient.request("coucou");
-		LOG.debug("response=" + response);
+		LOG.info("response=" + response);
 		tcplistener.stop();
 		response = (String) tcpClient.request("coucou");
-		LOG.debug("response=" + response);
+		LOG.info("response=" + response);
 		
 	}
 

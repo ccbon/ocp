@@ -128,7 +128,7 @@ public class TopContainer implements IContainer {
 
 	@Override
 	public void init() throws Exception {
-		LOG.debug("init class " + getClass());
+		LOG.info("init class " + getClass());
 		Iterator<Object> it = designer.iterator();
 		while (it.hasNext()) {
 			Object o = it.next();

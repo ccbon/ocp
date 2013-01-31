@@ -38,7 +38,7 @@ public class TCPClient {
 		} catch (Exception e) {
 			if (e instanceof SocketException || e instanceof EOFException
 					|| e instanceof SocketTimeoutException) {
-				LOG.debug("try again (e=" + e + ")");
+				LOG.info("try again (e=" + e + ")");
 				destroy(socket);
 				socket = createNewSocket();
 				output = request0(input, socket);
@@ -67,16 +67,16 @@ public class TCPClient {
 	private Socket cleanSocket(Socket socket) throws Exception {
 		if (socket == null || socket.isClosed() || !socket.isBound()
 				|| !socket.isConnected()) {
-			LOG.debug("socket=" + socket);
+			LOG.info("socket=" + socket);
 			if (socket != null) {
 				if (socket.isClosed()) {
-					LOG.debug("clientSocket is closed.");
+					LOG.info("clientSocket is closed.");
 				}
 				if (!socket.isBound()) {
-					LOG.debug("clientSocket is unbound.");
+					LOG.info("clientSocket is unbound.");
 				}
 				if (!socket.isConnected()) {
-					LOG.debug("clientSocket is not connected.");
+					LOG.info("clientSocket is not connected.");
 				}
 			}
 			return createNewSocket();
@@ -85,11 +85,11 @@ public class TCPClient {
 	}
 
 	private Serializable request0(Serializable input, Socket socket) throws Exception {
-		LOG.debug("about to write input on the socket. input=" + input);
+		LOG.info("about to write input on the socket. input=" + input);
 		protocol.getStreamSerializer().writeObject(socket, input);
-		LOG.debug("input flush");
+		LOG.info("input flush");
 		Serializable output = protocol.getStreamSerializer().readObject(socket);
-		LOG.debug("output received");
+		LOG.info("output received");
 		return output;
 	}
 
@@ -102,7 +102,7 @@ public class TCPClient {
 			destroy(socket);
 			if (e instanceof SocketException || e instanceof EOFException
 					|| e instanceof SocketTimeoutException) {
-				LOG.debug("try again (e=" + e + ")");
+				LOG.info("try again (e=" + e + ")");
 				socket = createNewSocket();
 				send0(input, socket);
 			} else {
@@ -127,20 +127,20 @@ public class TCPClient {
 	}
 
 	public void send0(Serializable input, Socket socket) throws Exception {
-		LOG.debug("about to write input on the socket. input=" + input);
+		LOG.info("about to write input on the socket. input=" + input);
 		protocol.getStreamSerializer().writeObject(socket, input);
-		LOG.debug("input flush");
+		LOG.info("input flush");
 	}
 
 	public Socket createNewSocket() throws Exception {
-		LOG.debug("start new socket on " + hostname + ":" + port);
+		LOG.info("start new socket on " + hostname + ":" + port);
 		Socket socket = new Socket();
 		socket.setSendBufferSize(32768);
 		socket.setReceiveBufferSize(32768);
 		// socket.setSoTimeout(1000);
 		// socket.setReuseAddress(true);
 		socket.connect(new InetSocketAddress(hostname, port));
-		LOG.debug("end new socket");
+		LOG.info("end new socket");
 		return socket;
 	}
 

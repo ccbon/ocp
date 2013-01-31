@@ -31,7 +31,7 @@ public class OpenDataSourceAction extends Action {
 
 	@Override
 	public void run() {
-		LOG.debug("Open DataSource");
+		LOG.info("Open DataSource");
 		try {
 			if (w.ds != null) {
 				w.closeDataSourceAction.run();

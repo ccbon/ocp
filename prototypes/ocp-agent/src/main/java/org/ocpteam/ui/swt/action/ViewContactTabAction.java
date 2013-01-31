@@ -33,7 +33,7 @@ public class ViewContactTabAction extends Action {
 
 	@Override
 	public void run() {
-		LOG.debug("View Contact");
+		LOG.info("View Contact");
 		addContactTab();
 	}
 
@@ -57,7 +57,7 @@ public class ViewContactTabAction extends Action {
 		contactCTabItem.addDisposeListener(new DisposeListener() {
 			@Override
 			public void widgetDisposed(DisposeEvent arg0) {
-				LOG.debug("dispose");
+				LOG.info("dispose");
 			}
 		});
 
@@ -70,7 +70,7 @@ public class ViewContactTabAction extends Action {
 
 			@Override
 			public void handleEvent(Event event) {
-				LOG.debug("closing contact list");
+				LOG.info("closing contact list");
 				contactCTabItem.dispose();
 			}
 		});

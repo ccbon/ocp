@@ -26,7 +26,7 @@ public class ConfigPreferenceScenario implements IScenario {
 
 	@Override
 	public void run() throws Exception {
-		LOG.debug("Starting DHT6 new DataSource senario");
+		LOG.info("Starting DHT6 new DataSource senario");
 		Shell shell = new Shell(w.getShell().getDisplay());
 		// Create the preference manager
 		PreferenceManager prefManager = new PreferenceManager();

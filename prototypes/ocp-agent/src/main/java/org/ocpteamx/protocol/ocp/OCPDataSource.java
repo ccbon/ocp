@@ -95,7 +95,7 @@ public class OCPDataSource extends DSPDataSource {
 				c.nodeIdSet.add(nodeId);
 			}
 		}
-		LOG.debug("toContact: " + c);
+		LOG.info("toContact: " + c);
 		return c;
 	}
 

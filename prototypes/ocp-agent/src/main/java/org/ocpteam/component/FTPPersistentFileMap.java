@@ -29,23 +29,23 @@ public class FTPPersistentFileMap extends DSContainer<DataSource> implements
 
 	public void setURI(String uri) throws Exception {
 		this.uri = new URI(uri);
-		LOG.debug("uri = " + uri);
+		LOG.info("uri = " + uri);
 		this.ftp = new FTPClient();
 		this.hostname = this.uri.getHost();
 		String[] a = this.uri.getUserInfo().split(":");
 		this.login = a[0];
 		this.password = a[1];
-		LOG.debug("login = " + login);
-		LOG.debug("passord = " + password);
+		LOG.info("login = " + login);
+		LOG.info("passord = " + password);
 		this.pathname = this.uri.getPath();
-		LOG.debug("pathname = " + pathname);
+		LOG.info("pathname = " + pathname);
 		checkConnection();
 	}
 
 	private void checkConnection() throws Exception {
 		if (ftp.isConnected() == false) {
 
-			LOG.debug("Reconnect");
+			LOG.info("Reconnect");
 			try {
 				ftp.disconnect();
 			} catch (Exception e) {
@@ -60,15 +60,15 @@ public class FTPPersistentFileMap extends DSContainer<DataSource> implements
 			}
 		}
 		boolean b = ftp.changeWorkingDirectory(pathname);
-		LOG.debug("b=" + b);
-		LOG.debug("pathname = " + pathname);
+		LOG.info("b=" + b);
+		LOG.info("pathname = " + pathname);
 		if (b == false) {
 			ftp.makeDirectory(pathname);
 			b = ftp.changeWorkingDirectory(pathname);
-			LOG.debug("b=" + b);
+			LOG.info("b=" + b);
 		}
 		ftp.enterLocalPassiveMode();
-		LOG.debug("check connection passed.");
+		LOG.info("check connection passed.");
 	}
 
 	@Override
@@ -101,7 +101,7 @@ public class FTPPersistentFileMap extends DSContainer<DataSource> implements
 		ByteArrayOutputStream baos = null;
 		try {
 			ftp.setFileType(FTP.BINARY_FILE_TYPE);
-			LOG.debug("name = " + name);
+			LOG.info("name = " + name);
 			f = ftp.retrieveFileStream(name);
 			if (f == null) {
 				throw new Exception("Cannot retrieve the file content of "
@@ -158,8 +158,8 @@ public class FTPPersistentFileMap extends DSContainer<DataSource> implements
 
 	@Override
 	public void put(Address address, byte[] value) throws Exception {
-		LOG.debug("Start put");
-		LOG.debug("Address=" + address);
+		LOG.info("Start put");
+		LOG.info("Address=" + address);
 		checkConnection();
 		ByteArrayInputStream bais = new ByteArrayInputStream(value);
 		ftp.setFileType(FTP.BINARY_FILE_TYPE);
@@ -167,7 +167,7 @@ public class FTPPersistentFileMap extends DSContainer<DataSource> implements
 			throw new Exception("Cannot store file");
 		}
 		bais.close();
-		LOG.debug("End put");
+		LOG.info("End put");
 	}
 
 	@Override

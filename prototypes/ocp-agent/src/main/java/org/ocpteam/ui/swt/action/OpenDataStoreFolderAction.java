@@ -21,7 +21,7 @@ public class OpenDataStoreFolderAction extends Action {
 		try {
 			PersistentFileMap fs = (PersistentFileMap) w.ds
 					.getComponent(IDataStore.class);
-			LOG.debug("root path=" + fs.getURI());
+			LOG.info("root path=" + fs.getURI());
 			Program.launch(fs.getURI());
 		} catch (Exception e1) {
 			e1.printStackTrace();

@@ -27,7 +27,7 @@ public class EditPreferencesAction extends Action {
 
 	@Override
 	public void run() {
-		LOG.debug("Start preferences");
+		LOG.info("Start preferences");
 		try {
 			// Create the preference manager
 			PreferenceManager mgr = new PreferenceManager();

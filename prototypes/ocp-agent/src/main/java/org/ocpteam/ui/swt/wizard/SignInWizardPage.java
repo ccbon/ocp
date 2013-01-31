@@ -62,7 +62,7 @@ public class SignInWizardPage extends WizardPage {
 
 	@Override
 	public boolean isPageComplete() {
-		LOG.debug("isPageComplete");
+		LOG.info("isPageComplete");
 		if (usernameText.getText().equals("")) {
 			return false;
 		}

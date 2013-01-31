@@ -32,7 +32,7 @@ public class DHT1Module implements IModule {
 			@Override
 			public Serializable run(Session session, Serializable[] objects)
 					throws Exception {
-				LOG.debug("storing...");
+				LOG.info("storing...");
 				DHT1DataSource ds = (DHT1DataSource) session.ds();
 				DHT1DataModel dm = (DHT1DataModel) ds.getContext()
 						.getDataModel();
@@ -60,7 +60,7 @@ public class DHT1Module implements IModule {
 			@Override
 			public Serializable run(Session session, Serializable[] objects)
 					throws Exception {
-				LOG.debug("retrieving...");
+				LOG.info("retrieving...");
 				DHT1DataSource ds = (DHT1DataSource) session.ds();
 				DHT1DataModel dm = (DHT1DataModel) ds.getContext()
 						.getDataModel();
@@ -86,7 +86,7 @@ public class DHT1Module implements IModule {
 			@Override
 			public Serializable run(Session session, Serializable[] objects)
 					throws Exception {
-				LOG.debug("remove...");
+				LOG.info("remove...");
 				DHT1DataSource ds = (DHT1DataSource) session.ds();
 				String key = (String) objects[0];
 				ds.destroy(key);
@@ -112,12 +112,12 @@ public class DHT1Module implements IModule {
 			public void run(Session session, Serializable[] objects,
 					Socket socket, Protocol protocol)
 					throws Exception {
-				LOG.debug("keyset...");
+				LOG.info("keyset...");
 				DHT1DataSource ds = (DHT1DataSource) session.ds();
 				Set<String> set = ds.keySet();
-				LOG.debug("set=" + set);
+				LOG.info("set=" + set);
 				for (String s : set) {
-					LOG.debug("write " + s);
+					LOG.info("write " + s);
 					protocol.getStreamSerializer().writeObject(socket, s);
 				}
 			}
@@ -137,14 +137,14 @@ public class DHT1Module implements IModule {
 			public void run(Session session, Serializable[] objects,
 					Socket socket, Protocol protocol)
 					throws Exception {
-				LOG.debug("submap...");
+				LOG.info("submap...");
 				// normally we should filter the key where hash(key) >= given
 				// node_id...
 				DHT1DataSource ds = (DHT1DataSource) session.ds();
 				Set<String> set = ds.keySet();
-				LOG.debug("set=" + set);
+				LOG.info("set=" + set);
 				for (String s : set) {
-					LOG.debug("write " + s);
+					LOG.info("write " + s);
 					protocol.getStreamSerializer().writeObject(socket, s);
 					protocol.getStreamSerializer().writeObject(socket,
 							ds.retrieve(s));
@@ -166,7 +166,7 @@ public class DHT1Module implements IModule {
 			public void run(Session session, Serializable[] objects,
 					Socket socket, Protocol protocol)
 					throws Exception {
-				LOG.debug("setMap...");
+				LOG.info("setMap...");
 				// normally we should filter the key where hash(key) >= given
 				// node_id...
 				DHT1DataSource ds = (DHT1DataSource) session.ds();

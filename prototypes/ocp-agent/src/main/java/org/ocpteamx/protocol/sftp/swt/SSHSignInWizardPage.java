@@ -69,7 +69,7 @@ public class SSHSignInWizardPage extends WizardPage {
 		btnPasswordAuthentication.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				LOG.debug("bIsPassword = true");
+				LOG.info("bIsPassword = true");
 				bIsPassword = true;
 				update();
 			}
@@ -82,7 +82,7 @@ public class SSHSignInWizardPage extends WizardPage {
 		btnRadioButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				LOG.debug("bIsPassword = false");
+				LOG.info("bIsPassword = false");
 				bIsPassword = false;
 				update();
 			}
@@ -198,7 +198,7 @@ public class SSHSignInWizardPage extends WizardPage {
 
 	@Override
 	public boolean isPageComplete() {
-		LOG.debug("isPageComplete");
+		LOG.info("isPageComplete");
 		if (sessionText.getText().equals("")) {
 			return false;
 		}

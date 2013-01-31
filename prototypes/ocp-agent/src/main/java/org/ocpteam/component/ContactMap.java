@@ -101,7 +101,7 @@ public class ContactMap extends DSContainer<DSPDataSource> {
 	}
 
 	public Contact[] getOtherContacts() {
-		LOG.debug("contactmap=" + this);
+		LOG.info("contactmap=" + this);
 		Contact[] result = null;
 		if (containsMyself()) {
 			result = new Contact[map.size() - 1];
@@ -156,7 +156,7 @@ public class ContactMap extends DSContainer<DSPDataSource> {
 
 	public UDPClient getUdpClient(Contact contact) throws Exception {
 		String name = contact.getName();
-		LOG.debug("contact name: " + name);
+		LOG.info("contact name: " + name);
 		contact = this.get(name);
 		if (contact.getUdpPort() <= 0) {
 			return null;

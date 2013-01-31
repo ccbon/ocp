@@ -17,7 +17,7 @@ public class EditDataSouceAction extends Action {
 
 	@Override
 	public void run() {
-		LOG.debug("EditDataSourceAction");
+		LOG.info("EditDataSourceAction");
 		try {
 			EditDSPDataSourceScenario scenario = new EditDSPDataSourceScenario();
 			scenario.setWindow(w);

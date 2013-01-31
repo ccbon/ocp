@@ -11,31 +11,31 @@ public class FTPMap extends TopContainer {
 	public static void main(String[] args) {
 		try {
 			LOG.debug_on();
-			LOG.debug("Start");
+			LOG.info("Start");
 			IPersistentMap map = new FTPPersistentFileMap();
 			map.setURI("ftp://Yannis:toto@localhost:21/Map");
 			
-			LOG.debug("Uri set");
+			LOG.info("Uri set");
 			Address a = new Address("1234");
 			byte[] b = JLG.serialize(a);
 			map.put(a, b);
 			byte[] c = map.get(a);
-			LOG.debug("b.hashCode = " + b.hashCode());
-			LOG.debug("c.hashCode = " + c.hashCode());
+			LOG.info("b.hashCode = " + b.hashCode());
+			LOG.info("c.hashCode = " + c.hashCode());
 			c = map.get(a);
 			int i = 0;
 			while (i < b.length) {
 				if (b[i] != c[i]) {
-					LOG.debug("b is different of c");
+					LOG.info("b is different of c");
 					break;
 				}
 				i++;
 			}
 			if (i == b.length) {
-				LOG.debug("b is equal to c");
+				LOG.info("b is equal to c");
 			}
 			Address d = (Address) JLG.deserialize(c);
-			LOG.debug("d = " + d);
+			LOG.info("d = " + d);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

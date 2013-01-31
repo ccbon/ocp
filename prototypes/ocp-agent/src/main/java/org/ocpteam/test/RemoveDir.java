@@ -24,7 +24,7 @@ public class RemoveDir {
 				f = new File(f, "qqq");
 
 			}
-			LOG.debug("i=" + i);
+			LOG.info("i=" + i);
 			p.delete();
 		}
 	}

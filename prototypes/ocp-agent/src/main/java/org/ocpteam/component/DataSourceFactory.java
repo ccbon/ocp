@@ -33,7 +33,7 @@ public class DataSourceFactory extends Container<IContainer> {
 
 		String name = file.getName();
 		String extension = name.substring(name.lastIndexOf("."));
-		LOG.debug("extension=" + extension);
+		LOG.info("extension=" + extension);
 		String protocol = null;
 		URI uri = null;
 		if (file.exists() && extension.equalsIgnoreCase(".uri")) {

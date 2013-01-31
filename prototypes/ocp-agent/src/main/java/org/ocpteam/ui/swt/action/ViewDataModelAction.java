@@ -26,7 +26,7 @@ public class ViewDataModelAction extends Action {
 
 	@Override
 	public void run() {
-		LOG.debug("Data Model");
+		LOG.info("Data Model");
 		try {
 			w.viewDataModel();
 		} catch (Exception e) {

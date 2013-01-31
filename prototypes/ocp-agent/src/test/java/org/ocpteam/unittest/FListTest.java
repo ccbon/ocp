@@ -44,24 +44,24 @@ public class FListTest {
 		IMarshaler marshaler = new FListMarshaler();
 		EmptyClass a = new EmptyClass();
 		Structure s = a.toStructure();
-		LOG.debug("s=" + s);
+		LOG.info("s=" + s);
 		byte[] array = marshaler.marshal(s);
-		LOG.debug("array=" + new String(array));
+		LOG.info("array=" + new String(array));
 		Structure s2 = marshaler.unmarshal(array);
-		LOG.debug("s2=" + s2);
-		LOG.debug("b=" + s.equals(s2));
+		LOG.info("s2=" + s2);
+		LOG.info("b=" + s.equals(s2));
 	}
 
 	public void testFList() throws Exception {
 		IMarshaler marshaler = new FListMarshaler();
 		TestObject a = new TestObject();
 		Structure s = a.toStructure();
-		LOG.debug("s=" + s);
+		LOG.info("s=" + s);
 		byte[] array = marshaler.marshal(s);
-		LOG.debug("array=" + new String(array));
+		LOG.info("array=" + new String(array));
 		Structure s2 = marshaler.unmarshal(array);
-		LOG.debug("s2=" + s2);
-		LOG.debug("b=" + s.equals(s2));
+		LOG.info("s2=" + s2);
+		LOG.info("b=" + s.equals(s2));
 	}
 
 }

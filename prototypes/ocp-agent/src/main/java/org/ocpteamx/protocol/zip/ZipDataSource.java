@@ -33,7 +33,7 @@ public class ZipDataSource extends DataSource {
 	
 	@Override
 	public void saveAs(File file) throws Exception {
-		LOG.debug("zip saveas");
+		LOG.info("zip saveas");
 		file.delete();
 		getFile().renameTo(file);
 		bIsNew = false;
@@ -43,7 +43,7 @@ public class ZipDataSource extends DataSource {
 	@Override
 	public void connect() throws Exception {
 		super.connect();
-		LOG.debug("opening datasource: " + getFile());
+		LOG.info("opening datasource: " + getFile());
 		ZipFileSystem fs = (ZipFileSystem) getComponent(IDataModel.class);
 		fs.refresh();
 		setContext(new Context(fs));

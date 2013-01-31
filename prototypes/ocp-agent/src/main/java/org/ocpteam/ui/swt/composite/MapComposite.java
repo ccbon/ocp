@@ -59,7 +59,7 @@ public class MapComposite extends Composite {
 		table.addMenuDetectListener(new MenuDetectListener() {
 			@Override
 			public void menuDetected(MenuDetectEvent arg0) {
-				LOG.debug("opening context menu");
+				LOG.info("opening context menu");
 				final MenuManager myMenu = new MenuManager("xxx");
 				final Menu menu = myMenu
 						.createContextMenu(MapComposite.this.dsw.getShell());
@@ -99,7 +99,7 @@ public class MapComposite extends Composite {
 					break;
 				default:
 				}
-				LOG.debug("keypressed: keycode:" + e.keyCode
+				LOG.info("keypressed: keycode:" + e.keyCode
 						+ " and character = '" + e.character + "'");
 				MapComposite.this.dsw.refresh();
 			}
@@ -108,10 +108,10 @@ public class MapComposite extends Composite {
 		table.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseDown(MouseEvent e) {
-				LOG.debug("mouse down");
+				LOG.info("mouse down");
 				Point pt = new Point(e.x, e.y);
 				if (table.getItem(pt) == null) {
-					LOG.debug("cancel selection");
+					LOG.info("cancel selection");
 					table.deselectAll();
 				}
 				MapComposite.this.dsw.refresh();
@@ -163,7 +163,7 @@ public class MapComposite extends Composite {
 	public void remove() throws Exception {
 		for (TableItem item : table.getSelection()) {
 			String key = item.getText(0);
-			LOG.debug("removing key = " + key);
+			LOG.info("removing key = " + key);
 			mdm.remove(key);
 		}
 		refresh();

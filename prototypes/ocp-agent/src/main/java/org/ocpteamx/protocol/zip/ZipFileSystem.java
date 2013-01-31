@@ -48,7 +48,7 @@ public class ZipFileSystem extends Container<ZipDataSource> implements
 			JLG.mkdir(dir);
 			IFile d = getFile(path);
 			for (IFile child : d.listFiles()) {
-				LOG.debug("child: " + child.getName());
+				LOG.info("child: " + child.getName());
 				checkout(path, child.getName(), dir);
 			}
 		} else { // file
@@ -60,7 +60,7 @@ public class ZipFileSystem extends Container<ZipDataSource> implements
 
 	@Override
 	public void commit(String remoteDir, File file) throws Exception {
-		LOG.debug("zip commit: " + file.getName());
+		LOG.info("zip commit: " + file.getName());
 		if (remoteDir.startsWith("/")) {
 			remoteDir = remoteDir.substring(1);
 		}
@@ -149,7 +149,7 @@ public class ZipFileSystem extends Container<ZipDataSource> implements
 			Enumeration<? extends ZipEntry> entries = zip.entries();
 			while (entries.hasMoreElements()) {
 				ZipEntry zipEntry = entries.nextElement();
-				LOG.debug("adding to fs " + zipEntry.getName());
+				LOG.info("adding to fs " + zipEntry.getName());
 				this.root.add(zipEntry.getName(), zipEntry);
 			}
 		} finally {

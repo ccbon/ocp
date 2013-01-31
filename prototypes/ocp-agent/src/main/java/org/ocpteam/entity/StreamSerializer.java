@@ -35,12 +35,12 @@ public class StreamSerializer implements IStreamSerializer {
 		int remaining = length;
 		int start = 0;
 		while (remaining > so_rcvbuf) {
-			LOG.debug("reading " + so_rcvbuf + " byte. start=" + start);
+			LOG.info("reading " + so_rcvbuf + " byte. start=" + start);
 			read(in, input, start, so_rcvbuf);
 			remaining -= so_rcvbuf;
 			start += so_rcvbuf;
 		}
-		LOG.debug("reading " + remaining + " byte. start=" + start);
+		LOG.info("reading " + remaining + " byte. start=" + start);
 		read(in, input, start, remaining);
 		return ser.deserialize(input);
 	}
@@ -52,43 +52,43 @@ public class StreamSerializer implements IStreamSerializer {
 			int readed = in.read(input, start + total_readed, length
 					- total_readed);
 			total_readed += readed;
-			LOG.debug("total_readed " + total_readed);
+			LOG.info("total_readed " + total_readed);
 		}
 	}
 
 	@Override
 	public void writeObject(Socket socket, Serializable o) throws Exception {
 		DataOutputStream out = new DataOutputStream(socket.getOutputStream());
-		LOG.debug("start");
+		LOG.info("start");
 		if (o == null) {
-			LOG.debug("o is null");
+			LOG.info("o is null");
 			out.writeInt(0);
 			out.flush();
 		} else {
-			LOG.debug("about to serialize");
+			LOG.info("about to serialize");
 			byte[] input = serialize(o);
-			LOG.debug("about to write the length=" + input.length);
+			LOG.info("about to write the length=" + input.length);
 			out.writeInt(input.length);
 			out.flush();
-			LOG.debug("about to write the content");
-			LOG.debug("SO_RCVBUF=" + socket.getReceiveBufferSize()
+			LOG.info("about to write the content");
+			LOG.info("SO_RCVBUF=" + socket.getReceiveBufferSize()
 					+ " and SO_SNDBUF=" + socket.getSendBufferSize());
 
 			int so_rcvbuf = 32768; // socket.getReceiveBufferSize() - 1192;
 			int remaining = input.length;
 			int start = 0;
 			while (remaining > so_rcvbuf) {
-				LOG.debug("writing " + so_rcvbuf + " bytes. start=" + start);
+				LOG.info("writing " + so_rcvbuf + " bytes. start=" + start);
 				out.write(input, start, so_rcvbuf);
 				out.flush();
 				remaining -= so_rcvbuf;
 				start += so_rcvbuf;
 			}
-			LOG.debug("reading " + remaining + " byte. start=" + start);
+			LOG.info("reading " + remaining + " byte. start=" + start);
 			out.write(input, start, remaining);
 			out.flush();
 		}
-		LOG.debug("write performed well");
+		LOG.info("write performed well");
 	}
 
 	@Override
@@ -100,7 +100,7 @@ public class StreamSerializer implements IStreamSerializer {
 	@Override
 	public byte[] serialize(Serializable o) throws Exception {
 		byte[] result = ser.serialize(o);
-		LOG.debug("serialized=" + new String(result));
+		LOG.info("serialized=" + new String(result));
 		return result;
 	}
 

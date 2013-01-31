@@ -37,7 +37,7 @@ public class CopyAction extends Action {
 
 	@Override
 	public void run() {
-		LOG.debug("Copy");
+		LOG.info("Copy");
 		// copy only from the local directory
 		if (window.explorerComposite == null) {
 			return;
@@ -60,7 +60,7 @@ public class CopyAction extends Action {
 						explorerComposite.currentLocalDirectory,
 						name);
 				String path = f.getAbsolutePath();
-				LOG.debug("path=" + path);
+				LOG.info("path=" + path);
 				data[i] = path;
 			}
 			window.clipboard.setContents(new Object[] { data },

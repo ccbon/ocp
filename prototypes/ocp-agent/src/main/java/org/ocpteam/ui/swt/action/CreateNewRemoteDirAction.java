@@ -27,7 +27,7 @@ public class CreateNewRemoteDirAction extends Action {
 
 	@Override
 	public void run() {
-		LOG.debug("Create New Directory");
+		LOG.info("Create New Directory");
 		composite.createNewRemoteDir();
 	}
 }

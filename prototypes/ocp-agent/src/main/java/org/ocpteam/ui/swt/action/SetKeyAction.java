@@ -20,7 +20,7 @@ public class SetKeyAction extends Action {
 
 	@Override
 	public void run() {
-		LOG.debug("Set Key");
+		LOG.info("Set Key");
 		SetKeyWizard wizard = new SetKeyWizard(w);
 		wizard.start();
 	}

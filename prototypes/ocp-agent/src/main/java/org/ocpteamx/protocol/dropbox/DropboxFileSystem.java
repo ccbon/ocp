@@ -33,13 +33,13 @@ public class DropboxFileSystem extends DSContainer<DropboxDataSource> implements
 
 	@Override
 	public IFile getFile(String dir) throws Exception {
-		LOG.debug("About to get: " + dir);
+		LOG.info("About to get: " + dir);
 		Entry entries = getClient().mDBApi.metadata(dir, 100, null, true, null);
 
 		DropboxFileImpl fi = new DropboxFileImpl();
 		for (Entry e : entries.contents) {
 			if (!e.isDeleted) {
-				LOG.debug("File: " + e.path);
+				LOG.info("File: " + e.path);
 				fi.add(new DropboxFileImpl(e));
 			}
 		}
@@ -81,7 +81,7 @@ public class DropboxFileSystem extends DSContainer<DropboxDataSource> implements
 	@Override
 	public void checkout(String remoteDir, String remoteFilename,
 			java.io.File localDir) throws Exception {
-		LOG.debug("About to download \"" + remoteFilename + "\" from:"
+		LOG.info("About to download \"" + remoteFilename + "\" from:"
 				+ remoteDir);
 		if (!remoteDir.endsWith("/")) {
 			remoteDir += "/";
@@ -96,14 +96,14 @@ public class DropboxFileSystem extends DSContainer<DropboxDataSource> implements
 
 	@Override
 	public void commit(String remoteDir, java.io.File file) throws Exception {
-		LOG.debug("About to upload \"" + file.getName() + "\" to:" + remoteDir);
+		LOG.info("About to upload \"" + file.getName() + "\" to:" + remoteDir);
 		if (!remoteDir.endsWith("/")) {
 			remoteDir += "/";
 		}
 		if (file.isDirectory()) {
 			mkdir(remoteDir, file.getName());
 			for (java.io.File child : file.listFiles()) {
-				LOG.debug("child: " + child.getName());
+				LOG.info("child: " + child.getName());
 				commit(remoteDir + file.getName(), child);
 			}
 		} else {
@@ -111,9 +111,9 @@ public class DropboxFileSystem extends DSContainer<DropboxDataSource> implements
 				getClient().mDBApi.putFile(remoteDir + file.getName(),
 						new FileInputStream(file), file.length(), null, null);
 			} catch (DropboxServerException e) {
-				LOG.debug("message=" + e.toString());
+				LOG.info("message=" + e.toString());
 				int i = e.toString().indexOf("ignored file list");
-				LOG.debug("i=" + i);
+				LOG.info("i=" + i);
 				if (i == -1) {
 					throw e;
 				}

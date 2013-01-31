@@ -42,9 +42,9 @@ public class OCPClient extends Client implements IAuthenticable {
 	public Id[] requestNodeId() throws Exception {
 		Id[] nodeIds = null;
 		// at this time we ask to the network to give us one node_id.
-		LOG.debug("request node id");
+		LOG.info("request node id");
 		OCPModule m = ds().getComponent(OCPModule.class);
-		LOG.debug("module class: " + m.getClass());
+		LOG.info("module class: " + m.getClass());
 		Response response = request(new InputMessage(m.requestNodeId()));
 		nodeIds = new Id[1];
 		nodeIds[0] = (Id) response.getObject();
@@ -56,7 +56,7 @@ public class OCPClient extends Client implements IAuthenticable {
 				OCPProtocol.GENERATE_CAPTCHA.getBytes());
 		Captcha captcha = (Captcha) ds().serializer.deserialize((byte[]) r
 				.getObject());
-		LOG.debug("captcha content = " + captcha);
+		LOG.info("captcha content = " + captcha);
 		// if (!captcha.checkSignature(r.getContact())) {
 		// throw new Exception("captcha signature not consistant");
 		// }
@@ -121,7 +121,7 @@ public class OCPClient extends Client implements IAuthenticable {
 				client.setConfig(config);
 				String result = (String) client.execute("add",
 						new Object[] { "" + port });
-				LOG.debug("result = " + result);
+				LOG.info("result = " + result);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -23,7 +23,7 @@ public class ViewDataStoreAction extends Action {
 
 	@Override
 	public void run() {
-		LOG.debug("View Datastore");
+		LOG.info("View Datastore");
 		addDataStoreTab();
 	}
 
@@ -47,7 +47,7 @@ public class ViewDataStoreAction extends Action {
 		datastoreCTabItem.addDisposeListener(new DisposeListener() {
 			@Override
 			public void widgetDisposed(DisposeEvent arg0) {
-				LOG.debug("dispose");
+				LOG.info("dispose");
 			}
 		});
 
@@ -60,7 +60,7 @@ public class ViewDataStoreAction extends Action {
 
 			@Override
 			public void handleEvent(Event event) {
-				LOG.debug("closing contact list");
+				LOG.info("closing contact list");
 				datastoreCTabItem.dispose();
 			}
 		});

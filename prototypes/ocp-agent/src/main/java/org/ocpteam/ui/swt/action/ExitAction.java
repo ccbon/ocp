@@ -29,7 +29,7 @@ public class ExitAction extends Action {
 
 	@Override
 	public void run() {
-		LOG.debug("Exit");
+		LOG.info("Exit");
 		if (confirm()) {
 			exit();
 		}

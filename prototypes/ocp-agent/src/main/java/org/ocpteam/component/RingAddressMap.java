@@ -133,7 +133,7 @@ public class RingAddressMap extends DSContainer<AddressDataSource> implements
 		Contact predecessor = ringNodeMap.getPredecessor(ds().getNode());
 		if (predecessor.isMyself()) {
 			if (ds().isFirstAgent()) {
-				LOG.debug("first agent: ds=" + ds().getName());
+				LOG.info("first agent: ds=" + ds().getName());
 				return;
 			} else {
 				ds().client.getExecutor().execute(new Runnable() {
@@ -197,7 +197,7 @@ public class RingAddressMap extends DSContainer<AddressDataSource> implements
 			getLocalMap().putAll(map);
 			contact = ds().nodeMap.getSuccessor(contact.getNode());
 			if (contact == firstContact) {
-				LOG.debug("break copyRing");
+				LOG.info("break copyRing");
 				break;
 			}
 		}

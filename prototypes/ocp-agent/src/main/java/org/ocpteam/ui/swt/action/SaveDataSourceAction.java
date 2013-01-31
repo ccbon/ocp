@@ -25,7 +25,7 @@ public class SaveDataSourceAction extends Action {
 
 	@Override
 	public void run() {
-		LOG.debug("Saving datasource");
+		LOG.info("Saving datasource");
 		try {
 			if (window.ds.getFile() == null || window.ds.isNew()) {
 				window.saveAsDataSourceAction.run();

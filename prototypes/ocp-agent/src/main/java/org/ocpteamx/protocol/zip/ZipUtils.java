@@ -18,7 +18,7 @@ public class ZipUtils {
 			throws Exception {
 		lock.lock();
 		try {
-			LOG.debug("extracting from " + zipfile + " path=" + path);
+			LOG.info("extracting from " + zipfile + " path=" + path);
 			ZipInputStream zipInputStream = null;
 			ZipEntry zipEntry = null;
 			byte[] buffer = new byte[2048];
@@ -26,9 +26,9 @@ public class ZipUtils {
 				zipInputStream = new ZipInputStream(
 						new FileInputStream(zipfile));
 				while ((zipEntry = zipInputStream.getNextEntry()) != null) {
-					LOG.debug("zip path=" + zipEntry.getName());
+					LOG.info("zip path=" + zipEntry.getName());
 					if (zipEntry.getName().equalsIgnoreCase(path)) {
-						LOG.debug("found it.");
+						LOG.info("found it.");
 						FileOutputStream fileoutputstream = new FileOutputStream(
 								file);
 						int n;
@@ -146,11 +146,11 @@ public class ZipUtils {
 				if (name.startsWith("/")) {
 					name = name.substring(1);
 				}
-				LOG.debug("name=" + name);
-				LOG.debug("oldname=" + oldname);
+				LOG.info("name=" + name);
+				LOG.info("oldname=" + oldname);
 				boolean toBeRenamed = false;
 				if (name.startsWith(oldname + "/") || name.equals(oldname)) {
-					LOG.debug("to be renamed.");
+					LOG.info("to be renamed.");
 					toBeRenamed = true;
 				}
 				String newEntryName = name;
@@ -265,7 +265,7 @@ public class ZipUtils {
 					if (name.startsWith("/")) {
 						name = name.substring(1);
 					}
-					LOG.debug("name=" + name);
+					LOG.info("name=" + name);
 
 					boolean toBeReplaced = false;
 					for (File f : files) {
@@ -273,7 +273,7 @@ public class ZipUtils {
 								.getPath();
 						String fname = f.getCanonicalFile().toURI().getPath()
 								.replaceFirst("\\Q" + base + "\\E", "");
-						LOG.debug("fname=" + fname);
+						LOG.info("fname=" + fname);
 						if (!dir.equals("")) {
 							fname = dir + "/" + fname;
 						}
@@ -281,7 +281,7 @@ public class ZipUtils {
 								|| name.startsWith(fname + "/")
 								|| name.equals("/" + fname)
 								|| name.equals(fname)) {
-							LOG.debug("to be replaced.");
+							LOG.info("to be replaced.");
 							toBeReplaced = true;
 							break;
 						}
@@ -300,12 +300,12 @@ public class ZipUtils {
 				}
 
 				// add all the files
-				LOG.debug("Adding the new files");
+				LOG.info("Adding the new files");
 				for (File f : files) {
 					String base = parent.getCanonicalFile().toURI().getPath();
 					String fname = f.getCanonicalFile().toURI().getPath()
 							.replaceFirst("\\Q" + base + "\\E", "");
-					LOG.debug("fname=" + fname);
+					LOG.info("fname=" + fname);
 					if (!dir.equals("")) {
 						fname = dir + "/" + fname;
 					}

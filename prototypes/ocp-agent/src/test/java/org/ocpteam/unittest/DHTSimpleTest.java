@@ -72,32 +72,32 @@ public class DHTSimpleTest {
 			ds2.connect();
 
 			ContactMap cm = ds.getComponent(ContactMap.class);
-			LOG.debug("contactMap 1 size:" + cm.size());
-			LOG.debug("contactMap 1 :" + cm);
+			LOG.info("contactMap 1 size:" + cm.size());
+			LOG.info("contactMap 1 :" + cm);
 			
 			ContactMap cm2 = ds2.getComponent(ContactMap.class);
-			LOG.debug("contactMap 2 size:" + cm2.size());
+			LOG.info("contactMap 2 size:" + cm2.size());
 			
 			Context ctx = ds.getContext();
 			DHTDataModel dm = (DHTDataModel) ctx.getDataModel();
 			dm.set("hello", "world");
 			ds.remove("hello");
 			String value = dm.get("hello");
-			LOG.debug("hello=" + value);
+			LOG.info("hello=" + value);
 			assertEquals("world", value);
 			dm.remove("hello");
 			value = dm.get("hello");
-			LOG.debug("hello=" + value);
+			LOG.info("hello=" + value);
 			assertNull(value);
 			
 			dm.set("hello", "world");
 			dm.set("ejder", "bastug");
 			dm.set("jean-louis", "guenego");
 			Set<String> set = dm.keySet();
-			LOG.debug("set: " + set);
+			LOG.info("set: " + set);
 			assertEquals(3, set.size());
 			
-			LOG.debug("testing sendquick");
+			LOG.info("testing sendquick");
 			ds.client.sendQuick(ds2.toContact(), "hello".getBytes());
 			
 			ds.disconnect();

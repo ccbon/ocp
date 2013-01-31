@@ -17,7 +17,7 @@ public class OCPServer extends Server {
 	public OCPAgent agent;
 
 	public void configure() throws Exception {
-		LOG.debug("ds = " + ds());
+		LOG.info("ds = " + ds());
 		this.agent = ds().getComponent(OCPAgent.class);
 
 		boolean bFound = false;
@@ -65,12 +65,12 @@ public class OCPServer extends Server {
 
 	@Override
 	public void stop() {
-		LOG.debug("stopping servers");
+		LOG.info("stopping servers");
 		for (Iterator<IListener> it = listenerList.iterator(); it.hasNext();) {
 			it.next().stop();
 		}
 		bIsStarted = false;
-		LOG.debug("servers stopped.");
+		LOG.info("servers stopped.");
 	}
 
 	@Override

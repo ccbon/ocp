@@ -70,18 +70,18 @@ public abstract class DSPDataSource extends DataSource {
 	public synchronized void connect() throws Exception {
 		super.connect();
 		if (isFirstAgent()) {
-			LOG.debug("This is the first agent on the network");
+			LOG.info("This is the first agent on the network");
 			network = this.getNetworkProperties();
 		} else {
 			network = client.getNetworkProperties();
 		}
-		LOG.debug("network properties: " + JLG.propertiesToString(network));
+		LOG.info("network properties: " + JLG.propertiesToString(network));
 		readNetworkConfig();
 
 		client.askForContact();
 
 		if (getProperty("server", "yes").equals("yes")) {
-			LOG.debug("starting the server");
+			LOG.info("starting the server");
 			configureServer();
 			server.start();
 			askForNode();
@@ -121,7 +121,7 @@ public abstract class DSPDataSource extends DataSource {
 		for (Object component : components()) {
 			try {
 				Method m = component.getClass().getMethod("readNetworkConfig");
-				LOG.debug("invoke");
+				LOG.info("invoke");
 				m.invoke(component);
 			} catch (NoSuchMethodException e) {
 			}
@@ -144,7 +144,7 @@ public abstract class DSPDataSource extends DataSource {
 		super.disconnect();
 		if (server.isStarted()) {
 			onNodeNiceDeparture();
-			LOG.debug("stopping the server");
+			LOG.info("stopping the server");
 			server.stop();
 		}
 	}
@@ -152,7 +152,7 @@ public abstract class DSPDataSource extends DataSource {
 	public synchronized void disconnectHard() throws Exception {
 		super.disconnect();
 		if (server.isStarted()) {
-			LOG.debug("stopping the server");
+			LOG.info("stopping the server");
 			server.stop();
 		}
 	}

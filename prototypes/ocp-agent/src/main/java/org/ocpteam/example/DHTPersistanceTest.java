@@ -45,14 +45,14 @@ public class DHTPersistanceTest {
 
 			Context ctx2 = ds2.getContext();
 			DHTDataModel dm2 = (DHTDataModel) ctx2.getDataModel();
-			LOG.debug("keyset=" + dm.keySet());
-			LOG.debug("keyset=" + dm2.keySet());
-			LOG.debug("hello2->" + dm2.get("hello2"));
-			LOG.debug("coucou->" + dm2.get("coucou"));
+			LOG.info("keyset=" + dm.keySet());
+			LOG.info("keyset=" + dm2.keySet());
+			LOG.info("hello2->" + dm2.get("hello2"));
+			LOG.info("coucou->" + dm2.get("coucou"));
 			
 			ds.disconnect();
-			LOG.debug("hello2->" + dm2.get("hello2"));
-			LOG.debug("coucou->" + dm2.get("coucou"));
+			LOG.info("hello2->" + dm2.get("hello2"));
+			LOG.info("coucou->" + dm2.get("coucou"));
 			ds2.disconnect();
 		} catch (Exception e) {
 			e.printStackTrace();

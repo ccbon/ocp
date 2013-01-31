@@ -145,7 +145,7 @@ public class ExplorerComposite extends Composite {
 					break;
 				default:
 				}
-				LOG.debug("keypressed: keycode:" + e.keyCode
+				LOG.info("keypressed: keycode:" + e.keyCode
 						+ " and character = '" + e.character + "'");
 				ExplorerComposite.this.w.refresh();
 			}
@@ -153,7 +153,7 @@ public class ExplorerComposite extends Composite {
 		localDirectoryTable.addMenuDetectListener(new MenuDetectListener() {
 			@Override
 			public void menuDetected(MenuDetectEvent arg0) {
-				LOG.debug("opening context menu");
+				LOG.info("opening context menu");
 				final MenuManager myMenu = new MenuManager("xxx");
 				final Menu menu = myMenu
 						.createContextMenu(ExplorerComposite.this.w.getShell());
@@ -175,7 +175,7 @@ public class ExplorerComposite extends Composite {
 					RenameFileAction renameFileAction = new RenameFileAction(
 							ExplorerComposite.this);
 					myMenu.add(renameFileAction);
-					LOG.debug("array.lenght=" + sel);
+					LOG.info("array.lenght=" + sel);
 					if (sel > 1) {
 						openFileAction.setEnabled(false);
 						renameFileAction.setEnabled(false);
@@ -202,21 +202,21 @@ public class ExplorerComposite extends Composite {
 		localDirectoryTable.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseDoubleClick(MouseEvent e) {
-				LOG.debug("double click");
+				LOG.info("double click");
 				TableItem[] items = localDirectoryTable.getSelection();
 				if (items.length == 1) {
 					TableItem item = items[0];
 					openLocalFile(item);
 				}
-				LOG.debug("table item:" + e.widget.getClass());
+				LOG.info("table item:" + e.widget.getClass());
 			}
 
 			@Override
 			public void mouseDown(MouseEvent e) {
-				LOG.debug("mouse down");
+				LOG.info("mouse down");
 				Point pt = new Point(e.x, e.y);
 				if (localDirectoryTable.getItem(pt) == null) {
-					LOG.debug("cancel selection");
+					LOG.info("cancel selection");
 					localDirectoryTable.deselectAll();
 				}
 				ExplorerComposite.this.w.refresh();
@@ -284,7 +284,7 @@ public class ExplorerComposite extends Composite {
 					break;
 				}
 
-				LOG.debug("keypressed: keycode:" + e.keyCode
+				LOG.info("keypressed: keycode:" + e.keyCode
 						+ " and character = '" + e.character + "'");
 				ExplorerComposite.this.w.refresh();
 			}
@@ -292,7 +292,7 @@ public class ExplorerComposite extends Composite {
 		remoteDirectoryTable.addMenuDetectListener(new MenuDetectListener() {
 			@Override
 			public void menuDetected(MenuDetectEvent e) {
-				LOG.debug("opening context menu");
+				LOG.info("opening context menu");
 				final MenuManager myMenu = new MenuManager("xxx");
 				final Menu menu = myMenu
 						.createContextMenu(ExplorerComposite.this.w.getShell());
@@ -341,24 +341,24 @@ public class ExplorerComposite extends Composite {
 		remoteDirectoryTable.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseDoubleClick(MouseEvent e) {
-				LOG.debug("double click");
+				LOG.info("double click");
 				TableItem[] items = remoteDirectoryTable.getSelection();
-				LOG.debug("length=" + items.length);
+				LOG.info("length=" + items.length);
 				if (items.length == 1) {
-					LOG.debug("length=1");
+					LOG.info("length=1");
 					TableItem item = items[0];
 					openRemoteFile(item);
 				}
-				LOG.debug("table item:" + e.widget.getClass());
+				LOG.info("table item:" + e.widget.getClass());
 
 			}
 
 			@Override
 			public void mouseDown(MouseEvent e) {
-				LOG.debug("mouse down");
+				LOG.info("mouse down");
 				Point pt = new Point(e.x, e.y);
 				if (remoteDirectoryTable.getItem(pt) == null) {
-					LOG.debug("cancel selection");
+					LOG.info("cancel selection");
 					remoteDirectoryTable.deselectAll();
 				}
 				ExplorerComposite.this.w.refresh();
@@ -465,10 +465,10 @@ public class ExplorerComposite extends Composite {
 		table.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseDown(MouseEvent e) {
-				LOG.debug("mouse down");
+				LOG.info("mouse down");
 				Point pt = new Point(e.x, e.y);
 				if (table.getItem(pt) == null) {
-					LOG.debug("cancel selection");
+					LOG.info("cancel selection");
 					table.deselectAll();
 				}
 			}
@@ -506,11 +506,11 @@ public class ExplorerComposite extends Composite {
 
 			@Override
 			public void drop(DropTargetEvent event) {
-				LOG.debug("drop");
+				LOG.info("drop");
 				if (TextTransfer.getInstance().isSupportedType(
 						event.currentDataType)) {
 					String text = (String) event.data;
-					LOG.debug("received from transfer: " + text);
+					LOG.info("received from transfer: " + text);
 					(new CommitAction(ExplorerComposite.this.w)).run();
 				} else if (FileTransfer.getInstance().isSupportedType(
 						event.currentDataType)) {
@@ -552,11 +552,11 @@ public class ExplorerComposite extends Composite {
 
 			@Override
 			public void drop(DropTargetEvent event) {
-				LOG.debug("drop");
+				LOG.info("drop");
 				if (TextTransfer.getInstance().isSupportedType(
 						event.currentDataType)) {
 					String text = (String) event.data;
-					LOG.debug("received from transfer: " + text);
+					LOG.info("received from transfer: " + text);
 					(new CheckOutAction(ExplorerComposite.this.w)).run();
 				} else if (FileTransfer.getInstance().isSupportedType(
 						event.currentDataType)) {
@@ -652,7 +652,7 @@ public class ExplorerComposite extends Composite {
 	public void openLocalFile(TableItem item) {
 		String name = item.getText(0);
 		String type = item.getText(1);
-		LOG.debug("type = " + type);
+		LOG.info("type = " + type);
 		if (type.equals(DIRECTORY_TYPE)) {
 
 			if (name.equals(DIRECTORY_PARENT)) {
@@ -685,7 +685,7 @@ public class ExplorerComposite extends Composite {
 		}
 
 		File[] children = null;
-		LOG.debug("currentLocalDirectory=" + currentLocalDirectory);
+		LOG.info("currentLocalDirectory=" + currentLocalDirectory);
 		if (currentLocalDirectory != null) {
 			children = currentLocalDirectory.listFiles();
 			if (Platform.isWindows()) {
@@ -709,7 +709,7 @@ public class ExplorerComposite extends Composite {
 		});
 
 		for (File f : children) {
-			LOG.debug("filename: " + f.getAbsolutePath());
+			LOG.info("filename: " + f.getAbsolutePath());
 			TableItem tableItem = new TableItem(localDirectoryTable, SWT.NONE);
 			String type = null;
 			String size = null;
@@ -785,7 +785,7 @@ public class ExplorerComposite extends Composite {
 					"Cannot delete the parent directory.");
 			return;
 		}
-		LOG.debug("type = " + type);
+		LOG.info("type = " + type);
 		JLG.rm(new File(currentLocalDirectory, name));
 	}
 

@@ -29,7 +29,7 @@ public class RemoveFileAction extends Action {
 
 	@Override
 	public void run() {
-		LOG.debug("Delete local file");
+		LOG.info("Delete local file");
 		int selNbr = composite.localDirectoryTable.getSelection().length;
 		if (selNbr == 1) {
 			String name = composite.localDirectoryTable.getSelection()[0].getText();

@@ -55,8 +55,8 @@ public class DropboxClient extends DSContainer<DropboxDataSource> implements
 			properties.remove(username);
 		}
 
-		LOG.debug("username=" + username);
-		LOG.debug(properties.toString());
+		LOG.info("username=" + username);
+		LOG.info(properties.toString());
 		if (properties.containsKey(username)) {
 			reAuth();
 		} else {
@@ -87,15 +87,15 @@ public class DropboxClient extends DSContainer<DropboxDataSource> implements
 
 	private void loadTokens() {
 		try {
-			LOG.debug(ds().tokenFilename);
+			LOG.info(ds().tokenFilename);
 			properties = JLG.loadConfig(ds().tokenFilename);
 		} catch (Exception e) {
-			LOG.debug("Cant load tokens");
+			LOG.info("Cant load tokens");
 			properties = new Properties();
 		}
 
 		for (Object key : properties.keySet()) {
-			LOG.debug(key + "=" + properties.get(key));
+			LOG.info(key + "=" + properties.get(key));
 		}
 	}
 
@@ -105,8 +105,8 @@ public class DropboxClient extends DSContainer<DropboxDataSource> implements
 		tokenKey = array[0];
 		tokenSecret = array[1];
 
-		LOG.debug("token_key=" + tokenKey);
-		LOG.debug("token_secret=" + tokenSecret);
+		LOG.info("token_key=" + tokenKey);
+		LOG.info("token_secret=" + tokenSecret);
 		AccessTokenPair reAuthTokens = new AccessTokenPair(tokenKey,
 				tokenSecret);
 
@@ -125,8 +125,8 @@ public class DropboxClient extends DSContainer<DropboxDataSource> implements
 		tokenKey = getSession().getAccessTokenPair().key;
 		tokenSecret = getSession().getAccessTokenPair().secret;
 
-		LOG.debug("tokenKey=" + tokenKey);
-		LOG.debug("tokenSecret=" + tokenSecret);
+		LOG.info("tokenKey=" + tokenKey);
+		LOG.info("tokenSecret=" + tokenSecret);
 		username = mDBApi.accountInfo().displayName;
 	}
 

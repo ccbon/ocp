@@ -68,7 +68,7 @@ public class DHTInterestingStress extends TopContainer {
 			}
 		}
 		System.out.println();
-		LOG.debug("try to pick up a connected datasource");
+		LOG.info("try to pick up a connected datasource");
 		int r = JLG.random(n);
 		DataSource d = ds[r];
 		synchronized (d) {
@@ -76,13 +76,13 @@ public class DHTInterestingStress extends TopContainer {
 				return;
 			}
 			try {
-				LOG.debug("found datasource=" + r);
+				LOG.info("found datasource=" + r);
 				Context c = d.getContext();
 				DHTDataModel dht = (DHTDataModel) c.getDataModel();
 				dht.set("key" + JLG.random(100), "value" + JLG.random(100));
-				LOG.debug("keyset size: " + dht.keySet().size());
+				LOG.info("keyset size: " + dht.keySet().size());
 				String key = "key" + JLG.random(100);
-				LOG.debug("getting " + key + " : " + dht.get(key));
+				LOG.info("getting " + key + " : " + dht.get(key));
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -117,7 +117,7 @@ public class DHTInterestingStress extends TopContainer {
 			@Override
 			public void run() {
 				try {
-					LOG.debug("availability");
+					LOG.info("availability");
 					for (int i = 1; i < ds.length; i++) {
 						synchronized (ds[i]) {
 							double r = Math.random();
@@ -163,14 +163,14 @@ public class DHTInterestingStress extends TopContainer {
 		scheduler.shutdown();
 		scheduler.shutdownNow();
 		disconnectAll();
-		LOG.debug("app finished");
+		LOG.info("app finished");
 		JLG.showActiveThreads();
 	}
 
 	private void disconnectAll() throws Exception {
 		for (int i = 0; i < n; i++) {
 			synchronized (ds[i]) {
-				LOG.debug("disconnecting " + i);
+				LOG.info("disconnecting " + i);
 				if (ds[i].isConnected()) {
 					ds[i].disconnect();
 				}
@@ -208,11 +208,11 @@ public class DHTInterestingStress extends TopContainer {
 		for (int i = 0; i < n; i++) {
 			ds[i].connect();
 			ContactMap cm = ds[i].getComponent(ContactMap.class);
-			LOG.debug("ds[" + i + "] contact map size: " + cm.size());
+			LOG.info("ds[" + i + "] contact map size: " + cm.size());
 		}
 		for (int i = 0; i < n; i++) {
 			ContactMap cm = ds[i].getComponent(ContactMap.class);
-			LOG.debug("ds[" + i + "] contact map size: " + cm.size());
+			LOG.info("ds[" + i + "] contact map size: " + cm.size());
 		}
 	}
 

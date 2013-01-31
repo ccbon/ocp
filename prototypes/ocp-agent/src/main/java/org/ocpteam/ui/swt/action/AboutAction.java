@@ -31,7 +31,7 @@ public class AboutAction extends Action {
 
 	@Override
 	public void run() {
-		LOG.debug("About");
+		LOG.info("About");
 		Display display = window.getShell().getDisplay();
 		MessageBox messageBox = new MessageBox(new Shell(display),
 				SWT.ICON_INFORMATION | SWT.OK);

@@ -31,20 +31,20 @@ public class SField implements Serializable {
 
 	@Override
 	public boolean equals(Object obj) {
-		LOG.debug("Testing the field type " + type);
+		LOG.info("Testing the field type " + type);
 		if (!(obj instanceof SField)) {
-			LOG.debug("Not a Field");
+			LOG.info("Not a Field");
 			return false;
 		}
 		SField f = (SField) obj;
 		if (!type.equals(f.getType())) {
-			LOG.debug("Not same type of Field");
+			LOG.info("Not same type of Field");
 			return false;
 		}
-		LOG.debug("Type OK: Type=" + type);
+		LOG.info("Type OK: Type=" + type);
 		if (value == null && f.getValue() != null) {
-			LOG.debug("f1.value=null | f2.value!=null");
-			LOG.debug("f2.value=" + f.getValue());
+			LOG.info("f1.value=null | f2.value!=null");
+			LOG.info("f2.value=" + f.getValue());
 			return false;
 		}
 		if (type.equals(Structure.TYPE_BYTES)) {
@@ -52,12 +52,12 @@ public class SField implements Serializable {
 		}
 		
 		if (value != null && (!value.equals(f.getValue()))) {
-			LOG.debug("Not same value of Field");
-			LOG.debug("This=" + value);
-			LOG.debug("Given=" + f.getValue());
+			LOG.info("Not same value of Field");
+			LOG.info("This=" + value);
+			LOG.info("Given=" + f.getValue());
 			return false;
 		}
-		LOG.debug("Value OK: Value=" + value);
+		LOG.info("Value OK: Value=" + value);
 		return true;
 	}
 

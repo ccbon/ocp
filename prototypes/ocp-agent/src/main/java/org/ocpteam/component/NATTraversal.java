@@ -44,7 +44,7 @@ public class NATTraversal extends Component implements INATTraversal {
 			@Override
 			public void run() {
 				synchronized (NATTraversal.this) {
-					LOG.debug("start synchronized on " + NATTraversal.this);
+					LOG.info("start synchronized on " + NATTraversal.this);
 					try {
 						
 						// be silent and try to do only your job...
@@ -52,8 +52,8 @@ public class NATTraversal extends Component implements INATTraversal {
 								.setLevel(Level.OFF);
 
 						InetAddress addr = InetAddress.getLocalHost();
-						LOG.debug("my hostname:" + addr.getHostName());
-						LOG.debug("my ip:" + addr.getHostAddress());
+						LOG.info("my hostname:" + addr.getHostName());
+						LOG.info("my ip:" + addr.getHostAddress());
 						PortMapping desiredMapping = new PortMapping(port,
 								addr.getHostAddress(),
 								protocol, "OCP Agent Mapping");
@@ -62,11 +62,11 @@ public class NATTraversal extends Component implements INATTraversal {
 								new PortMappingListener(desiredMapping));
 
 						upnpService.getControlPoint().search();
-						LOG.debug("NAT run done.");
+						LOG.info("NAT run done.");
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
-					LOG.debug("stop synchronized on " + NATTraversal.this);
+					LOG.info("stop synchronized on " + NATTraversal.this);
 				}
 			}
 		}, "NATTraversal").start();
@@ -74,7 +74,7 @@ public class NATTraversal extends Component implements INATTraversal {
 		Runtime.getRuntime().addShutdownHook(new Thread() {
 			@Override
 			public void run() {
-				LOG.debug("NAT Traversal: hook on exit...");
+				LOG.info("NAT Traversal: hook on exit...");
 				unmap();
 			}
 		});
@@ -86,16 +86,16 @@ public class NATTraversal extends Component implements INATTraversal {
 
 			@Override
 			public void run() {
-				LOG.debug("unmap on " + NATTraversal.this);
+				LOG.info("unmap on " + NATTraversal.this);
 				synchronized (NATTraversal.this) {
-					LOG.debug("start sync on " + NATTraversal.this);
+					LOG.info("start sync on " + NATTraversal.this);
 					if (upnpService != null) {
-						LOG.debug("About to stop nat traversal for port "
+						LOG.info("About to stop nat traversal for port "
 								+ port + ".");
 						upnpService.shutdown();
 						upnpService = null;
 					}
-					LOG.debug("stop sync on " + NATTraversal.this);
+					LOG.info("stop sync on " + NATTraversal.this);
 				}
 			}
 		}, "NATTraversal-unmap").start();

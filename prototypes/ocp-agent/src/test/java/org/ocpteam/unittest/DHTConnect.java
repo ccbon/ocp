@@ -84,17 +84,17 @@ public class DHTConnect extends TopContainer {
 		for (int i = 0; i < n; i++) {
 			ds[i].connect();
 			ContactMap cm = ds[i].getComponent(ContactMap.class);
-			LOG.debug("ds[" + i + "] contact map size: " + cm.size());
+			LOG.info("ds[" + i + "] contact map size: " + cm.size());
 			assertEquals(i + 1, cm.size());
 		}
 		for (int i = 0; i < n; i++) {
 			ContactMap cm = ds[i].getComponent(ContactMap.class);
-			LOG.debug("ds[" + i + "] contact map size: " + cm.size());
+			LOG.info("ds[" + i + "] contact map size: " + cm.size());
 			assertEquals(n, cm.size());
 		}
 
 		// disconnect the #1
-		LOG.debug("disconnect 1");
+		LOG.info("disconnect 1");
 		ds[1].disconnect();
 		ds[1].getComponent(ContactMap.class).removeAll();
 		ds[3].disconnect();
@@ -111,13 +111,13 @@ public class DHTConnect extends TopContainer {
 			JLG.println("ds[" + i + "] contact map size: " + cm.size());
 		}
 
-		LOG.debug("reconnect 1");
+		LOG.info("reconnect 1");
 		ds[1].connect();
 		for (int i = 0; i < n; i++) {
 			ContactMap cm = ds[i].getComponent(ContactMap.class);
 			JLG.println("ds[" + i + "] contact map size: " + cm.size() + ": " + cm.values());
 		}
-		LOG.debug("reconnect 3");
+		LOG.info("reconnect 3");
 		ds[3].connect();
 		for (int i = 0; i < n; i++) {
 			ContactMap cm = ds[i].getComponent(ContactMap.class);

@@ -33,7 +33,7 @@ public class InputMessage implements IStructurable {
 	public Structure toStructure() throws Exception {
 		Structure result = new Structure(getClass());
 		result.setIntField("transid", transid);
-		LOG.debug("objects=" + objects);
+		LOG.info("objects=" + objects);
 		result.setListField("objects", objects);
 		return result;
 	}

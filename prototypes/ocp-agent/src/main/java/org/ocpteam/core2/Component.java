@@ -79,7 +79,7 @@ public class Component implements IComponent {
 
 	@Override
 	public void init() throws Exception {
-		LOG.debug("init class " + getClass());
+		LOG.info("init class " + getClass());
 		Iterator<Object> it = designer.components().iterator();
 		while (it.hasNext()) {
 			Object o = it.next();

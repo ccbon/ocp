@@ -18,7 +18,7 @@ public class RemoveKeyAction extends Action {
 
 	@Override
 	public void run() {
-		LOG.debug("Remove Key");
+		LOG.info("Remove Key");
 		try {
 			MapComposite mapComposite = (MapComposite) w.explorerComposite;
 			mapComposite.remove();

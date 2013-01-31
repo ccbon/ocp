@@ -35,7 +35,7 @@ public class MapModule implements IModule {
 			@Override
 			public Serializable run(Session session, Serializable[] objects)
 					throws Exception {
-				LOG.debug("GET...");
+				LOG.info("GET...");
 				Address address = (Address) objects[0];
 				return session.ds().getComponent(IAddressMap.class)
 						.get(address);
@@ -59,7 +59,7 @@ public class MapModule implements IModule {
 			@Override
 			public Serializable run(Session session, Serializable[] objects)
 					throws Exception {
-				LOG.debug("PUT...");
+				LOG.info("PUT...");
 				Address address = (Address) objects[0];
 				byte[] value = (byte[]) objects[1];
 				session.ds().getComponent(IAddressMap.class)
@@ -85,7 +85,7 @@ public class MapModule implements IModule {
 			@Override
 			public Serializable run(Session session, Serializable[] objects)
 					throws Exception {
-				LOG.debug("REMOVE...");
+				LOG.info("REMOVE...");
 				Address address = (Address) objects[0];
 				session.ds().getComponent(IAddressMap.class).remove(address);
 				return null;
@@ -110,15 +110,15 @@ public class MapModule implements IModule {
 			public void run(Session session, Serializable[] objects,
 					Socket socket, Protocol protocol) throws Exception {
 				try {
-					LOG.debug("localmap...");
+					LOG.info("localmap...");
 					IDataStore map = session.ds()
 							.getComponent(IAddressMap.class).getLocalMap();
 					Set<Address> set = map.keySet();
 					for (Address address : set) {
-						LOG.debug("write " + address);
+						LOG.info("write " + address);
 						protocol.getStreamSerializer().writeObject(socket,
 								address);
-						LOG.debug("sha1(value)=" + JLG.sha1(map.get(address)));
+						LOG.info("sha1(value)=" + JLG.sha1(map.get(address)));
 						protocol.getStreamSerializer().writeObject(socket,
 								map.get(address));
 					}
@@ -142,7 +142,7 @@ public class MapModule implements IModule {
 			@Override
 			public void run(Session session, Serializable[] objects,
 					Socket socket, Protocol protocol) throws Exception {
-				LOG.debug("setMap...");
+				LOG.info("setMap...");
 				try {
 					while (true) {
 						Serializable serializable = protocol
@@ -180,14 +180,14 @@ public class MapModule implements IModule {
 			@Override
 			public void run(Session session, Serializable[] objects,
 					Socket socket, Protocol protocol) throws Exception {
-				LOG.debug("transfer submap...");
+				LOG.info("transfer submap...");
 				Id nodeId = (Id) objects[0];
 				IDataStore localMap = session.ds()
 						.getComponent(IAddressMap.class).getLocalMap();
 				Set<Address> set = new HashSet<Address>(localMap.keySet());
 				for (Address address : set) {
 					if (address.compareTo(nodeId) > 0) {
-						LOG.debug("write " + address);
+						LOG.info("write " + address);
 						protocol.getStreamSerializer().writeObject(socket,
 								address);
 						protocol.getStreamSerializer().writeObject(socket,

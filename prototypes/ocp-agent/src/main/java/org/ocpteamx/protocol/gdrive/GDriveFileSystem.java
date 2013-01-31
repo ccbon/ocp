@@ -38,13 +38,13 @@ public class GDriveFileSystem extends DSContainer<GDriveDataSource> implements
 
 	@Override
 	public IFile getFile(String dir) throws Exception {
-		LOG.debug("getFile with dir = " + dir);
+		LOG.info("getFile with dir = " + dir);
 		GDriveClient c = (GDriveClient) ds().getComponent(IAuthenticable.class);
 		List<File> result = new ArrayList<File>();
 		Files.List request = c.service.files().list();
 		String id = getIdFromPath(dir);
 		String query = "'" + id + "' in parents AND trashed != true";
-		LOG.debug(query);
+		LOG.info(query);
 		request.setQ(query);
 
 		do {
@@ -69,7 +69,7 @@ public class GDriveFileSystem extends DSContainer<GDriveDataSource> implements
 	}
 
 	private String getIdFromPath(String dir) throws Exception {
-		LOG.debug("getIdFromPath with dir = " + dir);
+		LOG.info("getIdFromPath with dir = " + dir);
 		if (dir.equals("/") || dir.equals("")) {
 			return getRootId();
 		}
@@ -127,7 +127,7 @@ public class GDriveFileSystem extends DSContainer<GDriveDataSource> implements
 		body.setMimeType("application/vnd.google-apps.folder");
 		GDriveClient c = (GDriveClient) ds().getComponent(IAuthenticable.class);
 		File f = c.service.files().insert(body).execute();
-		LOG.debug("f.id = " + f.getId());
+		LOG.info("f.id = " + f.getId());
 
 	}
 
@@ -152,7 +152,7 @@ public class GDriveFileSystem extends DSContainer<GDriveDataSource> implements
 
 		// Send the request to the API.
 		File f = c.service.files().update(id, file).execute();
-		LOG.debug("f.Id = " + f.getId());
+		LOG.info("f.Id = " + f.getId());
 	}
 
 	@Override
@@ -174,7 +174,7 @@ public class GDriveFileSystem extends DSContainer<GDriveDataSource> implements
 		if (f == null) {
 			throw new Exception("The file does not exist.");
 		}
-		LOG.debug("f.id = " + f.getId());
+		LOG.info("f.id = " + f.getId());
 		String url = f.getDownloadUrl();
 		if (url == null || url.equals("")) {
 			throw new Exception("This file is Google specific and cannot be downloaded.");
@@ -195,7 +195,7 @@ public class GDriveFileSystem extends DSContainer<GDriveDataSource> implements
 			fos.close();
 		}
 
-		LOG.debug("Getting file with id = " + f.getId());
+		LOG.info("Getting file with id = " + f.getId());
 	}
 
 	@Override
@@ -204,7 +204,7 @@ public class GDriveFileSystem extends DSContainer<GDriveDataSource> implements
 		if (file.isDirectory()) {
 			mkdir(remoteDir, file.getName());
 			for (java.io.File child : file.listFiles()) {
-				LOG.debug("child: " + child.getName());
+				LOG.info("child: " + child.getName());
 				commit(remoteDir + "/" + file.getName(), child);
 			}
 		} else {
@@ -222,7 +222,7 @@ public class GDriveFileSystem extends DSContainer<GDriveDataSource> implements
 			GDriveClient c = (GDriveClient) ds().getComponent(
 					IAuthenticable.class);
 			File f = c.service.files().insert(body, mediaContent).execute();
-			LOG.debug("f.id = " + f.getId());
+			LOG.info("f.id = " + f.getId());
 		}
 	}
 

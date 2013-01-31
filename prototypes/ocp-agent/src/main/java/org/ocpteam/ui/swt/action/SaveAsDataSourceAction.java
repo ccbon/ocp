@@ -33,7 +33,7 @@ public class SaveAsDataSourceAction extends Action {
 	@Override
 	public void run() {
 		try {
-			LOG.debug("Saving as datasource");
+			LOG.info("Saving as datasource");
 			Display display = window.getShell().getDisplay();
 			Shell shell = new Shell(display);
 			shell.setLayout(new FillLayout());
@@ -49,7 +49,7 @@ public class SaveAsDataSourceAction extends Action {
 			}
 			String selected = fd.open();
 			window.getShell().setFocus();
-			LOG.debug(selected);
+			LOG.info(selected);
 			if (selected == null) {
 				return;
 			}

@@ -53,7 +53,7 @@ public class DROPBOXSignInWizard extends Wizard implements IScenario {
 
 			@Override
 			protected void nextPressed() {
-				LOG.debug("Next pressed");
+				LOG.info("Next pressed");
 				super.nextPressed();
 			}
 
@@ -64,10 +64,10 @@ public class DROPBOXSignInWizard extends Wizard implements IScenario {
 
 	protected void informClient() {
 		c.username = p1.text.getText();
-		LOG.debug("username=" + c.username);
+		LOG.info("username=" + c.username);
 
 		boolean bRememberMe = p1.btnRememberMe.getSelection();
-		LOG.debug("bRememberMe=" + bRememberMe);
+		LOG.info("bRememberMe=" + bRememberMe);
 		c.setRememberMe(bRememberMe);
 	}
 

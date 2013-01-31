@@ -25,7 +25,7 @@ public class SignOutAction extends Action {
 
 	@Override
 	public void run() {
-		LOG.debug("Disconnect a user...");
+		LOG.info("Disconnect a user...");
 		try {
 			window.signOut();
 		} catch (Exception e) {

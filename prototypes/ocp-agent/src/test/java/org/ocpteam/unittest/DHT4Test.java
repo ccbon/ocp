@@ -48,33 +48,33 @@ public class DHT4Test {
 
 			ds[0].connect();
 			ds[0].dm.set("hello", "world");
-			LOG.debug("hello->" + ds[0].dm.get("hello"));
+			LOG.info("hello->" + ds[0].dm.get("hello"));
 
 			// start all
 			for (int i = 1; i < n; i++) {
 				ds[i].connect();
 				ContactMap cm = ds[i].getComponent(ContactMap.class);
-				LOG.debug("ds[" + i + "] contact map size: " + cm.size());
+				LOG.info("ds[" + i + "] contact map size: " + cm.size());
 				assertEquals(i + 1, cm.size());
 			}
 			
 			
 			
 			ds[0].dm.set("coucou", "suzana");
-			LOG.debug("keyset: " + ds[0].dm.keySet());
+			LOG.info("keyset: " + ds[0].dm.keySet());
 			//ds[0].dm.remove("hello");
 			ds[0].networkPicture();
 			
 			ds[0].disconnectHard();
 			ds[1].contactMap.refreshContactList();
 			ds[1].client.waitForCompletion();
-			LOG.debug("-------------------------------------");
+			LOG.info("-------------------------------------");
 			ds[1].networkPicture();
 			
-			LOG.debug("coucou->" + ds[1].dm.get("coucou"));
+			LOG.info("coucou->" + ds[1].dm.get("coucou"));
 			ds[1].client.waitForCompletion();
 			for (int i = 1; i < n; i++) {
-				LOG.debug("disconnecting " + ds[i].getName());
+				LOG.info("disconnecting " + ds[i].getName());
 				ds[i].disconnectHard();
 			}
 

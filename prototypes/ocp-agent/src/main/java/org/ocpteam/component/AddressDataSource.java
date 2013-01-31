@@ -56,7 +56,7 @@ public abstract class AddressDataSource extends DSPDataSource {
 		if (getComponent(IDataStore.class) instanceof IPersistentMap) {
 			String dir = getProperty("uri", Application.getAppDir()
 					+ "/datastore/" + getProtocolName() + "/" + getName());
-			LOG.debug("dir=" + dir);
+			LOG.info("dir=" + dir);
 			String uri = getProperty("datastore.uri", dir);
 
 			((IPersistentMap) getComponent(IDataStore.class)).setURI(uri);
@@ -110,10 +110,10 @@ public abstract class AddressDataSource extends DSPDataSource {
 					break;
 				}
 				Address key = (Address) serializable;
-				LOG.debug("address=" + key);
+				LOG.info("address=" + key);
 				byte[] value = (byte[]) protocol.getStreamSerializer()
 						.readObject(socket);
-				LOG.debug("sha1(value)=" + JLG.sha1(value));
+				LOG.info("sha1(value)=" + JLG.sha1(value));
 				localmap.put(key, value);
 			}
 			contactMap.getTcpClient(c).returnSocket(socket);
@@ -124,7 +124,7 @@ public abstract class AddressDataSource extends DSPDataSource {
 		} catch (NotAvailableContactException e) {
 		} finally {
 			if (socket != null) {
-				LOG.debug("about to close the socket. For info socket buffer size:"
+				LOG.info("about to close the socket. For info socket buffer size:"
 						+ socket.getReceiveBufferSize());
 				socket.close();
 				socket = null;

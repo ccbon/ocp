@@ -46,7 +46,7 @@ public class DHT2DataModel extends DSContainer<DHT2DataSource> implements IMapDa
 			return;
 		}
 		Queue<Contact> contactQueue = nodeMap.getContactQueue(address);
-		LOG.debug("contactQueue=" + contactQueue);
+		LOG.info("contactQueue=" + contactQueue);
 
 		DHT2Module m = ds().getComponent(DHT2Module.class);
 		ds().client.requestByPriority(contactQueue, new InputMessage(m.store(),
@@ -104,7 +104,7 @@ public class DHT2DataModel extends DSContainer<DHT2DataSource> implements IMapDa
 			return;
 		}
 		Queue<Contact> contactQueue = nodeMap.getContactQueue(address);
-		LOG.debug("contactQueue=" + contactQueue);
+		LOG.info("contactQueue=" + contactQueue);
 
 		DHT2Module m = ds().getComponent(DHT2Module.class);
 		ds().client.requestByPriority(contactQueue, new InputMessage(m.remove(),
@@ -132,7 +132,7 @@ public class DHT2DataModel extends DSContainer<DHT2DataSource> implements IMapDa
 								break;
 							}
 							String s = (String) serializable;
-							LOG.debug("s=" + s);
+							LOG.info("s=" + s);
 							set.add(s);
 						}
 						ds().contactMap.getTcpClient(c).returnSocket(socket);

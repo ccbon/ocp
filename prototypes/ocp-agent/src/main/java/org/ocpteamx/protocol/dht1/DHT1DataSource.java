@@ -175,12 +175,12 @@ public class DHT1DataSource extends DSPDataSource {
 	}
 
 	public void store(String key, String value) throws Exception {
-		LOG.debug("local store: " + key + "->" + value);
+		LOG.info("local store: " + key + "->" + value);
 		map.put(new Address(key.getBytes()), value.getBytes());
 	}
 
 	public String retrieve(String key) {
-		LOG.debug("local retrieve: " + key);
+		LOG.info("local retrieve: " + key);
 		return new String(map.get(new Address(key.getBytes())));
 	}
 

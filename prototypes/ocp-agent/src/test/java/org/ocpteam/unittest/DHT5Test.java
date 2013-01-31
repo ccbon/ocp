@@ -72,7 +72,7 @@ public class DHT5Test {
 			
 			Context ctx = dts.getContext();
 			IFileSystem fs = (IFileSystem) ctx.getDataModel();
-			LOG.debug("commit " + filename);
+			LOG.info("commit " + filename);
 			fs.commit("/", new File(filename));
 			JLG.rm(filename);
 			
@@ -91,7 +91,7 @@ public class DHT5Test {
 			for (int i = 1; i < n; i++) {
 				ds[i].connect();
 				ContactMap cm = ds[i].getComponent(ContactMap.class);
-				LOG.debug("ds[" + i + "] contact map size: " + cm.size());
+				LOG.info("ds[" + i + "] contact map size: " + cm.size());
 				assertEquals(i + 1, cm.size());
 			}
 			
@@ -103,18 +103,18 @@ public class DHT5Test {
 
 			ctx = dts.getContext();
 			fs = (IFileSystem) ctx.getDataModel();
-			LOG.debug("checkout" + filename);
+			LOG.info("checkout" + filename);
 			fs.checkout("/", filename, new File("."));
 			Id checksum2 = TestUtils.checksum(filename);
 			
 			for (int i = 0; i < n; i++) {
-				LOG.debug("disconnecting " + ds[i].getName());
+				LOG.info("disconnecting " + ds[i].getName());
 				ds[i].disconnectHard();
 			}
 			
 			JLG.rm(filename);
-			LOG.debug("checksum=" + checksum);
-			LOG.debug("checksum2=" + checksum2);
+			LOG.info("checksum=" + checksum);
+			LOG.info("checksum2=" + checksum2);
 			assertEquals(checksum, checksum2);
 		} catch (Exception e) {
 			e.printStackTrace();

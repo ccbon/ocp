@@ -25,7 +25,7 @@ public class FTPClient extends DSContainer<FTPDataSource> implements
 	@Override
 	public void connect() throws Exception {
 		hostname = ds().getURI().getHost();
-		LOG.debug("hostname=" + hostname);
+		LOG.info("hostname=" + hostname);
 		try {
 			ftp.connect(hostname);
 		} catch (Exception e) {
@@ -53,7 +53,7 @@ public class FTPClient extends DSContainer<FTPDataSource> implements
 		String login = a.getUsername();
 		String password = (String) getChallenge();
 		if (ftp.login(login, password)) {
-			LOG.debug("ftp logged in.");
+			LOG.info("ftp logged in.");
 			IDataModel dm = new FTPFileSystem(this);
 			User user = new User();
 			user.setUsername(login);

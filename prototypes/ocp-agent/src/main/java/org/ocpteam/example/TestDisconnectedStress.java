@@ -49,13 +49,13 @@ public class TestDisconnectedStress extends TopContainer {
 
 		connectAll();
 		disconnectAll();
-		LOG.debug("app finished");
+		LOG.info("app finished");
 		//JLG.showActiveThreads();
 	}
 
 	private void disconnectAll() throws Exception {
 		for (int i = 0; i < n; i++) {
-			LOG.debug("disconnecting " + i);
+			LOG.info("disconnecting " + i);
 			ds[i].disconnect();
 		}
 	}
@@ -90,11 +90,11 @@ public class TestDisconnectedStress extends TopContainer {
 		for (int i = 0; i < n; i++) {
 			ds[i].connect();
 			ContactMap cm = ds[i].getComponent(ContactMap.class);
-			LOG.debug("ds[" + i + "] contact map size: " + cm.size());
+			LOG.info("ds[" + i + "] contact map size: " + cm.size());
 		}
 		for (int i = 0; i < n; i++) {
 			ContactMap cm = ds[i].getComponent(ContactMap.class);
-			LOG.debug("ds[" + i + "] contact map size: " + cm.size());
+			LOG.info("ds[" + i + "] contact map size: " + cm.size());
 		}
 
 	}

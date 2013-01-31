@@ -27,7 +27,7 @@ public class OpenConsoleAction extends Action {
 
 	@Override
 	public void run() {
-		LOG.debug("Opening Console");
+		LOG.info("Opening Console");
 		window.open();
 	}
 

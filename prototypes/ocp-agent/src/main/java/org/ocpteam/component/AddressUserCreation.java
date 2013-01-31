@@ -140,8 +140,8 @@ public class AddressUserCreation extends DSContainer<AddressDataSource>
 		String username = um.getUsername();
 		IAuthenticable a = ds().getComponent(IAuthenticable.class);
 		String password = (String) a.getChallenge();
-		LOG.debug("username=" + username);
-		LOG.debug("password=" + password);
+		LOG.info("username=" + username);
+		LOG.info("password=" + password);
 		if (ds().usesComponent(ISecurity.class)) {
 			ISecurity security = ds().getComponent(ISecurity.class);
 			this.user = security.getUser(username, password);

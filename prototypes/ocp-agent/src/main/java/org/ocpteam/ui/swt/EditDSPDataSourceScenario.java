@@ -24,7 +24,7 @@ public class EditDSPDataSourceScenario implements IScenario {
 
 	@Override
 	public void run() throws Exception {
-		LOG.debug("Starting new DataSource senario");
+		LOG.info("Starting new DataSource senario");
 		Shell shell = new Shell(w.getShell().getDisplay());
 		// Create the preference manager
 		PreferenceManager prefManager = new PreferenceManager();

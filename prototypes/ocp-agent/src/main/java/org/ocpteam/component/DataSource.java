@@ -97,7 +97,7 @@ public abstract class DataSource extends TopContainer implements IComponent,
 
 	@Override
 	public void save() throws Exception {
-		LOG.debug("saving ds");
+		LOG.info("saving ds");
 		if (bIsNew) {
 			throw new Exception("Need a filename to save a new datasource");
 		}
@@ -113,7 +113,7 @@ public abstract class DataSource extends TopContainer implements IComponent,
 	public void saveAs(File file) throws Exception {
 		this.file = file;
 		bIsNew = false;
-		LOG.debug("save");
+		LOG.info("save");
 		save();
 	}
 
@@ -176,7 +176,7 @@ public abstract class DataSource extends TopContainer implements IComponent,
 		String resourceClassString = packageString + "."
 				+ getProtocolName().toUpperCase() + subpackage.toUpperCase()
 				+ "Resource";
-		LOG.debug("class=" + resourceClassString);
+		LOG.info("class=" + resourceClassString);
 		try {
 			ResourceBundle result = (ResourceBundle) Class.forName(
 					resourceClassString).newInstance();

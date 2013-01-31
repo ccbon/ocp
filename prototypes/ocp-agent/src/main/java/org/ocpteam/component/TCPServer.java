@@ -33,13 +33,13 @@ public class TCPServer {
 
 	public void start() {
 		pool = Executors.newCachedThreadPool();
-		LOG.debug("pool class=" + pool);
+		LOG.info("pool class=" + pool);
 
 		pool.execute(new Runnable() {
 
 			@Override
 			public void run() {
-				LOG.debug("starting a TCP server thread on port:" + port);
+				LOG.info("starting a TCP server thread on port:" + port);
 				try {
 					if (serverSocket != null) {
 						try {
@@ -52,7 +52,7 @@ public class TCPServer {
 					serverSocket.setReuseAddress(true);
 					serverSocket.bind(new InetSocketAddress(port));
 					while (true) {
-						LOG.debug("waiting for a client connection");
+						LOG.info("waiting for a client connection");
 						final Socket socket = serverSocket.accept();
 						socket.setSendBufferSize(32768);
 						pool.execute(new Runnable() {
@@ -64,7 +64,7 @@ public class TCPServer {
 								try {
 									int i = 0;
 									while (i < 1000) {
-										LOG.debug("wait for message");
+										LOG.info("wait for message");
 										protocol.process(socket);
 										i++;
 									}
@@ -78,20 +78,20 @@ public class TCPServer {
 									} catch (Exception e) {
 									}
 									TCPServer.this.unregister(socket);
-									LOG.debug("end");
+									LOG.info("end");
 								}
 							}
 						});
 					}
 				} catch (Exception e) {
 				}
-				LOG.debug("TCP server thread finished");
+				LOG.info("TCP server thread finished");
 			}
 		});
 	}
 
 	public void stop() {
-		LOG.debug("stopping a TCP server with port: " + port);
+		LOG.info("stopping a TCP server with port: " + port);
 		try {
 			if (serverSocket != null) {
 				serverSocket.close();
@@ -113,8 +113,8 @@ public class TCPServer {
 			}
 		}
 		pool.shutdownNow();
-		LOG.debug("pool shutdownNow=" + pool);
-		LOG.debug("end stopping a TCP server with port: " + port);
+		LOG.info("pool shutdownNow=" + pool);
+		LOG.info("end stopping a TCP server with port: " + port);
 	}
 
 	public void register(Socket socket) {

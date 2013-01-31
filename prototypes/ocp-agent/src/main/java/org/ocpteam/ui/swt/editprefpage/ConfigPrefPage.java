@@ -34,7 +34,7 @@ public class ConfigPrefPage extends PreferencePage {
 		text = new Text(composite, SWT.BORDER);
 		ps = (MyPreferenceStore) getPreferenceStore();
 		if (ps.w.getDSEditMode() == DataSourceWindow.EDIT_MODE) {
-			LOG.debug("Edit mode");
+			LOG.info("Edit mode");
 			text.setText(ps.w.ds.getProperty("server.port"));
 		} else {
 			int i = JLG.random(20000) + 20000;
@@ -46,7 +46,7 @@ public class ConfigPrefPage extends PreferencePage {
 		name = new Text(composite, SWT.BORDER);
 		name.setLayoutData(new RowData(228, SWT.DEFAULT));
 		if (ps.w.getDSEditMode() == DataSourceWindow.EDIT_MODE) {
-			LOG.debug("Edit mode");
+			LOG.info("Edit mode");
 			name.setText(ps.w.ds.getProperty("name"));
 		} else {
 			name.setText("ds_" + JLG.random(10000000));
@@ -63,7 +63,7 @@ public class ConfigPrefPage extends PreferencePage {
 
 	@Override
 	public boolean performOk() {
-		LOG.debug("Config performApply");
+		LOG.info("Config performApply");
 		ps.w.ds.setProperty("server.port", text.getText());
 		ps.w.ds.setProperty("name", name.getText());
 		syncServer();

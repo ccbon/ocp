@@ -25,7 +25,7 @@ public class EOMObject implements Serializable, IStructurable {
 
 	@Override
 	public void fromStructure(Structure s) throws Exception {
-		LOG.debug("End Of Message");
+		LOG.info("End Of Message");
 	}
 
 }

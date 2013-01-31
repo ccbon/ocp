@@ -91,7 +91,7 @@ public class DHT2DataSource extends DSPDataSource {
 		Contact predecessor = ringNodeMap.getPredecessor(getNode());
 		if (predecessor.isMyself()) {
 			if (isFirstAgent()) {
-				LOG.debug("first agent: ds=" + getName());
+				LOG.info("first agent: ds=" + getName());
 				return;
 			}
 			// it means I am the first agent on my ring.
@@ -131,7 +131,7 @@ public class DHT2DataSource extends DSPDataSource {
 	}
 
 	private void copyRingContent() throws Exception {
-		LOG.debug("start to copy ring content (ds=" + getName() + " ring="
+		LOG.info("start to copy ring content (ds=" + getName() + " ring="
 				+ getNode().getRing() + ")");
 		for (NodeMap nodeMap : ringNodeMap.getNodeMaps()) {
 			for (Contact c : nodeMap.getNodeMap().values()) {
@@ -195,13 +195,13 @@ public class DHT2DataSource extends DSPDataSource {
 	}
 
 	public void store(String key, String value) throws Exception {
-		LOG.debug("local store: " + key + "->" + value);
+		LOG.info("local store: " + key + "->" + value);
 		Address a = new Address(key.getBytes());
 		map.put(a, value.getBytes());
 	}
 
 	public String retrieve(String key) throws Exception {
-		LOG.debug("local retrieve: " + key);
+		LOG.info("local retrieve: " + key);
 		Address a = new Address(key.getBytes());
 		return new String(map.get(a));
 	}

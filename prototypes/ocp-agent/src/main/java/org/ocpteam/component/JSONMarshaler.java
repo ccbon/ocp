@@ -37,7 +37,7 @@ public class JSONMarshaler implements IMarshaler {
 				String type = jsonArray.getString(0);
 				
 				if (jsonArray.get(1) == JSONObject.NULL) {
-					LOG.debug("JSONObject.NULL");
+					LOG.info("JSONObject.NULL");
 					if (type.equals(Structure.TYPE_INT)) {
 						result.setIntField(key, (Integer) null);
 					} else if (type.equals(Structure.TYPE_DECIMAL)) {

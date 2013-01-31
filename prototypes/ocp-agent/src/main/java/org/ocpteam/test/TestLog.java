@@ -10,7 +10,7 @@ public class TestLog {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		LOG.debug_on();
-		LOG.debug("Ceci est mon premier debug.");
+		LOG.info("Ceci est mon premier debug.");
 	}
 
 }

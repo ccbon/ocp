@@ -33,7 +33,7 @@ public class DHT1DataModel extends DSContainer<DHT1DataSource> implements IMapDa
 			return;
 		}
 		Queue<Contact> contactQueue = ds().nodeMap.getContactQueue(address);
-		LOG.debug("contactQueue=" + contactQueue);
+		LOG.info("contactQueue=" + contactQueue);
 		
 		DHT1Module m = ds().getComponent(DHT1Module.class);
 		ds().client.requestByPriority(contactQueue, new InputMessage(m.store(), key, value));
@@ -92,7 +92,7 @@ public class DHT1DataModel extends DSContainer<DHT1DataSource> implements IMapDa
 								break;
 							}
 							String s = (String) serializable;
-							LOG.debug("s=" + s);
+							LOG.info("s=" + s);
 							set.add(s);
 						}
 						ds().contactMap.getTcpClient(c).returnSocket(socket);

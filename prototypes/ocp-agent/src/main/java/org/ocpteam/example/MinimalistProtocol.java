@@ -11,8 +11,8 @@ public class MinimalistProtocol extends Protocol implements IProtocol {
 	@Override
 	public void process(Socket clientSocket) throws Exception {
 		String input = (String) getStreamSerializer().readObject(clientSocket);
-		LOG.debug("input = " + input);
-		LOG.debug("return ok");
+		LOG.info("input = " + input);
+		LOG.info("return ok");
 		getStreamSerializer().writeObject(clientSocket, "ok");
 	}
 

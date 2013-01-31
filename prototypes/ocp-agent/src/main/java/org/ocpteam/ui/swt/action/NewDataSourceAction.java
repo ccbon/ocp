@@ -23,7 +23,7 @@ public class NewDataSourceAction extends Action {
 
 	@Override
 	public void run() {
-		LOG.debug("New DataSource");
+		LOG.info("New DataSource");
 		try {
 			if (w.ds != null) {
 				w.closeDataSourceAction.run();
@@ -35,7 +35,7 @@ public class NewDataSourceAction extends Action {
 			}
 			w.ds = w.dsf.getInstance(protocol);
 			ResourceBundle swt = w.dsf.getResource(protocol, "swt");
-			LOG.debug("bundle=" + swt);
+			LOG.info("bundle=" + swt);
 			if (swt != null && swt.containsKey("NewDataSourceScenario")) {
 				IScenario scenario = (IScenario) swt
 						.getObject("NewDataSourceScenario");

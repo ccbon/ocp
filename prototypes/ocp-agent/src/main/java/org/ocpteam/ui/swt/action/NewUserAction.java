@@ -27,7 +27,7 @@ public class NewUserAction extends Action {
 
 	@Override
 	public void run() {
-		LOG.debug("Creating a new User: display a wizard...");
+		LOG.info("Creating a new User: display a wizard...");
 		NewUserWizard.start(window);
 	}
 }

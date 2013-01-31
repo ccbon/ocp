@@ -119,12 +119,12 @@ public class BFSDataModel extends DSContainer<AddressDataSource> implements
 	}
 
 	private Pointer commit(File file) throws Exception {
-		LOG.debug("about to commit " + file.getName());
+		LOG.info("about to commit " + file.getName());
 		Pointer result = null;
 		if (file.isDirectory()) {
 			Tree tree = new Tree();
 			for (File child : file.listFiles()) {
-				LOG.debug("child: " + child.getName());
+				LOG.info("child: " + child.getName());
 				Pointer p = commit(child);
 				if (child.isDirectory()) {
 					tree.addTree(child.getName(), p);
@@ -185,12 +185,12 @@ public class BFSDataModel extends DSContainer<AddressDataSource> implements
 
 	@Override
 	public synchronized void commit(String remoteDir, File file) throws Exception {
-		LOG.debug("path = " + remoteDir);
+		LOG.info("path = " + remoteDir);
 		String[] dirnames = remoteDir.split("/");
 		if (remoteDir.equals("/")) {
 			dirnames = new String[] { "" };
 		}
-		LOG.debug("dirnames.length = " + dirnames.length);
+		LOG.info("dirnames.length = " + dirnames.length);
 		Tree[] trees = getTreeStack(dirnames);
 		Pointer p = commit(file);
 		Tree tree = trees[trees.length - 1];
@@ -222,12 +222,12 @@ public class BFSDataModel extends DSContainer<AddressDataSource> implements
 
 	@Override
 	public synchronized void mkdir(String existingParentDir, String newDir) throws Exception {
-		LOG.debug("existingParentDir = " + existingParentDir);
+		LOG.info("existingParentDir = " + existingParentDir);
 		String[] dirnames = existingParentDir.split("/");
 		if (existingParentDir.equals("/")) {
 			dirnames = new String[] { "" };
 		}
-		LOG.debug("dirnames.length = " + dirnames.length);
+		LOG.info("dirnames.length = " + dirnames.length);
 		Tree[] trees = getTreeStack(dirnames);
 		Pointer p = createRemoteTree(new Tree());
 		Tree tree = trees[trees.length - 1];
@@ -243,12 +243,12 @@ public class BFSDataModel extends DSContainer<AddressDataSource> implements
 
 	@Override
 	public synchronized void rm(String existingParentDir, String name) throws Exception {
-		LOG.debug("existingParentDir = " + existingParentDir);
+		LOG.info("existingParentDir = " + existingParentDir);
 		String[] dirnames = existingParentDir.split("/");
 		if (existingParentDir.equals("/")) {
 			dirnames = new String[] { "" };
 		}
-		LOG.debug("dirnames.length = " + dirnames.length);
+		LOG.info("dirnames.length = " + dirnames.length);
 		Tree[] trees = getTreeStack(dirnames);
 
 		Tree tree = trees[trees.length - 1];
@@ -265,12 +265,12 @@ public class BFSDataModel extends DSContainer<AddressDataSource> implements
 	@Override
 	public synchronized void rename(String existingParentDir, String oldName, String newName)
 			throws Exception {
-		LOG.debug("existingParentDir = " + existingParentDir);
+		LOG.info("existingParentDir = " + existingParentDir);
 		String[] dirnames = existingParentDir.split("/");
 		if (existingParentDir.equals("/")) {
 			dirnames = new String[] { "" };
 		}
-		LOG.debug("dirnames.length = " + dirnames.length);
+		LOG.info("dirnames.length = " + dirnames.length);
 		Tree[] trees = getTreeStack(dirnames);
 
 		Tree tree = trees[trees.length - 1];

@@ -17,7 +17,7 @@ public class ViewNetworkPropertiesAction extends Action {
 
 	@Override
 	public void run() {
-		LOG.debug("View Network properties...");
+		LOG.info("View Network properties...");
 		NetworkPropertiesDialog dialog = new NetworkPropertiesDialog(window.getShell(), window);
 		dialog.open();
 		window.getShell().setFocus();

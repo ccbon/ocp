@@ -38,7 +38,7 @@ public class TCPTest {
 			TCPClient tcpclient = new TCPClient("localhost", 23456, protocol);
 			while (i < n) {
 				String response = (String) tcpclient.request("hello");
-				LOG.debug("response[" + i + "]=" + response);
+				LOG.info("response[" + i + "]=" + response);
 				i++;
 			}
 
@@ -47,7 +47,7 @@ public class TCPTest {
 			i = 0;
 			while (i < n) {
 				String response = (String) tcpclient.request("hello");
-				LOG.debug("response[" + i + "]=" + response);
+				LOG.info("response[" + i + "]=" + response);
 				i++;
 			}
 			

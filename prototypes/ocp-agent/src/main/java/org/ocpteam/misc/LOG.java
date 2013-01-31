@@ -19,8 +19,32 @@ public class LOG {
 	private static StreamHandler fh;
 	private static FileHandler fileHandler;
 
-	public static void debug(String input) {
+	public static void severe(String input) {
+		log(Level.SEVERE, input);
+	}
+
+	public static void warning(String input) {
+		log(Level.WARNING, input);
+	}
+
+	public static void info(String input) {
 		log(Level.INFO, input);
+	}
+
+	public static void config(String input) {
+		log(Level.CONFIG, input);
+	}
+
+	public static void fine(String input) {
+		log(Level.FINE, input);
+	}
+
+	public static void finer(String input) {
+		log(Level.FINER, input);
+	}
+
+	public static void finest(String input) {
+		log(Level.FINEST, input);
 	}
 
 	private static void log(Level level, String msg) {
@@ -79,7 +103,7 @@ public class LOG {
 	public static void debug_on() {
 		checkInit();
 		logger.setLevel(Level.INFO);
-		debug("debug on");
+		info("debug on");
 	}
 
 	public static void debug_off() {
@@ -95,7 +119,7 @@ public class LOG {
 		Throwable t = new Throwable();
 		StringWriter result = new StringWriter();
 		t.printStackTrace(new PrintWriter(result));
-		debug(result.toString());
+		info(result.toString());
 	}
 
 	public static void error(Exception e) {
@@ -132,9 +156,12 @@ public class LOG {
 	}
 
 	private static String escape(String logfile) {
-		LOG.debug("logfile=" + logfile);
+		LOG.info("logfile=" + logfile);
 		return logfile.replaceAll("%t", System.getProperty("java.io.tmpdir"))
 				.replaceAll("%h", System.getProperty("user.home"));
 	}
 
+	public static void setLevel(Level newLevel) {
+		logger.setLevel(newLevel);
+	}
 }

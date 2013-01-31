@@ -22,19 +22,19 @@ public class SFTPUserInfo implements UserInfo {
 
 	@Override
 	public String getPassword() {
-		LOG.debug("getPassword");
+		LOG.info("getPassword");
 		return password;
 	}
 
 	@Override
 	public boolean promptPassphrase(String arg0) {
-		LOG.debug("promptPassphrase");
+		LOG.info("promptPassphrase");
 		return false;
 	}
 
 	@Override
 	public boolean promptPassword(String arg0) {
-		LOG.debug("promptPassword: " + arg0);
+		LOG.info("promptPassword: " + arg0);
 		return true;
 	}
 

@@ -25,7 +25,7 @@ public class DSPModule implements IModule {
 			@Override
 			public Serializable run(Session session, Serializable[] objects)
 					throws Exception {
-				LOG.debug("declareContact: ");
+				LOG.info("declareContact: ");
 
 				Contact contact = (Contact) objects[0];
 				InetAddress host = session.getSocket().getInetAddress();
@@ -53,7 +53,7 @@ public class DSPModule implements IModule {
 			@Override
 			public Serializable run(Session session, Serializable[] objects)
 					throws Exception {
-				LOG.debug("get network properties: ");
+				LOG.info("get network properties: ");
 				DSPDataSource ds = (DSPDataSource) session.ds();
 				return ds.network;
 			}
@@ -76,7 +76,7 @@ public class DSPModule implements IModule {
 			@Override
 			public Serializable run(Session session, Serializable[] objects)
 					throws Exception {
-				LOG.debug("get contact: " + session.ds().toContact());
+				LOG.info("get contact: " + session.ds().toContact());
 				return session.ds().toContact();
 			}
 

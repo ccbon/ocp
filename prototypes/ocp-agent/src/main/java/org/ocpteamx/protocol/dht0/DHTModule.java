@@ -24,7 +24,7 @@ public class DHTModule implements IModule {
 			@Override
 			public Serializable run(Session session, Serializable[] objects)
 					throws Exception {
-				LOG.debug("storing...");
+				LOG.info("storing...");
 				DHTDataSource ds = (DHTDataSource) session.ds();
 				String key = (String) objects[0];
 				String value = (String) objects[1];
@@ -50,7 +50,7 @@ public class DHTModule implements IModule {
 			@Override
 			public Serializable run(Session session, Serializable[] objects)
 					throws Exception {
-				LOG.debug("retrieving...");
+				LOG.info("retrieving...");
 				DHTDataSource ds = (DHTDataSource) session.ds();
 				String key = (String) objects[0];
 				return ds.retrieve(key);
@@ -74,7 +74,7 @@ public class DHTModule implements IModule {
 			@Override
 			public Serializable run(Session session, Serializable[] objects)
 					throws Exception {
-				LOG.debug("remove...");
+				LOG.info("remove...");
 				DHTDataSource ds = (DHTDataSource) session.ds();
 				String key = (String) objects[0];
 				ds.remove(key);
@@ -99,12 +99,12 @@ public class DHTModule implements IModule {
 			@Override
 			public void run(Session session, Serializable[] objects,
 					Socket socket, Protocol protocol) throws Exception {
-				LOG.debug("keyset...");
+				LOG.info("keyset...");
 				DHTDataSource ds = (DHTDataSource) session.ds();
 				Set<String> set = ds.keySet();
-				LOG.debug("set=" + set);
+				LOG.info("set=" + set);
 				for (String s : set) {
-					LOG.debug("write " + s);
+					LOG.info("write " + s);
 					protocol.getStreamSerializer().writeObject(socket, s);
 				}
 			}

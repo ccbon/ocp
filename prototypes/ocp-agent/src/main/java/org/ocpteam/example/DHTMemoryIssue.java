@@ -61,12 +61,12 @@ public class DHTMemoryIssue extends TopContainer {
 						i++;
 					}
 				} catch (Exception e) {
-					LOG.debug("Threads: " + Thread.activeCount());
+					LOG.info("Threads: " + Thread.activeCount());
 					e.printStackTrace();
 				} finally {
 					for (int i = 0; i < n; i++) {
 						try {
-							LOG.debug("disconnecting " + i);
+							LOG.info("disconnecting " + i);
 							ds[i].disconnect();
 						} catch (Exception e) {
 							e.printStackTrace();
@@ -111,7 +111,7 @@ public class DHTMemoryIssue extends TopContainer {
 				
 				for (int i = 0; i < n; i++) {
 					DHTDataModel dht = (DHTDataModel) ds[i].getContext().getDataModel();
-					LOG.debug("size=" + dht.keySet().size());
+					LOG.info("size=" + dht.keySet().size());
 				}	
 			}
 		};
@@ -119,7 +119,7 @@ public class DHTMemoryIssue extends TopContainer {
 		run1.run();
 		
 		
-		LOG.debug("app finished");
+		LOG.info("app finished");
 	}
 
 }

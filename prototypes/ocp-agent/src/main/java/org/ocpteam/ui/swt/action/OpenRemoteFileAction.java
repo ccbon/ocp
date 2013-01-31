@@ -28,7 +28,7 @@ public class OpenRemoteFileAction extends Action {
 
 	@Override
 	public void run() {
-		LOG.debug("Open");
+		LOG.info("Open");
 		TableItem item = composite.remoteDirectoryTable.getSelection()[0];
 		composite.openRemoteFile(item);
 	}

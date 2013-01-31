@@ -62,7 +62,7 @@ public class NewUserCaptchaWizardPage extends WizardPage {
 
 	@Override
 	public IWizardPage getNextPage() {
-		LOG.debug("p2: getNextPage");
+		LOG.info("p2: getNextPage");
 		return super.getNextPage();
 	}
 

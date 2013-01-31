@@ -125,7 +125,7 @@ public class OCPAgent extends DSContainer<OCPDataSource> {
 		} else {
 			id = new Id(sId);
 		}
-		LOG.debug("agent id = " + id);
+		LOG.info("agent id = " + id);
 
 		try {
 			backupNbr = (byte) Integer.parseInt(ds().network.getProperty(
@@ -158,11 +158,11 @@ public class OCPAgent extends DSContainer<OCPDataSource> {
 			storage = new Storage(ds());
 			storage.attach();
 		}
-		LOG.debug("end");
+		LOG.info("end");
 	}
 
 	public void disconnect() throws Exception {
-		LOG.debug("disconnect");
+		LOG.info("disconnect");
 		if (getServer() != null) {
 			getServer().stop();
 		}
@@ -203,12 +203,12 @@ public class OCPAgent extends DSContainer<OCPDataSource> {
 	}
 
 	public boolean isResponsible(Address address) throws Exception {
-		LOG.debug("address = " + address);
+		LOG.info("address = " + address);
 		Id nodeId = getNodeId(address);
-		LOG.debug("nodeId = " + nodeId);
+		LOG.info("nodeId = " + nodeId);
 		OCPContact contact = getContactFromNodeId(nodeId);
-		LOG.debug("contact = " + contact);
-		LOG.debug("is responsible: " + contact.getName().equals(id.toString()));
+		LOG.info("contact = " + contact);
+		LOG.info("is responsible: " + contact.getName().equals(id.toString()));
 		return contact.getName().equals(id.toString());
 		// return true;
 	}
@@ -234,7 +234,7 @@ public class OCPAgent extends DSContainer<OCPDataSource> {
 			storage.put(address, content);
 		} else {
 			// transfer the order to another agent
-			LOG.debug("transfert the order");
+			LOG.info("transfert the order");
 			Id nodeId = getNodeId(address);
 			Queue<Contact> contactQueue = makeContactQueue(nodeId);
 			getClient().store(contactQueue, address, content);
@@ -376,7 +376,7 @@ public class OCPAgent extends DSContainer<OCPDataSource> {
 
 	public Pointer set(OCPUser user, Serializable serializable)
 			throws Exception {
-		LOG.debug("set serializable: " + serializable.getClass());
+		LOG.info("set serializable: " + serializable.getClass());
 		return set(user, ds().serializer.serialize(serializable));
 	}
 
@@ -508,9 +508,9 @@ public class OCPAgent extends DSContainer<OCPDataSource> {
 
 	public void createUser(String login, String password, int backupNbr,
 			Captcha captcha, String answer) throws Exception {
-		LOG.debug("creating user: " + login + ", " + password + ", "
+		LOG.info("creating user: " + login + ", " + password + ", "
 				+ backupNbr + ", answer=" + answer);
-		LOG.debug("captcha=" + captcha);
+		LOG.info("captcha=" + captcha);
 		OCPUser user = new OCPUser(this, login, backupNbr);
 		UserPublicInfo upi = user.getPublicInfo(this);
 
@@ -544,7 +544,7 @@ public class OCPAgent extends DSContainer<OCPDataSource> {
 		if (nodeMap.size() == 0) {
 			throw new Exception("nodeMap is not populated.");
 		}
-		LOG.debug("nodeMap=" + nodeMap);
+		LOG.info("nodeMap=" + nodeMap);
 		Id nodeId = nodeMap.floorKey(address);
 		if (nodeId == null) {
 			nodeId = nodeMap.lastKey();
@@ -564,14 +564,14 @@ public class OCPAgent extends DSContainer<OCPDataSource> {
 		// debugging aspect
 		if (ds().getProperty("debug", "false").equalsIgnoreCase("true")) {
 			LOG.debug_on();
-			LOG.debug("working directory = " + System.getProperty("user.dir"));
+			LOG.info("working directory = " + System.getProperty("user.dir"));
 		}
 
 		Iterator<String> it = ds().iterator();
 		while (it.hasNext()) {
 			String key = it.next();
 			String value = ds().getProperty(key);
-			LOG.debug(key + "=" + value);
+			LOG.info(key + "=" + value);
 		}
 		name = ds().getProperty("name", "anonymous");
 
@@ -626,7 +626,7 @@ public class OCPAgent extends DSContainer<OCPDataSource> {
 	}
 
 	public void addContact(Contact contact) throws Exception {
-		LOG.debug("adding contact: " + contact);
+		LOG.info("adding contact: " + contact);
 		ds().contactMap.add(contact);
 		OCPContact c = (OCPContact) contact;
 		if (c.nodeIdSet.size() == 0) {
@@ -635,7 +635,7 @@ public class OCPAgent extends DSContainer<OCPDataSource> {
 		Iterator<Id> it = c.nodeIdSet.iterator();
 		while (it.hasNext()) {
 			Id id = it.next();
-			LOG.debug("adding node to nodeMap");
+			LOG.info("adding node to nodeMap");
 			nodeMap.put(id, c);
 		}
 	}
@@ -647,7 +647,7 @@ public class OCPAgent extends DSContainer<OCPDataSource> {
 			Iterator<Id> it = c.nodeIdSet.iterator();
 			while (it.hasNext()) {
 				Id id = it.next();
-				LOG.debug("removing node to nodeMap");
+				LOG.info("removing node to nodeMap");
 				nodeMap.remove(id);
 			}
 			return c;
@@ -659,11 +659,11 @@ public class OCPAgent extends DSContainer<OCPDataSource> {
 	public Captcha wantToCreateUser(String login, String password)
 			throws Exception {
 		// TODO check if user already exists ?
-		LOG.debug("want to create a user");
+		LOG.info("want to create a user");
 		Id key = hash(ucrypt(password, (login + password).getBytes()));
-		LOG.debug("key = " + key);
+		LOG.info("key = " + key);
 		Queue<Contact> contactQueue = makeContactQueue(key);
-		LOG.debug("contact queue established.");
+		LOG.info("contact queue established.");
 		return getClient().askCaptcha(contactQueue);
 	}
 

@@ -27,7 +27,7 @@ public class AddressMapDataModel extends DSContainer<DSPDataSource> implements
 		Address address = getAddress(key);
 		getMap().put(address, value.getBytes());
 		setRootContent(key, address);
-		LOG.debug("set finished.");
+		LOG.info("set finished.");
 	}
 
 	private void setRootContent(String key, Address address) throws Exception {

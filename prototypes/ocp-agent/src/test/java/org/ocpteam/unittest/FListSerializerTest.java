@@ -33,42 +33,42 @@ public class FListSerializerTest {
 		FListSerializer ser = new FListSerializer();
 		int[] array = new int[] {1,2,3,4};
 		byte[] serrialized = ser.serialize(array);
-		LOG.debug("serialized=" + new String(serrialized));
+		LOG.info("serialized=" + new String(serrialized));
 		Integer[] deserrialized = (Integer[]) ser.deserialize(serrialized);
-		LOG.debug("deserialized=" + deserrialized);
+		LOG.info("deserialized=" + deserrialized);
 	}
 
 	public void test() throws Exception {
 		FListSerializer ser = new FListSerializer();
 		String s = "coucou";
 		byte[] array = ser.serialize(s);
-		LOG.debug("array=" + JLG.NL + new String(array));
+		LOG.info("array=" + JLG.NL + new String(array));
 		String s2 = (String) ser.deserialize(array);
-		LOG.debug("s2=" + s2);
+		LOG.info("s2=" + s2);
 
 		int i = 12;
 		array = ser.serialize(i);
-		LOG.debug("array=" + JLG.NL + new String(array));
+		LOG.info("array=" + JLG.NL + new String(array));
 		int i2 = (Integer) ser.deserialize(array);
-		LOG.debug("i2=" + i2);
+		LOG.info("i2=" + i2);
 
 		double d = 12.34;
 		array = ser.serialize(d);
-		LOG.debug("array=" + JLG.NL + new String(array));
+		LOG.info("array=" + JLG.NL + new String(array));
 		double d2 = (Double) ser.deserialize(array);
-		LOG.debug("d2=" + d2);
+		LOG.info("d2=" + d2);
 
 		byte[] b = "coucou".getBytes();
 		array = ser.serialize(b);
-		LOG.debug("array=" + JLG.NL + new String(array));
+		LOG.info("array=" + JLG.NL + new String(array));
 		byte[] b2 = (byte[]) ser.deserialize(array);
-		LOG.debug("b2=" + new String(b2));
+		LOG.info("b2=" + new String(b2));
 
 		TestObject t = new TestObject();
 		array = ser.serialize(t);
-		LOG.debug("array=" + JLG.NL + new String(array));
+		LOG.info("array=" + JLG.NL + new String(array));
 		TestObject t2 = (TestObject) ser.deserialize(array);
-		LOG.debug("t2=" + t2);
+		LOG.info("t2=" + t2);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -77,12 +77,12 @@ public class FListSerializerTest {
 		Map<String, Address> map = new HashMap<String, Address>();
 		map.put("address1", new Address("0123"));
 //		map.put("address2", new Address("1234"));
-		LOG.debug("map=" + map);
+		LOG.info("map=" + map);
 		byte[] array = ser.serialize((Serializable) map);
-		LOG.debug("array=" + JLG.NL + new String(array));
+		LOG.info("array=" + JLG.NL + new String(array));
 		Map<String, Address> map2 = (Map<String, Address>) ser
 				.deserialize(array);
-		LOG.debug("map2=" + map2);
+		LOG.info("map2=" + map2);
 	}
 
 }

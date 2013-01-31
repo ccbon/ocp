@@ -221,8 +221,8 @@ public class Security extends DSContainer<AddressDataSource> implements
 	@Override
 	public void putUser(SecureUser secureUser, String password)
 			throws Exception {
-		LOG.debug("secureUser.getUsername()=" + secureUser.getUsername());
-		LOG.debug("password=" + password);
+		LOG.info("secureUser.getUsername()=" + secureUser.getUsername());
+		LOG.info("password=" + password);
 		Address address = getUserAddress(secureUser.getUsername(), password);
 		byte[] value = ds().serializer.serialize(secureUser);
 		value = passwordCrypt(password, value);

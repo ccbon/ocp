@@ -24,7 +24,7 @@ public class RenameFileAction extends Action {
 
 	@Override
 	public void run() {
-		LOG.debug("Rename");
+		LOG.info("Rename");
 		final TableItem item = composite.localDirectoryTable.getSelection()[0];
 		final String name = item.getText(0);
 		final Text text = new Text(item.getParent(), SWT.BORDER);
@@ -39,7 +39,7 @@ public class RenameFileAction extends Action {
 				case SWT.KEYPAD_CR:
 				case '\r':
 					if ((text.getText() != "") && (!name.equals(text.getText()))) {
-						LOG.debug("renaming...");
+						LOG.info("renaming...");
 						composite.renameLocalFile(name, text.getText());
 						item.setText(0, text.getText());
 					}
@@ -50,7 +50,7 @@ public class RenameFileAction extends Action {
 					break;
 				default:
 				}
-				LOG.debug("keypressed: keycode:" + e.keyCode
+				LOG.info("keypressed: keycode:" + e.keyCode
 						+ " and character = '" + e.character + "'");
 			};
 		});
@@ -58,9 +58,9 @@ public class RenameFileAction extends Action {
 			@Override
 			public void focusLost(FocusEvent e) {
 				if ((text.getText() != "") && (!name.equals(text.getText()))) {
-					LOG.debug("renaming2...");
-					LOG.debug("name = |" + name + "|");
-					LOG.debug("text.getText() = |" + text.getText() + "|");
+					LOG.info("renaming2...");
+					LOG.info("name = |" + name + "|");
+					LOG.info("text.getText() = |" + text.getText() + "|");
 					composite.renameLocalFile(name, text.getText());
 					item.setText(0, text.getText());
 				}

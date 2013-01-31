@@ -54,7 +54,7 @@ public class FTPFileSystem implements IFileSystem {
 
 		// Check if FTPFile is a regular file
 		if (ftpFile.isFile()) {
-			LOG.debug("FTPFile: " + ftpFile.getName() + "; "
+			LOG.info("FTPFile: " + ftpFile.getName() + "; "
 					+ ftpFile.getSize());
 			fos = new FileOutputStream(new File(localDir, ftpFile.getName()));
 			ftp.retrieveFile(ftpFile.getName(), fos);
@@ -74,7 +74,7 @@ public class FTPFileSystem implements IFileSystem {
 		for (FTPFile ftpFile : ftpFiles) {
 			// Check if FTPFile is a regular file
 			if (ftpFile.isFile()) {
-				LOG.debug("FTPFile: " + ftpFile.getName() + "; "
+				LOG.info("FTPFile: " + ftpFile.getName() + "; "
 						+ ftpFile.getSize());
 				fos = new FileOutputStream(
 						new File(localDir, ftpFile.getName()));
@@ -96,7 +96,7 @@ public class FTPFileSystem implements IFileSystem {
 		if (file.isDirectory()) {
 			ftp.mkd(remoteDir + file.getName());
 			for (File child : file.listFiles()) {
-				LOG.debug("child: " + child.getName());
+				LOG.info("child: " + child.getName());
 				commit(remoteDir + file.getName(), child);
 			}
 		} else {

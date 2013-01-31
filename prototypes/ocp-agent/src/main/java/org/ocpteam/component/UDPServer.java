@@ -54,7 +54,7 @@ public class UDPServer {
 	}
 
 	public void stop() {
-		LOG.debug("stopping a UDP server with port: " + port);
+		LOG.info("stopping a UDP server with port: " + port);
 		try {
 			if (serverSocket != null) {
 				serverSocket.close();
@@ -66,8 +66,8 @@ public class UDPServer {
 		// make sure we don't accept new tasks
 		pool.shutdown();
 		pool.shutdownNow();
-		LOG.debug("pool shutdownNow=" + pool);
-		LOG.debug("end stopping a TCP server with port: " + port);
+		LOG.info("pool shutdownNow=" + pool);
+		LOG.info("end stopping a TCP server with port: " + port);
 	}
 
 	public void setProtocol(IProtocol protocol) {

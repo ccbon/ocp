@@ -47,8 +47,8 @@ public class HTTPServerHandler extends Container<IContainer> implements HttpHand
 			OutputStream responseBody = exchange.getResponseBody();
 			try {
 				File file = new File(root + path);
-				LOG.debug("asking path: " + path);
-				LOG.debug("asking file: " + file.getAbsolutePath());
+				LOG.info("asking path: " + path);
+				LOG.info("asking file: " + file.getAbsolutePath());
 				responseBody.write(JLG.getBinaryFile(file));
 			} catch (Exception e) {
 				responseBody.write(("Error...\n").getBytes());

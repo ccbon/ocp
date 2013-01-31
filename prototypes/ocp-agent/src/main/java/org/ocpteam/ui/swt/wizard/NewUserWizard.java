@@ -26,10 +26,10 @@ public class NewUserWizard extends Wizard {
 			@Override
 			protected void nextPressed() {
 				try {
-					LOG.debug("next button pressed");
+					LOG.info("next button pressed");
 					IWizardPage page = this.getCurrentPage();
 					if (page.getClass() == NewUserFormWizardPage.class) {
-						LOG.debug("form page");
+						LOG.info("form page");
 						((NewUserFormWizardPage) page).onNextPage();
 					}
 					super.nextPressed();
@@ -48,7 +48,7 @@ public class NewUserWizard extends Wizard {
 			}
 		};
 		dialog.open();
-		LOG.debug("about to dispose shell");
+		LOG.info("about to dispose shell");
 	}
 
 	private NewUserFormWizardPage p1;
@@ -78,18 +78,18 @@ public class NewUserWizard extends Wizard {
 		IWizardPage[] pages = getPages();
 		for (int i = 0; i < pages.length; i++) {
 			if (!pages[i].isPageComplete()) {
-				LOG.debug("page not completed: " + i);
+				LOG.info("page not completed: " + i);
 				return false;
 			}
 		}
-		LOG.debug("all pages completed.");
+		LOG.info("all pages completed.");
 		return true;
 	}
 
 	@Override
 	public boolean performFinish() {
 		try {
-			LOG.debug("creating the user");
+			LOG.info("creating the user");
 			IUserCreation uc = window.ds.getComponent(IUserCreation.class);
 			if (uc.needsCaptcha()) {
 				uc.setCaptcha(getCaptcha());

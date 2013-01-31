@@ -26,7 +26,7 @@ public class OCP2DataSource extends OCPDataSource {
 		String resourceClassString = packageString + "."
 				+ "OCP" + subpackage.toUpperCase()
 				+ "Resource";
-		LOG.debug("class=" + resourceClassString);
+		LOG.info("class=" + resourceClassString);
 		return (ResourceBundle) Class.forName(resourceClassString)
 				.newInstance();
 

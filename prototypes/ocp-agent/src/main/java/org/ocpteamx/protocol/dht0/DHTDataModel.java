@@ -52,9 +52,9 @@ public class DHTDataModel extends DSContainer<DHTDataSource> implements IMapData
 				@Override
 				public String call() throws Exception {
 					try {
-						LOG.debug("request");
+						LOG.info("request");
 						String value = (String) ds().client.request(c, message);
-						LOG.debug("request end");
+						LOG.info("request end");
 						if (value != null) {
 							return value;
 						}
@@ -108,7 +108,7 @@ public class DHTDataModel extends DSContainer<DHTDataSource> implements IMapData
 								break;
 							}
 							String s = (String) serializable;
-							LOG.debug("s=" + s);
+							LOG.info("s=" + s);
 							set.add(s);
 						}
 						ds().contactMap.getTcpClient(c).returnSocket(socket);

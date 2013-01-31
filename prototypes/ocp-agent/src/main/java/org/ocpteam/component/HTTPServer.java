@@ -23,7 +23,7 @@ public class HTTPServer implements Runnable {
 			server.createContext("/", handler);
 			server.setExecutor(Executors.newCachedThreadPool());
 			server.start();
-			LOG.debug("Server is listening on port " + port);
+			LOG.info("Server is listening on port " + port);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

@@ -32,7 +32,7 @@ public class SignInAction extends Action {
 
 	@Override
 	public void run() {
-		LOG.debug("Authentication User: display a wizard...");
+		LOG.info("Authentication User: display a wizard...");
 		IScenario scenario = null;
 		try {
 			ResourceBundle swt = window.ds.getResource("swt");

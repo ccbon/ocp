@@ -27,7 +27,7 @@ public class RefreshTest {
 			p.setProperty("server.port", "" + port);
 			ds[0].setConfig(p);
 			ds[0].connect();
-			LOG.debug("0: contactMap size: " + ds[0].contactMap.size());
+			LOG.info("0: contactMap size: " + ds[0].contactMap.size());
 			ds[0].contactMap.refreshContactList();
 			ds[0].client.waitForCompletion();
 
@@ -41,7 +41,7 @@ public class RefreshTest {
 				ds[i].connect();
 			}
 			for (int i = 0; i < n; i++) {
-				LOG.debug(i + ": contactMap size: " + ds[i].contactMap.size());
+				LOG.info(i + ": contactMap size: " + ds[i].contactMap.size());
 				ds[i].contactMap.refreshContactList();
 				ds[i].client.waitForCompletion();
 
@@ -51,7 +51,7 @@ public class RefreshTest {
 			}
 			ds[n-1].contactMap.refreshContactList();
 			ds[n-1].client.waitForCompletion();
-			LOG.debug((n-1) + ": contactMap size: " + ds[n-1].contactMap.size());
+			LOG.info((n-1) + ": contactMap size: " + ds[n-1].contactMap.size());
 
 			ds[n-1].disconnect();
 		} catch (Exception e) {
