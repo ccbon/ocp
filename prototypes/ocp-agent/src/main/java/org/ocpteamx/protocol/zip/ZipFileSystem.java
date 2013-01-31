@@ -13,7 +13,8 @@ import org.ocpteam.interfaces.IFileSystem;
 import org.ocpteam.misc.JLG;
 import org.ocpteam.misc.LOG;
 
-public class ZipFileSystem extends Container<ZipDataSource> implements IFileSystem {
+public class ZipFileSystem extends Container<ZipDataSource> implements
+		IFileSystem {
 
 	public ZipFileImpl root;
 
@@ -23,7 +24,7 @@ public class ZipFileSystem extends Container<ZipDataSource> implements IFileSyst
 	ZipDataSource ds() {
 		return getRoot();
 	}
-	
+
 	@Override
 	public void checkoutAll(String localDir) throws Exception {
 		// TODO Auto-generated method stub
@@ -51,9 +52,9 @@ public class ZipFileSystem extends Container<ZipDataSource> implements IFileSyst
 				checkout(path, child.getName(), dir);
 			}
 		} else { // file
-			ZipUtils.extract(ds().getFile(), path.substring(1), new File(localDir, remoteFilename));
+			ZipUtils.extract(ds().getFile(), path.substring(1), new File(
+					localDir, remoteFilename));
 		}
-
 
 	}
 
@@ -122,7 +123,8 @@ public class ZipFileSystem extends Container<ZipDataSource> implements IFileSyst
 		if (!existingParentDir.endsWith("/")) {
 			existingParentDir += "/";
 		}
-		ZipUtils.rename(ds().getFile(), existingParentDir + oldName, existingParentDir + newName);
+		ZipUtils.rename(ds().getFile(), existingParentDir + oldName,
+				existingParentDir + newName);
 		refresh();
 
 	}
@@ -133,6 +135,9 @@ public class ZipFileSystem extends Container<ZipDataSource> implements IFileSyst
 	}
 
 	public void refresh() throws Exception {
+		if (!ZipUtils.lock.tryLock()) {
+			return;
+		}
 		this.root = new ZipFileImpl();
 		ZipFile zip = null;
 		try {
@@ -147,6 +152,7 @@ public class ZipFileSystem extends Container<ZipDataSource> implements IFileSyst
 			if (zip != null) {
 				zip.close();
 			}
+			ZipUtils.lock.unlock();
 		}
 	}
 

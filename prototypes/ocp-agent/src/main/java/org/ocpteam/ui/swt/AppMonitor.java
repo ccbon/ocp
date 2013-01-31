@@ -50,6 +50,7 @@ public class AppMonitor implements Runnable {
 
 	public void start() {
 		t = new Thread(this);
+		t.setName("AppMonitor");
 		t.start();
 	}
 
@@ -85,6 +86,7 @@ public class AppMonitor implements Runnable {
 		Future<?> future = pool.submit(task);
 		MonitoredTask mt = new MonitoredTask(te, future);
 		map.put(task, mt);
+		showProgress(task);
 	}
 
 	@Override
