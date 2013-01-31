@@ -1,4 +1,4 @@
-package org.ocpteam.ui.swt;
+package org.ocpteam.ui.swt.editprefpage;
 
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.swt.SWT;
@@ -11,6 +11,7 @@ import org.ocpteam.component.DSPDataSource;
 import org.ocpteam.component.Server;
 import org.ocpteam.misc.JLG;
 import org.ocpteam.misc.LOG;
+import org.ocpteam.ui.swt.DataSourceWindow;
 import org.ocpteam.ui.swt.DataSourceWindow.MyPreferenceStore;
 import org.eclipse.swt.layout.RowData;
 

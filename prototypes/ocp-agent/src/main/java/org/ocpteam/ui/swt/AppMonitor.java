@@ -15,6 +15,7 @@ import org.eclipse.swt.widgets.TableItem;
 import org.ocpteam.misc.LOG;
 import org.ocpteam.misc.swt.QuickMessage;
 import org.ocpteam.ui.swt.composite.ExplorerComposite;
+import org.ocpteam.ui.swt.editprefpage.MonitorPreferencePage;
 
 public class AppMonitor implements Runnable {
 

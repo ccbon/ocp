@@ -9,8 +9,8 @@ import org.eclipse.jface.preference.PreferenceNode;
 import org.ocpteam.misc.LOG;
 import org.ocpteam.ui.swt.DataSourceWindow;
 import org.ocpteam.ui.swt.DataSourcesPreferencePage;
-import org.ocpteam.ui.swt.GeneralPreferencePage;
-import org.ocpteam.ui.swt.MonitorPreferencePage;
+import org.ocpteam.ui.swt.editprefpage.GeneralPreferencePage;
+import org.ocpteam.ui.swt.editprefpage.MonitorPreferencePage;
 
 public class EditPreferencesAction extends Action {
 	public static ResourceBundle defaultPreferences = ResourceBundle

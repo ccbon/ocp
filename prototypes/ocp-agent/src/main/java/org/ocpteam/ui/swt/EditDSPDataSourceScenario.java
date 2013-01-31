@@ -10,6 +10,7 @@ import org.ocpteam.component.PersistentFileMap;
 import org.ocpteam.interfaces.IDataStore;
 import org.ocpteam.misc.LOG;
 import org.ocpteam.ui.swt.DataSourceWindow.MyPreferenceStore;
+import org.ocpteam.ui.swt.editprefpage.ConfigPrefPage;
 
 public class EditDSPDataSourceScenario implements IScenario {
 

@@ -1,4 +1,4 @@
-package org.ocpteam.ui.swt;
+package org.ocpteam.ui.swt.editprefpage;
 
 import java.io.File;
 import java.io.IOException;
@@ -9,6 +9,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.ocpteam.ui.swt.DataSourceWindow;
 import org.ocpteam.ui.swt.DataSourceWindow.MyPreferenceStore;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.events.SelectionAdapter;

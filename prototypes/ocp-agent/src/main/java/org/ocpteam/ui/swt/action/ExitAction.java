@@ -6,7 +6,7 @@ import org.eclipse.swt.graphics.ImageData;
 import org.ocpteam.misc.LOG;
 import org.ocpteam.misc.swt.QuickMessage;
 import org.ocpteam.ui.swt.DataSourceWindow;
-import org.ocpteam.ui.swt.GeneralPreferencePage;
+import org.ocpteam.ui.swt.editprefpage.GeneralPreferencePage;
 
 public class ExitAction extends Action {
 	private DataSourceWindow w;

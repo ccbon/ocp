@@ -1,4 +1,4 @@
-package org.ocpteam.ui.swt;
+package org.ocpteam.ui.swt.editprefpage;
 
 import java.io.IOException;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -44,9 +44,6 @@ public class MonitorPreferencePage extends PreferencePage {
 		refreshRate.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true,
 				false, 1, 1));
 		int rate = ps.getInt(REFRESHRATE);
-		if (rate == 0) {
-			rate = 1000;
-		}
 		refreshRate.setText("" + rate);
 
 		lblMaxThread = new Label(composite, SWT.NONE);
@@ -58,9 +55,6 @@ public class MonitorPreferencePage extends PreferencePage {
 		maxThread.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false,
 				1, 1));
 		int thread = ps.getInt(MAXTHREAD);
-		if (thread == 0) {
-			thread = 1;
-		}
 		maxThread.setText("" + thread);
 
 		return composite;
@@ -68,8 +62,8 @@ public class MonitorPreferencePage extends PreferencePage {
 
 	@Override
 	protected void performDefaults() {
-		refreshRate.setText("1000");
-		maxThread.setText("1");
+		refreshRate.setText(ps.getDefaultInt(REFRESHRATE) + "");
+		maxThread.setText(ps.getDefaultInt(MAXTHREAD) + "");
 		super.performDefaults();
 	}
 

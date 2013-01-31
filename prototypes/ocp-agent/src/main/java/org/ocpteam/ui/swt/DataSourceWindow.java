@@ -87,6 +87,7 @@ import org.ocpteam.ui.swt.action.SignOutAction;
 import org.ocpteam.ui.swt.action.ViewDataModelAction;
 import org.ocpteam.ui.swt.composite.ExplorerComposite;
 import org.ocpteam.ui.swt.composite.MapComposite;
+import org.ocpteam.ui.swt.editprefpage.GeneralPreferencePage;
 
 public class DataSourceWindow extends ApplicationWindow implements IComponent {
 
