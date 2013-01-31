@@ -83,7 +83,8 @@ public class SignInWithAuthenticationWizardPage extends WizardPage {
 		});
 
 		passwordText.setBounds(10, 115, 187, 19);
-
+		Control[] list = null;
+		
 		if (window.ds.usesComponent(IUserCreation.class)) {
 			btnCreateAnNew = new Button(container, SWT.NONE);
 			btnCreateAnNew.addSelectionListener(new SelectionAdapter() {
@@ -98,11 +99,17 @@ public class SignInWithAuthenticationWizardPage extends WizardPage {
 			});
 			btnCreateAnNew.setBounds(10, 10, 152, 25);
 			btnCreateAnNew.setText("Create a new account");
+			list = new Control[] { btnCreateAnNew, usernameText,
+					passwordText };
+			container.setTabList(list);
+		} else {
+			list = new Control[] { usernameText,
+					passwordText };
+			container.setTabList(list);
 		}
 
-		Control[] list = new Control[] { btnCreateAnNew, usernameText,
-				passwordText };
-		container.setTabList(list);
+		
+		
 	}
 
 	@Override
