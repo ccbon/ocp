@@ -103,7 +103,7 @@ public class BFSDataModel extends DSContainer<AddressDataSource> implements
 	}
 
 	@Override
-	public void commitAll(String localDir) throws Exception {
+	public synchronized void commitAll(String localDir) throws Exception {
 		File file = new File(localDir);
 		if (!file.isDirectory()) {
 			throw new Exception("must be a directory:" + localDir);
@@ -132,7 +132,7 @@ public class BFSDataModel extends DSContainer<AddressDataSource> implements
 					tree.addFile(child.getName(), p);
 				}
 			}
-			result = set(tree);
+			result = createRemoteTree(tree);
 		} else { // file
 			result = createRemoteFile(file);
 		}
@@ -184,7 +184,7 @@ public class BFSDataModel extends DSContainer<AddressDataSource> implements
 	}
 
 	@Override
-	public void commit(String remoteDir, File file) throws Exception {
+	public synchronized void commit(String remoteDir, File file) throws Exception {
 		LOG.debug("path = " + remoteDir);
 		String[] dirnames = remoteDir.split("/");
 		if (remoteDir.equals("/")) {
@@ -199,16 +199,16 @@ public class BFSDataModel extends DSContainer<AddressDataSource> implements
 		} else {
 			tree.addFile(file.getName(), p);
 		}
-		p = set(tree);
+		p = createRemoteTree(tree);
 		for (int i = dirnames.length - 2; i >= 0; i--) {
 			tree = trees[i];
 			tree.addTree(dirnames[i + 1], p);
-			p = set(tree);
+			p = createRemoteTree(tree);
 		}
 		setRootPointer(p);
 	}
 
-	private Pointer set(Tree tree) throws Exception {
+	private Pointer createRemoteTree(Tree tree) throws Exception {
 		byte[] value = ds().serializer.serialize(tree);
 		Address address = new Address(ds().md.hash(value));
 		put(address, value, tree);
@@ -221,7 +221,7 @@ public class BFSDataModel extends DSContainer<AddressDataSource> implements
 	}
 
 	@Override
-	public void mkdir(String existingParentDir, String newDir) throws Exception {
+	public synchronized void mkdir(String existingParentDir, String newDir) throws Exception {
 		LOG.debug("existingParentDir = " + existingParentDir);
 		String[] dirnames = existingParentDir.split("/");
 		if (existingParentDir.equals("/")) {
@@ -229,20 +229,20 @@ public class BFSDataModel extends DSContainer<AddressDataSource> implements
 		}
 		LOG.debug("dirnames.length = " + dirnames.length);
 		Tree[] trees = getTreeStack(dirnames);
-		Pointer p = set(new Tree());
+		Pointer p = createRemoteTree(new Tree());
 		Tree tree = trees[trees.length - 1];
 		tree.addTree(newDir, p);
-		p = set(tree);
+		p = createRemoteTree(tree);
 		for (int i = dirnames.length - 2; i >= 0; i--) {
 			tree = trees[i];
 			tree.addTree(dirnames[i + 1], p);
-			p = set(tree);
+			p = createRemoteTree(tree);
 		}
 		setRootPointer(p);
 	}
 
 	@Override
-	public void rm(String existingParentDir, String name) throws Exception {
+	public synchronized void rm(String existingParentDir, String name) throws Exception {
 		LOG.debug("existingParentDir = " + existingParentDir);
 		String[] dirnames = existingParentDir.split("/");
 		if (existingParentDir.equals("/")) {
@@ -253,17 +253,17 @@ public class BFSDataModel extends DSContainer<AddressDataSource> implements
 
 		Tree tree = trees[trees.length - 1];
 		tree.removeEntry(name);
-		Pointer p = set(tree);
+		Pointer p = createRemoteTree(tree);
 		for (int i = dirnames.length - 2; i >= 0; i--) {
 			tree = trees[i];
 			tree.addTree(dirnames[i + 1], p);
-			p = set(tree);
+			p = createRemoteTree(tree);
 		}
 		setRootPointer(p);
 	}
 
 	@Override
-	public void rename(String existingParentDir, String oldName, String newName)
+	public synchronized void rename(String existingParentDir, String oldName, String newName)
 			throws Exception {
 		LOG.debug("existingParentDir = " + existingParentDir);
 		String[] dirnames = existingParentDir.split("/");
@@ -275,11 +275,11 @@ public class BFSDataModel extends DSContainer<AddressDataSource> implements
 
 		Tree tree = trees[trees.length - 1];
 		tree.renameEntry(oldName, newName);
-		Pointer p = set(tree);
+		Pointer p = createRemoteTree(tree);
 		for (int i = dirnames.length - 2; i >= 0; i--) {
 			tree = trees[i];
 			tree.addTree(dirnames[i + 1], p);
-			p = set(tree);
+			p = createRemoteTree(tree);
 		}
 		setRootPointer(p);
 	}
