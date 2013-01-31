@@ -44,6 +44,7 @@ public class AppMonitor implements Runnable {
 		this.w = w;
 		map = new HashMap<Task, MonitoredTask>();
 		w.ps.setDefault(MonitorPreferencePage.MAXTHREAD, 1);
+		w.ps.setDefault(MonitorPreferencePage.REFRESHRATE, 1000);
 		int maxThread = w.ps.getInt(MonitorPreferencePage.MAXTHREAD);
 		LOG.debug("maxThread=" + maxThread);
 		pool = (ThreadPoolExecutor) Executors.newFixedThreadPool(maxThread);
