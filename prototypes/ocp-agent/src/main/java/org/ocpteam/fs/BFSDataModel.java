@@ -129,7 +129,7 @@ public class BFSDataModel extends DSContainer<AddressDataSource> implements
 				if (child.isDirectory()) {
 					tree.addTree(child.getName(), p);
 				} else {
-					tree.addFile(child.getName(), p);
+					tree.addFile(child.getName(), p, child.length());
 				}
 			}
 			result = createRemoteTree(tree);
@@ -197,7 +197,7 @@ public class BFSDataModel extends DSContainer<AddressDataSource> implements
 		if (file.isDirectory()) {
 			tree.addTree(file.getName(), p);
 		} else {
-			tree.addFile(file.getName(), p);
+			tree.addFile(file.getName(), p, file.length());
 		}
 		p = createRemoteTree(tree);
 		for (int i = dirnames.length - 2; i >= 0; i--) {

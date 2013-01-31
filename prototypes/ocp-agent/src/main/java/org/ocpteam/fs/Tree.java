@@ -26,13 +26,13 @@ public class Tree implements IStructurable, IFile {
 		entryMap = new HashMap<String, TreeEntry>();
 	}
 
-	public void addFile(String name, Pointer p) {
-		entryMap.put(name, new TreeEntry(name, p, TreeEntry.FILE));
+	public void addFile(String name, Pointer p, long size) {
+		entryMap.put(name, new TreeEntry(name, p, TreeEntry.FILE, size));
 
 	}
 
 	public void addTree(String name, Pointer p) {
-		entryMap.put(name, new TreeEntry(name, p, TreeEntry.TREE));
+		entryMap.put(name, new TreeEntry(name, p, TreeEntry.TREE, TreeEntry.NO_SIZE));
 	}
 
 	public Collection<TreeEntry> getEntries() {
